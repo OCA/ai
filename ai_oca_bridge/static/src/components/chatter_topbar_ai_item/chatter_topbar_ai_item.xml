@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="ai_oca_bridge.ChatterAIItem" owl="1">
+        <span class="o_ChatterTopbar_AIItem">
+            <t t-esc="props.bridge.name" />
+            <i
+                class="fa fa-info-circle ms-1"
+                role="img"
+                t-on-mouseenter="(ev) => this.onMouseEnter(ev)"
+                t-on-mouseleave="(ev) => this.onMouseLeave(ev)"
+                t-if="props.bridge.description"
+            />
+        </span>
+    </t>
+    <t t-name="ai_oca_bridge.ChatterAIItemPopover" owl="1">
+        <div class="popup-div">
+            <p class="popover-content p-2">
+                <t t-out="props.help or ''" />
+            </p>
+        </div>
+    </t>
+</templates>

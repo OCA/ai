@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2025 Dixmit
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <record model="ir.ui.view" id="ai_bridge_form_view">
+        <field name="model">ai.bridge</field>
+        <field name="arch" type="xml">
+            <form>
+                <header />
+                <sheet>
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="bg-danger"
+                        attrs="{'invisible': [('active', '=', True)]}"
+                    />
+                    <group>
+                        <field name="name" />
+                        <field name="sequence" />
+                        <field name="usage" />
+                        <field name="company_id" groups="base.group_multi_company" />
+                        <field name="description" />
+                        <field
+                            name="model_id"
+                            options="{'no_create': True, 'no_create_edit': True}"
+                        />
+                        <field name="model" invisible="1" />
+                        <field
+                            name="field_ids"
+                            widget="many2many_tags"
+                            options="{'no_create': True, 'no_create_edit': True}"
+                            domain="[('model_id', '=', model_id)]"
+                        />
+                        <field
+                            name="domain"
+                            widget="domain"
+                            options="{'model': 'model'}"
+                        />
+                        <field name="group_ids" widget="many2many_tags" />
+                        <field name="url" />
+                        <field name="auth_type" />
+                        <field
+                            name="auth_token"
+                            password="1"
+                            attrs="{'invisible': [('auth_type', '!=', 'token')], 'required': [('auth_type', '=', 'token')]}"
+                        />
+                        <field
+                            name="auth_username"
+                            attrs="{'invisible': [('auth_type', '!=', 'basic')], 'required': [('auth_type', '=', 'basic')]}"
+                        />
+                        <field
+                            name="auth_password"
+                            password="1"
+                            attrs="{'invisible': [('auth_type', '!=', 'basic')], 'required': [('auth_type', '=', 'basic')]}"
+                        />
+                        <field name="active" invisible="1" />
+                    </group>
+                    <notebook>
+                        <page string="Sample" name="sample">
+                            <field name="sample_payload" />
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user" />
+                    <field name="activity_ids" />
+                    <field name="message_ids" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="ai_bridge_search_view">
+        <field name="model">ai.bridge</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="model_id" />
+                <field name="usage" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <separator />
+                <filter
+                    name="active"
+                    string="Active"
+                    domain="[('active', '=', True)]"
+                />
+                <filter
+                    name="inactive"
+                    string="Archived"
+                    domain="[('active', '=', False)]"
+                />
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="ai_bridge_tree_view">
+        <field name="model">ai.bridge</field>
+        <field name="arch" type="xml">
+            <tree decoration-muted="active == False">
+                <field name="active" invisible="1" />
+                <field name="sequence" widget="handle" />
+                <field name="name" />
+                <field name="model_id" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="usage" />
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="ai_bridge_act_window">
+        <field name="name">AI Bridge</field>
+        <field name="res_model">ai.bridge</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record model="ir.ui.menu" id="ai_bridge_menu">
+        <field name="name">AI Bridge</field>
+        <field name="parent_id" ref="ai_bridge_root_menu" />
+        <field name="action" ref="ai_bridge_act_window" />
+        <field name="sequence" eval="10" />
+    </record>
+
+</odoo>
