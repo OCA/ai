@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t
+        t-name="ai_oca_bridge.ChatterTopbar"
+        t-inherit="mail.ChatterTopbar"
+        t-inherit-mode="extension"
+        owl="1"
+    >
+        <xpath
+            expr="//div[hasclass('o_ChatterTopbar_rightSection')]/button[1]"
+            position="before"
+        >
+            <ChatterAITopbar
+                record="chatterTopbar"
+                t-if="chatterTopbar.chatter.webRecord.data.ai_bridge_info !== undefined and chatterTopbar.chatter.webRecord.data.ai_bridge_info.length > 0"
+            />
+        </xpath>
+    </t>
+</templates>
