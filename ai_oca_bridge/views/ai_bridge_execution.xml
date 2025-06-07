@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2025 Dixmit
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <record model="ir.ui.view" id="ai_bridge_execution_form_view">
+        <field name="model">ai.bridge.execution</field>
+        <field name="arch" type="xml">
+            <form create="false" edit="false">
+                <header>
+                    <field name="state" widget="statusbar" />
+                </header>
+                <sheet>
+                    <group>
+                        <field name="ai_bridge_id" />
+                        <field name="res_id" />
+                        <field name="model_id" />
+                        <field name="create_uid" />
+                        <field name="create_date" />
+                        <field name="company_id" groups="base.group_multi_company" />
+                    </group>
+                    <notebook>
+                        <page string="Execution Details" name="execution_details">
+                            <group string="Payload">
+                                <field name="payload_txt" nolabel="1" cols="2" />
+                            </group>
+                            <group string="Response">
+                                <field name="result" nolabel="1" cols="2" />
+                            </group>
+                        </page>
+                        <page
+                            string="Error"
+                            name="error"
+                            attrs="{'invisible': [('error', '=', False)]}"
+                        >
+                            <field name="error" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="ai_bridge_execution_search_view">
+        <field name="model">ai.bridge.execution</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="ai_bridge_id" />
+                <field name="model_id" />
+                <field name="create_uid" />
+                <field name="create_date" />
+
+                <field name="company_id" groups="base.group_multi_company" />
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="ai_bridge_execution_tree_view">
+        <field name="model">ai.bridge.execution</field>
+        <field name="arch" type="xml">
+            <tree create="false" edit="false">
+                <field name="ai_bridge_id" />
+                <field name="res_id" />
+                <field name="model_id" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="create_uid" />
+                <field name="create_date" />
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="ai_bridge_execution_act_window">
+        <field name="name">AI Execution</field>
+        <field name="res_model">ai.bridge.execution</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record model="ir.ui.menu" id="ai_bridge_execution_menu">
+        <field name="name">AI Bridge Execution</field>
+        <field name="parent_id" ref="ai_bridge_root_menu" />
+        <field name="action" ref="ai_bridge_execution_act_window" />
+        <field name="sequence" eval="20" />
+    </record>
+
+</odoo>

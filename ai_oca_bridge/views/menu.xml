@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2025 Dixmit
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+
+     XML which can edit the lateral bar menu of the view.
+
+    -->
+<odoo>
+    <menuitem
+        name="AI Bridge"
+        id="ai_bridge_root_menu"
+        groups="base.group_system"
+        web_icon="ai_oca_bridge,static/description/icon.png"
+        sequence="40"
+    />
+
+</odoo>
