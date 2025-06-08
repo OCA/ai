@@ -1,0 +1,66 @@
+<odoo>
+    <record model="ir.ui.view" id="ai_agent_user">
+        <field name="name">ai_agent_user</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='signature']/.." position="after">
+                <group name="ai_agent" string="AI Agent" colspan="2">
+                    <field name="is_ai_agent" string="Is AI Agent" />
+                </group>
+                <group invisible="not is_ai_agent" colspan="2">
+                    <group name="base_configuration" colspan="1">
+                        <field name="agent_category_id" string="Agent Category" />
+                        <field name="api_type" string="API Type" />
+                        <field
+                            name="api_configuration_id"
+                            required="is_ai_agent"
+                            string="API Configuration"
+                        />
+                        <field name="api_endpoint" string="API endpoint" />
+                        <field name="auth_type" string="Authentication Type" />
+                        <field
+                            name="header_auth_token"
+                            string="Header Auth Token"
+                            password="True"
+                            invisible="auth_type != 'token'"
+                        />
+                        <field name="api_timeout" string="API Timeout (s)" />
+                        <field name="simulated_delay" />
+                        <field
+                            name="simulated_delay_min"
+                            string="Delay Min (s)"
+                            invisible="not simulated_delay"
+                        />
+                        <field
+                            name="simulated_delay_max"
+                            string="Delay Max (s)"
+                            invisible="not simulated_delay"
+                        />
+                    </group>
+                    <group name="api_type_configuration" colspan="1">
+                        <field
+                            name="custom_api_method"
+                            invisible="api_type != 'custom_api'"
+                        />
+                        <field
+                            name="custom_api_response_key"
+                            invisible="api_type != 'custom_api'"
+                            required="is_ai_agent"
+                        />
+                    </group>
+                </group>
+            </xpath>
+            <div class="oe_button_box" position="inside">
+                <button
+                    name="action_open_interactions"
+                    type="object"
+                    string="Interactions"
+                    icon="fa-comments"
+                >
+                    <field name="interactions_count" widget="statinfo" />
+                </button>
+            </div>
+        </field>
+    </record>
+</odoo>

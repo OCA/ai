@@ -1,0 +1,26 @@
+{
+    "name": "AI Bridge Disscuss Agent Base",
+    "version": "17.0.1.0.0",
+    "category": "AI",
+    "summary": "Base module for AI Agent integration on Discuss",
+    "author": "Binhex, Odoo Community Association (OCA)",
+    "depends": [
+        "mail",
+        "queue_job",
+    ],
+    "external_dependencies": {"python": ["requests", "json", "markdown", "re"]},
+    "website": "https://github.com/OCA/ai",
+    "data": [
+        "security/ir.model.access.csv",
+        "data/ir_module_category_data.xml",
+        "data/queue_job_channel_data.xml",
+        "data/queue_job_function_data.xml",
+        "data/cron_data.xml",
+        "views/res_users_views.xml",
+        "views/agent_views.xml",
+        "views/agent_menus.xml",
+    ],
+    "post_init_hook": "post_init_hook",
+    "installable": True,
+    "license": "AGPL-3",
+}
