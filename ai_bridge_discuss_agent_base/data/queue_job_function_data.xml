@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record id="job_function_agents_communication" model="queue.job.function">
+        <field name="model_id" ref="mail.model_discuss_channel" />
+        <field name="method">get_ai_agent_response_task</field>
+        <field name="channel_id" ref="channel_agents_communication" />
+    </record>
+    <record id="job_function_message_async_post" model="queue.job.function">
+        <field name="model_id" ref="mail.model_discuss_channel" />
+        <field name="method">post_message_async</field>
+        <field name="channel_id" ref="channel_agents_communication" />
+    </record>
+</odoo>

@@ -1,0 +1,112 @@
+<odoo>
+    <record model="ir.ui.view" id="ai_agent_category_form">
+        <field name="name">ai_agent_category_form</field>
+        <field name="model">agent.category</field>
+        <field name="arch" type="xml">
+            <form string="AI Agent Category">
+                <sheet>
+                    <group>
+                        <field name="name" />
+                        <field name="description" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_agent_api_parameter_tree">
+        <field name="name">agent.api.parameter.tree</field>
+        <field name="model">agent.api.parameter</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="parameter_type" />
+                <field name="name" />
+                <field name="value" />
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_agent_api_parameter_form">
+        <field name="name">agent.api.parameter.form</field>
+        <field name="model">agent.api.parameter</field>
+        <field name="arch" type="xml">
+            <form string="API Parameter">
+                <sheet>
+                    <group>
+                        <field name="parameter_type" />
+                        <field name="name" />
+                        <field name="value" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_agent_api_configuration_tree">
+        <field name="name">agent.api.configuration.tree</field>
+        <field name="model">agent.api.configuration</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="api_parameter_ids" widget="many2many_tags" />
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_agent_api_configuration_form">
+        <field name="name">agent.api.configuration.form</field>
+        <field name="model">agent.api.configuration</field>
+        <field name="arch" type="xml">
+            <form string="API Configuration">
+                <sheet>
+                    <group>
+                        <field name="name" />
+                    </group>
+                    <notebook>
+                        <page string="API Parameters" name="api_parameters">
+                            <field
+                                name="api_parameter_ids"
+                                widget="section_and_note_one2many"
+                                mode="tree"
+                            >
+                                <tree editable="bottom">
+                                    <control>
+                                        <create
+                                            name="add_product_control"
+                                            string="Add API Parameter"
+                                        />
+                                    </control>
+                                    <field name="parameter_type" />
+                                    <field name="name" />
+                                    <field name="value" />
+                                </tree>
+                                <form string="API Parameter">
+                                    <sheet>
+                                        <group>
+                                            <field name="parameter_type" />
+                                            <field name="name" />
+                                            <field name="value" />
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_agent_api_parameter">
+        <field name="name">Agent API Parameters</field>
+        <field name="res_model">agent.api.parameter</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="action_agent_api_configuration">
+        <field name="name">Agent API Configurations</field>
+        <field name="res_model">agent.api.configuration</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+</odoo>

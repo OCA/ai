@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_agent_category_user,access_agent_category_user,model_agent_category,base.group_user,1,0,0,0
+access_agent_category_system,access_agent_category_system,model_agent_category,base.group_system,1,1,1,1
+access_agent_api_parameter_system,access_agent_api_parameter_system,model_agent_api_parameter,base.group_system,1,1,1,1
+access_agent_api_configuration_system,access_agent_api_configuration_system,model_agent_api_configuration,base.group_system,1,1,1,1

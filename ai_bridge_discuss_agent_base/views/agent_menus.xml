@@ -1,0 +1,16 @@
+<odoo>
+    <menuitem
+        id="menu_agent_api_parameter"
+        name="Agent API Parameters"
+        parent="mail.mail_menu_technical"
+        action="action_agent_api_parameter"
+        sequence="10"
+    />
+    <menuitem
+        id="menu_agent_api_configuration"
+        name="Agent API Configurations"
+        parent="mail.mail_menu_technical"
+        action="action_agent_api_configuration"
+        sequence="10"
+    />
+</odoo>
