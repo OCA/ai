@@ -66,9 +66,10 @@ class TestBridge(TransactionCase):
         self.assertEqual(execution.res_id, self.partner.id)
         self.assertNotIn("name", execution.payload)
 
-    def test_bridge_none_auth_fields(self):
+    def test_bridge_none_auth_fields_record_v0(self):
         self.bridge.write(
             {
+                "payload_type": "record_v0",
                 "auth_type": "none",
                 "field_ids": [
                     (4, self.env.ref("base.field_res_partner__name").id),
@@ -100,6 +101,43 @@ class TestBridge(TransactionCase):
         self.assertEqual(execution.res_id, self.partner.id)
         self.assertIn("name", execution.payload)
         self.assertEqual(execution.payload["name"], self.partner.name)
+        self.assertEqual(1, self.bridge.execution_count)
+
+    def test_bridge_none_auth_fields_record(self):
+        self.bridge.write(
+            {
+                "payload_type": "record",
+                "auth_type": "none",
+                "field_ids": [
+                    (4, self.env.ref("base.field_res_partner__name").id),
+                    (4, self.env.ref("base.field_res_partner__create_date").id),
+                    (4, self.env.ref("base.field_res_partner__image_1920").id),
+                ],
+            }
+        )
+        self.assertTrue(self.partner.ai_bridge_info)
+        self.assertIn(
+            self.bridge.id, [bridge["id"] for bridge in self.partner.ai_bridge_info]
+        )
+        self.assertFalse(
+            self.env["ai.bridge.execution"].search(
+                [("ai_bridge_id", "=", self.bridge.id)]
+            )
+        )
+        with mock.patch("requests.post") as mock_post:
+            self.bridge.execute_ai_bridge(self.partner._name, self.partner.id)
+            mock_post.assert_called_once()
+        self.assertTrue(
+            self.env["ai.bridge.execution"].search(
+                [("ai_bridge_id", "=", self.bridge.id)]
+            )
+        )
+        execution = self.env["ai.bridge.execution"].search(
+            [("ai_bridge_id", "=", self.bridge.id)]
+        )
+        self.assertEqual(execution.res_id, self.partner.id)
+        self.assertIn("name", execution.payload["record"])
+        self.assertEqual(execution.payload["record"]["name"], self.partner.name)
         self.assertEqual(1, self.bridge.execution_count)
 
     def test_bridge_basic_auth(self):
@@ -231,3 +269,61 @@ class TestBridge(TransactionCase):
     def test_sample(self):
         self.assertTrue(self.bridge.sample_payload)
         self.assertIn("_id", self.bridge.sample_payload)
+
+    def test_bridge_result_message(self):
+        self.bridge.write({"result_type": "message"})
+        self.assertFalse(
+            self.env["ai.bridge.execution"].search(
+                [("ai_bridge_id", "=", self.bridge.id)]
+            )
+        )
+        message_count = self.env["mail.message"].search_count(
+            [("model", "=", self.partner._name), ("res_id", "=", self.partner.id)]
+        )
+        with mock.patch("requests.post") as mock_post:
+            mock_post.return_value = mock.Mock(
+                status_code=200, json=lambda: {"body": "My message"}
+            )
+            self.bridge.execute_ai_bridge(self.partner._name, self.partner.id)
+            mock_post.assert_called_once()
+        self.assertEqual(
+            self.env["mail.message"].search_count(
+                [("model", "=", self.partner._name), ("res_id", "=", self.partner.id)]
+            ),
+            message_count + 1,
+        )
+
+    def test_bridge_result_message_async(self):
+        self.bridge.write({"result_type": "message", "result_kind": "async"})
+        self.assertFalse(
+            self.env["ai.bridge.execution"].search(
+                [("ai_bridge_id", "=", self.bridge.id)]
+            )
+        )
+        message_count = self.env["mail.message"].search_count(
+            [("model", "=", self.partner._name), ("res_id", "=", self.partner.id)]
+        )
+        with mock.patch("requests.post") as mock_post:
+            mock_post.return_value = mock.Mock(
+                status_code=200, json=lambda: {"body": "My message"}
+            )
+            self.bridge.execute_ai_bridge(self.partner._name, self.partner.id)
+            mock_post.assert_called_once()
+        self.assertEqual(
+            self.env["mail.message"].search_count(
+                [("model", "=", self.partner._name), ("res_id", "=", self.partner.id)]
+            ),
+            message_count,
+        )
+        execution = self.env["ai.bridge.execution"].search(
+            [("ai_bridge_id", "=", self.bridge.id)]
+        )
+        self.assertTrue(execution.expiration_date)
+        execution._process_response({"body": "My message"})
+        self.assertEqual(
+            self.env["mail.message"].search_count(
+                [("model", "=", self.partner._name), ("res_id", "=", self.partner.id)]
+            ),
+            message_count + 1,
+        )
+        self.assertFalse(execution.expiration_date)
