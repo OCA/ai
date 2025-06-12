@@ -8,9 +8,11 @@
     "license": "AGPL-3",
     "author": "Dixmit,Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/ai",
+    "category": "AI",
     "development_status": "Beta",
     "depends": ["mail"],
     "data": [
+        "data/ir_module_category.xml",
         "security/ir.model.access.csv",
         "security/security.xml",
         "views/menu.xml",
@@ -29,5 +31,5 @@
             "ai_oca_bridge/static/tests/helpers/**/*.esm.js",
         ],
     },
-    "applications": True,
+    "application": True,
 }

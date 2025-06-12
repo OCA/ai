@@ -3,6 +3,8 @@
 
 from unittest import mock
 
+from werkzeug import urls
+
 from odoo.tests.common import HttpCase, tagged
 
 
@@ -38,6 +40,20 @@ class TestAsyncConnection(HttpCase):
             ]
         )
 
+    def test_wrong_key(self):
+        result = self.opener.post(f"{self.url}1234", json={"body": "Test response"})
+        self.assertEqual(
+            result.status_code, 404, "Should return 404 for wrong key in URL."
+        )
+
+    def test_wrong_id(self):
+        result = self.opener.post(
+            f"{self.base_url()}/ai/response/-1/TOKEN", json={"body": "Test response"}
+        )
+        self.assertEqual(
+            result.status_code, 404, "Should return 404 for wrong key in URL."
+        )
+
     def test_connection(self):
         self.assertTrue(
             self.env["ai.bridge.execution"].search(
@@ -65,4 +81,36 @@ class TestAsyncConnection(HttpCase):
                     ("expiration_date", "!=", False),
                 ]
             )
+        )
+        # Key is wrong, so no message should be created
+        result = self.opener.post(self.url, json={"body": "Test response"})
+        self.assertEqual(
+            result.status_code, 404, "Should return 404 for wrong key in URL."
+        )
+
+    def test_connection_expired(self):
+        self.assertTrue(
+            self.env["ai.bridge.execution"].search(
+                [
+                    ("ai_bridge_id", "=", self.bridge.id),
+                    ("expiration_date", "!=", False),
+                ]
+            )
+        )
+        execution = self.env["ai.bridge.execution"].search(
+            [
+                ("ai_bridge_id", "=", self.bridge.id),
+                ("expiration_date", "!=", False),
+            ]
+        )
+        execution.expiration_date = "2020-01-01 00:00:00"
+        token = execution._generate_token()
+        result = self.opener.post(
+            urls.url_join(
+                execution.get_base_url(), f"/ai/response/{execution.id}/{token}"
+            ),
+            json={"body": "Test response"},
+        )
+        self.assertEqual(
+            result.status_code, 404, "Should return 404 for expired execution."
         )

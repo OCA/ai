@@ -60,7 +60,7 @@ class AiBridgeExecution(models.Model):
         help="Expiration date for the async operation token.",
     )
 
-    @api.depends()
+    @api.depends("model_id", "res_id", "ai_bridge_id")
     def _compute_name(self):
         for record in self:
             model = record.sudo().model_id.name or "Unknown Model"
@@ -96,6 +96,19 @@ class AiBridgeExecution(models.Model):
             payload["_response_url"] = urls.url_join(
                 self.get_base_url(), f"/ai/response/{self.id}/{token}"
             )
+        IrParamSudo = self.env["ir.config_parameter"].sudo()
+        dbuuid = IrParamSudo.get_param("database.uuid")
+        db_create_date = IrParamSudo.get_param("database.create_date")
+        payload["_odoo"] = {
+            "db": dbuuid,
+            "db_name": self.env.cr.dbname,
+            "db_hash": tools.hmac(
+                self.env(su=True),
+                "database-hash",
+                (dbuuid, db_create_date, self.env.cr.dbname),
+            ),
+            "user_id": self.env.user.id,
+        }
         return payload
 
     def _execute(self, **kwargs):
@@ -119,7 +132,7 @@ class AiBridgeExecution(models.Model):
             self.state = "done"
             self.payload = payload
             if self.ai_bridge_id.result_kind == "immediate":
-                self._process_response(response.json())
+                return self._process_response(response.json())
         except Exception:
             self.state = "error"
             self.payload = payload
@@ -183,6 +196,16 @@ class AiBridgeExecution(models.Model):
 
     def _process_response_message(self, response):
         return {"id": self._get_channel().message_post(**response).id}
+
+    def _process_response_action(self, response):
+        if response.get("action"):
+            action = self.env["ir.actions.actions"]._for_xml_id(response["action"])
+            if response.get("context"):
+                action["context"] = response["context"]
+            if response.get("res_id"):
+                action["res_id"] = response["res_id"]
+            return {"action": action}
+        return {}
 
     def _get_channel(self):
         if self.model_id and self.res_id:
