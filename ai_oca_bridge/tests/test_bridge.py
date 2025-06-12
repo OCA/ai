@@ -1,6 +1,7 @@
 # Copyright 2025 Dixmit
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
+import json
 from unittest import mock
 
 from odoo.tests.common import TransactionCase
@@ -327,3 +328,40 @@ class TestBridge(TransactionCase):
             message_count + 1,
         )
         self.assertFalse(execution.expiration_date)
+
+    def test_bridge_result_action_immediate(self):
+        self.bridge.write({"result_type": "action", "result_kind": "immediate"})
+        self.assertFalse(
+            self.env["ai.bridge.execution"].search(
+                [("ai_bridge_id", "=", self.bridge.id)]
+            )
+        )
+        with mock.patch("requests.post") as mock_post:
+            mock_post.return_value = mock.Mock(
+                status_code=200,
+                json=lambda: {
+                    "action": "ai_oca_bridge.ai_bridge_act_window",
+                    "context": {"key": "value"},
+                },
+            )
+            result = self.bridge.execute_ai_bridge(self.partner._name, self.partner.id)
+            mock_post.assert_called_once()
+        self.assertIn("action", result)
+        self.assertEqual(
+            result["action"]["id"],
+            self.env.ref("ai_oca_bridge.ai_bridge_act_window").id,
+        )
+
+    def test_bridge_execute_computed_fields(self):
+        with mock.patch("requests.post") as mock_post:
+            mock_post.return_value = mock.Mock(
+                status_code=200, json=lambda: {"body": "My message"}
+            )
+            self.bridge.execute_ai_bridge(self.partner._name, self.partner.id)
+            mock_post.assert_called_once()
+        execution = self.env["ai.bridge.execution"].search(
+            [("ai_bridge_id", "=", self.bridge.id)]
+        )
+        self.assertEqual(
+            execution.payload["_id"], json.loads(execution.payload_txt)["_id"]
+        )
