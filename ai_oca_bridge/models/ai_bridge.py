@@ -50,8 +50,9 @@ class AiBridge(models.Model):
     )
     result_type = fields.Selection(
         [
-            ("none", "None"),
-            ("message", "message"),
+            ("none", "No processing"),
+            ("message", "Post a Message"),
+            ("action", "Action"),
         ],
         required=True,
         default="none",
@@ -60,9 +61,15 @@ class AiBridge(models.Model):
     result_kind = fields.Selection(
         [("immediate", "Immediate"), ("async", "Asynchronous")],
         default="immediate",
-        help="Defines how the result from the AI system is processed. "
-        "If 'Asynchronous', the result will be processed in the background "
-        "and communicated later from the AI system.",
+        help="""
+        Defines how the result from the AI system is processed.
+        - 'Immediate': The result is processed immediately after the AI system responds.
+        - 'Asynchronous': The result is processed in the background.
+          It allows longer operations.
+          Odoo will provide a URL to the AI system where the response will be sent.
+          Users will receive a notification when the operation is started.
+          No notification will be sent when it is finished.
+        """,
     )
     async_timeout = fields.Integer(
         default=300,
@@ -166,19 +173,25 @@ class AiBridge(models.Model):
             execution = self.env["ai.bridge.execution"].create(
                 {
                     "ai_bridge_id": self.id,
-                    "model_id": self.sudo().model_id.id,
+                    "model_id": self.sudo().env["ir.model"]._get_id(res_model),
                     "res_id": res_id,
                 }
             )
-            execution._execute()
+            result = execution._execute()
+            if result:
+                return result
             if execution.state == "done":
                 return {
-                    "body": _("%s executed successfully.", self.name),
-                    "args": {"type": "success", "title": _("AI Bridge Executed")},
+                    "notification": {
+                        "body": _("%s executed successfully.", self.name),
+                        "args": {"type": "success", "title": _("AI Bridge Executed")},
+                    }
                 }
             return {
-                "body": _("%s failed.", self.name),
-                "args": {"type": "danger", "title": _("AI Bridge Failed")},
+                "notification": {
+                    "body": _("%s failed.", self.name),
+                    "args": {"type": "danger", "title": _("AI Bridge Failed")},
+                }
             }
 
     def _enabled_for(self, record):
@@ -207,6 +220,8 @@ class AiBridge(models.Model):
             return {}
         if record is None and self.env.context.get("sample_payload"):
             record = self.env[self.model_id.model].search([], limit=1)
+            if not record:
+                return {}
         vals = {}
         if self.sudo().field_ids:
             vals = record.read(self.sudo().field_ids.mapped("name"))[0]
@@ -231,6 +246,8 @@ class AiBridge(models.Model):
             return {}
         if record is None and self.env.context.get("sample_payload"):
             record = self.env[self.model_id.model].search([], limit=1)
+            if not record:
+                return {}
         vals = {}
         if self.sudo().field_ids:
             vals = record.read(self.sudo().field_ids.mapped("name"))[0]

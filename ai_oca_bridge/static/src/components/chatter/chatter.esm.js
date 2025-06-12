@@ -12,15 +12,21 @@ registerPatch({
                     return;
                 }
             }
-            const notification = await this.env.services.orm.call(
+            const result = await this.env.services.orm.call(
                 "ai.bridge",
                 "execute_ai_bridge",
                 [[aiBridge.id], this.thread.model, this.thread.id]
             );
-            if (notification && this.env.services && this.env.services.notification) {
+            if (result.action && this.env.services && this.env.services.action) {
+                this.env.services.action.doAction(result.action);
+            } else if (
+                result.notification &&
+                this.env.services &&
+                this.env.services.notification
+            ) {
                 this.env.services.notification.add(
-                    notification.body,
-                    notification.args
+                    result.notification.body,
+                    result.notification.args
                 );
             }
         },
