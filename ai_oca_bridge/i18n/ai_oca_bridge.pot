@@ -14,6 +14,20 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: ai_oca_bridge
+#: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__result_kind
+msgid ""
+"\n"
+"        Defines how the result from the AI system is processed.\n"
+"        - 'Immediate': The result is processed immediately after the AI system responds.\n"
+"        - 'Asynchronous': The result is processed in the background.\n"
+"          It allows longer operations.\n"
+"          Odoo will provide a URL to the AI system where the response will be sent.\n"
+"          Users will receive a notification when the operation is started.\n"
+"          No notification will be sent when it is finished.\n"
+"        "
+msgstr ""
+
+#. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
 #, python-format
@@ -32,6 +46,11 @@ msgstr ""
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
 #, python-format
 msgid "%s is not active."
+msgstr ""
+
+#. module: ai_oca_bridge
+#: model:ir.module.category,name:ai_oca_bridge.module_category_ai
+msgid "AI"
 msgstr ""
 
 #. module: ai_oca_bridge
@@ -70,6 +89,11 @@ msgstr ""
 #. module: ai_oca_bridge
 #: model:ir.actions.act_window,name:ai_oca_bridge.ai_bridge_execution_act_window
 msgid "AI Execution"
+msgstr ""
+
+#. module: ai_oca_bridge
+#: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__result_type__action
+msgid "Action"
 msgstr ""
 
 #. module: ai_oca_bridge
@@ -139,6 +163,16 @@ msgid "Archived"
 msgstr ""
 
 #. module: ai_oca_bridge
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__async_timeout
+msgid "Async Timeout"
+msgstr ""
+
+#. module: ai_oca_bridge
+#: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__result_kind__async
+msgid "Asynchronous"
+msgstr ""
+
+#. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__message_attachment_count
 msgid "Attachment Count"
 msgstr ""
@@ -194,6 +228,11 @@ msgid ""
 msgstr ""
 
 #. module: ai_oca_bridge
+#: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__result_type
+msgid "Defines the type of result expected from the AI system."
+msgstr ""
+
+#. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__description
 msgid "Description"
 msgstr ""
@@ -239,6 +278,30 @@ msgstr ""
 #. module: ai_oca_bridge
 #: model_terms:ir.ui.view,arch_db:ai_oca_bridge.ai_bridge_execution_form_view
 msgid "Execution Details"
+msgstr ""
+
+#. module: ai_oca_bridge
+#. odoo-python
+#: code:addons/ai_oca_bridge/controllers/ai.py:0
+#, python-format
+msgid "Execution is expired."
+msgstr ""
+
+#. module: ai_oca_bridge
+#. odoo-python
+#: code:addons/ai_oca_bridge/controllers/ai.py:0
+#, python-format
+msgid "Execution not found."
+msgstr ""
+
+#. module: ai_oca_bridge
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__expiration_date
+msgid "Expiration Date"
+msgstr ""
+
+#. module: ai_oca_bridge
+#: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge_execution__expiration_date
+msgid "Expiration date for the async operation token."
 msgstr ""
 
 #. module: ai_oca_bridge
@@ -305,6 +368,11 @@ msgstr ""
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__message_has_error
 msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: ai_oca_bridge
+#: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__result_kind__immediate
+msgid "Immediate"
 msgstr ""
 
 #. module: ai_oca_bridge
@@ -383,6 +451,11 @@ msgid "Next Activity Type"
 msgstr ""
 
 #. module: ai_oca_bridge
+#: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__result_type__none
+msgid "No processing"
+msgstr ""
+
+#. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__auth_type__none
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__usage__none
 msgid "None"
@@ -420,6 +493,31 @@ msgid "Payload Txt"
 msgstr ""
 
 #. module: ai_oca_bridge
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__payload_type
+msgid "Payload Type"
+msgstr ""
+
+#. module: ai_oca_bridge
+#: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__result_type__message
+msgid "Post a Message"
+msgstr ""
+
+#. module: ai_oca_bridge
+#: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__payload_type__record
+msgid "Record"
+msgstr ""
+
+#. module: ai_oca_bridge
+#: model_terms:ir.ui.view,arch_db:ai_oca_bridge.ai_bridge_form_view
+msgid "Record Payload"
+msgstr ""
+
+#. module: ai_oca_bridge
+#: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__payload_type__record_v0
+msgid "Record v0"
+msgstr ""
+
+#. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__res_id
 msgid "Res"
 msgstr ""
@@ -437,6 +535,16 @@ msgstr ""
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__result
 msgid "Result"
+msgstr ""
+
+#. module: ai_oca_bridge
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__result_kind
+msgid "Result Kind"
+msgstr ""
+
+#. module: ai_oca_bridge
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__result_type
+msgid "Result Type"
 msgstr ""
 
 #. module: ai_oca_bridge
@@ -491,13 +599,32 @@ msgid "The type of authentication used to connect to the external AI system."
 msgstr ""
 
 #. module: ai_oca_bridge
+#: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__user_id
+msgid "The user that will be shown when executing this AI bridge."
+msgstr ""
+
+#. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__usage__thread
 msgid "Thread"
 msgstr ""
 
 #. module: ai_oca_bridge
+#: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__async_timeout
+msgid ""
+"Timeout in seconds for asynchronous operations. If the operation does not "
+"complete within this time, it will be considered failed."
+msgstr ""
+
+#. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__auth_type__token
 msgid "Token Authentication"
+msgstr ""
+
+#. module: ai_oca_bridge
+#. odoo-python
+#: code:addons/ai_oca_bridge/controllers/ai.py:0
+#, python-format
+msgid "Token is not allowed for this execution."
 msgstr ""
 
 #. module: ai_oca_bridge
@@ -520,6 +647,11 @@ msgstr ""
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__usage
 msgid "Usage"
+msgstr ""
+
+#. module: ai_oca_bridge
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__user_id
+msgid "User"
 msgstr ""
 
 #. module: ai_oca_bridge
