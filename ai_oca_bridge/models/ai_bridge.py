@@ -3,10 +3,13 @@
 
 import base64
 import json
+import logging
 from datetime import date, datetime
 
 from odoo import _, api, fields, models
 from odoo.tools.safe_eval import safe_eval
+
+_logger = logging.getLogger(__name__)
 
 
 class AiBridge(models.Model):
@@ -32,20 +35,46 @@ class AiBridge(models.Model):
     name = fields.Char(required=True, translate=True)
     active = fields.Boolean(default=True)
     description = fields.Html(translate=True)
-    model_id = fields.Many2one(
-        "ir.model",
-        string="Model",
-        domain=[("transient", "=", False)],
+    user_id = fields.Many2one(
+        "res.users",
+        default=lambda self: self.env.user,
+        help="The user that will be shown when executing this AI bridge.",
+    )
+    payload_type = fields.Selection(
+        [
+            ("record", "Record"),
+            ("record_v0", "Record v0"),  # Deprecated, use 'record' instead
+        ],
         required=True,
-        ondelete="cascade",
-        help="The model to which this bridge is associated.",
+        default="record",
     )
-    model = fields.Char(
-        related="model_id.model",
-        string="Model Name",
+    result_type = fields.Selection(
+        [
+            ("none", "No processing"),
+            ("message", "Post a Message"),
+            ("action", "Action"),
+        ],
+        required=True,
+        default="none",
+        help="Defines the type of result expected from the AI system.",
     )
-    domain = fields.Char(
-        string="Filter", compute="_compute_domain", readonly=False, store=True
+    result_kind = fields.Selection(
+        [("immediate", "Immediate"), ("async", "Asynchronous")],
+        default="immediate",
+        help="""
+        Defines how the result from the AI system is processed.
+        - 'Immediate': The result is processed immediately after the AI system responds.
+        - 'Asynchronous': The result is processed in the background.
+          It allows longer operations.
+          Odoo will provide a URL to the AI system where the response will be sent.
+          Users will receive a notification when the operation is started.
+          No notification will be sent when it is finished.
+        """,
+    )
+    async_timeout = fields.Integer(
+        default=300,
+        help="Timeout in seconds for asynchronous operations. "
+        "If the operation does not complete within this time, it will be considered failed.",
     )
     execution_ids = fields.One2many("ai.bridge.execution", "ai_bridge_id")
     execution_count = fields.Integer(
@@ -65,10 +94,23 @@ class AiBridge(models.Model):
         string="Authentication Type",
         help="The type of authentication used to connect to the external AI system.",
     )
+    auth_username = fields.Char(groups="base.group_system")
+    auth_password = fields.Char(groups="base.group_system")
+    auth_token = fields.Char(groups="base.group_system")
     group_ids = fields.Many2many(
         "res.groups",
         help="User groups allowed to use this AI bridge.",
     )
+    sample_payload = fields.Text(
+        help="Sample payload to be sent to the AI system. "
+        "This is used for testing and debugging purposes.",
+        compute="_compute_sample_payload",
+    )
+
+    #######################################
+    # Payload type 'record' specific fields
+    #######################################
+
     field_ids = fields.Many2many(
         "ir.model.fields",
         help="Fields to include in the AI bridge.",
@@ -76,13 +118,20 @@ class AiBridge(models.Model):
         store=True,
         readonly=False,
     )
-    auth_username = fields.Char(groups="base.group_system")
-    auth_password = fields.Char(groups="base.group_system")
-    auth_token = fields.Char(groups="base.group_system")
-    sample_payload = fields.Text(
-        help="Sample payload to be sent to the AI system. "
-        "This is used for testing and debugging purposes.",
-        compute="_compute_sample_payload",
+    model_id = fields.Many2one(
+        "ir.model",
+        string="Model",
+        domain=[("transient", "=", False)],
+        required=False,
+        ondelete="cascade",
+        help="The model to which this bridge is associated.",
+    )
+    model = fields.Char(
+        related="model_id.model",
+        string="Model Name",
+    )
+    domain = fields.Char(
+        string="Filter", compute="_compute_domain", readonly=False, store=True
     )
 
     @api.depends("model_id")
@@ -95,19 +144,12 @@ class AiBridge(models.Model):
         for record in self:
             record.field_ids = False
 
-    @api.depends("field_ids", "model_id")
+    @api.depends("field_ids", "model_id", "payload_type")
     def _compute_sample_payload(self):
         for record in self:
-            if not record.model_id:
-                record.sample_payload = json.dumps({})
-                continue
-            item = record.env[record.model_id.model].search([], limit=1)
-            if item:
-                record.sample_payload = json.dumps(
-                    record._prepare_payload(item), indent=4
-                )
-            else:
-                record.sample_payload = json.dumps({})
+            record.sample_payload = json.dumps(
+                record.with_context(sample_payload=True)._prepare_payload(), indent=4
+            )
 
     @api.depends("execution_ids")
     def _compute_execution_count(self):
@@ -131,19 +173,25 @@ class AiBridge(models.Model):
             execution = self.env["ai.bridge.execution"].create(
                 {
                     "ai_bridge_id": self.id,
-                    "model_id": self.sudo().model_id.id,
+                    "model_id": self.sudo().env["ir.model"]._get_id(res_model),
                     "res_id": res_id,
                 }
             )
-            execution._execute()
+            result = execution._execute()
+            if result:
+                return result
             if execution.state == "done":
                 return {
-                    "body": _("%s executed successfully.", self.name),
-                    "args": {"type": "success", "title": _("AI Bridge Executed")},
+                    "notification": {
+                        "body": _("%s executed successfully.", self.name),
+                        "args": {"type": "success", "title": _("AI Bridge Executed")},
+                    }
                 }
             return {
-                "body": _("%s failed.", self.name),
-                "args": {"type": "danger", "title": _("AI Bridge Failed")},
+                "notification": {
+                    "body": _("%s failed.", self.name),
+                    "args": {"type": "danger", "title": _("AI Bridge Failed")},
+                }
             }
 
     def _enabled_for(self, record):
@@ -156,9 +204,50 @@ class AiBridge(models.Model):
             return bool(record.filtered_domain(domain))
         return True
 
-    def _prepare_payload(self, record, **kwargs):
+    def _prepare_payload(self, **kwargs):
+        method = getattr(self, f"_prepare_payload_{self.payload_type}", None)
+        if not method:
+            raise ValueError(
+                f"Unsupported payload type: {self.payload_type}. "
+                "Please implement a method for this payload type."
+            )
+        return method(**kwargs)
+
+    def _prepare_payload_record(self, record=None, **kwargs):
         """Prepare the payload to be sent to the AI system."""
         self.ensure_one()
+        if not self.model_id:
+            return {}
+        if record is None and self.env.context.get("sample_payload"):
+            record = self.env[self.model_id.model].search([], limit=1)
+            if not record:
+                return {}
+        vals = {}
+        if self.sudo().field_ids:
+            vals = record.read(self.sudo().field_ids.mapped("name"))[0]
+        return json.loads(
+            json.dumps(
+                {
+                    "record": vals,
+                    "_model": record._name,
+                    "_id": record.id,
+                },
+                default=self.custom_serializer,
+            )
+        )
+
+    def _prepare_payload_record_v0(self, record=None, **kwargs):
+        """Prepare the payload to be sent to the AI system."""
+        _logger.warning(
+            "The 'record_v0' payload type is deprecated. " "Use 'record' instead."
+        )
+        self.ensure_one()
+        if not self.model_id:
+            return {}
+        if record is None and self.env.context.get("sample_payload"):
+            record = self.env[self.model_id.model].search([], limit=1)
+            if not record:
+                return {}
         vals = {}
         if self.sudo().field_ids:
             vals = record.read(self.sudo().field_ids.mapped("name"))[0]
