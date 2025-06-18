@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-06-11 09:26+0000\n"
+"PO-Revision-Date: 2025-06-18 10:25+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -31,6 +31,16 @@ msgid ""
 "          No notification will be sent when it is finished.\n"
 "        "
 msgstr ""
+"\n"
+"        Definisce come il risultato dal sistema IA è elaborato.\n"
+"        - 'Immediato': il risultato è elaborato immediatamente dopo la "
+"risposta della IA.\n"
+"        - 'Asincrono': il risultato è elaborato in background.\n"
+"          Consente operazioni più lunghe.\n"
+"          Odoo fornirà un URL al sistema IA dove la risposta verrà inviata.\n"
+"          Gli utenti riceveranno una notifica quando si avvia l'operazione.\n"
+"          Non verrà inviata una notifica alla conclusione.\n"
+"        "
 
 #. module: ai_oca_bridge
 #. odoo-python
@@ -56,50 +66,50 @@ msgstr "%s non è attivo."
 #. module: ai_oca_bridge
 #: model:ir.module.category,name:ai_oca_bridge.module_category_ai
 msgid "AI"
-msgstr ""
+msgstr "IA"
 
 #. module: ai_oca_bridge
 #: model:ir.actions.act_window,name:ai_oca_bridge.ai_bridge_act_window
 #: model:ir.ui.menu,name:ai_oca_bridge.ai_bridge_menu
 #: model:ir.ui.menu,name:ai_oca_bridge.ai_bridge_root_menu
 msgid "AI Bridge"
-msgstr "Collegamento AI"
+msgstr "Collegamento IA"
 
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
 #, python-format
 msgid "AI Bridge Executed"
-msgstr "Collegamento AI eseguito"
+msgstr "Collegamento IA eseguito"
 
 #. module: ai_oca_bridge
 #: model:ir.ui.menu,name:ai_oca_bridge.ai_bridge_execution_menu
 msgid "AI Bridge Execution"
-msgstr "Esecuzione collegamento AI"
+msgstr "Esecuzione collegamento IA"
 
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
 #, python-format
 msgid "AI Bridge Failed"
-msgstr "Collegamento AI fallito"
+msgstr "Collegamento IA fallito"
 
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
 #, python-format
 msgid "AI Bridge Inactive"
-msgstr "Collegamento AI inattivo"
+msgstr "Collegamento IA inattivo"
 
 #. module: ai_oca_bridge
 #: model:ir.actions.act_window,name:ai_oca_bridge.ai_bridge_execution_act_window
 msgid "AI Execution"
-msgstr "Esecuzione AI"
+msgstr "Esecuzione IA"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__result_type__action
 msgid "Action"
-msgstr ""
+msgstr "Azione"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__message_needaction
@@ -135,12 +145,12 @@ msgstr "Icona tipo attività"
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__ai_bridge_id
 msgid "Ai Bridge"
-msgstr "Collegamento AI"
+msgstr "Collegamento IA"
 
 #. module: ai_oca_bridge
 #: model:ir.model,name:ai_oca_bridge.model_ai_bridge
 msgid "Ai Bridge Configuration"
-msgstr "Configurazione collegamento AI"
+msgstr "Configurazione collegamento IA"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__ai_bridge_info
@@ -154,12 +164,12 @@ msgstr "Configurazione collegamento AI"
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_res_partner__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_res_users__ai_bridge_info
 msgid "Ai Bridge Info"
-msgstr "Informazioni collegamento AI"
+msgstr "Informazioni collegamento IA"
 
 #. module: ai_oca_bridge
 #: model:ir.model,name:ai_oca_bridge.model_ai_bridge_execution
 msgid "Ai Execution"
-msgstr "Esecuzione AI"
+msgstr "Esecuzione IA"
 
 #. module: ai_oca_bridge
 #: model_terms:ir.ui.view,arch_db:ai_oca_bridge.ai_bridge_form_view
@@ -170,12 +180,12 @@ msgstr "In archivio"
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__async_timeout
 msgid "Async Timeout"
-msgstr ""
+msgstr "Timeout asincrono"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__result_kind__async
 msgid "Asynchronous"
-msgstr ""
+msgstr "Asincrono"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__message_attachment_count
@@ -237,7 +247,7 @@ msgstr ""
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__result_type
 msgid "Defines the type of result expected from the AI system."
-msgstr ""
+msgstr "Definisce il tipo di risultato che ci si aspetta dal sistema IA."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__description
@@ -292,24 +302,24 @@ msgstr "Dettagli esecuzione"
 #: code:addons/ai_oca_bridge/controllers/ai.py:0
 #, python-format
 msgid "Execution is expired."
-msgstr ""
+msgstr "L'esecuzione è scaduta."
 
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/controllers/ai.py:0
 #, python-format
 msgid "Execution not found."
-msgstr ""
+msgstr "Esecuzione non trovata."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__expiration_date
 msgid "Expiration Date"
-msgstr ""
+msgstr "Data di scadenza"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge_execution__expiration_date
 msgid "Expiration date for the async operation token."
-msgstr ""
+msgstr "Data scadenza per il token operazione asincrono."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__field_ids
@@ -319,7 +329,7 @@ msgstr "Campo"
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__field_ids
 msgid "Fields to include in the AI bridge."
-msgstr "Campi da includere nel collegamento AI."
+msgstr "Campi da includere nel collegamento IA."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__domain
@@ -380,7 +390,7 @@ msgstr "Se selezionata, alcuni messaggi hanno un errore di consegna."
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__result_kind__immediate
 msgid "Immediate"
-msgstr ""
+msgstr "Immediato"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__message_is_follower
@@ -460,7 +470,7 @@ msgstr "Tipo prossima attività"
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__result_type__none
 msgid "No processing"
-msgstr ""
+msgstr "Nessuna elaborazione"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__auth_type__none
@@ -502,27 +512,27 @@ msgstr "Testo del carico"
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__payload_type
 msgid "Payload Type"
-msgstr ""
+msgstr "Tipo carico"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__result_type__message
 msgid "Post a Message"
-msgstr ""
+msgstr "Invia un messaggio"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__payload_type__record
 msgid "Record"
-msgstr ""
+msgstr "Record"
 
 #. module: ai_oca_bridge
 #: model_terms:ir.ui.view,arch_db:ai_oca_bridge.ai_bridge_form_view
 msgid "Record Payload"
-msgstr ""
+msgstr "Record carico"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__payload_type__record_v0
 msgid "Record v0"
-msgstr ""
+msgstr "Record v0"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__res_id
@@ -547,12 +557,12 @@ msgstr "Risultato"
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__result_kind
 msgid "Result Kind"
-msgstr ""
+msgstr "Genere risultato"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__result_type
 msgid "Result Type"
-msgstr ""
+msgstr "Tipo risultato"
 
 #. module: ai_oca_bridge
 #: model_terms:ir.ui.view,arch_db:ai_oca_bridge.ai_bridge_form_view
@@ -599,7 +609,7 @@ msgstr ""
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__url
 msgid "The URL of the external AI system to which this bridge connects."
-msgstr "L'URL del sistema AI esterno a cui questo collegamento fa riferimento."
+msgstr "L'URL del sistema IA esterno a cui questo collegamento fa riferimento."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__model_id
@@ -610,12 +620,12 @@ msgstr "Modello a cui è associato questo collegamento."
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__auth_type
 msgid "The type of authentication used to connect to the external AI system."
 msgstr ""
-"Il tipo di autenticazione utilizzato per connettere il sistema di AI esterno."
+"Il tipo di autenticazione utilizzato per connettere il sistema di IA esterno."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__user_id
 msgid "The user that will be shown when executing this AI bridge."
-msgstr ""
+msgstr "Utente da visualizzare quando si esegue questo collegamento IA."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__usage__thread
@@ -628,6 +638,8 @@ msgid ""
 "Timeout in seconds for asynchronous operations. If the operation does not "
 "complete within this time, it will be considered failed."
 msgstr ""
+"Timeout in secondi per operazioni asincrone. Se l'operazione non si completa "
+"entro questo tempo, verrà considerata fallita."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__auth_type__token
@@ -639,7 +651,7 @@ msgstr "Autenticazione token"
 #: code:addons/ai_oca_bridge/controllers/ai.py:0
 #, python-format
 msgid "Token is not allowed for this execution."
-msgstr ""
+msgstr "Il token non è autorizzato per questa esecuzione."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__activity_exception_decoration
@@ -666,9 +678,9 @@ msgstr "Uilizzo"
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__user_id
 msgid "User"
-msgstr ""
+msgstr "Utente"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__group_ids
 msgid "User groups allowed to use this AI bridge."
-msgstr "Gruppi utente autorizzati ad usare questo collegamento AI."
+msgstr "Gruppi utente autorizzati ad usare questo collegamento IA."
