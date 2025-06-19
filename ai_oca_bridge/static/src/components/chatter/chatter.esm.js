@@ -6,11 +6,9 @@ registerPatch({
     name: "Chatter",
     recordMethods: {
         async onClickAiBridge(aiBridge) {
-            if (this.isTemporary) {
-                const saved = await this.doSaveRecord();
-                if (!saved) {
-                    return;
-                }
+            const saved = await this.doSaveRecord();
+            if (!saved) {
+                return;
             }
             const result = await this.env.services.orm.call(
                 "ai.bridge",
