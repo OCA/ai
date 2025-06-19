@@ -21,7 +21,7 @@ Available addons
 ----------------
 addon | version | maintainers | summary
 --- | --- | --- | ---
-[ai_oca_bridge](ai_oca_bridge/) | 16.0.2.0.0 |  | Makes a basic configuration to be used as bridge with external AI systems
+[ai_oca_bridge](ai_oca_bridge/) | 16.0.2.0.1 |  | Makes a basic configuration to be used as bridge with external AI systems
 
 [//]: # (end addons)
 
