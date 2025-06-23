@@ -205,62 +205,56 @@ class AiBridge(models.Model):
         return True
 
     def _prepare_payload(self, **kwargs):
+        base_payload = {}
         method = getattr(self, f"_prepare_payload_{self.payload_type}", None)
         if not method:
             raise ValueError(
                 f"Unsupported payload type: {self.payload_type}. "
                 "Please implement a method for this payload type."
             )
-        return method(**kwargs)
+        return method(base_payload=base_payload, **kwargs)
 
-    def _prepare_payload_record(self, record=None, **kwargs):
+    def _prepare_payload_record(self, base_payload=None, record=None, **kwargs):
         """Prepare the payload to be sent to the AI system."""
         self.ensure_one()
+        payload = base_payload.copy() if base_payload else {}
         if not self.model_id:
-            return {}
+            return payload
         if record is None and self.env.context.get("sample_payload"):
             record = self.env[self.model_id.model].search([], limit=1)
             if not record:
-                return {}
+                return payload
         vals = {}
         if self.sudo().field_ids:
             vals = record.read(self.sudo().field_ids.mapped("name"))[0]
-        return json.loads(
-            json.dumps(
-                {
-                    "record": vals,
-                    "_model": record._name,
-                    "_id": record.id,
-                },
-                default=self.custom_serializer,
-            )
-        )
+        payload["record"] = vals
+        payload["_model"] = record._name
+        payload["_id"] = record.id
+        return json.loads(json.dumps(payload, default=self.custom_serializer))
 
-    def _prepare_payload_record_v0(self, record=None, **kwargs):
-        """Prepare the payload to be sent to the AI system."""
+    def _prepare_payload_record_v0(self, base_payload=None, record=None, **kwargs):
+        """Prepare the payload to be sent to the AI system (deprecated version)."""
         _logger.warning(
-            "The 'record_v0' payload type is deprecated. " "Use 'record' instead."
+            "The 'record_v0' payload type is deprecated. Use 'record' instead."
         )
         self.ensure_one()
+        payload = base_payload.copy() if base_payload else {}
         if not self.model_id:
-            return {}
+            return payload
+
         if record is None and self.env.context.get("sample_payload"):
             record = self.env[self.model_id.model].search([], limit=1)
             if not record:
-                return {}
+                return payload
+
         vals = {}
         if self.sudo().field_ids:
             vals = record.read(self.sudo().field_ids.mapped("name"))[0]
-        return json.loads(
-            json.dumps(
-                {
-                    **vals,
-                    "_model": record._name,
-                    "_id": record.id,
-                },
-                default=self.custom_serializer,
-            )
-        )
+        payload.update(vals)
+        payload["_model"] = record._name
+        payload["_id"] = record.id
+
+        return json.loads(json.dumps(payload, default=self.custom_serializer))
 
     def custom_serializer(self, obj):
         if isinstance(obj, datetime) or isinstance(obj, date):
