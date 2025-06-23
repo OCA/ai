@@ -30,9 +30,12 @@
                             />
                             <field name="result_type" />
                             <field
-                                name="company_id"
-                                groups="base.group_multi_company"
+                                name="model_id"
+                                options="{'no_create': True, 'no_create_edit': True}"
+                                domain="[('ai_usage', '=', usage)]"
+                                attrs="{'required': [('model_required', '=', 'True')]}"
                             />
+                            <field name="model_required" invisible="1" />
                             <field name="description" />
                         </group>
                         <group>
@@ -63,11 +66,6 @@
                         >
                             <group>
                                 <field name="group_ids" widget="many2many_tags" />
-                                <field
-                                    name="model_id"
-                                    options="{'no_create': True, 'no_create_edit': True}"
-                                    attrs="{'required': [('payload_type', 'in', ['record', 'record_v0'])]}"
-                                />
                                 <field name="model" invisible="1" />
                                 <field
                                     name="field_ids"

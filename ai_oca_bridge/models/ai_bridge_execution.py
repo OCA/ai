@@ -116,7 +116,12 @@ class AiBridgeExecution(models.Model):
         record = None
         if self.res_id and self.model_id:
             record = self.env[self.sudo().model_id.model].browse(self.res_id)
-        payload = self.ai_bridge_id._prepare_payload(record=record, **kwargs)
+        payload = self.ai_bridge_id._prepare_payload(
+            record=record,
+            res_id=self.res_id,
+            model=self.sudo().model_id.model,
+            **kwargs,
+        )
         payload = self._add_extra_payload_fields(payload)
         try:
             response = requests.post(
