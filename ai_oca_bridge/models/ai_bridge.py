@@ -27,7 +27,13 @@ class AiBridge(models.Model):
         # We leave it empty to allow multiple companies to use the same bridge.
     )
     usage = fields.Selection(
-        [("none", "None"), ("thread", "Thread")],
+        [
+            ("none", "None"),
+            ("thread", "Thread"),
+            ("ai_thread_create", "AI Thread Create"),
+            ("ai_thread_write", "AI Thread Write"),
+            ("ai_thread_unlink", "AI Thread Unlink"),
+        ],
         default="none",
         help="Defines how this bridge is used. "
         "If 'Thread', it will be used in the mail thread context.",
@@ -42,10 +48,14 @@ class AiBridge(models.Model):
     )
     payload_type = fields.Selection(
         [
+            ("none", "No payload"),
             ("record", "Record"),
             ("record_v0", "Record v0"),  # Deprecated, use 'record' instead
         ],
         required=True,
+        store=True,
+        readonly=False,
+        compute="_compute_payload_type",
         default="record",
     )
     result_type = fields.Selection(
@@ -106,6 +116,14 @@ class AiBridge(models.Model):
         "This is used for testing and debugging purposes.",
         compute="_compute_sample_payload",
     )
+    model_id = fields.Many2one(
+        "ir.model",
+        string="Model",
+        required=False,
+        ondelete="cascade",
+        help="The model to which this bridge is associated.",
+    )
+    model_required = fields.Boolean(compute="_compute_model_fields")
 
     #######################################
     # Payload type 'record' specific fields
@@ -118,14 +136,6 @@ class AiBridge(models.Model):
         store=True,
         readonly=False,
     )
-    model_id = fields.Many2one(
-        "ir.model",
-        string="Model",
-        domain=[("transient", "=", False)],
-        required=False,
-        ondelete="cascade",
-        help="The model to which this bridge is associated.",
-    )
     model = fields.Char(
         related="model_id.model",
         string="Model Name",
@@ -133,6 +143,41 @@ class AiBridge(models.Model):
     domain = fields.Char(
         string="Filter", compute="_compute_domain", readonly=False, store=True
     )
+
+    @api.onchange("usage")
+    def _compute_payload_type(self):
+        for record in self:
+            if record.usage == "ai_thread_unlink":
+                record.payload_type = "none"
+
+    @api.constrains("usage", "payload_type")
+    def _check_payload_type_usage_compatibility(self):
+        for record in self:
+            if record.usage == "ai_thread_unlink" and record.payload_type != "none":
+                raise models.ValidationError(
+                    _(
+                        "When usage is 'AI Thread Unlink', "
+                        "the Payload Type must be 'No payload'."
+                    )
+                )
+
+    @api.depends("usage")
+    def _compute_model_fields(self):
+        for record in self:
+            record.update(record._get_model_fields())
+
+    def _get_model_fields(self):
+        if self.usage == "thread":
+            return {
+                "model_required": True,
+            }
+        if self.usage in ["ai_thread_create", "ai_thread_write", "ai_thread_unlink"]:
+            return {
+                "model_required": True,
+            }
+        return {
+            "model_required": False,
+        }
 
     @api.depends("model_id")
     def _compute_domain(self):
@@ -212,6 +257,12 @@ class AiBridge(models.Model):
                 "Please implement a method for this payload type."
             )
         return method(**kwargs)
+
+    def _prepare_payload_none(self, res_model=False, res_id=False, **kwargs):
+        return {
+            "_model": res_model,
+            "_id": res_id,
+        }
 
     def _prepare_payload_record(self, record=None, **kwargs):
         """Prepare the payload to be sent to the AI system."""
