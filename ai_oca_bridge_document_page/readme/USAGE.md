@@ -1,0 +1,3 @@
+Depending on the bridges you have created, create, update or delete a Document Page mathing the bridge domain. You should see the execution on the AI Bridge Execution menu.
+
+For testing the endpoint side, you can download [this n8n workflow JSON](../static/description/RagCapabilitiesWithOdooKnowledge.json), capable of inserting information on the database. Keep in mind that for this to work at least `content`, `display_name` and `draft_name` fields should be included on the list of fields
