@@ -102,9 +102,29 @@ msgid "AI Bridge Inactive"
 msgstr "Collegamento IA inattivo"
 
 #. module: ai_oca_bridge
+#: model:ir.model,name:ai_oca_bridge.model_ai_bridge_thread
+msgid "AI Bridge Mixin"
+msgstr ""
+
+#. module: ai_oca_bridge
 #: model:ir.actions.act_window,name:ai_oca_bridge.ai_bridge_execution_act_window
 msgid "AI Execution"
 msgstr "Esecuzione IA"
+
+#. module: ai_oca_bridge
+#: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__usage__ai_thread_create
+msgid "AI Thread Create"
+msgstr ""
+
+#. module: ai_oca_bridge
+#: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__usage__ai_thread_unlink
+msgid "AI Thread Unlink"
+msgstr ""
+
+#. module: ai_oca_bridge
+#: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__usage__ai_thread_write
+msgid "AI Thread Write"
+msgstr ""
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__result_type__action
@@ -170,6 +190,11 @@ msgstr "Informazioni collegamento IA"
 #: model:ir.model,name:ai_oca_bridge.model_ai_bridge_execution
 msgid "Ai Execution"
 msgstr "Esecuzione IA"
+
+#. module: ai_oca_bridge
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_ir_model__ai_usage
+msgid "Ai Usage"
+msgstr ""
 
 #. module: ai_oca_bridge
 #: model_terms:ir.ui.view,arch_db:ai_oca_bridge.ai_bridge_form_view
@@ -393,6 +418,11 @@ msgid "Immediate"
 msgstr "Immediato"
 
 #. module: ai_oca_bridge
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_ir_model__is_ai_bridge_thread
+msgid "Is Ai Bridge Thread"
+msgstr ""
+
+#. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__message_is_follower
 msgid "Is Follower"
 msgstr "Segue"
@@ -442,6 +472,16 @@ msgid "Model Name"
 msgstr "Nome modello"
 
 #. module: ai_oca_bridge
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__model_required
+msgid "Model Required"
+msgstr ""
+
+#. module: ai_oca_bridge
+#: model:ir.model,name:ai_oca_bridge.model_ir_model
+msgid "Models"
+msgstr ""
+
+#. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__my_activity_date_deadline
 msgid "My Activity Deadline"
 msgstr "Scadenza mia attività"
@@ -466,6 +506,11 @@ msgstr "Riepilogo prossima attività"
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__activity_type_id
 msgid "Next Activity Type"
 msgstr "Tipo prossima attività"
+
+#. module: ai_oca_bridge
+#: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__payload_type__none
+msgid "No payload"
+msgstr ""
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__result_type__none
@@ -684,3 +729,11 @@ msgstr "Utente"
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__group_ids
 msgid "User groups allowed to use this AI bridge."
 msgstr "Gruppi utente autorizzati ad usare questo collegamento IA."
+
+#. module: ai_oca_bridge
+#. odoo-python
+#: code:addons/ai_oca_bridge/models/ai_bridge.py:0
+#, python-format
+msgid ""
+"When usage is 'AI Thread Unlink', the Payload Type must be 'No payload'."
+msgstr ""
