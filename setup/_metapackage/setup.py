@@ -9,6 +9,7 @@ setuptools.setup(
     version=version,
     install_requires=[
         'odoo-addon-ai_oca_bridge>=16.0dev,<16.1dev',
+        'odoo-addon-ai_oca_bridge_chatter>=16.0dev,<16.1dev',
     ],
     classifiers=[
         'Programming Language :: Python',
