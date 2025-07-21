@@ -1,4 +1,4 @@
-
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <record id="view_users_form_vapi_api_key" model="ir.ui.view">
         <field name="name">res.users.form.vapi.api.key</field>

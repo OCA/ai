@@ -1,12 +1,12 @@
 $(document).ready(function () {
 
     function toOdooDatetime(dateObj) {
-        const pad = n => n < 10 ? '0' + n : n;
-        return dateObj.getFullYear() + '-' +
-            pad(dateObj.getMonth() + 1) + '-' +
-            pad(dateObj.getDate()) + ' ' +
-            pad(dateObj.getHours()) + ':' +
-            pad(dateObj.getMinutes()) + ':' +
+        const pad = n => n < 10 ? "0" + n : n;
+        return dateObj.getFullYear() + "-" +
+            pad(dateObj.getMonth() + 1) + "-" +
+            pad(dateObj.getDate()) + " " +
+            pad(dateObj.getHours()) + ":" +
+            pad(dateObj.getMinutes()) + ":" +
             pad(dateObj.getSeconds());
     }
 
@@ -14,9 +14,9 @@ $(document).ready(function () {
     function showVapiWidget() {
 
         $.ajax({
-            url: '/polpo_vapi_integration/widget_config',
-            method: 'POST',
-            contentType: 'application/json',
+            url: "/polpo_vapi_integration/widget_config",
+            method: "POST",
+            contentType: "application/json",
             data: JSON.stringify({}),
             success: function (res) {
                 var config = res.result;
@@ -52,17 +52,17 @@ $(document).ready(function () {
                     let logId = null;
                     let statusUpdated = false;
 
-                    instance.on('call-start', () => {
+                    instance.on("call-start", () => {
                         callStartTime = new Date();
 
-                        const callId = 'call_' + Date.now();
-                        fetch('/web/dataset/call_kw/vapi.log/create', {
-                            method: 'POST',
+                        const callId = "call_" + Date.now();
+                        fetch("/web/dataset/call_kw/vapi.log/create", {
+                            method: "POST",
                             headers: {
-                                'Content-Type': 'application/json',
-                                'X-Requested-With': 'XMLHttpRequest'
+                                "Content-Type": "application/json",
+                                "X-Requested-With": "XMLHttpRequest"
                             },
-                            credentials: 'include',
+                            credentials: "include",
                             body: JSON.stringify({
                                 jsonrpc: "2.0",
                                 method: "call",
@@ -87,22 +87,22 @@ $(document).ready(function () {
                         .catch(error => console.error("Error:", error));
                     });
 
-                    instance.on('message', function(message) {
+                    instance.on("message", function(message) {
 
                         if (
-                            message.type === 'transcript' &&
-                            message.role === 'user' &&
-                            message.transcriptType === 'final'
+                            message.type === "transcript" &&
+                            message.role === "user" &&
+                            message.transcriptType === "final"
                         ) {
                             if (logId && !statusUpdated) {
                                 statusUpdated = true;
-                                fetch('/web/dataset/call_kw/vapi.log/write', {
-                                    method: 'POST',
+                                fetch("/web/dataset/call_kw/vapi.log/write", {
+                                    method: "POST",
                                     headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-Requested-With': 'XMLHttpRequest'
+                                        "Content-Type": "application/json",
+                                        "X-Requested-With": "XMLHttpRequest"
                                     },
-                                    credentials: 'include',
+                                    credentials: "include",
                                     body: JSON.stringify({
                                         jsonrpc: "2.0",
                                         method: "call",
@@ -128,13 +128,13 @@ $(document).ready(function () {
                                 .catch(error => console.error("Error:", error));
                             } else if (logId) {
 
-                                fetch('/web/dataset/call_kw/vapi.log/write', {
-                                    method: 'POST',
+                                fetch("/web/dataset/call_kw/vapi.log/write", {
+                                    method: "POST",
                                     headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-Requested-With': 'XMLHttpRequest'
+                                        "Content-Type": "application/json",
+                                        "X-Requested-With": "XMLHttpRequest"
                                     },
-                                    credentials: 'include',
+                                    credentials: "include",
                                     body: JSON.stringify({
                                         jsonrpc: "2.0",
                                         method: "call",
@@ -161,19 +161,19 @@ $(document).ready(function () {
                         }
                     });
 
-                    instance.on('call-end', () => {
+                    instance.on("call-end", () => {
                         callEndTime = new Date();
 
                         if (callStartTime) {
                             const duration = Math.floor((callEndTime - callStartTime) / 1000);
 
-                            fetch('/web/dataset/call_kw/vapi.log/write', {
-                                method: 'POST',
+                            fetch("/web/dataset/call_kw/vapi.log/write", {
+                                method: "POST",
                                 headers: {
-                                    'Content-Type': 'application/json',
-                                    'X-Requested-With': 'XMLHttpRequest'
+                                    "Content-Type": "application/json",
+                                    "X-Requested-With": "XMLHttpRequest"
                                 },
-                                credentials: 'include',
+                                credentials: "include",
                                 body: JSON.stringify({
                                     jsonrpc: "2.0",
                                     method: "call",

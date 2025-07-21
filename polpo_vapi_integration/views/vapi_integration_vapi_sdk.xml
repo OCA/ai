@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <template id="vapi_integration_vapi_sdk" inherit_id="web.layout">
         <xpath expr="//head" position="inside">
