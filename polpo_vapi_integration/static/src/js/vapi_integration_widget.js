@@ -1,7 +1,7 @@
 $(document).ready(function () {
+    "use strict";
 
     function toOdooDatetime(dateObj) {
-        "use strict";
         const pad = n => n < 10 ? "0" + n : n;
         return dateObj.getFullYear() + "-" +
             pad(dateObj.getMonth() + 1) + "-" +
@@ -13,7 +13,6 @@ $(document).ready(function () {
 
 
     function showVapiWidget() {
-        "use strict";
 
         $.ajax({
             url: "/polpo_vapi_integration/widget_config",
@@ -127,9 +126,7 @@ $(document).ready(function () {
                                     })
                                 })
                                 .then(response => response.json())
-                                .then(data => {
-                                    // Nothing to do here, just logging the response
-                                })
+                                .then(() => { /* no action needed */ })
                                 .catch(error => console.error("Error:", error));
                             } else if (logId) {
 
@@ -158,7 +155,7 @@ $(document).ready(function () {
                                     })
                                 })
                                 .then(response => response.json())
-                                .then(_ => { /* no action needed */ })
+                                .then(() => { /* no action needed */ })
                                 .catch(error => console.error("Error:", error));
                             }
                         }
@@ -197,7 +194,7 @@ $(document).ready(function () {
                                 })
                             })
                             .then(response => response.json())
-                            .then(_ => { /* no action needed */ })
+                            .then(() => { /* no action needed */ })
                             .catch(error => console.error("Error:", error));
 
                         }
