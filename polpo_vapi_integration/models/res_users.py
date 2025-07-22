@@ -8,7 +8,8 @@ class ResUsers(models.Model):
     vapi_api_key = fields.Char("User Vapi API Key", copy=False, index=True)
 
     _sql_constraints = [
-        ("vapi_api_key_unique", "unique(vapi_api_key)", _("User Vapi API Key must be unique for each user.")),
+        ("vapi_api_key_unique", "unique(vapi_api_key)",
+         _("User Vapi API Key must be unique for each user.")),
     ]
 
     @api.constrains("vapi_api_key")
@@ -20,4 +21,5 @@ class ResUsers(models.Model):
                     ("id", "!=", user.id)
                 ])
                 if users:
-                    raise ValidationError(_("User Vapi API Key must be unique for each user."))
+                    raise ValidationError(
+                        _("User Vapi API Key must be unique for each user."))
