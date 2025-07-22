@@ -3,12 +3,16 @@
     <record id="res_config_settings_view_form_inherit_vapi" model="ir.ui.view">
         <field name="name">res.config.settings.view.form.inherit.vapi</field>
         <field name="model">res.config.settings</field>
-        <field name="priority" eval="30"/>
-        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="priority" eval="30" />
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('settings')]" position="inside">
-                <div class="app_settings_block" data-string="Vapi Parameters" string="Vapi Integration"
-                     data-key="vapi_config">
+                <div
+                    class="app_settings_block"
+                    data-string="Vapi Parameters"
+                    string="Vapi Integration"
+                    data-key="vapi_config"
+                >
                     <h2>Parámetros Vapi</h2>
                     <div class="row mt16 o_settings_container">
                         <div class="col-12 col-lg-6 o_setting_box">
@@ -20,7 +24,7 @@
                                     From your Vapi.ai account, you can find your API key in the settings section.
                                 </div>
                                 <div class="text-muted content-group">
-                                    <field name="vapi_api_key" class="w-100"/>
+                                    <field name="vapi_api_key" class="w-100" />
                                 </div>
                             </div>
                         </div>
@@ -35,7 +39,7 @@
                                     Assistant ID is a unique identifier for your Vapi assistant.
                                 </div>
                                 <div class="text-muted content-group">
-                                    <field name="vapi_assistant_id" class="w-100"/>
+                                    <field name="vapi_assistant_id" class="w-100" />
                                 </div>
                             </div>
                         </div>

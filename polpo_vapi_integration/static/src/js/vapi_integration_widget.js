@@ -2,30 +2,33 @@ $(document).ready(function () {
     "use strict";
 
     function toOdooDatetime(dateObj) {
-        const pad = n => n < 10 ? "0" + n : n;
-        return dateObj.getFullYear() + "-" +
-            pad(dateObj.getMonth() + 1) + "-" +
-            pad(dateObj.getDate()) + " " +
-            pad(dateObj.getHours()) + ":" +
-            pad(dateObj.getMinutes()) + ":" +
-            pad(dateObj.getSeconds());
+        const pad = (n) => (n < 10 ? "0" + n : n);
+        return (
+            dateObj.getFullYear() +
+            "-" +
+            pad(dateObj.getMonth() + 1) +
+            "-" +
+            pad(dateObj.getDate()) +
+            " " +
+            pad(dateObj.getHours()) +
+            ":" +
+            pad(dateObj.getMinutes()) +
+            ":" +
+            pad(dateObj.getSeconds())
+        );
     }
 
-
     function showVapiWidget() {
-
         $.ajax({
             url: "/polpo_vapi_integration/widget_config",
             method: "POST",
             contentType: "application/json",
             data: JSON.stringify({}),
             success: function (res) {
-
                 var config = res.result;
 
                 // Wait for vapiSDK to be available
                 var tryRun = function () {
-
                     let callStartTime = null;
                     let callEndTime = null;
                     let logId = null;
@@ -40,21 +43,18 @@ $(document).ready(function () {
                         apiKey: config.api_key,
                         assistant: config.assistant_id,
                         assistantOverrides: {
-                            firstMessage: "Hello " + config.userName + ", ¿how are you?",
+                            firstMessage:
+                                "Hello " + config.userName + ", ¿how are you?",
                             variableValues: {
                                 userData: config.userData,
                                 companyData: config.companyData,
-                                fechaHora: new Date().toLocaleDateString()
+                                fechaHora: new Date().toLocaleDateString(),
                             },
-                            metadata: {
-                            }
+                            metadata: {},
                         },
-                        message: {
-                        },
-                        config: {
-                        }
+                        message: {},
+                        config: {},
                     });
-
 
                     instance.on("call-start", () => {
                         callStartTime = new Date();
@@ -64,7 +64,7 @@ $(document).ready(function () {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/json",
-                                "X-Requested-With": "XMLHttpRequest"
+                                "X-Requested-With": "XMLHttpRequest",
                             },
                             credentials: "include",
                             body: JSON.stringify({
@@ -73,26 +73,27 @@ $(document).ready(function () {
                                 params: {
                                     model: "vapi.log",
                                     method: "create",
-                                    args: [{
-                                        user_id: config.userId,
-                                        start_time: toOdooDatetime(callStartTime),
-                                        state: "started",
-                                        call_id: callId
-                                    }],
-                                    kwargs: {}
+                                    args: [
+                                        {
+                                            user_id: config.userId,
+                                            start_time: toOdooDatetime(callStartTime),
+                                            state: "started",
+                                            call_id: callId,
+                                        },
+                                    ],
+                                    kwargs: {},
                                 },
-                                id: Math.floor(Math.random() * 1000000)
+                                id: Math.floor(Math.random() * 1000000),
+                            }),
+                        })
+                            .then((response) => response.json())
+                            .then((data) => {
+                                logId = data.result;
                             })
-                        })
-                        .then((response) => response.json())
-                        .then((data) => {
-                            logId = data.result;
-                        })
-                        .catch((error) => console.error("Error:", error));
+                            .catch((error) => console.error("Error:", error));
                     });
 
-                    instance.on("message", function(message) {
-
+                    instance.on("message", function (message) {
                         if (
                             message.type === "transcript" &&
                             message.role === "user" &&
@@ -104,7 +105,7 @@ $(document).ready(function () {
                                     method: "POST",
                                     headers: {
                                         "Content-Type": "application/json",
-                                        "X-Requested-With": "XMLHttpRequest"
+                                        "X-Requested-With": "XMLHttpRequest",
                                     },
                                     credentials: "include",
                                     body: JSON.stringify({
@@ -117,24 +118,27 @@ $(document).ready(function () {
                                                 [logId],
                                                 {
                                                     state: "in_progress",
-                                                    last_active: toOdooDatetime(new Date())
-                                                }
+                                                    last_active: toOdooDatetime(
+                                                        new Date()
+                                                    ),
+                                                },
                                             ],
-                                            kwargs: {}
+                                            kwargs: {},
                                         },
-                                        id: Math.floor(Math.random() * 1000000)
-                                    })
+                                        id: Math.floor(Math.random() * 1000000),
+                                    }),
                                 })
-                                .then((response) => response.json())
-                                .then(() => { /* no action needed */ })
-                                .catch((error) => console.error("Error:", error));
+                                    .then((response) => response.json())
+                                    .then(() => {
+                                        /* No action needed */
+                                    })
+                                    .catch((error) => console.error("Error:", error));
                             } else if (logId) {
-
                                 fetch("/web/dataset/call_kw/vapi.log/write", {
                                     method: "POST",
                                     headers: {
                                         "Content-Type": "application/json",
-                                        "X-Requested-With": "XMLHttpRequest"
+                                        "X-Requested-With": "XMLHttpRequest",
                                     },
                                     credentials: "include",
                                     body: JSON.stringify({
@@ -146,17 +150,21 @@ $(document).ready(function () {
                                             args: [
                                                 [logId],
                                                 {
-                                                    last_active: toOdooDatetime(new Date())
-                                                }
+                                                    last_active: toOdooDatetime(
+                                                        new Date()
+                                                    ),
+                                                },
                                             ],
-                                            kwargs: {}
+                                            kwargs: {},
                                         },
-                                        id: Math.floor(Math.random() * 1000000)
-                                    })
+                                        id: Math.floor(Math.random() * 1000000),
+                                    }),
                                 })
-                                .then((response) => response.json())
-                                .then(() => { /* no action needed */ })
-                                .catch((error) => console.error("Error:", error));
+                                    .then((response) => response.json())
+                                    .then(() => {
+                                        /* No action needed */
+                                    })
+                                    .catch((error) => console.error("Error:", error));
                             }
                         }
                     });
@@ -165,13 +173,15 @@ $(document).ready(function () {
                         callEndTime = new Date();
 
                         if (callStartTime) {
-                            const duration = Math.floor((callEndTime - callStartTime) / 1000);
+                            const duration = Math.floor(
+                                (callEndTime - callStartTime) / 1000
+                            );
 
                             fetch("/web/dataset/call_kw/vapi.log/write", {
                                 method: "POST",
                                 headers: {
                                     "Content-Type": "application/json",
-                                    "X-Requested-With": "XMLHttpRequest"
+                                    "X-Requested-With": "XMLHttpRequest",
                                 },
                                 credentials: "include",
                                 body: JSON.stringify({
@@ -185,24 +195,24 @@ $(document).ready(function () {
                                             {
                                                 end_time: toOdooDatetime(callEndTime),
                                                 duration: duration,
-                                                state: "finished"
-                                            }
+                                                state: "finished",
+                                            },
                                         ],
-                                        kwargs: {}
+                                        kwargs: {},
                                     },
-                                    id: Math.floor(Math.random() * 1000000)
-                                })
+                                    id: Math.floor(Math.random() * 1000000),
+                                }),
                             })
-                            .then((response) => response.json())
-                            .then(() => { /* no action needed */ })
-                            .catch((error) => console.error("Error:", error));
-
+                                .then((response) => response.json())
+                                .then(() => {
+                                    /* No action needed */
+                                })
+                                .catch((error) => console.error("Error:", error));
                         }
                     });
-
                 };
                 tryRun();
-            }
+            },
         });
     }
 
@@ -211,4 +221,3 @@ $(document).ready(function () {
 
     // Or you can call it from wherever you want in your flow.
 });
-
