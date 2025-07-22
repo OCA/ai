@@ -13,14 +13,18 @@ class VapiLog(models.Model):
     start_time = fields.Datetime("Start", required=True, help="Date and time when the call started")
     end_time = fields.Datetime("End", help="Date and time when the call ended")
     duration = fields.Integer("Duration (sec.)", help="Call duration in seconds, 0 if not ended")
-    state = fields.Selection([
-        ("started", "Started"),
-        ("in_progress", "In Progress"),
-        ("finished", "Ended"),
-        ("error", "Error"),
-    ], string="Call Status", default="in_progress", required=True,
-        help="The current status of the call. 'Started' when initiated, 'In Progress' during the call, "
-             "'Ended' when completed, and 'Error' if there was an issue.")
+    state = fields.Selection(
+        [
+            ("started", "Started"),
+            ("in_progress", "In Progress"),
+            ("finished", "Ended"),
+            ("error", "Error"),
+        ],
+        string="Call Status",
+        default="in_progress",
+        required=True,
+        help="The current status of the call. 'Started' when initiated, 'In Progress' during the call, 'Ended' when completed, and 'Error' if there was an issue.",
+    )
     last_active = fields.Datetime("Last activity",
                                   help="Date and time of the last activity in the call, used to "
                                        "determine if the call is stuck")
@@ -56,4 +60,3 @@ class VapiLog(models.Model):
                 "end_time": fields.Datetime.now(),
                 "duration": rec.start_time and int((fields.Datetime.now() - rec.start_time).total_seconds()) or 0,
             })
-

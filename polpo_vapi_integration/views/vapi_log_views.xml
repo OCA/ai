@@ -40,11 +40,14 @@
                 <field name="duration" optional="hide"/>
                 <field name="duration_str"/>
                 <field name="last_active" optional="hide"/>
-                <field name="state" widget="badge"
-                       decoration-success="state == 'finished'"
-                       decoration-danger="state == 'error'"
-                       decoration-warning="state == 'started'"
-                       decoration-info="state == 'in_progress'"/>
+                <field
+                    name="state"
+                    widget="badge"
+                    decoration-success="state == 'finished'"
+                    decoration-danger="state == 'error'"
+                    decoration-warning="state == 'started'"
+                    decoration-info="state == 'in_progress'"
+                />
             </tree>
         </field>
     </record>
@@ -100,7 +103,6 @@
         <field name="target">inline</field>
         <field name="context">{'module' : 'polpo_vapi_integration', 'bin_size': False}</field>
     </record>
-
 
 
     <menuitem id="menu_vapi_settings"

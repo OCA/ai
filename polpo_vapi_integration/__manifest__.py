@@ -1,7 +1,6 @@
 {
     "name": "Odoo Vapi Call Integration",
     "summary": "Integrate Odoo with Vapi.ai for voice agent call logging and management.",
-    "description": "This module enables seamless integration between Odoo and Vapi.ai, allowing automated logging and management of calls handled by AI voice agents. It provides call logs, settings, and user-specific API keys.",
     "version": "16.0.1.0.0",
     "author": "Odoo Community Association (OCA)",
     "maintainers": ["qappsuy"],

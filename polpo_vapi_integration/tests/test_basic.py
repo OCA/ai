@@ -1,5 +1,5 @@
-
 from odoo.tests.common import TransactionCase
+
 
 class TestVapiIntegration(TransactionCase):
     def test_module_install(self):

@@ -21,4 +21,3 @@ class ResUsers(models.Model):
                 ])
                 if users:
                     raise ValidationError(_("User Vapi API Key must be unique for each user."))
-

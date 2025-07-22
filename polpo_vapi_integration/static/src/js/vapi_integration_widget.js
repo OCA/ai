@@ -84,11 +84,11 @@ $(document).ready(function () {
                                 id: Math.floor(Math.random() * 1000000)
                             })
                         })
-                        .then(response => response.json())
-                        .then(data => {
+                        .then((response) => response.json())
+                        .then((data) => {
                             logId = data.result;
                         })
-                        .catch(error => console.error("Error:", error));
+                        .catch((error) => console.error("Error:", error));
                     });
 
                     instance.on("message", function(message) {
@@ -125,9 +125,9 @@ $(document).ready(function () {
                                         id: Math.floor(Math.random() * 1000000)
                                     })
                                 })
-                                .then(response => response.json())
+                                .then((response) => response.json())
                                 .then(() => { /* no action needed */ })
-                                .catch(error => console.error("Error:", error));
+                                .catch((error) => console.error("Error:", error));
                             } else if (logId) {
 
                                 fetch("/web/dataset/call_kw/vapi.log/write", {
@@ -154,9 +154,9 @@ $(document).ready(function () {
                                         id: Math.floor(Math.random() * 1000000)
                                     })
                                 })
-                                .then(response => response.json())
+                                .then((response) => response.json())
                                 .then(() => { /* no action needed */ })
-                                .catch(error => console.error("Error:", error));
+                                .catch((error) => console.error("Error:", error));
                             }
                         }
                     });
@@ -193,9 +193,9 @@ $(document).ready(function () {
                                     id: Math.floor(Math.random() * 1000000)
                                 })
                             })
-                            .then(response => response.json())
+                            .then((response) => response.json())
                             .then(() => { /* no action needed */ })
-                            .catch(error => console.error("Error:", error));
+                            .catch((error) => console.error("Error:", error));
 
                         }
                     });

@@ -1,5 +1,6 @@
 from odoo import models, fields
 
+
 class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
@@ -7,4 +8,3 @@ class ResConfigSettings(models.TransientModel):
                                config_parameter="vapi_api_key")
     vapi_assistant_id = fields.Char(string="Vapi Assistant ID",
                                     config_parameter="vapi_assistant_id")
-
