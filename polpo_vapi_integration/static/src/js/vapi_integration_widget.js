@@ -1,6 +1,7 @@
 $(document).ready(function () {
 
     function toOdooDatetime(dateObj) {
+        "use strict";
         const pad = n => n < 10 ? "0" + n : n;
         return dateObj.getFullYear() + "-" +
             pad(dateObj.getMonth() + 1) + "-" +
@@ -12,6 +13,7 @@ $(document).ready(function () {
 
 
     function showVapiWidget() {
+        "use strict";
 
         $.ajax({
             url: "/polpo_vapi_integration/widget_config",
@@ -19,18 +21,23 @@ $(document).ready(function () {
             contentType: "application/json",
             data: JSON.stringify({}),
             success: function (res) {
-                var config = res.result;
 
+                var config = res.result;
 
                 // Wait for vapiSDK to be available
                 var tryRun = function () {
+
+                    let callStartTime = null;
+                    let callEndTime = null;
+                    let logId = null;
+                    let statusUpdated = false;
+
                     if (!window.vapiSDK || !window.vapiSDK.run) {
                         setTimeout(tryRun, 200);
                         return;
                     }
 
                     const instance = window.vapiSDK.run({
-
                         apiKey: config.api_key,
                         assistant: config.assistant_id,
                         assistantOverrides: {
@@ -49,8 +56,6 @@ $(document).ready(function () {
                         }
                     });
 
-                    let logId = null;
-                    let statusUpdated = false;
 
                     instance.on("call-start", () => {
                         callStartTime = new Date();
@@ -153,9 +158,7 @@ $(document).ready(function () {
                                     })
                                 })
                                 .then(response => response.json())
-                                .then(data => {
-                                    // Nothing to do here, just logging the response
-                                })
+                                .then(_ => { /* no action needed */ })
                                 .catch(error => console.error("Error:", error));
                             }
                         }
@@ -194,9 +197,7 @@ $(document).ready(function () {
                                 })
                             })
                             .then(response => response.json())
-                            .then(data => {
-                                // Nothing to do here, just logging the response
-                            })
+                            .then(_ => { /* no action needed */ })
                             .catch(error => console.error("Error:", error));
 
                         }

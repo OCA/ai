@@ -5,7 +5,7 @@
     "version": "16.0.1.0.0",
     "author": "Odoo Community Association (OCA)",
     "maintainers": ["qappsuy"],
-    "website": "https://github.com/OCA/server-tools",
+    "website": "https://github.com/OCA/ai",
     "category": "Extra Tools",
     "license": "LGPL-3",
     "depends": ["base", "web"],
