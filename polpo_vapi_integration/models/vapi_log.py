@@ -23,7 +23,8 @@ class VapiLog(models.Model):
         string="Call Status",
         default="in_progress",
         required=True,
-        help="The current status of the call. 'Started' when initiated, 'In Progress' during the call, 'Ended' when completed, and 'Error' if there was an issue.",
+        help="The current status of the call. 'Started' when initiated, 'In Progress' during the call, "
+             "'Ended' when completed, and 'Error' if there was an issue.",
     )
     last_active = fields.Datetime("Last activity",
                                   help="Date and time of the last activity in the call, used to "
@@ -58,5 +59,8 @@ class VapiLog(models.Model):
             rec.write({
                 "state": "error",
                 "end_time": fields.Datetime.now(),
-                "duration": rec.start_time and int((fields.Datetime.now() - rec.start_time).total_seconds()) or 0,
+                "duration": (
+                   int((fields.Datetime.now() - rec.start_time).total_seconds())
+                    if rec.start_time else 0
+                ),
             })
