@@ -1,0 +1,317 @@
+{
+  "name": "RagCapabilitiesWithOdooKnowledge",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "eb45cee2-0176-43e8-9594-72d681802926",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [-20, -60],
+      "name": "Webhook",
+      "id": "ee52dae6-e719-41c1-a5b1-a5311a21bdb0",
+      "webhookId": "eb45cee2-0176-43e8-9594-72d681802926"
+    },
+    {
+      "parameters": {
+        "html": "={{ $json.body.record.content }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.markdown",
+      "typeVersion": 1,
+      "position": [220, -60],
+      "id": "a004b925-2461-4574-944b-e5a1eeeed0a7",
+      "name": "Markdown"
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "memoryKey": {
+          "__rl": true,
+          "mode": "list",
+          "value": "vector_store_key"
+        },
+        "embeddingBatchSize": 1
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1.3,
+      "position": [720, -60],
+      "id": "662d1025-0b0f-48d7-a568-764cee7116c9",
+      "name": "Simple Vector Store"
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "={{ $('PrepareContent').item.json.document_content }}",
+        "options": {
+          "metadata": {
+            "metadataValues": [
+              {
+                "name": "document_id",
+                "value": "document_title"
+              },
+              {
+                "name": "document_revision"
+              }
+            ]
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [880, 160],
+      "id": "a1fa398a-b67f-4ba8-8756-ced0caa26e2f",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query }}",
+        "options": {
+          "systemMessage": "=You are a RAG-only assistant.\n\nYour ONLY job is to answer questions using the external TOOL provided. DO NOT use your own knowledge or memory. You are NOT allowed to explain or judge the tool's answer.\n\nRules:\n1. ALWAYS call the TOOL for EVERY question.\n2. DO NOT add, change, or \"fix\" the TOOL's response.\n3. Prepare the final response using only the information from the TOOL’s response.\n\nEven if the TOOL says something strange, funny, or wrong — TRUST it completely. That is your only task."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [260, 340],
+      "id": "08efea5a-4778-4bfc-a942-88726e378b89",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a9a3c583-0238-407a-a100-7e4c5685fb7c",
+              "name": "document_content",
+              "value": "={{ $json.data }}",
+              "type": "string"
+            },
+            {
+              "id": "2067d6cf-6822-4089-b424-7bcc44e974b9",
+              "name": "document_id",
+              "value": "={{ $json.body.record.id }}",
+              "type": "string"
+            },
+            {
+              "id": "2bfe6080-164b-499e-9d4a-bb47bbe675ac",
+              "name": "document_title",
+              "value": "={{ $json.body.record.display_name }}",
+              "type": "string"
+            },
+            {
+              "id": "b796a424-5757-4d6f-9cfd-e959fd1a4d52",
+              "name": "document_revision",
+              "value": "={{ $json.body.record.draft_name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [480, -60],
+      "id": "76eb1632-202d-4c3f-b8bc-ef11269f924f",
+      "name": "PrepareContent"
+    },
+    {
+      "parameters": {
+        "mode": "retrieve-as-tool",
+        "toolDescription": "Call this tool for getting answers to any kind of human questions",
+        "memoryKey": {
+          "__rl": true,
+          "mode": "list",
+          "value": "vector_store_key"
+        },
+        "topK": 2,
+        "includeDocumentMetadata": false
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1.3,
+      "position": [460, 580],
+      "id": "233c6570-03fe-4d9a-96b9-c8ef6d48aea4",
+      "name": "Simple Vector Store Tool"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [-20, 340],
+      "id": "3132b80b-3490-4663-abee-d319d4df6a82",
+      "name": "TestRAG"
+    },
+    {
+      "parameters": {
+        "model": "granite-embedding:latest"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
+      "typeVersion": 1,
+      "position": [700, 160],
+      "id": "16f298b4-cff0-44d8-97fe-0ec2ffa39aac",
+      "name": "GraniteEmbedding",
+      "credentials": {
+        "ollamaApi": {
+          "id": "swl1IV4BEvffsY2Q",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "granite-embedding:latest"
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOllama",
+      "typeVersion": 1,
+      "position": [440, 780],
+      "id": "d16c9eb5-dfa5-42c0-9a41-8e079a496603",
+      "name": "GraniteEmbeddingRecover",
+      "credentials": {
+        "ollamaApi": {
+          "id": "swl1IV4BEvffsY2Q",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "qwen3:1.7b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [240, 580],
+      "id": "0bdb0f17-a0a4-48f4-8db7-73fe1dbc85cf",
+      "name": "Qwen3:1.7b",
+      "credentials": {
+        "ollamaApi": {
+          "id": "swl1IV4BEvffsY2Q",
+          "name": "Ollama account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "TestRAG": [
+      {
+        "json": {
+          "query": "Why do apples fall to the ground?"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Markdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Markdown": {
+      "main": [
+        [
+          {
+            "node": "PrepareContent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Simple Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PrepareContent": {
+      "main": [
+        [
+          {
+            "node": "Simple Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Vector Store Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TestRAG": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GraniteEmbedding": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Simple Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GraniteEmbeddingRecover": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Simple Vector Store Tool",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qwen3:1.7b": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "99787de6-2e75-4ea8-9df7-18cf24486187",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9dfb7cea57c92e029bf10b0f55a26934d6922e8cd8a7e993b1dde4590d0674ca"
+  },
+  "id": "S9hHrLjEISoxhrCm",
+  "tags": []
+}

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record id="ai_bridge_document_page_create" model="ai.bridge">
+        <field name="name">Document Page AI Bridge - Create</field>
+        <field name="description">
+            <![CDATA[
+            <p>This AI bridge is triggered when a new document page is created.</p>
+            ]]>
+        </field>
+        <field name="model_id" ref="document_page.model_document_page" />
+        <field name="usage">ai_thread_create</field>
+        <field name="url">https://api.example.com/ai/document/create</field>
+        <field name="auth_type">none</field>
+        <field name="payload_type">record</field>
+        <field name="result_type">none</field>
+        <field name="result_kind">immediate</field>
+        <field
+            name="field_ids"
+            eval="[(6, 0, [ref('document_page.field_document_page__content'), ref('document_page.field_document_page__display_name'), ref('document_page.field_document_page__draft_name')])]"
+        />
+    </record>
+
+    <record id="ai_bridge_document_page_write" model="ai.bridge">
+        <field name="name">Document Page AI Bridge - Update</field>
+        <field name="description">
+            <![CDATA[
+            <p>This AI bridge is triggered when a document page is updated.</p>
+            ]]>
+        </field>
+        <field name="model_id" ref="document_page.model_document_page" />
+        <field name="usage">ai_thread_write</field>
+        <field name="url">https://api.example.com/ai/document/create</field>
+        <field name="auth_type">none</field>
+        <field name="payload_type">record</field>
+        <field name="result_type">none</field>
+        <field name="result_kind">immediate</field>
+        <field
+            name="field_ids"
+            eval="[(6, 0, [ref('document_page.field_document_page__content'), ref('document_page.field_document_page__display_name'), ref('document_page.field_document_page__draft_name')])]"
+        />
+    </record>
+
+    <record id="ai_bridge_document_page_unlink" model="ai.bridge">
+        <field name="name">Document Page AI Bridge - Delete</field>
+        <field name="description">
+            <![CDATA[
+            <p>This AI bridge is triggered when a document page is deleted.</p>
+            ]]>
+        </field>
+        <field name="model_id" ref="document_page.model_document_page" />
+        <field name="usage">ai_thread_unlink</field>
+        <field name="url">https://api.example.com/ai/document/create</field>
+        <field name="auth_type">none</field>
+        <field name="payload_type">none</field>
+        <field name="result_type">none</field>
+        <field name="result_kind">immediate</field>
+    </record>
+</odoo>
