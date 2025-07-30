@@ -8,17 +8,20 @@
     "category": "Extra Tools",
     "license": "LGPL-3",
     "depends": ["base", "web"],
-    "icon": "/polpo_vapi_integration/static/description/icon.png",
+    "icon": "/ai_oca_vapi_integration/static/description/icon.png",
     "data": [
         "security/ir.model.access.csv",
-        "views/vapi_integration_vapi_sdk.xml",
         "views/vapi_log_views.xml",
         "views/res_config_settings_views.xml",
         "views/res_users_views.xml",
+        "views/vapi_integration_vapi_sdk.xml",
     ],
     "assets": {
         "web.assets_backend": [
-            "/polpo_vapi_integration/static/src/js/vapi_integration_widget.js",
+            "/ai_oca_vapi_integration/static/src/js/vapi_integration_widget.js",
+        ],
+        "web.assets_frontend": [
+            "ai_oca_vapi_integration/static/src/js/vapi_sdk.js",
         ],
     },
     "installable": True,

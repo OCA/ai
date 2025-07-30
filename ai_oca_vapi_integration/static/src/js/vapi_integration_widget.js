@@ -1,6 +1,5 @@
 $(document).ready(function () {
     "use strict";
-
     function toOdooDatetime(dateObj) {
         const pad = (n) => (n < 10 ? "0" + n : n);
         return (
@@ -20,39 +19,42 @@ $(document).ready(function () {
 
     function showVapiWidget() {
         $.ajax({
-            url: "/polpo_vapi_integration/widget_config",
+            url: "/vapi_integration/widget_config",
             method: "POST",
             contentType: "application/json",
             data: JSON.stringify({}),
             success: function (res) {
-                var config = res.result;
-
                 // Wait for vapiSDK to be available
                 var tryRun = function () {
-                    let callStartTime = null;
-                    let callEndTime = null;
-                    let logId = null;
-                    let statusUpdated = false;
-
                     if (!window.vapiSDK || !window.vapiSDK.run) {
                         setTimeout(tryRun, 200);
                         return;
                     }
 
+                    let callStartTime = null;
+                    let callEndTime = null;
+                    let logId = null;
+                    let statusUpdated = false;
+                    var config = res.result;
+
                     const instance = window.vapiSDK.run({
                         apiKey: config.api_key,
                         assistant: config.assistant_id,
                         assistantOverrides: {
-                            firstMessage:
-                                "Hello " + config.userName + ", ¿how are you?",
+                            firstMessage: "Hola " + config.userName + ", ¿cómo estás?",
                             variableValues: {
+                                userToken: config.vapiKey,
+                                userId: config.userId,
                                 userData: config.userData,
                                 companyData: config.companyData,
                                 fechaHora: new Date().toLocaleDateString(),
                             },
                             metadata: {},
                         },
-                        message: {},
+                        message: {
+                            content:
+                                "La url de la base de datos de esta llamada es https://polpo.uy",
+                        },
                         config: {},
                     });
 

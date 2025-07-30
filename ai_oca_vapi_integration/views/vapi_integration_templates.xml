@@ -7,10 +7,10 @@
     >
         <xpath expr="//body" position="inside">
             <t
-                t-if="request.session.uid and not (request.httprequest.path.startswith('/web/login') or
-                                                 request.httprequest.path.startswith('/my') or
-                                                 request.httprequest.path.startswith('/shop') or
-                                                 request.httprequest.path.startswith('/website'))"
+                t-if="request.session.uid
+                and request.httprequest.path.startswith('/web')
+                and not request.httprequest.path.startswith('/web/login')
+            "
             >
                 <div id="vapi_integration_floating_button">
                     <button class="vapi-integration-btn" title="Start Call">

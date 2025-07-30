@@ -3,7 +3,7 @@ from odoo.http import request
 
 
 class VapiIntegrationController(http.Controller):
-    @http.route("/polpo_vapi_integration/widget_config", type="json", auth="user")
+    @http.route("/vapi_integration/widget_config", type="json", auth="user")
     def widget_config(self):
         user = request.env.user
 

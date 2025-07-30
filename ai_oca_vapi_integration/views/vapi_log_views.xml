@@ -19,7 +19,7 @@
         id="menu_vapi_root"
         name="Vapi Call"
         sequence="90"
-        web_icon="polpo_vapi_integration,static/description/icon.svg"
+        web_icon="ai_oca_vapi_integration,static/description/icon.svg"
     />
 
 
@@ -114,7 +114,7 @@
         <field name="target">inline</field>
         <field
             name="context"
-        >{'module' : 'polpo_vapi_integration', 'bin_size': False}</field>
+        >{'module' : 'ai_oca_vapi_integration', 'bin_size': False}</field>
     </record>
 
 
