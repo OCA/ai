@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-07-22 16:25+0000\n"
+"PO-Revision-Date: 2025-07-31 10:59+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -736,12 +736,12 @@ msgstr "Gruppi utente autorizzati ad usare questo collegamento IA."
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Messaggi sito web"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Cronologia comunicazioni sito web"
 
 #. module: ai_oca_bridge
 #. odoo-python
