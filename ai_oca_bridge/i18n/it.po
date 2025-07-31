@@ -175,6 +175,8 @@ msgstr "Configurazione collegamento IA"
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_document_page__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_helpdesk_ticket__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_helpdesk_ticket_team__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_blacklist__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_channel__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread__ai_bridge_info
@@ -730,6 +732,16 @@ msgstr "Utente"
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__group_ids
 msgid "User groups allowed to use this AI bridge."
 msgstr "Gruppi utente autorizzati ad usare questo collegamento IA."
+
+#. module: ai_oca_bridge
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: ai_oca_bridge
+#: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__website_message_ids
+msgid "Website communication history"
+msgstr ""
 
 #. module: ai_oca_bridge
 #. odoo-python
