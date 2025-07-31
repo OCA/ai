@@ -11,6 +11,7 @@ setuptools.setup(
         'odoo-addon-ai_oca_bridge>=16.0dev,<16.1dev',
         'odoo-addon-ai_oca_bridge_chatter>=16.0dev,<16.1dev',
         'odoo-addon-ai_oca_bridge_document_page>=16.0dev,<16.1dev',
+        'odoo-addon-ai_oca_bridge_helpdesk_mgmt>=16.0dev,<16.1dev',
     ],
     classifiers=[
         'Programming Language :: Python',
