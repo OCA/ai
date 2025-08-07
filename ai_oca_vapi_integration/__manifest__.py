@@ -21,7 +21,7 @@
             "/ai_oca_vapi_integration/static/src/js/vapi_integration_widget.js",
         ],
         "web.assets_frontend": [
-            "ai_oca_vapi_integration/static/src/js/vapi_sdk.js",
+            "ai_oca_vapi_integration/static/libs/vapi_sdk.js",
         ],
     },
     "installable": True,

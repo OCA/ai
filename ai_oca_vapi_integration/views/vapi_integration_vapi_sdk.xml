@@ -4,7 +4,7 @@
         <xpath expr="//head" position="inside">
             <script
                 type="text/javascript"
-                src="/ai_oca_vapi_integration/static/src/js/vapi_sdk.js"
+                src="/ai_oca_vapi_integration/static/libs/vapi_sdk.js"
                 id="vapi-sdk"
                 defer="defer"
                 async="async"
