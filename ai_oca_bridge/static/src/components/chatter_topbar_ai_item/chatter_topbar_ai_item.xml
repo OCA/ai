@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
-    <t t-name="ai_oca_bridge.ChatterAIItem" owl="1">
+    <t t-name="ai_oca_bridge.ChatterAIItem">
         <span class="o_ChatterTopbar_AIItem">
             <t t-esc="props.bridge.name" />
             <i
@@ -12,7 +12,7 @@
             />
         </span>
     </t>
-    <t t-name="ai_oca_bridge.ChatterAIItemPopover" owl="1">
+    <t t-name="ai_oca_bridge.ChatterAIItemPopover">
         <div class="popup-div">
             <p class="popover-content p-2">
                 <t t-out="props.help or ''" />

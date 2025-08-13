@@ -1,32 +1,45 @@
 /** @odoo-module **/
 
-import {registerPatch} from "@mail/model/model_core";
+import {Chatter} from "@mail/core/web/chatter";
+import {patch} from "@web/core/utils/patch";
 
-registerPatch({
-    name: "Chatter",
-    recordMethods: {
-        async onClickAiBridge(aiBridge) {
-            const saved = await this.doSaveRecord();
-            if (!saved) {
-                return;
+patch(Chatter.prototype, {
+    async onClickAiBridge(aiBridge) {
+        let saved = true;
+
+        if (this.props.webRecord && this.props.webRecord.save) {
+            try {
+                await this.props.webRecord.save();
+            } catch (error) {
+                saved = false;
+                console.error("Error saving record:", error);
             }
-            const result = await this.env.services.orm.call(
-                "ai.bridge",
-                "execute_ai_bridge",
-                [[aiBridge.id], this.thread.model, this.thread.id]
+        }
+
+        if (!saved) {
+            return;
+        }
+
+        const model = this.props.webRecord.resModel;
+        const id = this.props.webRecord.resId;
+
+        const result = await this.env.services.orm.call(
+            "ai.bridge",
+            "execute_ai_bridge",
+            [[aiBridge.id], model, id]
+        );
+
+        if (result.action && this.env.services && this.env.services.action) {
+            this.env.services.action.doAction(result.action);
+        } else if (
+            result.notification &&
+            this.env.services &&
+            this.env.services.notification
+        ) {
+            this.env.services.notification.add(
+                result.notification.body,
+                result.notification.args
             );
-            if (result.action && this.env.services && this.env.services.action) {
-                this.env.services.action.doAction(result.action);
-            } else if (
-                result.notification &&
-                this.env.services &&
-                this.env.services.notification
-            ) {
-                this.env.services.notification.add(
-                    result.notification.body,
-                    result.notification.args
-                );
-            }
-        },
+        }
     },
 });

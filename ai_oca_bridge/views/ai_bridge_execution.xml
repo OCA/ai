@@ -22,17 +22,13 @@
                     <notebook>
                         <page string="Execution Details" name="execution_details">
                             <group string="Payload">
-                                <field name="payload_txt" nolabel="1" cols="2" />
+                                <field name="payload_txt" nolabel="True" cols="2" />
                             </group>
                             <group string="Response">
-                                <field name="result" nolabel="1" cols="2" />
+                                <field name="result" nolabel="True" cols="2" />
                             </group>
                         </page>
-                        <page
-                            string="Error"
-                            name="error"
-                            attrs="{'invisible': [('error', '=', False)]}"
-                        >
+                        <page string="Error" name="error" invisible="not error">
                             <field name="error" />
                         </page>
                     </notebook>

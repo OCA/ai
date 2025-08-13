@@ -21,14 +21,9 @@ On the external system, you will receive a POST payload. The data included will 
 
 Adds a new item called record with all the fields.
 
-### Record Payload (v0)
-
-Adds all the fields directly on the payload.
-It will be removed on 17.0.
-
 ## Asynchronous and synchronous calls
 
-The new system allows asynchronous and synchronous calls. 
+The new system allows asynchronous and synchronous calls.
 Asynchronous calls makes sense when the task to be processed don't need to be immediate.
 For example, reviewing an invoice and leave a comment with the result.
 The same would happen with a chat message.

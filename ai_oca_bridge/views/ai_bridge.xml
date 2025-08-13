@@ -13,7 +13,7 @@
                         name="web_ribbon"
                         title="Archived"
                         bg_color="bg-danger"
-                        attrs="{'invisible': [('active', '=', True)]}"
+                        invisible="active"
                     />
                     <h1 class="oe_title">
                         <field name="name" />
@@ -26,16 +26,16 @@
                             <field name="result_kind" />
                             <field
                                 name="async_timeout"
-                                attrs="{'invisible': [('result_kind', '!=', 'async')]}"
+                                invisible="result_kind != 'async'"
                             />
                             <field name="result_type" />
                             <field
                                 name="model_id"
                                 options="{'no_create': True, 'no_create_edit': True}"
                                 domain="[('ai_usage', '=', usage)]"
-                                attrs="{'required': [('model_required', '=', 'True')]}"
+                                required="model_required"
                             />
-                            <field name="model_required" invisible="1" />
+                            <field name="model_required" invisible="True" />
                             <field name="description" />
                         </group>
                         <group>
@@ -43,30 +43,33 @@
                             <field name="auth_type" />
                             <field
                                 name="auth_token"
-                                password="1"
-                                attrs="{'invisible': [('auth_type', '!=', 'token')], 'required': [('auth_type', '=', 'token')]}"
+                                password="True"
+                                invisible="auth_type != 'token'"
+                                required="auth_type == 'token'"
                             />
                             <field
                                 name="auth_username"
-                                attrs="{'invisible': [('auth_type', '!=', 'basic')], 'required': [('auth_type', '=', 'basic')]}"
+                                invisible="auth_type != 'basic'"
+                                required="auth_type == 'basic'"
                             />
                             <field
                                 name="auth_password"
-                                password="1"
-                                attrs="{'invisible': [('auth_type', '!=', 'basic')], 'required': [('auth_type', '=', 'basic')]}"
+                                password="True"
+                                invisible="auth_type != 'basic'"
+                                required="auth_type == 'basic'"
                             />
-                            <field name="active" invisible="1" />
+                            <field name="active" invisible="True" />
                         </group>
                     </group>
                     <notebook>
                         <page
                             string="Record Payload"
                             name="record_configuration"
-                            attrs="{'invisible': [('payload_type', 'not in', ['record', 'record_v0'])]}"
+                            invisible="payload_type != 'record'"
                         >
                             <group>
                                 <field name="group_ids" widget="many2many_tags" />
-                                <field name="model" invisible="1" />
+                                <field name="model" invisible="True" />
                                 <field
                                     name="field_ids"
                                     widget="many2many_tags"
@@ -121,7 +124,7 @@
         <field name="model">ai.bridge</field>
         <field name="arch" type="xml">
             <tree decoration-muted="active == False">
-                <field name="active" invisible="1" />
+                <field name="active" column_invisible="True" />
                 <field name="sequence" widget="handle" />
                 <field name="name" />
                 <field name="model_id" />
