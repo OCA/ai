@@ -49,12 +49,8 @@ class AiBridge(models.Model):
         [
             ("none", "No payload"),
             ("record", "Record"),
-            ("record_v0", "Record v0"),  # Deprecated, use 'record' instead
         ],
         required=True,
-        store=True,
-        readonly=False,
-        compute="_compute_payload_type",
         default="record",
     )
     result_type = fields.Selection(
@@ -83,7 +79,8 @@ class AiBridge(models.Model):
     async_timeout = fields.Integer(
         default=300,
         help="Timeout in seconds for asynchronous operations. "
-        "If the operation does not complete within this time, it will be considered failed.",
+        "If the operation does not complete within this time,\
+            it will be considered failed.",
     )
     execution_ids = fields.One2many("ai.bridge.execution", "ai_bridge_id")
     execution_count = fields.Integer(
@@ -279,32 +276,6 @@ class AiBridge(models.Model):
             json.dumps(
                 {
                     "record": vals,
-                    "_model": record._name,
-                    "_id": record.id,
-                },
-                default=self.custom_serializer,
-            )
-        )
-
-    def _prepare_payload_record_v0(self, record=None, **kwargs):
-        """Prepare the payload to be sent to the AI system."""
-        _logger.warning(
-            "The 'record_v0' payload type is deprecated. " "Use 'record' instead."
-        )
-        self.ensure_one()
-        if not self.model_id:
-            return {}
-        if record is None and self.env.context.get("sample_payload"):
-            record = self.env[self.model_id.model].search([], limit=1)
-            if not record:
-                return {}
-        vals = {}
-        if self.sudo().field_ids:
-            vals = record.read(self.sudo().field_ids.mapped("name"))[0]
-        return json.loads(
-            json.dumps(
-                {
-                    **vals,
                     "_model": record._name,
                     "_id": record.id,
                 },

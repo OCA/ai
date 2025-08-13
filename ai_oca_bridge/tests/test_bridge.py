@@ -67,43 +67,6 @@ class TestBridge(TransactionCase):
         self.assertEqual(execution.res_id, self.partner.id)
         self.assertNotIn("name", execution.payload)
 
-    def test_bridge_none_auth_fields_record_v0(self):
-        self.bridge.write(
-            {
-                "payload_type": "record_v0",
-                "auth_type": "none",
-                "field_ids": [
-                    (4, self.env.ref("base.field_res_partner__name").id),
-                    (4, self.env.ref("base.field_res_partner__create_date").id),
-                    (4, self.env.ref("base.field_res_partner__image_1920").id),
-                ],
-            }
-        )
-        self.assertTrue(self.partner.ai_bridge_info)
-        self.assertIn(
-            self.bridge.id, [bridge["id"] for bridge in self.partner.ai_bridge_info]
-        )
-        self.assertFalse(
-            self.env["ai.bridge.execution"].search(
-                [("ai_bridge_id", "=", self.bridge.id)]
-            )
-        )
-        with mock.patch("requests.post") as mock_post:
-            self.bridge.execute_ai_bridge(self.partner._name, self.partner.id)
-            mock_post.assert_called_once()
-        self.assertTrue(
-            self.env["ai.bridge.execution"].search(
-                [("ai_bridge_id", "=", self.bridge.id)]
-            )
-        )
-        execution = self.env["ai.bridge.execution"].search(
-            [("ai_bridge_id", "=", self.bridge.id)]
-        )
-        self.assertEqual(execution.res_id, self.partner.id)
-        self.assertIn("name", execution.payload)
-        self.assertEqual(execution.payload["name"], self.partner.name)
-        self.assertEqual(1, self.bridge.execution_count)
-
     def test_bridge_none_auth_fields_record(self):
         self.bridge.write(
             {

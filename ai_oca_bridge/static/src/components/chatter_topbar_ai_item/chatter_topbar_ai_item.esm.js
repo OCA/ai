@@ -1,12 +1,16 @@
 /** @odoo-module **/
 
-const {Component, markup} = owl;
+import {Component, markup} from "@odoo/owl";
 import {usePopover} from "@web/core/popover/popover_hook";
 
-export class ChatterAIItemPopover extends Component {}
-ChatterAIItemPopover.template = "ai_oca_bridge.ChatterAIItemPopover";
+export class ChatterAIItemPopover extends Component {
+    static template = "ai_oca_bridge.ChatterAIItemPopover";
+}
 
 export class ChatterAIItem extends Component {
+    static template = "ai_oca_bridge.ChatterAIItem";
+    static props = {bridge: Object};
+
     setup() {
         super.setup();
         this.popover = usePopover();
@@ -41,6 +45,3 @@ export class ChatterAIItem extends Component {
         }
     }
 }
-
-ChatterAIItem.template = "ai_oca_bridge.ChatterAIItem";
-ChatterAIItem.props = {bridge: Object};
