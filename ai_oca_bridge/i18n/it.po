@@ -578,11 +578,6 @@ msgid "Record Payload"
 msgstr "Record carico"
 
 #. module: ai_oca_bridge
-#: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__payload_type__record_v0
-msgid "Record v0"
-msgstr "Record v0"
-
-#. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__res_id
 msgid "Res"
 msgstr "Res"
