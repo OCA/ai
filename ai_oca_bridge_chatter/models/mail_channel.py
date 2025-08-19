@@ -5,7 +5,7 @@ from odoo import models
 
 
 class MailChannel(models.Model):
-    _inherit = "mail.channel"
+    _inherit = "discuss.channel"
 
     def message_post(self, **kwargs):
         message = super().message_post(**kwargs)

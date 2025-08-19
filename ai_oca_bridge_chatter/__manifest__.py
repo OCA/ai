@@ -4,7 +4,7 @@
 {
     "name": "Ai Oca Bridge Chatter",
     "summary": """Integrate a Bridge with a user that will use it on chatter""",
-    "version": "16.0.1.0.0",
+    "version": "17.0.1.0.0",
     "license": "AGPL-3",
     "author": "Dixmit,Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/ai",
