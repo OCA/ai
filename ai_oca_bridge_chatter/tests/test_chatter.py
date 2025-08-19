@@ -36,7 +36,7 @@ class TestChatter(common.TransactionCase):
             groups="base.group_user",
         )
         cls.chat = (
-            cls.env["mail.channel"]
+            cls.env["discuss.channel"]
             .with_user(cls.user.id)
             .create(
                 {
@@ -49,7 +49,7 @@ class TestChatter(common.TransactionCase):
                 }
             )
         )
-        cls.channel = cls.env["mail.channel"].create(
+        cls.channel = cls.env["discuss.channel"].create(
             {
                 "name": "Main Channel",
                 "channel_type": "channel",
@@ -71,7 +71,7 @@ class TestChatter(common.TransactionCase):
         """Answer is direct in this case"""
         self.assertFalse(
             self.env["mail.message"].search(
-                [("res_id", "=", self.chat.id), ("model", "=", "mail.channel")]
+                [("res_id", "=", self.chat.id), ("model", "=", "discuss.channel")]
             ),
         )
         with mock.patch("requests.post") as mock_post:
@@ -85,7 +85,7 @@ class TestChatter(common.TransactionCase):
         self.assertEqual(
             2,
             self.env["mail.message"].search_count(
-                [("res_id", "=", self.chat.id), ("model", "=", "mail.channel")]
+                [("res_id", "=", self.chat.id), ("model", "=", "discuss.channel")]
             ),
         )
 
@@ -93,7 +93,7 @@ class TestChatter(common.TransactionCase):
         """No AI bridge should be called when the user is not callend in the channel"""
         self.assertFalse(
             self.env["mail.message"].search(
-                [("res_id", "=", self.channel.id), ("model", "=", "mail.channel")]
+                [("res_id", "=", self.channel.id), ("model", "=", "discuss.channel")]
             ),
         )
         with mock.patch("requests.post") as mock_post:
@@ -107,7 +107,7 @@ class TestChatter(common.TransactionCase):
         self.assertEqual(
             1,
             self.env["mail.message"].search_count(
-                [("res_id", "=", self.channel.id), ("model", "=", "mail.channel")]
+                [("res_id", "=", self.channel.id), ("model", "=", "discuss.channel")]
             ),
         )
 
@@ -115,7 +115,7 @@ class TestChatter(common.TransactionCase):
         """Test that AI answers only if they are called in channels"""
         self.assertFalse(
             self.env["mail.message"].search(
-                [("res_id", "=", self.channel.id), ("model", "=", "mail.channel")]
+                [("res_id", "=", self.channel.id), ("model", "=", "discuss.channel")]
             ),
         )
         with mock.patch("requests.post") as mock_post:
@@ -130,15 +130,16 @@ class TestChatter(common.TransactionCase):
         self.assertEqual(
             2,
             self.env["mail.message"].search_count(
-                [("res_id", "=", self.channel.id), ("model", "=", "mail.channel")]
+                [("res_id", "=", self.channel.id), ("model", "=", "discuss.channel")]
             ),
         )
 
     def test_channel_multiple_calls(self):
-        """Test that AI answers might be from multiple users in the channel at the same time"""
+        """Test that AI answers might be from multiple users
+        in the channel at the same time"""
         self.assertFalse(
             self.env["mail.message"].search(
-                [("res_id", "=", self.channel.id), ("model", "=", "mail.channel")]
+                [("res_id", "=", self.channel.id), ("model", "=", "discuss.channel")]
             ),
         )
         self.user.ai_bridge_id = self.bridge
@@ -154,7 +155,7 @@ class TestChatter(common.TransactionCase):
         self.assertEqual(
             3,
             self.env["mail.message"].search_count(
-                [("res_id", "=", self.channel.id), ("model", "=", "mail.channel")]
+                [("res_id", "=", self.channel.id), ("model", "=", "discuss.channel")]
             ),
         )
 
@@ -162,7 +163,7 @@ class TestChatter(common.TransactionCase):
         """Test that AI does not answer to AI messages"""
         self.assertFalse(
             self.env["mail.message"].search(
-                [("res_id", "=", self.channel.id), ("model", "=", "mail.channel")]
+                [("res_id", "=", self.channel.id), ("model", "=", "discuss.channel")]
             ),
         )
         self.user.ai_bridge_id = self.bridge
@@ -178,6 +179,6 @@ class TestChatter(common.TransactionCase):
         self.assertEqual(
             1,
             self.env["mail.message"].search_count(
-                [("res_id", "=", self.channel.id), ("model", "=", "mail.channel")]
+                [("res_id", "=", self.channel.id), ("model", "=", "discuss.channel")]
             ),
         )
