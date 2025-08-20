@@ -44,7 +44,8 @@ class AiBridge(models.Model):
     user_id = fields.Many2one(
         "res.users",
         default=lambda self: self.env.user,
-        help="The user that will be shown when executing this AI bridge.",
+        required=True,
+        help="The user who execute the bridge.",
     )
     payload_type = fields.Selection(
         [

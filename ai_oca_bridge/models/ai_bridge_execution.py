@@ -204,7 +204,7 @@ class AiBridgeExecution(models.Model):
         return {}
 
     def _process_response_message(self, response):
-        return {"id": self._get_channel().message_post(**response).id}
+        return {"id": self._get_channel().sudo().message_post(**response).id}
 
     def _process_response_action(self, response):
         if response.get("action"):

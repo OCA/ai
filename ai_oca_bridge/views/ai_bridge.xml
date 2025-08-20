@@ -29,6 +29,7 @@
                                 attrs="{'invisible': [('result_kind', '!=', 'async')]}"
                             />
                             <field name="result_type" />
+                            <field name="user_id" />
                             <field
                                 name="model_id"
                                 options="{'no_create': True, 'no_create_edit': True}"
