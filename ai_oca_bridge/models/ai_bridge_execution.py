@@ -13,7 +13,6 @@ from odoo import _, api, fields, models, tools
 
 
 class AiBridgeExecution(models.Model):
-
     _name = "ai.bridge.execution"
     _description = "Ai Execution"
     _order = "id desc"
