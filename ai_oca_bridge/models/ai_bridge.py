@@ -13,7 +13,6 @@ _logger = logging.getLogger(__name__)
 
 
 class AiBridge(models.Model):
-
     _name = "ai.bridge"
     _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "Ai Bridge Configuration"

@@ -5,14 +5,13 @@ from odoo import fields, models
 
 
 class IrModel(models.Model):
-
     _inherit = "ir.model"
 
     is_ai_bridge_thread = fields.Boolean()
     ai_usage = fields.Char(store=False, search="_search_ai_usage")
 
     def _reflect_model_params(self, model):
-        vals = super(IrModel, self)._reflect_model_params(model)
+        vals = super()._reflect_model_params(model)
         vals["is_ai_bridge_thread"] = (
             isinstance(model, self.pool["ai.bridge.thread"]) and not model._abstract
         )
