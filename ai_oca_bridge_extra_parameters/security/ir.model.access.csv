@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ai_extra_parameter_manager,access_ai_extra_parameter.manager,model_ai_extra_parameter,base.group_system,1,1,1,1
+access_ai_extra_parameter_user,access_ai_extra_parameter.user,model_ai_extra_parameter,base.group_user,1,0,0,0
