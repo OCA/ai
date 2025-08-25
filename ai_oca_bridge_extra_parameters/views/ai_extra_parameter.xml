@@ -1,0 +1,55 @@
+<odoo>
+    <record model="ir.ui.view" id="view_ai_extra_parameter_tree">
+        <field name="name">ai.extra.parameter.tree</field>
+        <field name="model">ai.extra.parameter</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="evaluate_type" />
+                <field name="parameter_type" />
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_ai_extra_parameter_form">
+        <field name="name">ai.extra.parameter.form</field>
+        <field name="model">ai.extra.parameter</field>
+        <field name="arch" type="xml">
+            <form string="AI Extra Parameter">
+                <sheet>
+                    <group>
+                        <field name="name" />
+                        <field name="evaluate_type" />
+                        <field name="parameter_type" />
+                    </group>
+                    <group>
+                        <field
+                            name="expression"
+                            attrs="{'invisible':[('evaluate_type','!=','expression')]}"
+                        />
+                    </group>
+                                    <group>
+                    <group>
+                        <field
+                                name="formula"
+                                widget="ace"
+                                attrs="{'invisible':[('evaluate_type','!=','formula')]}"
+                            />
+                    </group>
+                    <group attrs="{'invisible':[('evaluate_type','!=','formula')]}">
+                        <h2 name="hr_instructions">Instructions</h2>
+                        <span class='instructions'>
+                            Use 'object' to access all the line
+                            Use 'result' to return the result.
+                        </span>
+                    </group>
+                </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="ir.actions.act_window" id="action_ai_extra_parameters">
+        <field name="name">AI Extra Parameters</field>
+        <field name="res_model">ai.extra.parameter</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>
