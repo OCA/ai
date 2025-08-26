@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 17.0\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -159,14 +159,12 @@ msgstr ""
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__ai_bridge_info
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_document_page__ai_bridge_info
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_helpdesk_ticket__ai_bridge_info
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_helpdesk_ticket_team__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_discuss_channel__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_blacklist__ai_bridge_info
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_channel__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread_blacklist__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread_cc__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread_main_attachment__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread_phone__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_phone_blacklist__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_res_partner__ai_bridge_info
@@ -414,12 +412,6 @@ msgid "Is Follower"
 msgstr ""
 
 #. module: ai_oca_bridge
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge____last_update
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution____last_update
-msgid "Last Modified on"
-msgstr ""
-
-#. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__write_uid
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__write_uid
 msgid "Last Updated by"
@@ -429,11 +421,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__write_date
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__write_date
 msgid "Last Updated on"
-msgstr ""
-
-#. module: ai_oca_bridge
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__message_main_attachment_id
-msgid "Main Attachment"
 msgstr ""
 
 #. module: ai_oca_bridge
@@ -655,7 +642,7 @@ msgstr ""
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__async_timeout
 msgid ""
 "Timeout in seconds for asynchronous operations. If the operation does not "
-"complete within this time, it will be considered failed."
+"complete within this time,            it will be considered failed."
 msgstr ""
 
 #. module: ai_oca_bridge
@@ -700,16 +687,6 @@ msgstr ""
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__group_ids
 msgid "User groups allowed to use this AI bridge."
-msgstr ""
-
-#. module: ai_oca_bridge
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__website_message_ids
-msgid "Website Messages"
-msgstr ""
-
-#. module: ai_oca_bridge
-#: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__website_message_ids
-msgid "Website communication history"
 msgstr ""
 
 #. module: ai_oca_bridge
