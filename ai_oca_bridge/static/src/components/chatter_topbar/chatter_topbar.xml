@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t
+        t-name="ai_oca_bridge.ChatterTopbar"
+        t-inherit="mail.Chatter"
+        t-inherit-mode="extension"
+    >
+        <xpath expr="//button[@aria-label='Search Messages']" position="before">
+            <ChatterAITopbar
+                record="this"
+                t-if="props.webRecord and props.webRecord.data.ai_bridge_info and props.webRecord.data.ai_bridge_info.length > 0"
+            />
+        </xpath>
+    </t>
+</templates>
