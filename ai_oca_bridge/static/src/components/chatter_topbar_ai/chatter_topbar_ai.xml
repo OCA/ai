@@ -1,26 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
     <t t-name="ai_oca_bridge.ChatterAITopbar">
-        <Dropdown
-            class="'btn-group o_ChatterTopbar_AIButton me-1'"
-            togglerClass="'btn  ai_button_selection text-uppercase'"
-            hotkey="'i'"
-            showCaret="true"
-        >
-            <t t-set-slot="toggler">
-                <i class="fa fa-bolt" />
-            </t>
-            <t
-                t-foreach="props.record.props.webRecord.data.ai_bridge_info"
-                t-as="aiBridge"
-                t-key="aiBridge.id"
+        <Dropdown position="'bottom-end'">
+            <!-- TODO: avoid focus button effect and check hotkey functionality-->
+            <button
+                t-att-class="'btn btn-link d-flex align-items-center text-action px-1 btn ai_button_selection text-uppercase'"
+                data-hotkey="i"
             >
-                <DropdownItem
-                    class="'dropdown-item'"
-                    onSelected="() => this.props.record.onClickAiBridge(aiBridge)"
+                <i class="fa fa-bolt" />
+            </button>
+            <t t-set-slot="content">
+                <t
+                    t-foreach="props.record.props.webRecord.data.ai_bridge_info"
+                    t-as="aiBridge"
+                    t-key="aiBridge.id"
                 >
-                    <ChatterAIItem bridge="aiBridge" />
-                </DropdownItem>
+                    <DropdownItem
+                        class="'dropdown-item'"
+                        onSelected="() => this.props.record.onClickAiBridge(aiBridge)"
+                    >
+                        <ChatterAIItem bridge="aiBridge" />
+                    </DropdownItem>
+                </t>
             </t>
         </Dropdown>
     </t>

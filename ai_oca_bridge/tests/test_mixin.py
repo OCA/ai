@@ -6,7 +6,7 @@ from unittest import mock
 from odoo_test_helper import FakeModelLoader
 
 from odoo.exceptions import ValidationError
-from odoo.tests.common import Form, TransactionCase
+from odoo.tests import Form, TransactionCase
 
 
 class TestBridge(TransactionCase):
