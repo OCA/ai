@@ -39,7 +39,7 @@ class MailThread(models.AbstractModel):
 
             # We need to copy, because it is a frozen dict
             all_models = res["models"].copy()
-            for node in doc.xpath("/form/div[hasclass('oe_chatter')]"):
+            for node in doc.xpath("/form/chatter"):
                 # _add_tier_validation_label process
                 new_node = etree.fromstring(
                     "<field name='ai_bridge_info' invisible='1'/>"
@@ -60,7 +60,7 @@ class MailThread(models.AbstractModel):
     def _get_view_fields(self, view_type, models):
         """
         We need to add this in order to fix the usage of form opening from
-        trees inside a form
+        lists inside a form
         """
         result = super()._get_view_fields(view_type, models)
         if view_type == "form":
