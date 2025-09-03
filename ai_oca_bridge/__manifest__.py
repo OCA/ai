@@ -6,7 +6,7 @@
     "summary": """
     Makes a basic configuration to be used as bridge with external AI systems
     """,
-    "version": "17.0.0.0.1",
+    "version": "18.0.1.0.0",
     "license": "AGPL-3",
     "author": "Dixmit,Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/ai",
@@ -27,12 +27,8 @@
             "ai_oca_bridge/static/src/**/*.xml",
             "ai_oca_bridge/static/src/**/*.esm.js",
         ],
-        "web.tests_assets": [
-            "ai_oca_bridge/static/tests/helpers/**/*.esm.js",
-        ],
-        "web.qunit_suite_tests": [
-            "ai_oca_bridge/static/tests/**/*.esm.js",
-            ("remove", "ai_oca_bridge/static/tests/helpers/**/*.esm.js"),
+        "web.assets_unit_tests": [
+            "ai_oca_bridge/static/tests/**/*",
         ],
     },
     "application": True,
