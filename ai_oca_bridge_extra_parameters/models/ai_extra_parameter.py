@@ -23,7 +23,8 @@ class AIExtraParameter(models.Model):
         required=True,
         default="record",
         help="Defines the context in which this parameter is evaluated. "
-        "'record' means it will be evaluated in the context of the record being processed, "
+        "'record' means it will be evaluated in the context of the record "
+        "being processed, "
         "'self' means it will be evaluated in the context of the AI bridge itself.",
     )
 
@@ -212,7 +213,7 @@ class AIExtraParameter(models.Model):
             return self._evaluate_expression(obj)
         elif self.evaluate_type == "formula":
             result = self._evaluate_formula(obj)
-            if isinstance(result, (str, int, float, bool, type(None), dict, list)):
+            if isinstance(result, str | int | float | bool | type(None) | dict | list):
                 return result
             else:
                 return str(result)
@@ -386,8 +387,10 @@ class ExpressionVariableExtractor(ast.NodeVisitor):
     AST visitor that extracts external variables from Python expressions.
 
     This class is designed to analyze simple Python expressions (evaluated with eval())
-    and identify which variables are referenced but not defined within the expression itself.
-    It helps determine what external context variables are needed for expression evaluation.
+    and identify which variables are referenced but not defined within the expression
+    itself.
+    It helps determine what external context variables are needed for expression
+    evaluation.
 
     The extractor tracks:
     - Variables being read/accessed (ast.Load context)

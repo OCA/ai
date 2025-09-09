@@ -24,7 +24,7 @@
                     <group>
                         <field
                             name="expression"
-                            attrs="{'invisible':[('evaluate_type','!=','expression')]}"
+                            invisible="evaluate_type != 'expression'"
                         />
                     </group>
                                     <group>
@@ -32,10 +32,10 @@
                         <field
                                 name="formula"
                                 widget="ace"
-                                attrs="{'invisible':[('evaluate_type','!=','formula')]}"
+                                invisible="evaluate_type != 'formula'"
                             />
                     </group>
-                    <group attrs="{'invisible':[('evaluate_type','!=','formula')]}">
+                    <group invisible="evaluate_type != 'formula'">
                         <h2 name="hr_instructions">Instructions</h2>
                         <span class='instructions'>
                             Use 'object' to access all the line

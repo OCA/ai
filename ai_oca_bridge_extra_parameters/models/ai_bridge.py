@@ -8,7 +8,8 @@ class AiBridge(models.Model):
         "ai.extra.parameter",
         string="Extra Parameters",
         help="Additional parameters to be sent to the AI system. "
-        "These can be used to customize the AI request using expressions or fixed input.",
+        "These can be used to customize the AI request using expressions "
+        "or fixed input.",
     )
 
     def _prepare_payload(self, record=None, **kwargs):
