@@ -2,7 +2,6 @@ from odoo import fields, models
 
 
 class AiBridge(models.Model):
-
     _inherit = "ai.bridge"
 
     extra_parameter_ids = fields.Many2many(
