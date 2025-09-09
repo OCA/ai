@@ -4,7 +4,7 @@
 {
     "name": "AI OCA Bridge Extra Parameters",
     "summary": """Adds extra parameters to the AI OCA Bridge payload.""",
-    "version": "16.0.1.0.0",
+    "version": "17.0.1.0.0",
     "license": "AGPL-3",
     "author": "Binhex,Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/ai",
