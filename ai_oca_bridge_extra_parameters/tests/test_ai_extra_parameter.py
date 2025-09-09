@@ -131,7 +131,8 @@ class TestAIExtraParameter(TransactionCase):
         param = self.env["ai.extra.parameter"].create(
             {
                 "name": "method_param",
-                "expression": "Name length: {len(object.name)} - Upper: {object.name.upper()}",
+                "expression": "Name length: {len(object.name)} - Upper: "
+                "{object.name.upper()}",
                 "parameter_type": "record",
                 "evaluate_type": "expression",
             }
@@ -160,7 +161,9 @@ class TestAIExtraParameter(TransactionCase):
         param = self.env["ai.extra.parameter"].create(
             {
                 "name": "type_param",
-                "expression": "Int: {int(42.7)} - Bool: {bool(object.name)} - Str: {str(123)}",
+                "expression": (
+                    "Int: {int(42.7)} - Bool: {bool(object.name)} - " "Str: {str(123)}"
+                ),
                 "parameter_type": "record",
                 "evaluate_type": "expression",
             }
@@ -342,7 +345,9 @@ class TestAIExtraParameter(TransactionCase):
         param = self.env["ai.extra.parameter"].create(
             {
                 "name": "nested_attr",
-                "expression": "Model: {object.model_id.model} - Field: {object.model_id.name}",
+                "expression": (
+                    "Model: {object.model_id.model} - Field: {object.model_id.name}"
+                ),
                 "parameter_type": "self",
                 "evaluate_type": "expression",
             }
@@ -814,6 +819,19 @@ result = {
             result = param.evaluate_parameter(obj=self.partner)
             self.assertIsInstance(result, expected_type)
 
+    def test_formula_non_basic_type_conversion(self):
+        param = self.env["ai.extra.parameter"].create(
+            {
+                "name": "tuple_result_param",
+                "formula": "result = (object.name, object.email)",
+                "parameter_type": "record",
+                "evaluate_type": "formula",
+            }
+        )
+        result = param.evaluate_parameter(obj=self.partner)
+        self.assertIsInstance(result, str)
+        self.assertEqual(result, "('Test Partner', 'test@example.com')")
+
     def test_formula_with_odoo_recordset_methods(self):
         param = self.env["ai.extra.parameter"].create(
             {
@@ -823,7 +841,9 @@ result = {
     'has_children': bool(object.child_ids),
     'first_child': object.child_ids[0].name if object.child_ids else None,
     'mapped_names': object.child_ids.mapped('name'),
-    'filtered_count': len(object.child_ids.filtered(lambda c: '@example.com' in c.email))
+    'filtered_count': len(
+        object.child_ids.filtered(lambda c: '@example.com' in c.email)
+    )
 }""",
                 "parameter_type": "record",
                 "evaluate_type": "formula",
@@ -1004,7 +1024,10 @@ def outer_function(param1):
 
 output = outer_function(object.name)
 
-names = [child.name for child in object.child_ids] if hasattr(object, 'child_ids') else []
+names = (
+    [child.name for child in object.child_ids]
+    if hasattr(object, 'child_ids') else []
+)
 
 result = {
     'function_output': output,
