@@ -17,7 +17,11 @@ ai
 
 [//]: # (addons)
 
-This part will be replaced when running the oca-gen-addons-table script from OCA/maintainer-tools.
+Available addons
+----------------
+addon | version | maintainers | summary
+--- | --- | --- | ---
+[ai_oca_bridge](ai_oca_bridge/) | 18.0.1.0.0 |  | Makes a basic configuration to be used as bridge with external AI systems
 
 [//]: # (end addons)
 
