@@ -22,6 +22,7 @@ Available addons
 addon | version | maintainers | summary
 --- | --- | --- | ---
 [ai_oca_bridge](ai_oca_bridge/) | 18.0.1.0.0 |  | Makes a basic configuration to be used as bridge with external AI systems
+[ai_oca_native_generate_ollama](ai_oca_native_generate_ollama/) | 18.0.1.0.0 |  | This module replaces AI from html_editor to use an Ollama server instead of OpenAI through Odoo IAP.
 
 [//]: # (end addons)
 
