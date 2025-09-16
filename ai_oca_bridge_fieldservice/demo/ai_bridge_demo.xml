@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <!-- AI Bridge for FSM Order -->
+    <record id="demo_ai_bridge_fsm_order" model="ai.bridge">
+        <field name="name">FSM Order AI Bridge - Demo</field>
+        <field
+            name="description"
+        >&lt;p&gt;Demo AI Bridge for Field Service Orders&lt;/p&gt;</field>
+        <field name="model_id" ref="fieldservice.model_fsm_order" />
+        <field name="usage">ai_thread_create</field>
+        <field name="url">https://api.example.com/ai/fsm/demo</field>
+        <field name="auth_type">none</field>
+        <field name="payload_type">record</field>
+        <field name="result_type">none</field>
+        <field name="result_kind">immediate</field>
+        <field
+            name="field_ids"
+            eval="[(6, 0, [
+            ref('fieldservice.field_fsm_order__name'),
+            ref('fieldservice.field_fsm_order__description'),
+            ref('fieldservice.field_fsm_order__scheduled_date_start'),
+            ref('fieldservice.field_fsm_order__scheduled_duration'),
+        ])]"
+        />
+    </record>
+
+    <record id="demo_fsm_location_ai_bridge" model="fsm.location">
+        <field name="name">AI Bridge Demo Location</field>
+        <field name="phone">123456789</field>
+        <field name="email">demo@example.com</field>
+        <field name="street">Demo Street</field>
+        <field name="city">Demo City</field>
+        <field name="zip">12345</field>
+        <field name="country_id" ref="base.br" />
+        <field name="state_id" ref="base.state_br_sp" />
+        <field name="owner_id" ref="base.partner_root" />
+    </record>
+
+    <record id="demo_fsm_person_ai_bridge" model="fsm.person">
+        <field name="name">AI Bridge Demo Person</field>
+        <field name="phone">987654321</field>
+        <field name="email">person@example.com</field>
+    </record>
+
+    <record id="demo_fsm_order_ai_bridge" model="fsm.order">
+        <field name="name">AI Bridge Demo Order</field>
+        <field
+            name="description"
+        >This is a demo Field Service Order with AI Bridge integration</field>
+        <field name="person_id" ref="demo_fsm_person_ai_bridge" />
+        <field name="location_id" ref="demo_fsm_location_ai_bridge" />
+        <field
+            name="scheduled_date_start"
+            eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"
+        />
+        <field name="scheduled_duration">2.0</field>
+    </record>
+</odoo>
