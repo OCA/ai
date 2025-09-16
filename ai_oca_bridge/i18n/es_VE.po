@@ -21,10 +21,12 @@ msgstr ""
 msgid ""
 "\n"
 "        Defines how the result from the AI system is processed.\n"
-"        - 'Immediate': The result is processed immediately after the AI system responds.\n"
+"        - 'Immediate': The result is processed immediately after the AI "
+"system responds.\n"
 "        - 'Asynchronous': The result is processed in the background.\n"
 "          It allows longer operations.\n"
-"          Odoo will provide a URL to the AI system where the response will be sent.\n"
+"          Odoo will provide a URL to the AI system where the response will "
+"be sent.\n"
 "          Users will receive a notification when the operation is started.\n"
 "          No notification will be sent when it is finished.\n"
 "        "
@@ -174,6 +176,10 @@ msgstr "Configuración de puente de IA"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_calendar_event__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_crm_lead__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_crm_team__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_crm_team_member__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_document_page__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_helpdesk_ticket__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_helpdesk_ticket_team__ai_bridge_info
@@ -496,6 +502,11 @@ msgid "Name"
 msgstr "Nombre"
 
 #. module: ai_oca_bridge
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr ""
+
+#. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__activity_date_deadline
 msgid "Next Activity Deadline"
 msgstr "Fecha límite para la próxima actividad"
@@ -750,5 +761,5 @@ msgstr "Historia de la comunicación en la web"
 msgid ""
 "When usage is 'AI Thread Unlink', the Payload Type must be 'No payload'."
 msgstr ""
-"Cuando el uso es \"Hilo Puente IA\", el tipo de carga útil debe ser "
-"\"Sin carga útil\"."
+"Cuando el uso es \"Hilo Puente IA\", el tipo de carga útil debe ser \"Sin "
+"carga útil\"."

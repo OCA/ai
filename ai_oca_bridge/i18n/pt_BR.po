@@ -19,10 +19,12 @@ msgstr ""
 msgid ""
 "\n"
 "        Defines how the result from the AI system is processed.\n"
-"        - 'Immediate': The result is processed immediately after the AI system responds.\n"
+"        - 'Immediate': The result is processed immediately after the AI "
+"system responds.\n"
 "        - 'Asynchronous': The result is processed in the background.\n"
 "          It allows longer operations.\n"
-"          Odoo will provide a URL to the AI system where the response will be sent.\n"
+"          Odoo will provide a URL to the AI system where the response will "
+"be sent.\n"
 "          Users will receive a notification when the operation is started.\n"
 "          No notification will be sent when it is finished.\n"
 "        "
@@ -160,6 +162,10 @@ msgstr ""
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_calendar_event__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_crm_lead__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_crm_team__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_crm_team_member__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_document_page__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_helpdesk_ticket__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_helpdesk_ticket_team__ai_bridge_info
@@ -477,6 +483,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__name
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__name
 msgid "Name"
+msgstr ""
+
+#. module: ai_oca_bridge
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
 msgstr ""
 
 #. module: ai_oca_bridge

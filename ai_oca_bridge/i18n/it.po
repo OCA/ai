@@ -174,6 +174,10 @@ msgstr "Configurazione collegamento IA"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_calendar_event__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_crm_lead__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_crm_team__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_crm_team_member__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_document_page__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_helpdesk_ticket__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_helpdesk_ticket_team__ai_bridge_info
@@ -494,6 +498,11 @@ msgstr "Scadenza mia attività"
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__name
 msgid "Name"
 msgstr "Nome"
+
+#. module: ai_oca_bridge
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr ""
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__activity_date_deadline
