@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record id="ai_bridge_crm_lead_create" model="ai.bridge">
+        <field name="name">CRM Lead AI Bridge - Create</field>
+        <field name="description">
+            <![CDATA[
+            <p>This AI bridge is triggered when a new lead is created.</p>
+            ]]>
+        </field>
+        <field name="model_id" ref="crm.model_crm_lead" />
+        <field name="usage">ai_thread_create</field>
+        <field name="url">https://api.example.com/ai/document/create</field>
+        <field name="auth_type">none</field>
+        <field name="payload_type">record</field>
+        <field name="result_type">none</field>
+        <field name="result_kind">immediate</field>
+        <field
+            name="field_ids"
+            eval="[(6, 0, [ref('crm.field_crm_lead__name'), ref('crm.field_crm_lead__expected_revenue')])]"
+        />
+    </record>
+
+    <record id="ai_bridge_crm_lead_write" model="ai.bridge">
+        <field name="name">CRM Lead AI Bridge - Update</field>
+        <field name="description">
+            <![CDATA[
+            <p>This AI bridge is triggered when a CRM lead is updated.</p>
+            ]]>
+        </field>
+        <field name="model_id" ref="crm.model_crm_lead" />
+        <field name="usage">ai_thread_write</field>
+        <field name="url">https://api.example.com/ai/document/create</field>
+        <field name="auth_type">none</field>
+        <field name="payload_type">record</field>
+        <field name="result_type">none</field>
+        <field name="result_kind">immediate</field>
+        <field
+            name="field_ids"
+            eval="[(6, 0, [ref('crm.field_crm_lead__name'), ref('crm.field_crm_lead__expected_revenue')])]"
+        />
+    </record>
+
+    <record id="ai_bridge_crm_lead_unlink" model="ai.bridge">
+        <field name="name">CRM Lead AI Bridge - Delete</field>
+        <field name="description">
+            <![CDATA[
+            <p>This AI bridge is triggered when a CRM lead is deleted.</p>
+            ]]>
+        </field>
+        <field name="model_id" ref="crm.model_crm_lead" />
+        <field name="usage">ai_thread_unlink</field>
+        <field name="url">https://api.example.com/ai/document/create</field>
+        <field name="auth_type">none</field>
+        <field name="payload_type">none</field>
+        <field name="result_type">none</field>
+        <field name="result_kind">immediate</field>
+    </record>
+</odoo>
