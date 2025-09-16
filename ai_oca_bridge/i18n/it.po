@@ -179,6 +179,11 @@ msgstr "Configurazione collegamento IA"
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_crm_team__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_crm_team_member__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_document_page__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_fsm_equipment__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_fsm_location__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_fsm_order__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_fsm_person__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_fsm_team__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_helpdesk_ticket__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_helpdesk_ticket_team__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_blacklist__ai_bridge_info
