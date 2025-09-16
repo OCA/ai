@@ -13,6 +13,7 @@ setuptools.setup(
         'odoo-addon-ai_oca_bridge_crm_lead>=16.0dev,<16.1dev',
         'odoo-addon-ai_oca_bridge_document_page>=16.0dev,<16.1dev',
         'odoo-addon-ai_oca_bridge_extra_parameters>=16.0dev,<16.1dev',
+        'odoo-addon-ai_oca_bridge_fieldservice>=16.0dev,<16.1dev',
         'odoo-addon-ai_oca_bridge_helpdesk_mgmt>=16.0dev,<16.1dev',
     ],
     classifiers=[
