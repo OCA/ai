@@ -10,6 +10,7 @@ setuptools.setup(
     install_requires=[
         'odoo-addon-ai_oca_bridge>=16.0dev,<16.1dev',
         'odoo-addon-ai_oca_bridge_chatter>=16.0dev,<16.1dev',
+        'odoo-addon-ai_oca_bridge_crm_lead>=16.0dev,<16.1dev',
         'odoo-addon-ai_oca_bridge_document_page>=16.0dev,<16.1dev',
         'odoo-addon-ai_oca_bridge_extra_parameters>=16.0dev,<16.1dev',
         'odoo-addon-ai_oca_bridge_helpdesk_mgmt>=16.0dev,<16.1dev',
