@@ -1,0 +1,49 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ai_oca_bridge_crm_lead
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: ai_oca_bridge_crm_lead
+#: model:ai.bridge,name:ai_oca_bridge_crm_lead.ai_bridge_crm_lead_create
+msgid "CRM Lead AI Bridge - Create"
+msgstr ""
+
+#. module: ai_oca_bridge_crm_lead
+#: model:ai.bridge,name:ai_oca_bridge_crm_lead.ai_bridge_crm_lead_unlink
+msgid "CRM Lead AI Bridge - Delete"
+msgstr ""
+
+#. module: ai_oca_bridge_crm_lead
+#: model:ai.bridge,name:ai_oca_bridge_crm_lead.ai_bridge_crm_lead_write
+msgid "CRM Lead AI Bridge - Update"
+msgstr ""
+
+#. module: ai_oca_bridge_crm_lead
+#: model:ir.model,name:ai_oca_bridge_crm_lead.model_crm_lead
+msgid "Lead/Opportunity"
+msgstr ""
+
+#. module: ai_oca_bridge_crm_lead
+#: model_terms:ai.bridge,description:ai_oca_bridge_crm_lead.ai_bridge_crm_lead_unlink
+msgid "This AI bridge is triggered when a CRM lead is deleted."
+msgstr ""
+
+#. module: ai_oca_bridge_crm_lead
+#: model_terms:ai.bridge,description:ai_oca_bridge_crm_lead.ai_bridge_crm_lead_write
+msgid "This AI bridge is triggered when a CRM lead is updated."
+msgstr ""
+
+#. module: ai_oca_bridge_crm_lead
+#: model_terms:ai.bridge,description:ai_oca_bridge_crm_lead.ai_bridge_crm_lead_create
+msgid "This AI bridge is triggered when a new lead is created."
+msgstr ""
