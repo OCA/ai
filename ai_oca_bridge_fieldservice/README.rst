@@ -1,7 +1,3 @@
-.. image:: https://odoo-community.org/readme-banner-image
-   :target: https://odoo-community.org/get-involved?utm_source=readme
-   :alt: Odoo Community Association
-
 ===========================
 AI OCA Bridge Field Service
 ===========================
@@ -17,7 +13,7 @@ AI OCA Bridge Field Service
 .. |badge1| image:: https://img.shields.io/badge/maturity-Beta-yellow.png
     :target: https://odoo-community.org/page/development-status
     :alt: Beta
-.. |badge2| image:: https://img.shields.io/badge/license-AGPL--3-blue.png
+.. |badge2| image:: https://img.shields.io/badge/licence-AGPL--3-blue.png
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-OCA%2Fai-lightgray.png?logo=github
@@ -77,13 +73,13 @@ OCA, or the Odoo Community Association, is a nonprofit organization whose
 mission is to support the collaborative development of Odoo features and
 promote its widespread use.
 
-.. |maintainer-marcel-savegnago| image:: https://github.com/marcel-savegnago.png?size=40px
-    :target: https://github.com/marcel-savegnago
-    :alt: marcel-savegnago
+.. |maintainer-marcelsavegnago| image:: https://github.com/marcelsavegnago.png?size=40px
+    :target: https://github.com/marcelsavegnago
+    :alt: marcelsavegnago
 
 Current `maintainer <https://odoo-community.org/page/maintainer-role>`__:
 
-|maintainer-marcel-savegnago| 
+|maintainer-marcelsavegnago| 
 
 This module is part of the `OCA/ai <https://github.com/OCA/ai/tree/16.0/ai_oca_bridge_fieldservice>`_ project on GitHub.
 
