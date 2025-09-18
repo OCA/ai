@@ -21,10 +21,12 @@ msgstr ""
 msgid ""
 "\n"
 "        Defines how the result from the AI system is processed.\n"
-"        - 'Immediate': The result is processed immediately after the AI system responds.\n"
+"        - 'Immediate': The result is processed immediately after the AI "
+"system responds.\n"
 "        - 'Asynchronous': The result is processed in the background.\n"
 "          It allows longer operations.\n"
-"          Odoo will provide a URL to the AI system where the response will be sent.\n"
+"          Odoo will provide a URL to the AI system where the response will "
+"be sent.\n"
 "          Users will receive a notification when the operation is started.\n"
 "          No notification will be sent when it is finished.\n"
 "        "
@@ -45,21 +47,18 @@ msgstr ""
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
-#, python-format
 msgid "%s executed successfully."
 msgstr "%s ejecutado correctamente."
 
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
-#, python-format
 msgid "%s failed."
 msgstr "%s falló."
 
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
-#, python-format
 msgid "%s is not active."
 msgstr "%s no está activo."
 
@@ -78,7 +77,6 @@ msgstr "Puente de IA"
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
-#, python-format
 msgid "AI Bridge Executed"
 msgstr "Puente de IA ejecutado"
 
@@ -90,14 +88,12 @@ msgstr "Ejecución de Puente de IA"
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
-#, python-format
 msgid "AI Bridge Failed"
 msgstr "Puente de IA fallo"
 
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
-#, python-format
 msgid "AI Bridge Inactive"
 msgstr "Puente de IA inactivo"
 
@@ -174,14 +170,13 @@ msgstr "Configuración de puente de IA"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_discuss_channel__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_document_page__ai_bridge_info
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_helpdesk_ticket__ai_bridge_info
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_helpdesk_ticket_team__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_blacklist__ai_bridge_info
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_channel__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread_blacklist__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread_cc__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread_main_attachment__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread_phone__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_phone_blacklist__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_res_partner__ai_bridge_info
@@ -328,14 +323,12 @@ msgstr "Detalles de ejecución"
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/controllers/ai.py:0
-#, python-format
 msgid "Execution is expired."
 msgstr "La ejecución ha expirado."
 
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/controllers/ai.py:0
-#, python-format
 msgid "Execution not found."
 msgstr "No se ha encontrado la ejecución."
 
@@ -431,12 +424,6 @@ msgid "Is Follower"
 msgstr "Es seguidor"
 
 #. module: ai_oca_bridge
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge____last_update
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution____last_update
-msgid "Last Modified on"
-msgstr "Última modificación el"
-
-#. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__write_uid
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__write_uid
 msgid "Last Updated by"
@@ -447,11 +434,6 @@ msgstr "Última actualización por"
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__write_date
 msgid "Last Updated on"
 msgstr "Última actualización el"
-
-#. module: ai_oca_bridge
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__message_main_attachment_id
-msgid "Main Attachment"
-msgstr "Adjunto principal"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__message_has_error
@@ -578,11 +560,6 @@ msgid "Record Payload"
 msgstr "Carga útil de registro"
 
 #. module: ai_oca_bridge
-#: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__payload_type__record_v0
-msgid "Record v0"
-msgstr "Registro v0"
-
-#. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__res_id
 msgid "Res"
 msgstr "Respuesta"
@@ -684,10 +661,8 @@ msgstr "Hilo"
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__async_timeout
 msgid ""
 "Timeout in seconds for asynchronous operations. If the operation does not "
-"complete within this time, it will be considered failed."
+"complete within this time,            it will be considered failed."
 msgstr ""
-"Tiempo de espera en segundos para operaciones asincrónicas. Si la operación "
-"no se completa dentro de este tiempo, se considerará fallida."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__auth_type__token
@@ -697,7 +672,6 @@ msgstr "Autenticación de token"
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/controllers/ai.py:0
-#, python-format
 msgid "Token is not allowed for this execution."
 msgstr "Token no está permitido para esta ejecución."
 
@@ -714,7 +688,6 @@ msgstr "Dirección URL"
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge_execution.py:0
-#, python-format
 msgid "Unsupported authentication type."
 msgstr "Tipo de autenticación no admitido."
 
@@ -734,21 +707,32 @@ msgid "User groups allowed to use this AI bridge."
 msgstr "Grupos de usuarios autorizados a utilizar este puente de IA."
 
 #. module: ai_oca_bridge
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__website_message_ids
-msgid "Website Messages"
-msgstr "Mensajes del sitio web"
-
-#. module: ai_oca_bridge
-#: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__website_message_ids
-msgid "Website communication history"
-msgstr "Historia de la comunicación en la web"
-
-#. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
-#, python-format
 msgid ""
 "When usage is 'AI Thread Unlink', the Payload Type must be 'No payload'."
 msgstr ""
-"Cuando el uso es \"Hilo Puente IA\", el tipo de carga útil debe ser "
-"\"Sin carga útil\"."
+"Cuando el uso es \"Hilo Puente IA\", el tipo de carga útil debe ser \"Sin "
+"carga útil\"."
+
+#~ msgid "Last Modified on"
+#~ msgstr "Última modificación el"
+
+#~ msgid "Main Attachment"
+#~ msgstr "Adjunto principal"
+
+#~ msgid "Record v0"
+#~ msgstr "Registro v0"
+
+#~ msgid ""
+#~ "Timeout in seconds for asynchronous operations. If the operation does not "
+#~ "complete within this time, it will be considered failed."
+#~ msgstr ""
+#~ "Tiempo de espera en segundos para operaciones asincrónicas. Si la "
+#~ "operación no se completa dentro de este tiempo, se considerará fallida."
+
+#~ msgid "Website Messages"
+#~ msgstr "Mensajes del sitio web"
+
+#~ msgid "Website communication history"
+#~ msgstr "Historia de la comunicación en la web"

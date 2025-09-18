@@ -45,21 +45,18 @@ msgstr ""
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
-#, python-format
 msgid "%s executed successfully."
 msgstr "%s eseguito con successo."
 
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
-#, python-format
 msgid "%s failed."
 msgstr "%s fallito."
 
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
-#, python-format
 msgid "%s is not active."
 msgstr "%s non è attivo."
 
@@ -78,7 +75,6 @@ msgstr "Collegamento IA"
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
-#, python-format
 msgid "AI Bridge Executed"
 msgstr "Collegamento IA eseguito"
 
@@ -90,14 +86,12 @@ msgstr "Esecuzione collegamento IA"
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
-#, python-format
 msgid "AI Bridge Failed"
 msgstr "Collegamento IA fallito"
 
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
-#, python-format
 msgid "AI Bridge Inactive"
 msgstr "Collegamento IA inattivo"
 
@@ -174,14 +168,13 @@ msgstr "Configurazione collegamento IA"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_discuss_channel__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_document_page__ai_bridge_info
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_helpdesk_ticket__ai_bridge_info
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_helpdesk_ticket_team__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_blacklist__ai_bridge_info
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_channel__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread_blacklist__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread_cc__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread_main_attachment__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread_phone__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_phone_blacklist__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_res_partner__ai_bridge_info
@@ -328,14 +321,12 @@ msgstr "Dettagli esecuzione"
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/controllers/ai.py:0
-#, python-format
 msgid "Execution is expired."
 msgstr "L'esecuzione è scaduta."
 
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/controllers/ai.py:0
-#, python-format
 msgid "Execution not found."
 msgstr "Esecuzione non trovata."
 
@@ -431,12 +422,6 @@ msgid "Is Follower"
 msgstr "Segue"
 
 #. module: ai_oca_bridge
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge____last_update
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution____last_update
-msgid "Last Modified on"
-msgstr "Ultima modifica il"
-
-#. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__write_uid
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__write_uid
 msgid "Last Updated by"
@@ -447,11 +432,6 @@ msgstr "Ultimo aggiornamento di"
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__write_date
 msgid "Last Updated on"
 msgstr "Ultimo aggiornamento il"
-
-#. module: ai_oca_bridge
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__message_main_attachment_id
-msgid "Main Attachment"
-msgstr "Allegato principale"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__message_has_error
@@ -679,10 +659,8 @@ msgstr "Discussione"
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__async_timeout
 msgid ""
 "Timeout in seconds for asynchronous operations. If the operation does not "
-"complete within this time, it will be considered failed."
+"complete within this time,            it will be considered failed."
 msgstr ""
-"Timeout in secondi per operazioni asincrone. Se l'operazione non si completa "
-"entro questo tempo, verrà considerata fallita."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__auth_type__token
@@ -692,7 +670,6 @@ msgstr "Autenticazione token"
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/controllers/ai.py:0
-#, python-format
 msgid "Token is not allowed for this execution."
 msgstr "Il token non è autorizzato per questa esecuzione."
 
@@ -709,7 +686,6 @@ msgstr "URL"
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge_execution.py:0
-#, python-format
 msgid "Unsupported authentication type."
 msgstr "Tipo autenticazione non supportato."
 
@@ -729,21 +705,29 @@ msgid "User groups allowed to use this AI bridge."
 msgstr "Gruppi utente autorizzati ad usare questo collegamento IA."
 
 #. module: ai_oca_bridge
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__website_message_ids
-msgid "Website Messages"
-msgstr "Messaggi sito web"
-
-#. module: ai_oca_bridge
-#: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__website_message_ids
-msgid "Website communication history"
-msgstr "Cronologia comunicazioni sito web"
-
-#. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
-#, python-format
 msgid ""
 "When usage is 'AI Thread Unlink', the Payload Type must be 'No payload'."
 msgstr ""
 "Quando l'utilizzo è 'Rilascio thread IA', il tipo di carico deve essere "
 "'Nessun carico'."
+
+#~ msgid "Last Modified on"
+#~ msgstr "Ultima modifica il"
+
+#~ msgid "Main Attachment"
+#~ msgstr "Allegato principale"
+
+#~ msgid ""
+#~ "Timeout in seconds for asynchronous operations. If the operation does not "
+#~ "complete within this time, it will be considered failed."
+#~ msgstr ""
+#~ "Timeout in secondi per operazioni asincrone. Se l'operazione non si "
+#~ "completa entro questo tempo, verrà considerata fallita."
+
+#~ msgid "Website Messages"
+#~ msgstr "Messaggi sito web"
+
+#~ msgid "Website communication history"
+#~ msgstr "Cronologia comunicazioni sito web"
