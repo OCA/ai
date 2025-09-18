@@ -1,0 +1,53 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ai_oca_bridge_document_page
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2025-08-15 22:40+0000\n"
+"Last-Translator: \"Leonardo J. Caballero G.\" <leonardocaballero@gmail.com>\n"
+"Language-Team: none\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.10.4\n"
+
+#. module: ai_oca_bridge_document_page
+#: model:ir.model,name:ai_oca_bridge_document_page.model_document_page
+msgid "Document Page"
+msgstr "Página del documento"
+
+#. module: ai_oca_bridge_document_page
+#: model:ai.bridge,name:ai_oca_bridge_document_page.ai_bridge_document_page_create
+msgid "Document Page AI Bridge - Create"
+msgstr "Puente de IA de la página del documento - Crear"
+
+#. module: ai_oca_bridge_document_page
+#: model:ai.bridge,name:ai_oca_bridge_document_page.ai_bridge_document_page_unlink
+msgid "Document Page AI Bridge - Delete"
+msgstr "Puente de IA de la página del documento - Eliminar"
+
+#. module: ai_oca_bridge_document_page
+#: model:ai.bridge,name:ai_oca_bridge_document_page.ai_bridge_document_page_write
+msgid "Document Page AI Bridge - Update"
+msgstr "Puente de IA de la página del documento - Actualizar"
+
+#. module: ai_oca_bridge_document_page
+#: model_terms:ai.bridge,description:ai_oca_bridge_document_page.ai_bridge_document_page_unlink
+msgid "This AI bridge is triggered when a document page is deleted."
+msgstr "Este puente AI se activa cuando se elimina una página del documento."
+
+#. module: ai_oca_bridge_document_page
+#: model_terms:ai.bridge,description:ai_oca_bridge_document_page.ai_bridge_document_page_write
+msgid "This AI bridge is triggered when a document page is updated."
+msgstr "Este puente AI se activa cuando se actualiza una página de documento."
+
+#. module: ai_oca_bridge_document_page
+#: model_terms:ai.bridge,description:ai_oca_bridge_document_page.ai_bridge_document_page_create
+msgid "This AI bridge is triggered when a new document page is created."
+msgstr ""
+"Este puente de IA se activa cuando se crea una nueva página de documento."
