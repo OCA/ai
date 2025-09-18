@@ -154,6 +154,7 @@ msgstr ""
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_discuss_channel__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_document_page__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_blacklist__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread_blacklist__ai_bridge_info
