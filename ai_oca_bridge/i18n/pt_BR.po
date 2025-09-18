@@ -19,10 +19,12 @@ msgstr ""
 msgid ""
 "\n"
 "        Defines how the result from the AI system is processed.\n"
-"        - 'Immediate': The result is processed immediately after the AI system responds.\n"
+"        - 'Immediate': The result is processed immediately after the AI "
+"system responds.\n"
 "        - 'Asynchronous': The result is processed in the background.\n"
 "          It allows longer operations.\n"
-"          Odoo will provide a URL to the AI system where the response will be sent.\n"
+"          Odoo will provide a URL to the AI system where the response will "
+"be sent.\n"
 "          Users will receive a notification when the operation is started.\n"
 "          No notification will be sent when it is finished.\n"
 "        "
@@ -31,21 +33,18 @@ msgstr ""
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
-#, python-format
 msgid "%s executed successfully."
 msgstr ""
 
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
-#, python-format
 msgid "%s failed."
 msgstr ""
 
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
-#, python-format
 msgid "%s is not active."
 msgstr ""
 
@@ -64,7 +63,6 @@ msgstr ""
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
-#, python-format
 msgid "AI Bridge Executed"
 msgstr ""
 
@@ -76,14 +74,12 @@ msgstr ""
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
-#, python-format
 msgid "AI Bridge Failed"
 msgstr ""
 
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
-#, python-format
 msgid "AI Bridge Inactive"
 msgstr ""
 
@@ -160,14 +156,13 @@ msgstr ""
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_discuss_channel__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_document_page__ai_bridge_info
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_helpdesk_ticket__ai_bridge_info
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_helpdesk_ticket_team__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_blacklist__ai_bridge_info
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_channel__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread_blacklist__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread_cc__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread_main_attachment__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread_phone__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_phone_blacklist__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_res_partner__ai_bridge_info
@@ -312,14 +307,12 @@ msgstr ""
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/controllers/ai.py:0
-#, python-format
 msgid "Execution is expired."
 msgstr ""
 
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/controllers/ai.py:0
-#, python-format
 msgid "Execution not found."
 msgstr ""
 
@@ -415,12 +408,6 @@ msgid "Is Follower"
 msgstr ""
 
 #. module: ai_oca_bridge
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge____last_update
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution____last_update
-msgid "Last Modified on"
-msgstr ""
-
-#. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__write_uid
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__write_uid
 msgid "Last Updated by"
@@ -430,11 +417,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__write_date
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__write_date
 msgid "Last Updated on"
-msgstr ""
-
-#. module: ai_oca_bridge
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__message_main_attachment_id
-msgid "Main Attachment"
 msgstr ""
 
 #. module: ai_oca_bridge
@@ -562,11 +544,6 @@ msgid "Record Payload"
 msgstr ""
 
 #. module: ai_oca_bridge
-#: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__payload_type__record_v0
-msgid "Record v0"
-msgstr ""
-
-#. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__res_id
 msgid "Res"
 msgstr ""
@@ -661,7 +638,7 @@ msgstr ""
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__async_timeout
 msgid ""
 "Timeout in seconds for asynchronous operations. If the operation does not "
-"complete within this time, it will be considered failed."
+"complete within this time,            it will be considered failed."
 msgstr ""
 
 #. module: ai_oca_bridge
@@ -672,7 +649,6 @@ msgstr ""
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/controllers/ai.py:0
-#, python-format
 msgid "Token is not allowed for this execution."
 msgstr ""
 
@@ -689,7 +665,6 @@ msgstr ""
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge_execution.py:0
-#, python-format
 msgid "Unsupported authentication type."
 msgstr ""
 
@@ -709,19 +684,8 @@ msgid "User groups allowed to use this AI bridge."
 msgstr ""
 
 #. module: ai_oca_bridge
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__website_message_ids
-msgid "Website Messages"
-msgstr ""
-
-#. module: ai_oca_bridge
-#: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__website_message_ids
-msgid "Website communication history"
-msgstr ""
-
-#. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
-#, python-format
 msgid ""
 "When usage is 'AI Thread Unlink', the Payload Type must be 'No payload'."
 msgstr ""
