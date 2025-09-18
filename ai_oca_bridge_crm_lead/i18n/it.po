@@ -6,45 +6,51 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: Automatically generated\n"
+"PO-Revision-Date: 2025-09-18 16:42+0000\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.10.4\n"
 
 #. module: ai_oca_bridge_crm_lead
 #: model:ai.bridge,name:ai_oca_bridge_crm_lead.ai_bridge_crm_lead_create
 msgid "CRM Lead AI Bridge - Create"
-msgstr ""
+msgstr "Collegamento IA contatto CRM - Crea"
 
 #. module: ai_oca_bridge_crm_lead
 #: model:ai.bridge,name:ai_oca_bridge_crm_lead.ai_bridge_crm_lead_unlink
 msgid "CRM Lead AI Bridge - Delete"
-msgstr ""
+msgstr "Collegamento IA contatto CRM - Cancella"
 
 #. module: ai_oca_bridge_crm_lead
 #: model:ai.bridge,name:ai_oca_bridge_crm_lead.ai_bridge_crm_lead_write
 msgid "CRM Lead AI Bridge - Update"
-msgstr ""
+msgstr "Collegamento IA contatto CRM - Aggiorna"
 
 #. module: ai_oca_bridge_crm_lead
 #: model:ir.model,name:ai_oca_bridge_crm_lead.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr ""
+msgstr "Contatto/Opportunità"
 
 #. module: ai_oca_bridge_crm_lead
 #: model_terms:ai.bridge,description:ai_oca_bridge_crm_lead.ai_bridge_crm_lead_unlink
 msgid "This AI bridge is triggered when a CRM lead is deleted."
 msgstr ""
+"Questo collegamento IA è attivato quando un contatto CRM viene cancellato."
 
 #. module: ai_oca_bridge_crm_lead
 #: model_terms:ai.bridge,description:ai_oca_bridge_crm_lead.ai_bridge_crm_lead_write
 msgid "This AI bridge is triggered when a CRM lead is updated."
 msgstr ""
+"Questo collegamento IA viene attivato quando un contatto CRM viene "
+"aggiornato."
 
 #. module: ai_oca_bridge_crm_lead
 #: model_terms:ai.bridge,description:ai_oca_bridge_crm_lead.ai_bridge_crm_lead_create
 msgid "This AI bridge is triggered when a new lead is created."
 msgstr ""
+"Questo collegamento IA viene attivato quando viene creato un nuovo contatto."
