@@ -192,9 +192,17 @@ msgstr "Configurazione collegamento IA"
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread_blacklist__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread_cc__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread_phone__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_mrp_bom__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_mrp_production__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_mrp_unbuild__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_phone_blacklist__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_product_product__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_product_template__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_res_partner__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_res_users__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_stock_lot__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_stock_picking__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_stock_scrap__ai_bridge_info
 msgid "Ai Bridge Info"
 msgstr "Informazioni collegamento IA"
 
