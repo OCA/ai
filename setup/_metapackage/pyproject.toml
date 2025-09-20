@@ -1,8 +1,9 @@
 [project]
 name = "odoo-addons-oca-ai"
-version = "17.0.20250826.0"
+version = "17.0.20250920.0"
 dependencies = [
     "odoo-addon-ai_oca_bridge>=17.0dev,<17.1dev",
+    "odoo-addon-ai_oca_bridge_document_page>=17.0dev,<17.1dev",
 ]
 classifiers=[
     "Programming Language :: Python",

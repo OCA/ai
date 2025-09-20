@@ -22,6 +22,7 @@ Available addons
 addon | version | maintainers | summary
 --- | --- | --- | ---
 [ai_oca_bridge](ai_oca_bridge/) | 17.0.0.0.1 |  | Makes a basic configuration to be used as bridge with external AI systems
+[ai_oca_bridge_document_page](ai_oca_bridge_document_page/) | 17.0.1.0.0 |  | Adds Documents synchronization using AI Bridges
 
 [//]: # (end addons)
 
