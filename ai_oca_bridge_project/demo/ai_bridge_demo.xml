@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record id="ai_bridge_project_create" model="ai.bridge">
+        <field name="name">Project AI Bridge - Create</field>
+        <field name="description">
+            <![CDATA[
+            <p>This AI bridge is triggered when a new project is created.</p>
+            ]]>
+        </field>
+        <field name="model_id" ref="project.model_project_project" />
+        <field name="usage">ai_thread_create</field>
+        <field name="url">https://api.example.com/ai/project/create</field>
+        <field name="auth_type">none</field>
+        <field name="payload_type">record</field>
+        <field name="result_type">none</field>
+        <field name="result_kind">immediate</field>
+        <field
+            name="field_ids"
+            eval="[(6, 0, [ref('project.field_project_project__name'), ref('project.field_project_project__stage_id')])]"
+        />
+    </record>
+
+    <record id="ai_bridge_project_write" model="ai.bridge">
+        <field name="name">Project AI Bridge - Update</field>
+        <field name="description">
+            <![CDATA[
+            <p>This AI bridge is triggered when a project is updated.</p>
+            ]]>
+        </field>
+        <field name="model_id" ref="project.model_project_project" />
+        <field name="usage">ai_thread_write</field>
+        <field name="url">https://api.example.com/ai/project/update</field>
+        <field name="auth_type">none</field>
+        <field name="payload_type">record</field>
+        <field name="result_type">none</field>
+        <field name="result_kind">immediate</field>
+        <field
+            name="field_ids"
+            eval="[(6, 0, [ref('project.field_project_project__name'), ref('project.field_project_project__stage_id')])]"
+        />
+    </record>
+
+    <record id="ai_bridge_project_unlink" model="ai.bridge">
+        <field name="name">Project AI Bridge - Delete</field>
+        <field name="description">
+            <![CDATA[
+            <p>This AI bridge is triggered when a project is deleted.</p>
+            ]]>
+        </field>
+        <field name="model_id" ref="project.model_project_project" />
+        <field name="usage">ai_thread_unlink</field>
+        <field name="url">https://api.example.com/ai/project/delete</field>
+        <field name="auth_type">none</field>
+        <field name="payload_type">none</field>
+        <field name="result_type">none</field>
+        <field name="result_kind">immediate</field>
+    </record>
+
+    <record id="ai_bridge_task_create" model="ai.bridge">
+        <field name="name">Task AI Bridge - Create</field>
+        <field name="description">
+            <![CDATA[
+            <p>This AI bridge is triggered when a new task is created.</p>
+            ]]>
+        </field>
+        <field name="model_id" ref="project.model_project_task" />
+        <field name="usage">ai_thread_create</field>
+        <field name="url">https://api.example.com/ai/task/create</field>
+        <field name="auth_type">none</field>
+        <field name="payload_type">record</field>
+        <field name="result_type">none</field>
+        <field name="result_kind">immediate</field>
+        <field
+            name="field_ids"
+            eval="[(6, 0, [ref('project.field_project_task__name'), ref('project.field_project_task__stage_id')])]"
+        />
+    </record>
+
+    <record id="ai_bridge_task_write" model="ai.bridge">
+        <field name="name">Task AI Bridge - Update</field>
+        <field name="description">
+            <![CDATA[
+            <p>This AI bridge is triggered when a task is updated.</p>
+            ]]>
+        </field>
+        <field name="model_id" ref="project.model_project_task" />
+        <field name="usage">ai_thread_write</field>
+        <field name="url">https://api.example.com/ai/task/update</field>
+        <field name="auth_type">none</field>
+        <field name="payload_type">record</field>
+        <field name="result_type">none</field>
+        <field name="result_kind">immediate</field>
+        <field
+            name="field_ids"
+            eval="[(6, 0, [ref('project.field_project_task__name'), ref('project.field_project_task__stage_id')])]"
+        />
+    </record>
+
+    <record id="ai_bridge_task_unlink" model="ai.bridge">
+        <field name="name">Task AI Bridge - Delete</field>
+        <field name="description">
+            <![CDATA[
+            <p>This AI bridge is triggered when a task is deleted.</p>
+            ]]>
+        </field>
+        <field name="model_id" ref="project.model_project_task" />
+        <field name="usage">ai_thread_unlink</field>
+        <field name="url">https://api.example.com/ai/task/delete</field>
+        <field name="auth_type">none</field>
+        <field name="payload_type">none</field>
+        <field name="result_type">none</field>
+        <field name="result_kind">immediate</field>
+    </record>
+</odoo>
