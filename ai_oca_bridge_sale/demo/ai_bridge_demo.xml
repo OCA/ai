@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <!-- Sale Order AI Bridges -->
+    <record id="ai_bridge_sale_order_create" model="ai.bridge">
+        <field name="name">Sale Order AI Bridge - Create</field>
+        <field name="description">
+            <![CDATA[
+            <p>This AI bridge is triggered when a new sale order is created.</p>
+            ]]>
+        </field>
+        <field name="model_id" ref="sale.model_sale_order" />
+        <field name="usage">ai_thread_create</field>
+        <field name="url">https://api.example.com/ai/sale_order/create</field>
+        <field name="auth_type">none</field>
+        <field name="payload_type">record</field>
+        <field name="result_type">none</field>
+        <field name="result_kind">immediate</field>
+        <field
+            name="field_ids"
+            eval="[(6, 0, [ref('sale.field_sale_order__name'), ref('sale.field_sale_order__partner_id'), ref('sale.field_sale_order__state')])]"
+        />
+    </record>
+
+    <record id="ai_bridge_sale_order_write" model="ai.bridge">
+        <field name="name">Sale Order AI Bridge - Update</field>
+        <field name="description">
+            <![CDATA[
+            <p>This AI bridge is triggered when a sale order is updated.</p>
+            ]]>
+        </field>
+        <field name="model_id" ref="sale.model_sale_order" />
+        <field name="usage">ai_thread_write</field>
+        <field name="url">https://api.example.com/ai/sale_order/update</field>
+        <field name="auth_type">none</field>
+        <field name="payload_type">record</field>
+        <field name="result_type">none</field>
+        <field name="result_kind">immediate</field>
+        <field
+            name="field_ids"
+            eval="[(6, 0, [ref('sale.field_sale_order__name'), ref('sale.field_sale_order__partner_id'), ref('sale.field_sale_order__state')])]"
+        />
+    </record>
+
+    <record id="ai_bridge_sale_order_unlink" model="ai.bridge">
+        <field name="name">Sale Order AI Bridge - Delete</field>
+        <field name="description">
+            <![CDATA[
+            <p>This AI bridge is triggered when a sale order is deleted.</p>
+            ]]>
+        </field>
+        <field name="model_id" ref="sale.model_sale_order" />
+        <field name="usage">ai_thread_unlink</field>
+        <field name="url">https://api.example.com/ai/sale_order/delete</field>
+        <field name="auth_type">none</field>
+        <field name="payload_type">none</field>
+        <field name="result_type">none</field>
+        <field name="result_kind">immediate</field>
+    </record>
+
+    <!-- Sale Order Line AI Bridges -->
+    <record id="ai_bridge_sale_order_line_create" model="ai.bridge">
+        <field name="name">Sale Order Line AI Bridge - Create</field>
+        <field name="description">
+            <![CDATA[
+            <p>This AI bridge is triggered when a new sale order line is created.</p>
+            ]]>
+        </field>
+        <field name="model_id" ref="sale.model_sale_order_line" />
+        <field name="usage">ai_thread_create</field>
+        <field name="url">https://api.example.com/ai/sale_order_line/create</field>
+        <field name="auth_type">none</field>
+        <field name="payload_type">record</field>
+        <field name="result_type">none</field>
+        <field name="result_kind">immediate</field>
+        <field
+            name="field_ids"
+            eval="[(6, 0, [ref('sale.field_sale_order_line__name'), ref('sale.field_sale_order_line__product_id'), ref('sale.field_sale_order_line__product_uom_qty')])]"
+        />
+    </record>
+
+    <record id="ai_bridge_sale_order_line_write" model="ai.bridge">
+        <field name="name">Sale Order Line AI Bridge - Update</field>
+        <field name="description">
+            <![CDATA[
+            <p>This AI bridge is triggered when a sale order line is updated.</p>
+            ]]>
+        </field>
+        <field name="model_id" ref="sale.model_sale_order_line" />
+        <field name="usage">ai_thread_write</field>
+        <field name="url">https://api.example.com/ai/sale_order_line/update</field>
+        <field name="auth_type">none</field>
+        <field name="payload_type">record</field>
+        <field name="result_type">none</field>
+        <field name="result_kind">immediate</field>
+        <field
+            name="field_ids"
+            eval="[(6, 0, [ref('sale.field_sale_order_line__name'), ref('sale.field_sale_order_line__product_id'), ref('sale.field_sale_order_line__product_uom_qty')])]"
+        />
+    </record>
+
+    <record id="ai_bridge_sale_order_line_unlink" model="ai.bridge">
+        <field name="name">Sale Order Line AI Bridge - Delete</field>
+        <field name="description">
+            <![CDATA[
+            <p>This AI bridge is triggered when a sale order line is deleted.</p>
+            ]]>
+        </field>
+        <field name="model_id" ref="sale.model_sale_order_line" />
+        <field name="usage">ai_thread_unlink</field>
+        <field name="url">https://api.example.com/ai/sale_order_line/delete</field>
+        <field name="auth_type">none</field>
+        <field name="payload_type">none</field>
+        <field name="result_type">none</field>
+        <field name="result_kind">immediate</field>
+    </record>
+</odoo>
