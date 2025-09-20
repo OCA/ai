@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- MCP Tool Form View -->
+    <record id="view_mcp_tool_form" model="ir.ui.view">
+        <field name="name">mcp.tool.form</field>
+        <field name="model">mcp.tool</field>
+        <field name="arch" type="xml">
+            <form string="MCP Tool">
+                <header>
+                    <button
+                        name="action_call_tool"
+                        string="Call Tool"
+                        type="object"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('server_state', '!=', 'running')]}"
+                    />
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" />
+                        <h1><field name="name" placeholder="e.g. get_weather" /></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="server_id" />
+                            <field name="server_state" />
+                            <field name="is_auto_approved" />
+                        </group>
+                        <group>
+                            <field name="input_schema" widget="text" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field
+                                name="description"
+                                placeholder="Describe the tool's purpose and functionality..."
+                            />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- MCP Tool Tree View -->
+    <record id="view_mcp_tool_tree" model="ir.ui.view">
+        <field name="name">mcp.tool.tree</field>
+        <field name="model">mcp.tool</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="server_id" />
+                <field name="server_state" />
+                <field name="description" />
+                <field name="is_auto_approved" />
+                <button
+                    name="action_call_tool"
+                    string="Call"
+                    type="object"
+                    icon="fa-play"
+                    attrs="{'invisible': [('server_state', '!=', 'running')]}"
+                />
+            </tree>
+        </field>
+    </record>
+
+    <!-- MCP Tool Search View -->
+    <record id="view_mcp_tool_search" model="ir.ui.view">
+        <field name="name">mcp.tool.search</field>
+        <field name="model">mcp.tool</field>
+        <field name="arch" type="xml">
+            <search string="Search MCP Tools">
+                <field name="name" />
+                <field name="server_id" />
+                <field name="server_state" />
+                <field name="description" />
+                <filter
+                    string="Auto Approved"
+                    name="auto_approved"
+                    domain="[('is_auto_approved', '=', True)]"
+                />
+                <filter
+                    string="Running Servers"
+                    name="running_servers"
+                    domain="[('server_state', '=', 'running')]"
+                />
+                <group expand="0" string="Group By">
+                    <filter
+                        string="Server"
+                        name="group_by_server"
+                        context="{'group_by': 'server_id'}"
+                    />
+                    <filter
+                        string="Server Status"
+                        name="group_by_server_state"
+                        context="{'group_by': 'server_state'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- MCP Tool Action -->
+    <record id="action_mcp_tool" model="ir.actions.act_window">
+        <field name="name">MCP Tools</field>
+        <field name="res_model">mcp.tool</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_mcp_tool_search" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No tools found
+            </p>
+            <p>
+                Tools are provided by MCP servers. Start a server to discover its tools.
+            </p>
+        </field>
+    </record>
+
+</odoo>

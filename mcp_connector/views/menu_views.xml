@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- MCP Server Main Menu -->
+    <menuitem
+        id="menu_mcp_server_root"
+        name="MCP"
+        web_icon="mcp_server,static/description/icon.png"
+        sequence="100"
+    />
+
+    <!-- MCP Server Sub Menus -->
+    <menuitem
+        id="menu_mcp_server"
+        name="Servers"
+        parent="menu_mcp_server_root"
+        action="action_mcp_server"
+        sequence="10"
+    />
+
+    <menuitem
+        id="menu_mcp_tool"
+        name="Tools"
+        parent="menu_mcp_server_root"
+        action="action_mcp_tool"
+        sequence="20"
+    />
+
+    <menuitem
+        id="menu_mcp_resource"
+        name="Resources"
+        parent="menu_mcp_server_root"
+        action="action_mcp_resource"
+        sequence="30"
+    />
+
+    <menuitem
+        id="menu_mcp_prompt"
+        name="Prompts"
+        parent="menu_mcp_server_root"
+        action="mcp_prompt_action"
+        sequence="40"
+    />
+</odoo>

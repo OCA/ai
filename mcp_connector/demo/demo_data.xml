@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+
+        <!-- Demo MCP Server 1: Memory Server -->
+        <record id="demo_server_memory" model="mcp.server">
+            <field name="name">Memory Server</field>
+            <field name="command">npx</field>
+            <field name="args">["-y", "@modelcontextprotocol/server-memory"]</field>
+            <field name="env_vars">{}</field>
+            <field name="auto_approve">["*"]</field>
+            <field name="enabled">true</field>
+            <field name="active">true</field>
+            <field name="state">stopped</field>
+        </record>
+
+        <!-- Demo MCP Server 2: Puppeteer Web Automation -->
+        <record id="demo_server_puppeteer" model="mcp.server">
+            <field name="name">Puppeteer Web Automation Server</field>
+            <field name="command">npx</field>
+            <field name="args">["-y", "@modelcontextprotocol/server-puppeteer"]</field>
+            <field name="env_vars">{}</field>
+            <field name="auto_approve">["*"]</field>
+            <field name="enabled">true</field>
+            <field name="active">true</field>
+            <field name="state">stopped</field>
+        </record>
+
+</odoo>

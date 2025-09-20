@@ -1,0 +1,12 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mcp_server_admin,mcp.server admin,model_mcp_server,base.group_system,1,1,1,1
+access_mcp_server_user,mcp.server user,model_mcp_server,base.group_user,1,0,0,0
+access_mcp_tool_admin,mcp.tool admin,model_mcp_tool,base.group_system,1,1,1,1
+access_mcp_tool_user,mcp.tool user,model_mcp_tool,base.group_user,1,0,0,0
+access_mcp_resource_admin,mcp.resource admin,model_mcp_resource,base.group_system,1,1,1,1
+access_mcp_resource_user,mcp.resource user,model_mcp_resource,base.group_user,1,0,0,0
+access_mcp_tool_call_wizard,mcp.tool.call.wizard,model_mcp_tool_call_wizard,base.group_user,1,1,1,1
+access_mcp_resource_read_wizard,mcp.resource.read.wizard,model_mcp_resource_read_wizard,base.group_user,1,1,1,1
+access_mcp_prompt_admin,mcp.prompt admin,model_mcp_prompt,base.group_system,1,1,1,1
+access_mcp_prompt_user,mcp.prompt user,model_mcp_prompt,base.group_user,1,0,0,0
+access_mcp_prompt_get_wizard,mcp.prompt.get.wizard,model_mcp_prompt_get_wizard,base.group_user,1,1,1,1

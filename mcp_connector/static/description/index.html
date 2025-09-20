@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>MCP Connector</title>
+    <style>
+        body {
+            font-family: 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', 'DejaVu Sans', 'Verdana', 'sans-serif';
+            font-size: 13px;
+            color: #333;
+            line-height: 1.4;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f8f8;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 25px;
+        }
+        .feature-list {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        .feature-list li {
+            padding: 5px 0;
+            border-bottom: 1px solid #ecf0f1;
+        }
+        .feature-list li:before {
+            content: "✓ ";
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .highlight {
+            background-color: #e8f4f8;
+            padding: 15px;
+            border-left: 4px solid #3498db;
+            margin: 15px 0;
+        }
+        .code {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin: 10px 0;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ecf0f1;
+            text-align: center;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>MCP Connector</h1>
+        
+        <p>Integrate Odoo with Model Context Protocol (MCP) servers to unlock the power of external AI tools, APIs, and services directly within your Odoo environment.</p>
+        
+        <div class="highlight">
+            <strong>What is MCP?</strong><br>
+            Model Context Protocol (MCP) is a standardized protocol that enables AI applications to securely connect to data sources and tools, making it easier to integrate AI capabilities into existing applications.
+        </div>
+        
+        <h2>Key Features</h2>
+        <ul class="feature-list">
+            <li><strong>Server Management:</strong> Configure and control MCP servers with ease</li>
+            <li><strong>Tool Integration:</strong> Access and utilize tools exposed by MCP servers</li>
+            <li><strong>Resource Handling:</strong> Manage and interact with server resources</li>
+            <li><strong>Flexible Configuration:</strong> Support for custom commands and environment variables</li>
+            <li><strong>Secure Access:</strong> Built-in security with role-based access control</li>
+            <li><strong>User-Friendly Interface:</strong> Intuitive wizards and comprehensive views</li>
+        </ul>
+        
+        <h2>Use Cases</h2>
+        <ul class="feature-list">
+            <li><strong>AI Image Generation:</strong> Generate images from text prompts</li>
+            <li><strong>Text Translation:</strong> Multi-language support for Odoo content</li>
+            <li><strong>Weather Data:</strong> Real-time weather information integration</li>
+            <li><strong>Business Analytics:</strong> Connect to analytics and BI tools</li>
+            <li><strong>Custom APIs:</strong> Integrate with internal and external APIs</li>
+        </ul>
+        
+        <h2>Quick Start</h2>
+        <div class="code">
+1. Install: pip install mcp<br>
+2. Configure your MCP server<br>
+3. Start the server and discover tools<br>
+4. Use tools through the intuitive interface
+        </div>
+        
+        <h2>Technical Details</h2>
+        <ul class="feature-list">
+            <li>Threaded architecture for non-blocking operations</li>
+            <li>Full MCP protocol compliance</li>
+            <li>Comprehensive error handling and logging</li>
+            <li>Automatic tool and resource discovery</li>
+            <li>JSON-based parameter support</li>
+        </ul>
+        
+        <div class="footer">
+            <p>Developed by <strong>Escodoo</strong> | Maintained by <strong>OCA</strong></p>
+            <p>Open Source | AGPL-3 License | Community Driven</p>
+        </div>
+    </div>
+</body>
+</html>

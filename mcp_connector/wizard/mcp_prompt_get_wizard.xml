@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2025 Escodoo
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <!-- MCP Prompt Get Wizard Tree View -->
+    <record id="mcp_prompt_get_wizard_view_tree" model="ir.ui.view">
+        <field name="name">mcp.prompt.get.wizard.tree</field>
+        <field name="model">mcp.prompt.get.wizard</field>
+        <field name="arch" type="xml">
+            <tree create="false" edit="false" delete="false">
+                <field name="prompt_id" />
+                <field name="server_id" />
+                <field name="arguments" widget="json" />
+                <field name="result" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- MCP Prompt Get Wizard Form View -->
+    <record id="mcp_prompt_get_wizard_view_form" model="ir.ui.view">
+        <field name="name">mcp.prompt.get.wizard.form</field>
+        <field name="model">mcp.prompt.get.wizard</field>
+        <field name="arch" type="xml">
+            <form string="MCP Prompt Result" create="false" edit="false" delete="false">
+                <header>
+                    <button
+                        name="action_get_prompt"
+                        type="object"
+                        string="Get New Prompt"
+                        class="btn-primary"
+                    />
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="prompt_id" readonly="1" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="server_id" readonly="1" />
+                            <field name="arguments" widget="json" readonly="1" />
+                        </group>
+                    </group>
+                    <group>
+                        <field name="result" widget="text" readonly="1" nolabel="1" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- MCP Prompt Get Wizard Action -->
+    <record id="mcp_prompt_get_wizard_action" model="ir.actions.act_window">
+        <field name="name">MCP Prompt Results</field>
+        <field name="res_model">mcp.prompt.get.wizard</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_prompt_id': active_id}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No prompt results yet!
+            </p>
+            <p>
+                Use the "Get Prompt" button on a prompt to generate results.
+            </p>
+        </field>
+    </record>
+
+</odoo>

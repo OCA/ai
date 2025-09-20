@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2025 Escodoo
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <!-- MCP Tool Call Wizard Form View -->
+    <record id="view_mcp_tool_call_wizard_form" model="ir.ui.view">
+        <field name="name">mcp.tool.call.wizard.form</field>
+        <field name="model">mcp.tool.call.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Call MCP Tool">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="tool_id" />
+                            <field name="server_id" />
+                        </group>
+                        <group>
+                            <field
+                                name="arguments"
+                                widget="text"
+                                placeholder='e.g. {"city": "San Francisco", "days": 3}'
+                            />
+                        </group>
+                    </group>
+                    <group attrs="{'invisible': [('result', '=', False)]}">
+                        <field name="result" widget="text" readonly="1" />
+                    </group>
+                </sheet>
+                <footer>
+                    <button
+                        name="action_call_tool"
+                        string="Call Tool"
+                        type="object"
+                        class="btn-primary"
+                        attrs="{'invisible': [('result', '!=', False)]}"
+                    />
+                    <button string="Close" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- MCP Server Form View -->
+    <record id="view_mcp_server_form" model="ir.ui.view">
+        <field name="name">mcp.server.form</field>
+        <field name="model">mcp.server</field>
+        <field name="arch" type="xml">
+            <form string="MCP Server">
+                <header>
+                    <button
+                        name="action_start"
+                        string="Start Server"
+                        type="object"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('state', 'in', ['running'])]}"
+                    />
+                    <button
+                        name="action_stop"
+                        string="Stop Server"
+                        type="object"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('state', '!=', 'running')]}"
+                    />
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="stopped,running,error"
+                    />
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="action_view_tools"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-wrench"
+                        >
+                            <field name="tool_count" string="Tools" widget="statinfo" />
+                        </button>
+                        <button
+                            name="action_view_resources"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-database"
+                        >
+                            <field
+                                name="resource_count"
+                                string="Resources"
+                                widget="statinfo"
+                            />
+                        </button>
+                        <button
+                            name="action_view_prompts"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-magic"
+                        >
+                            <field
+                                name="prompt_count"
+                                string="Prompts"
+                                widget="statinfo"
+                            />
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" />
+                        <h1><field name="name" placeholder="e.g. Weather Server" /></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="command" placeholder="e.g. node, python" />
+                            <field
+                                name="args"
+                                placeholder='e.g. ["/path/to/server.js"]'
+                            />
+                            <field
+                                name="env_vars"
+                                placeholder='e.g. {"API_KEY": "abc123"}'
+                            />
+                        </group>
+                        <group>
+                            <field name="active" />
+                            <field name="enabled" />
+                            <field
+                                name="auto_approve"
+                                placeholder='e.g. ["get_weather"]'
+                            />
+                            <field name="last_start_time" readonly="1" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field
+                                name="description"
+                                placeholder="Describe the server's purpose and functionality..."
+                            />
+                        </page>
+                        <page
+                            string="Error Log"
+                            attrs="{'invisible': [('error_message', '=', False)]}"
+                        >
+                            <field name="error_message" readonly="1" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- MCP Server Tree View -->
+    <record id="view_mcp_server_tree" model="ir.ui.view">
+        <field name="name">mcp.server.tree</field>
+        <field name="model">mcp.server</field>
+        <field name="arch" type="xml">
+            <tree
+                decoration-success="state == 'running'"
+                decoration-danger="state == 'error'"
+            >
+                <field name="name" />
+                <field name="command" />
+                <field name="enabled" />
+                <field name="state" />
+                <field name="tool_count" />
+                <field name="resource_count" />
+                <field name="last_start_time" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- MCP Server Search View -->
+    <record id="view_mcp_server_search" model="ir.ui.view">
+        <field name="name">mcp.server.search</field>
+        <field name="model">mcp.server</field>
+        <field name="arch" type="xml">
+            <search string="Search MCP Servers">
+                <field name="name" />
+                <field name="command" />
+                <filter
+                    string="Running"
+                    name="running"
+                    domain="[('state', '=', 'running')]"
+                />
+                <filter
+                    string="Stopped"
+                    name="stopped"
+                    domain="[('state', '=', 'stopped')]"
+                />
+                <filter
+                    string="Error"
+                    name="error"
+                    domain="[('state', '=', 'error')]"
+                />
+                <filter
+                    string="Enabled"
+                    name="enabled"
+                    domain="[('enabled', '=', True)]"
+                />
+                <filter
+                    string="Disabled"
+                    name="disabled"
+                    domain="[('enabled', '=', False)]"
+                />
+                <group expand="0" string="Group By">
+                    <filter
+                        string="Status"
+                        name="group_by_state"
+                        context="{'group_by': 'state'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- MCP Server Action -->
+    <record id="action_mcp_server" model="ir.actions.act_window">
+        <field name="name">MCP Servers</field>
+        <field name="res_model">mcp.server</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_mcp_server_search" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first MCP server
+            </p>
+            <p>
+                MCP servers allow Odoo to communicate with external Model Context Protocol servers,
+                enabling access to tools and resources provided by those servers.
+            </p>
+        </field>
+    </record>
+</odoo>

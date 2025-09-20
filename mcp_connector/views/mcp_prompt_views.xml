@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- MCP Prompt Tree View -->
+    <record id="mcp_prompt_view_tree" model="ir.ui.view">
+        <field name="name">mcp.prompt.tree</field>
+        <field name="model">mcp.prompt</field>
+        <field name="arch" type="xml">
+            <tree default_order="name">
+                <field name="name" />
+                <field name="description" />
+                <field name="server_id" />
+                <field name="arguments" widget="json" />
+            </tree>
+        </field>
+    </record>
+
+    <!-- MCP Prompt Form View -->
+    <record id="mcp_prompt_view_form" model="ir.ui.view">
+        <field name="name">mcp.prompt.form</field>
+        <field name="model">mcp.prompt</field>
+        <field name="arch" type="xml">
+            <form string="MCP Prompt">
+                <header>
+                    <button
+                        name="action_get_prompt"
+                        type="object"
+                        string="Get Prompt"
+                        class="btn-primary"
+                    />
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="action_get_prompt"
+                            type="object"
+                            string="Get Prompt"
+                            class="oe_stat_button"
+                            icon="fa-magic"
+                        />
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Prompt Name" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="server_id" options="{'no_create': True}" />
+                            <field name="description" />
+                        </group>
+                    </group>
+                    <group>
+                        <field name="arguments" widget="json" nolabel="1" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- MCP Prompt Search View -->
+    <record id="mcp_prompt_view_search" model="ir.ui.view">
+        <field name="name">mcp.prompt.search</field>
+        <field name="model">mcp.prompt</field>
+        <field name="arch" type="xml">
+            <search string="Search MCP Prompts">
+                <field name="name" />
+                <field name="description" />
+                <field name="server_id" />
+                <separator />
+                <group expand="0" string="Group By">
+                    <filter
+                        string="Server"
+                        name="group_server"
+                        context="{'group_by': 'server_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- MCP Prompt Action -->
+    <record id="mcp_prompt_action" model="ir.actions.act_window">
+        <field name="name">MCP Prompts</field>
+        <field name="res_model">mcp.prompt</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="mcp_prompt_view_search" />
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first MCP Prompt!
+            </p>
+            <p>
+                MCP Prompts are AI-powered templates that can be used to generate
+                structured prompts for various tasks. They are discovered from
+                connected MCP servers.
+            </p>
+        </field>
+    </record>
+
+
+</odoo>

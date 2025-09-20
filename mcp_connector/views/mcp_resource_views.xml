@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- MCP Resource Form View -->
+    <record id="view_mcp_resource_form" model="ir.ui.view">
+        <field name="name">mcp.resource.form</field>
+        <field name="model">mcp.resource</field>
+        <field name="arch" type="xml">
+            <form string="MCP Resource">
+                <header>
+                    <button
+                        name="action_read_resource"
+                        string="Read Resource"
+                        type="object"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('server_state', '!=', 'running')]}"
+                    />
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" />
+                        <h1><field
+                                name="name"
+                                placeholder="e.g. Current Weather"
+                            /></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="server_id" />
+                            <field name="server_state" />
+                            <field
+                                name="uri"
+                                attrs="{'invisible': [('is_template', '=', True)]}"
+                            />
+                            <field name="is_template" />
+                            <field
+                                name="uri_template"
+                                attrs="{'invisible': [('is_template', '=', False)], 'required': [('is_template', '=', True)]}"
+                            />
+                        </group>
+                        <group>
+                            <field name="mime_type" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
+                            <field
+                                name="description"
+                                placeholder="Describe the resource's purpose and content..."
+                            />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- MCP Resource Tree View -->
+    <record id="view_mcp_resource_tree" model="ir.ui.view">
+        <field name="name">mcp.resource.tree</field>
+        <field name="model">mcp.resource</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+                <field name="server_id" />
+                <field name="server_state" />
+                <field name="uri" />
+                <field name="is_template" />
+                <field name="mime_type" />
+                <button
+                    name="action_read_resource"
+                    string="Read"
+                    type="object"
+                    icon="fa-book"
+                    attrs="{'invisible': [('server_state', '!=', 'running')]}"
+                />
+            </tree>
+        </field>
+    </record>
+
+    <!-- MCP Resource Search View -->
+    <record id="view_mcp_resource_search" model="ir.ui.view">
+        <field name="name">mcp.resource.search</field>
+        <field name="model">mcp.resource</field>
+        <field name="arch" type="xml">
+            <search string="Search MCP Resources">
+                <field name="name" />
+                <field name="server_id" />
+                <field name="server_state" />
+                <field name="uri" />
+                <field name="mime_type" />
+                <filter
+                    string="Templates"
+                    name="templates"
+                    domain="[('is_template', '=', True)]"
+                />
+                <filter
+                    string="Direct Resources"
+                    name="direct_resources"
+                    domain="[('is_template', '=', False)]"
+                />
+                <filter
+                    string="Running Servers"
+                    name="running_servers"
+                    domain="[('server_state', '=', 'running')]"
+                />
+                <group expand="0" string="Group By">
+                    <filter
+                        string="Server"
+                        name="group_by_server"
+                        context="{'group_by': 'server_id'}"
+                    />
+                    <filter
+                        string="Server Status"
+                        name="group_by_server_state"
+                        context="{'group_by': 'server_state'}"
+                    />
+                    <filter
+                        string="MIME Type"
+                        name="group_by_mime_type"
+                        context="{'group_by': 'mime_type'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- MCP Resource Action -->
+    <record id="action_mcp_resource" model="ir.actions.act_window">
+        <field name="name">MCP Resources</field>
+        <field name="res_model">mcp.resource</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_mcp_resource_search" />
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No resources found
+            </p>
+            <p>
+                Resources are provided by MCP servers. Start a server to discover its resources.
+            </p>
+        </field>
+    </record>
+
+</odoo>

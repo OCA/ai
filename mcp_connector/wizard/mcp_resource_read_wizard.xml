@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2025 Escodoo
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <!-- MCP Resource Read Wizard Form View -->
+    <record id="view_mcp_resource_read_wizard_form" model="ir.ui.view">
+        <field name="name">mcp.resource.read.wizard.form</field>
+        <field name="model">mcp.resource.read.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Read MCP Resource">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="resource_id" />
+                            <field name="server_id" />
+                            <field name="is_template" invisible="1" />
+                            <field
+                                name="uri"
+                                attrs="{'invisible': [('is_template', '=', True)]}"
+                            />
+                            <field
+                                name="uri_template"
+                                attrs="{'invisible': [('is_template', '=', False)]}"
+                            />
+                        </group>
+                        <group attrs="{'invisible': [('is_template', '=', False)]}">
+                            <field
+                                name="parameters"
+                                widget="ace"
+                                options="{'mode': 'json'}"
+                                attrs="{'required': [('is_template', '=', True)]}"
+                                placeholder='e.g. {"city": "San Francisco"}'
+                            />
+                        </group>
+                    </group>
+                    <group attrs="{'invisible': [('content', '=', False)]}">
+                        <field name="mime_type" readonly="1" />
+                        <field
+                            name="content"
+                            widget="ace"
+                            options="{'mode': 'text'}"
+                            readonly="1"
+                        />
+                    </group>
+                </sheet>
+                <footer>
+                    <button
+                        name="action_read_resource"
+                        string="Read Resource"
+                        type="object"
+                        class="btn-primary"
+                        attrs="{'invisible': [('content', '!=', False)]}"
+                    />
+                    <button string="Close" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>
