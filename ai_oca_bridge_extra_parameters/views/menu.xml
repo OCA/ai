@@ -1,0 +1,9 @@
+<odoo>
+    <menuitem
+        id="menu_ai_bridge_extra_parameter"
+        name="AI Bridge Extra Parameters"
+        parent="ai_oca_bridge.ai_bridge_menu"
+        action="action_ai_extra_parameters"
+        sequence="11"
+    />
+</odoo>
