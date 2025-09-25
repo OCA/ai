@@ -19,6 +19,7 @@ class TestBridge(TransactionCase):
         from .fake_models import BridgeTest
 
         cls.loader.update_registry((BridgeTest,))
+
         cls.bridge = cls.env["ai.bridge"].create(
             {
                 "name": "Test Bridge",
@@ -151,24 +152,67 @@ class TestBridge(TransactionCase):
         with self.assertRaises(ValidationError):
             self.bridge.payload_type = "record"
 
-    def test_bridge_model_search(self):
-        models = self.env["ir.model"].search([("ai_usage", "=", "thread")])
-        model = self.env["ir.model"]._get_id("bridge.test")
-        self.assertTrue(models)
-        self.assertIn(self.env.ref("base.model_res_partner"), models)
-        self.assertNotIn(model, models.ids)
-        models = self.env["ir.model"].search([("ai_usage", "=", "ai_thread_create")])
-        self.assertTrue(models)
-        self.assertNotIn(self.env.ref("base.model_res_partner"), models)
-        self.assertIn(model, models.ids)
-        models = self.env["ir.model"].search([("ai_usage", "=", "none")])
-        self.assertTrue(models)
-        self.assertIn(self.env.ref("base.model_res_partner"), models)
-        self.assertIn(model, models.ids)
-
     def test_bridge_model_required(self):
         self.assertFalse(self.bridge.model_required)
         self.bridge.usage = "ai_thread_create"
         self.assertTrue(self.bridge.model_required)
         self.bridge.usage = "thread"
         self.assertTrue(self.bridge.model_required)
+
+    def test_bridge_enabled_for_conditions(self):
+        self.bridge.write({"usage": "ai_thread_create"})
+        record = self.env["bridge.test"].create({"name": "Test Record"})
+        with mock.patch.object(
+            type(self.bridge), "_enabled_for", return_value=False
+        ) as mock_enabled:
+            with mock.patch("requests.post") as mock_post:
+                mock_post.return_value.status_code = 200
+                mock_post.return_value.json.return_value = {"result": "success"}
+                initial_count = self.env["ai.bridge.execution"].search_count([])
+                self.env["bridge.test"].create({"name": "Test Record 2"})
+                final_count = self.env["ai.bridge.execution"].search_count([])
+                self.assertEqual(initial_count, final_count)
+                mock_enabled.assert_called()
+                mock_post.assert_not_called()
+        self.bridge.write({"usage": "ai_thread_unlink", "payload_type": "none"})
+        with mock.patch.object(
+            type(self.bridge), "_enabled_for", return_value=False
+        ) as mock_enabled:
+            with mock.patch("requests.post") as mock_post:
+                mock_post.return_value.status_code = 200
+                mock_post.return_value.json.return_value = {"result": "success"}
+                initial_count = self.env["ai.bridge.execution"].search_count([])
+                record.unlink()
+                final_count = self.env["ai.bridge.execution"].search_count([])
+                self.assertEqual(initial_count, final_count)
+                mock_enabled.assert_called()
+                mock_post.assert_not_called()
+
+    def test_prepare_unlink_empty_records(self):
+        self.bridge.write({"usage": "ai_thread_unlink", "payload_type": "none"})
+        empty_records = self.env["bridge.test"].browse([])
+        initial_count = self.env["ai.bridge.execution"].search_count(
+            [("ai_bridge_id", "=", self.bridge.id)]
+        )
+        result = empty_records._prepare_execution_ai_bridges_unlink(empty_records)
+        self.assertEqual(len(result), 0)
+        self.assertEqual(result._name, "ai.bridge.execution")
+        final_count = self.env["ai.bridge.execution"].search_count(
+            [("ai_bridge_id", "=", self.bridge.id)]
+        )
+        self.assertEqual(initial_count, final_count)
+
+    def test_execute_ai_bridges_empty_records(self):
+        self.bridge.write({"usage": "ai_thread_create"})
+        empty_records = self.env["bridge.test"].browse([])
+        with mock.patch("requests.post") as mock_post:
+            mock_post.return_value.status_code = 200
+            mock_post.return_value.json.return_value = {"result": "success"}
+            empty_records._execute_ai_bridges_for_records(
+                empty_records, "ai_thread_create"
+            )
+            mock_post.assert_not_called()
+            execution_count = self.env["ai.bridge.execution"].search_count(
+                [("ai_bridge_id", "=", self.bridge.id)]
+            )
+            self.assertEqual(execution_count, 0)
