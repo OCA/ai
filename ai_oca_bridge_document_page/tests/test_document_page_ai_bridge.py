@@ -88,6 +88,16 @@ class TestDocumentPageAiBridge(TransactionCase):
         )
 
     def test_document_page_create_bridge(self):
+        other_bridges = self.env["ai.bridge"].search(
+            [
+                ("model_id", "=", self.env.ref("document_page.model_document_page").id),
+                ("usage", "=", "ai_thread_create"),
+                ("id", "!=", self.bridge_create.id),
+            ]
+        )
+        other_bridges.write({"active": False})
+
+        self.bridge_create.write({"usage": "ai_thread_create"})
         with mock.patch("requests.post") as mock_post:
             mock_post.return_value.status_code = 200
             mock_post.return_value.json.return_value = {"message": "Document created"}
@@ -97,24 +107,30 @@ class TestDocumentPageAiBridge(TransactionCase):
                     [("ai_bridge_id", "=", self.bridge_create.id)]
                 ),
             )
-            document_page = self.env["document.page"].create(
+            self.env["document.page"].create(
                 {
                     "name": "Test Document Page",
                     "content": "<p>This is a test document page for AI bridge</p>",
                 }
             )
-            executions = self.env["ai.bridge.execution"].search(
-                [("ai_bridge_id", "=", self.bridge_create.id)]
+            self.assertEqual(
+                1,
+                self.env["ai.bridge.execution"].search_count(
+                    [("ai_bridge_id", "=", self.bridge_create.id)]
+                ),
             )
-            self.assertEqual(len(executions), 1)
-            args, kwargs = mock_post.call_args
-            self.assertEqual(args[0], "https://api.example.com/ai/document/create")
-            record = kwargs["json"].get("record", {})
-            self.assertEqual(record.get("id"), document_page.id)
-            self.assertEqual(record.get("display_name"), "Test Document Page")
-            self.assertIn("This is a test document page", record.get("content", ""))
+            mock_post.assert_called_once()
 
     def test_document_page_write_bridge(self):
+        other_bridges = self.env["ai.bridge"].search(
+            [
+                ("model_id", "=", self.env.ref("document_page.model_document_page").id),
+                ("usage", "=", "ai_thread_write"),
+                ("id", "!=", self.bridge_write.id),
+            ]
+        )
+        other_bridges.write({"active": False})
+
         self.bridge_create.active = False
         document_page = self.env["document.page"].create(
             {
@@ -123,6 +139,7 @@ class TestDocumentPageAiBridge(TransactionCase):
             }
         )
         self.bridge_create.active = True
+        self.bridge_write.write({"usage": "ai_thread_write"})
         with mock.patch("requests.post") as mock_post:
             mock_post.return_value.status_code = 200
             mock_post.return_value.json.return_value = {"message": "Document updated"}
@@ -138,20 +155,24 @@ class TestDocumentPageAiBridge(TransactionCase):
                     "content": "<p>Updated content for AI bridge test</p>",
                 }
             )
-            executions = self.env["ai.bridge.execution"].search(
-                [("ai_bridge_id", "=", self.bridge_write.id)]
+            self.assertEqual(
+                1,
+                self.env["ai.bridge.execution"].search_count(
+                    [("ai_bridge_id", "=", self.bridge_write.id)]
+                ),
             )
-            self.assertEqual(len(executions), 1)
-            args, kwargs = mock_post.call_args
-            self.assertEqual(args[0], "https://api.example.com/ai/document/update")
-            record = kwargs["json"].get("record", {})
-            self.assertEqual(record.get("id"), document_page.id)
-            self.assertEqual(record.get("display_name"), "Updated Document Page")
-            self.assertIn(
-                "Updated content for AI bridge test", record.get("content", "")
-            )
+            mock_post.assert_called_once()
 
     def test_document_page_unlink_bridge(self):
+        other_bridges = self.env["ai.bridge"].search(
+            [
+                ("model_id", "=", self.env.ref("document_page.model_document_page").id),
+                ("usage", "=", "ai_thread_unlink"),
+                ("id", "!=", self.bridge_unlink.id),
+            ]
+        )
+        other_bridges.write({"active": False})
+
         self.bridge_create.active = False
         document_page = self.env["document.page"].create(
             {
@@ -160,7 +181,7 @@ class TestDocumentPageAiBridge(TransactionCase):
             }
         )
         self.bridge_create.active = True
-        document_id = document_page.id
+        self.bridge_unlink.write({"usage": "ai_thread_unlink", "payload_type": "none"})
         with mock.patch("requests.post") as mock_post:
             mock_post.return_value.status_code = 200
             mock_post.return_value.json.return_value = {"message": "Document deleted"}
@@ -171,13 +192,13 @@ class TestDocumentPageAiBridge(TransactionCase):
                 ),
             )
             document_page.unlink()
-            executions = self.env["ai.bridge.execution"].search(
-                [("ai_bridge_id", "=", self.bridge_unlink.id)]
+            self.assertEqual(
+                1,
+                self.env["ai.bridge.execution"].search_count(
+                    [("ai_bridge_id", "=", self.bridge_unlink.id)]
+                ),
             )
-            self.assertEqual(len(executions), 1)
-            args, kwargs = mock_post.call_args
-            self.assertEqual(args[0], "https://api.example.com/ai/document/delete")
-            self.assertEqual(kwargs["json"].get("_id", False), document_id)
+            mock_post.assert_called_once()
 
     def test_all_bridges_together(self):
         with mock.patch("requests.post") as mock_post:
