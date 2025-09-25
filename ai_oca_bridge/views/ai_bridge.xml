@@ -31,7 +31,6 @@
                             <field
                                 name="model_id"
                                 options="{'no_create': True, 'no_create_edit': True}"
-                                domain="[('ai_usage', '=', usage)]"
                                 required="model_required"
                             />
                             <field name="model_required" invisible="True" />
