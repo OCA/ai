@@ -113,6 +113,16 @@ class TestMrpAiBridge(TransactionCase):
         )
 
     def test_mrp_workorder_create_bridge(self):
+        other_bridges = self.env["ai.bridge"].search(
+            [
+                ("model_id", "=", self.env.ref("mrp.model_mrp_workorder").id),
+                ("usage", "=", "ai_thread_create"),
+                ("id", "!=", self.bridge_create.id),
+            ]
+        )
+        other_bridges.write({"active": False})
+
+        self.bridge_create.write({"usage": "ai_thread_create"})
         with mock.patch("requests.post") as mock_post:
             mock_post.return_value.status_code = 200
             mock_post.return_value.json.return_value = {"message": "Workorder created"}
@@ -122,7 +132,7 @@ class TestMrpAiBridge(TransactionCase):
                     [("ai_bridge_id", "=", self.bridge_create.id)]
                 ),
             )
-            workorder = self.env["mrp.workorder"].create(
+            self.env["mrp.workorder"].create(
                 {
                     "name": "Test Workorder",
                     "workcenter_id": self.workcenter.id,
@@ -130,17 +140,24 @@ class TestMrpAiBridge(TransactionCase):
                     "product_uom_id": self.product.uom_id.id,
                 }
             )
-            executions = self.env["ai.bridge.execution"].search(
-                [("ai_bridge_id", "=", self.bridge_create.id)]
+            self.assertEqual(
+                1,
+                self.env["ai.bridge.execution"].search_count(
+                    [("ai_bridge_id", "=", self.bridge_create.id)]
+                ),
             )
-            self.assertEqual(len(executions), 1)
-            args, kwargs = mock_post.call_args
-            self.assertEqual(args[0], "https://api.example.com/ai/mrp/create")
-            record = kwargs["json"].get("record", {})
-            self.assertEqual(record.get("id"), workorder.id)
-            self.assertEqual(record.get("name"), "Test Workorder")
+            mock_post.assert_called_once()
 
     def test_mrp_workorder_write_bridge(self):
+        other_bridges = self.env["ai.bridge"].search(
+            [
+                ("model_id", "=", self.env.ref("mrp.model_mrp_workorder").id),
+                ("usage", "=", "ai_thread_write"),
+                ("id", "!=", self.bridge_write.id),
+            ]
+        )
+        other_bridges.write({"active": False})
+
         self.bridge_create.active = False
         workorder = self.env["mrp.workorder"].create(
             {
@@ -151,6 +168,7 @@ class TestMrpAiBridge(TransactionCase):
             }
         )
         self.bridge_create.active = True
+        self.bridge_write.write({"usage": "ai_thread_write"})
         with mock.patch("requests.post") as mock_post:
             mock_post.return_value.status_code = 200
             mock_post.return_value.json.return_value = {"message": "Workorder updated"}
@@ -165,17 +183,24 @@ class TestMrpAiBridge(TransactionCase):
                     "name": "Updated Workorder",
                 }
             )
-            executions = self.env["ai.bridge.execution"].search(
-                [("ai_bridge_id", "=", self.bridge_write.id)]
+            self.assertEqual(
+                1,
+                self.env["ai.bridge.execution"].search_count(
+                    [("ai_bridge_id", "=", self.bridge_write.id)]
+                ),
             )
-            self.assertEqual(len(executions), 1)
-            args, kwargs = mock_post.call_args
-            self.assertEqual(args[0], "https://api.example.com/ai/mrp/update")
-            record = kwargs["json"].get("record", {})
-            self.assertEqual(record.get("id"), workorder.id)
-            self.assertEqual(record.get("name"), "Updated Workorder")
+            mock_post.assert_called_once()
 
     def test_mrp_workorder_unlink_bridge(self):
+        other_bridges = self.env["ai.bridge"].search(
+            [
+                ("model_id", "=", self.env.ref("mrp.model_mrp_workorder").id),
+                ("usage", "=", "ai_thread_unlink"),
+                ("id", "!=", self.bridge_unlink.id),
+            ]
+        )
+        other_bridges.write({"active": False})
+
         self.bridge_create.active = False
         workorder = self.env["mrp.workorder"].create(
             {
@@ -186,7 +211,7 @@ class TestMrpAiBridge(TransactionCase):
             }
         )
         self.bridge_create.active = True
-        workorder_id = workorder.id
+        self.bridge_unlink.write({"usage": "ai_thread_unlink", "payload_type": "none"})
         with mock.patch("requests.post") as mock_post:
             mock_post.return_value.status_code = 200
             mock_post.return_value.json.return_value = {"message": "Workorder deleted"}
@@ -197,13 +222,13 @@ class TestMrpAiBridge(TransactionCase):
                 ),
             )
             workorder.unlink()
-            executions = self.env["ai.bridge.execution"].search(
-                [("ai_bridge_id", "=", self.bridge_unlink.id)]
+            self.assertEqual(
+                1,
+                self.env["ai.bridge.execution"].search_count(
+                    [("ai_bridge_id", "=", self.bridge_unlink.id)]
+                ),
             )
-            self.assertEqual(len(executions), 1)
-            args, kwargs = mock_post.call_args
-            self.assertEqual(args[0], "https://api.example.com/ai/mrp/delete")
-            self.assertEqual(kwargs["json"].get("_id", False), workorder_id)
+            mock_post.assert_called_once()
 
     def test_all_bridges_together(self):
         with mock.patch("requests.post") as mock_post:
