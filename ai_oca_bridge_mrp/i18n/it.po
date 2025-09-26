@@ -1,0 +1,50 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ai_oca_bridge_mrp
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: Automatically generated\n"
+"Language-Team: none\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#. module: ai_oca_bridge_mrp
+#: model:ai.bridge,name:ai_oca_bridge_mrp.ai_bridge_mrp_create
+msgid "MRP AI Bridge - Create"
+msgstr ""
+
+#. module: ai_oca_bridge_mrp
+#: model:ai.bridge,name:ai_oca_bridge_mrp.ai_bridge_mrp_unlink
+msgid "MRP AI Bridge - Delete"
+msgstr ""
+
+#. module: ai_oca_bridge_mrp
+#: model:ai.bridge,name:ai_oca_bridge_mrp.ai_bridge_mrp_write
+msgid "MRP AI Bridge - Update"
+msgstr ""
+
+#. module: ai_oca_bridge_mrp
+#: model_terms:ai.bridge,description:ai_oca_bridge_mrp.ai_bridge_mrp_unlink
+msgid "This AI bridge is triggered when a MRP workorder is deleted."
+msgstr ""
+
+#. module: ai_oca_bridge_mrp
+#: model_terms:ai.bridge,description:ai_oca_bridge_mrp.ai_bridge_mrp_write
+msgid "This AI bridge is triggered when a MRP workorder is updated."
+msgstr ""
+
+#. module: ai_oca_bridge_mrp
+#: model_terms:ai.bridge,description:ai_oca_bridge_mrp.ai_bridge_mrp_create
+msgid "This AI bridge is triggered when a new workorder is created."
+msgstr ""
+
+#. module: ai_oca_bridge_mrp
+#: model:ir.model,name:ai_oca_bridge_mrp.model_mrp_workorder
+msgid "Work Order"
+msgstr ""
