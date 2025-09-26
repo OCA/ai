@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-07-31 10:59+0000\n"
+"PO-Revision-Date: 2025-09-26 16:20+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -661,6 +661,8 @@ msgid ""
 "Timeout in seconds for asynchronous operations. If the operation does not "
 "complete within this time,            it will be considered failed."
 msgstr ""
+"Timeout in secondi per operazioni asincrone. Se l'operazione non si completa "
+"entro questo tempo,             verrà considerata fallita."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__auth_type__token
