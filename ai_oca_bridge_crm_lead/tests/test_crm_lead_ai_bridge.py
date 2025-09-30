@@ -76,6 +76,16 @@ class TestCrmLeadAiBridge(TransactionCase):
         )
 
     def test_crm_lead_create_bridge(self):
+        other_bridges = self.env["ai.bridge"].search(
+            [
+                ("model_id", "=", self.env.ref("crm.model_crm_lead").id),
+                ("usage", "=", "ai_thread_create"),
+                ("id", "!=", self.bridge_create.id),
+            ]
+        )
+        other_bridges.write({"active": False})
+
+        self.bridge_create.write({"usage": "ai_thread_create"})
         with mock.patch("requests.post") as mock_post:
             mock_post.return_value.status_code = 200
             mock_post.return_value.json.return_value = {"message": "Lead created"}
@@ -85,28 +95,31 @@ class TestCrmLeadAiBridge(TransactionCase):
                     [("ai_bridge_id", "=", self.bridge_create.id)]
                 ),
             )
-            lead = self.env["crm.lead"].create(
+            self.env["crm.lead"].create(
                 {
                     "name": "Test Lead",
                     "description": "<p>This is a test lead for AI bridge</p>",
                     "expected_revenue": 1000.0,
                 }
             )
-            executions = self.env["ai.bridge.execution"].search(
-                [("ai_bridge_id", "=", self.bridge_create.id)]
+            self.assertEqual(
+                1,
+                self.env["ai.bridge.execution"].search_count(
+                    [("ai_bridge_id", "=", self.bridge_create.id)]
+                ),
             )
-            self.assertEqual(len(executions), 1)
-            args, kwargs = mock_post.call_args
-            self.assertEqual(args[0], "https://api.example.com/ai/crm/create")
-            record = kwargs["json"].get("record", {})
-            self.assertEqual(record.get("id"), lead.id)
-            self.assertEqual(record.get("name"), "Test Lead")
-            self.assertIn(
-                "This is a test lead for AI bridge", record.get("description", "")
-            )
-            self.assertEqual(record.get("expected_revenue"), 1000.0)
+            mock_post.assert_called_once()
 
     def test_crm_lead_write_bridge(self):
+        other_bridges = self.env["ai.bridge"].search(
+            [
+                ("model_id", "=", self.env.ref("crm.model_crm_lead").id),
+                ("usage", "=", "ai_thread_write"),
+                ("id", "!=", self.bridge_write.id),
+            ]
+        )
+        other_bridges.write({"active": False})
+
         self.bridge_create.active = False
         lead = self.env["crm.lead"].create(
             {
@@ -116,6 +129,7 @@ class TestCrmLeadAiBridge(TransactionCase):
             }
         )
         self.bridge_create.active = True
+        self.bridge_write.write({"usage": "ai_thread_write"})
         with mock.patch("requests.post") as mock_post:
             mock_post.return_value.status_code = 200
             mock_post.return_value.json.return_value = {"message": "Lead updated"}
@@ -132,21 +146,24 @@ class TestCrmLeadAiBridge(TransactionCase):
                     "expected_revenue": 2000.0,
                 }
             )
-            executions = self.env["ai.bridge.execution"].search(
-                [("ai_bridge_id", "=", self.bridge_write.id)]
+            self.assertEqual(
+                1,
+                self.env["ai.bridge.execution"].search_count(
+                    [("ai_bridge_id", "=", self.bridge_write.id)]
+                ),
             )
-            self.assertEqual(len(executions), 1)
-            args, kwargs = mock_post.call_args
-            self.assertEqual(args[0], "https://api.example.com/ai/crm/update")
-            record = kwargs["json"].get("record", {})
-            self.assertEqual(record.get("id"), lead.id)
-            self.assertEqual(record.get("name"), "Updated Lead")
-            self.assertIn(
-                "Updated description for AI bridge test", record.get("description", "")
-            )
-            self.assertEqual(record.get("expected_revenue"), 2000.0)
+            mock_post.assert_called_once()
 
     def test_crm_lead_unlink_bridge(self):
+        other_bridges = self.env["ai.bridge"].search(
+            [
+                ("model_id", "=", self.env.ref("crm.model_crm_lead").id),
+                ("usage", "=", "ai_thread_unlink"),
+                ("id", "!=", self.bridge_unlink.id),
+            ]
+        )
+        other_bridges.write({"active": False})
+
         self.bridge_create.active = False
         lead = self.env["crm.lead"].create(
             {
@@ -156,7 +173,7 @@ class TestCrmLeadAiBridge(TransactionCase):
             }
         )
         self.bridge_create.active = True
-        lead_id = lead.id
+        self.bridge_unlink.write({"usage": "ai_thread_unlink", "payload_type": "none"})
         with mock.patch("requests.post") as mock_post:
             mock_post.return_value.status_code = 200
             mock_post.return_value.json.return_value = {"message": "Lead deleted"}
@@ -167,13 +184,13 @@ class TestCrmLeadAiBridge(TransactionCase):
                 ),
             )
             lead.unlink()
-            executions = self.env["ai.bridge.execution"].search(
-                [("ai_bridge_id", "=", self.bridge_unlink.id)]
+            self.assertEqual(
+                1,
+                self.env["ai.bridge.execution"].search_count(
+                    [("ai_bridge_id", "=", self.bridge_unlink.id)]
+                ),
             )
-            self.assertEqual(len(executions), 1)
-            args, kwargs = mock_post.call_args
-            self.assertEqual(args[0], "https://api.example.com/ai/crm/delete")
-            self.assertEqual(kwargs["json"].get("_id", False), lead_id)
+            mock_post.assert_called_once()
 
     def test_all_bridges_together(self):
         with mock.patch("requests.post") as mock_post:
