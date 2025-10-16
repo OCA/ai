@@ -1,0 +1,185 @@
+{
+  "name": "Chat",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "af33e75e-2cb4-4953-903c-4d7ce88aba7d",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [-540, -180],
+      "id": "604ad5d2-f45f-4f27-8040-392c5cde67de",
+      "name": "Webhook",
+      "webhookId": "af33e75e-2cb4-4953-903c-4d7ce88aba7d"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Webhook').item.json.body._response_url }}",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "body",
+              "value": "={{ $json.data }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [320, -180],
+      "id": "196baea5-927e-49d7-b888-41a032255eb5",
+      "name": "HTTP Request",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.data }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [-200, -180],
+      "id": "92dff2e3-eede-4ba3-b494-ddbd3b33d009",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "gemma3:1b",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1,
+      "position": [-200, -20],
+      "id": "4f3c84b0-217b-44dd-9798-f9f3bde0437c",
+      "name": "Ollama Chat Model",
+      "credentials": {
+        "ollamaApi": {
+          "id": "hjdwBXqKYq7uKQBz",
+          "name": "Ollama account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "html": "={{ $json.body.message.body }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.markdown",
+      "typeVersion": 1,
+      "position": [-380, -180],
+      "id": "870d0777-4943-4f9d-a283-c31bb079f8b6",
+      "name": "Markdown"
+    },
+    {
+      "parameters": {
+        "mode": "markdownToHtml",
+        "markdown": "={{ $json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.markdown",
+      "typeVersion": 1,
+      "position": [160, -180],
+      "id": "3217e297-6508-47b2-bc67-52810c6512bd",
+      "name": "Markdown1"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $json.body._odoo.db }}-{{ $json.body._odoo.db_hash }}-{{ $json.body.message.model }}-{{ $json.body.message.res_id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [-100, -20],
+      "id": "35174f6e-a121-4db5-be62-86db987bc294",
+      "name": "Simple Memory"
+    }
+  ],
+  "pinData": {
+    "Webhook": []
+  },
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Markdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Markdown1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Markdown": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Markdown1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "539a3987-4bb4-41e2-b37e-26c1d8896779",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "853b8a3aa64a88c45a4d2dd4197c75abdf32fa4cca1ff05538d7e4592b457dcb"
+  },
+  "id": "YP8qXDrWacI1QVyu",
+  "tags": []
+}
