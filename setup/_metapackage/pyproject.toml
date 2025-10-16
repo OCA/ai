@@ -1,8 +1,9 @@
 [project]
 name = "odoo-addons-oca-ai"
-version = "17.0.20250924.0"
+version = "17.0.20251016.0"
 dependencies = [
     "odoo-addon-ai_oca_bridge>=17.0dev,<17.1dev",
+    "odoo-addon-ai_oca_bridge_chatter>=17.0dev,<17.1dev",
     "odoo-addon-ai_oca_bridge_document_page>=17.0dev,<17.1dev",
     "odoo-addon-ai_oca_bridge_extra_parameters>=17.0dev,<17.1dev",
 ]
