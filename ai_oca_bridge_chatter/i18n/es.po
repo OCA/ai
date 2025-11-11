@@ -1,0 +1,91 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ai_oca_bridge_chatter
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2025-08-16 01:25+0000\n"
+"Last-Translator: \"Leonardo J. Caballero G.\" <leonardocaballero@gmail.com>\n"
+"Language-Team: none\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.10.4\n"
+
+#. module: ai_oca_bridge_chatter
+#: model:ir.model.fields,field_description:ai_oca_bridge_chatter.field_res_users__ai_bridge_id
+msgid "AI Bridge"
+msgstr "Puente de IA"
+
+#. module: ai_oca_bridge_chatter
+#: model:ir.model,name:ai_oca_bridge_chatter.model_ai_bridge
+msgid "Ai Bridge Configuration"
+msgstr "Configuración de puente de IA"
+
+#. module: ai_oca_bridge_chatter
+#: model:ir.model,name:ai_oca_bridge_chatter.model_ai_bridge_execution
+msgid "Ai Execution"
+msgstr "Ejecución de IA"
+
+#. module: ai_oca_bridge_chatter
+#: model:ir.model.fields.selection,name:ai_oca_bridge_chatter.selection__ai_bridge__payload_type__chatter
+#: model:ir.model.fields.selection,name:ai_oca_bridge_chatter.selection__ai_bridge__usage__chatter
+msgid "Chatter"
+msgstr "Chatter"
+
+#. module: ai_oca_bridge_chatter
+#: model:ir.model.fields,field_description:ai_oca_bridge_chatter.field_ai_bridge_execution__chatter_user_id
+msgid "Chatter User"
+msgstr "Usuario de Chatter"
+
+#. module: ai_oca_bridge_chatter
+#: model:ir.model,name:ai_oca_bridge_chatter.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: ai_oca_bridge_chatter
+#: model:ir.model.fields,help:ai_oca_bridge_chatter.field_ai_bridge__usage
+msgid ""
+"Defines how this bridge is used. If 'Thread', it will be used in the mail "
+"thread context."
+msgstr ""
+"Define cómo se utiliza este puente. Si es 'Hilo', se usará en el contexto "
+"del hilo de correo."
+
+#. module: ai_oca_bridge_chatter
+#: model:ir.model,name:ai_oca_bridge_chatter.model_mail_channel
+msgid "Discussion Channel"
+msgstr "Canal de discusión"
+
+#. module: ai_oca_bridge_chatter
+#: model:ir.model.fields,field_description:ai_oca_bridge_chatter.field_ai_bridge__payload_type
+msgid "Payload Type"
+msgstr "Tipo de carga útil"
+
+#. module: ai_oca_bridge_chatter
+#. odoo-python
+#: code:addons/ai_oca_bridge_chatter/models/ai_bridge_execution.py:0
+#, python-format
+msgid "The message does not belong to any channel."
+msgstr "El mensaje no pertenece a ningún canal."
+
+#. module: ai_oca_bridge_chatter
+#. odoo-python
+#: code:addons/ai_oca_bridge_chatter/models/ai_bridge.py:0
+#, python-format
+msgid "The record must be a mail.message instance."
+msgstr "El registro debe ser una instancia de mail.message."
+
+#. module: ai_oca_bridge_chatter
+#: model:ir.model.fields,field_description:ai_oca_bridge_chatter.field_ai_bridge__usage
+msgid "Usage"
+msgstr "Uso"
+
+#. module: ai_oca_bridge_chatter
+#: model:ir.model,name:ai_oca_bridge_chatter.model_res_users
+msgid "User"
+msgstr "Usuario"
