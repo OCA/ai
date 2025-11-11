@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -64,14 +64,12 @@ msgstr ""
 #. module: ai_oca_bridge_chatter
 #. odoo-python
 #: code:addons/ai_oca_bridge_chatter/models/ai_bridge_execution.py:0
-#, python-format
 msgid "The message does not belong to any channel."
 msgstr ""
 
 #. module: ai_oca_bridge_chatter
 #. odoo-python
 #: code:addons/ai_oca_bridge_chatter/models/ai_bridge.py:0
-#, python-format
 msgid "The record must be a mail.message instance."
 msgstr ""
 
