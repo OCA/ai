@@ -4,7 +4,7 @@
 {
     "name": "Ai Oca Bridge CRM Lead",
     "summary": """Adds CRM Lead triggers for AI Bridges""",
-    "version": "16.0.1.0.0",
+    "version": "16.0.2.0.0",
     "license": "AGPL-3",
     "author": "Binhex,Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/ai",
