@@ -42,10 +42,11 @@ class Base(models.AbstractModel):
     def _execute_ai_bridges_for_records(self, records, usage):
         if not records:
             return
-
-        model_id = self.env["ir.model"]._get_id(records._name)
-        bridges = self.env["ai.bridge"].search(
-            [("model_id", "=", model_id), ("usage", "=", usage)]
+        model_id = self.sudo().env["ir.model"]._get_id(records._name)
+        bridges = (
+            self.env["ai.bridge"]
+            .sudo()
+            .search([("model_id", "=", model_id), ("usage", "=", usage)])
         )
         for bridge in bridges:
             for record in records:
