@@ -30,9 +30,9 @@ class AiBridge(models.Model):
         [
             ("none", "None"),
             ("thread", "Thread"),
-            ("ai_thread_create", "AI Thread Create"),
-            ("ai_thread_write", "AI Thread Write"),
-            ("ai_thread_unlink", "AI Thread Unlink"),
+            ("ai_thread_create", "On Record Created"),
+            ("ai_thread_write", "On Record Updated"),
+            ("ai_thread_unlink", "On Record Deleted"),
         ],
         default="none",
         help="Defines how this bridge is used. "
@@ -156,7 +156,7 @@ class AiBridge(models.Model):
             if record.usage == "ai_thread_unlink" and record.payload_type != "none":
                 raise models.ValidationError(
                     _(
-                        "When usage is 'AI Thread Unlink', "
+                        "When usage is 'On Record Deleted', "
                         "the Payload Type must be 'No payload'."
                     )
                 )
