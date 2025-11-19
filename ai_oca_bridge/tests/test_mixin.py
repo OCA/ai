@@ -6,6 +6,7 @@ from unittest import mock
 from odoo_test_helper import FakeModelLoader
 
 from odoo.exceptions import ValidationError
+from odoo.tests import new_test_user
 from odoo.tests.common import Form, TransactionCase
 
 
@@ -29,11 +30,75 @@ class TestBridge(TransactionCase):
                 "usage": "none",
             }
         )
+        cls.user = new_test_user(
+            cls.env,
+            login="bridge_user",
+            groups="base.group_user",
+        )
+        cls.portal_user = new_test_user(
+            cls.env,
+            login="bridge_portal_user",
+            groups="base.group_portal",
+        )
+        cls.env["ir.model.access"].create(
+            {
+                "name": "ai.bridge.execution user access",
+                "model_id": cls.env["ir.model"]._get_id("bridge.test"),
+                "perm_create": True,
+                "perm_read": True,
+                "perm_write": True,
+                "perm_unlink": True,
+            }
+        )
 
     @classmethod
     def tearDownClass(cls):
         cls.loader.restore_registry()
         super().tearDownClass()
+
+    def test_bridge_creation_user(self):
+        self.bridge.write({"usage": "ai_thread_create"})
+        self.assertEqual(
+            0,
+            self.env["ai.bridge.execution"].search_count(
+                [("ai_bridge_id", "=", self.bridge.id)]
+            ),
+        )
+        with self.with_user("bridge_user"), mock.patch("requests.post") as mock_post:
+            mock_post.return_value.status_code = 200
+            mock_post.return_value.json.return_value = {"result": "success"}
+            # Create a test record
+            self.env["bridge.test"].create({"name": "Test Record"})
+            mock_post.assert_called_once()
+        self.assertEqual(
+            1,
+            self.env["ai.bridge.execution"].search_count(
+                [("ai_bridge_id", "=", self.bridge.id)]
+            ),
+        )
+
+    def test_bridge_creation_portal_user(self):
+        self.bridge.write({"usage": "ai_thread_create"})
+        self.assertEqual(
+            0,
+            self.env["ai.bridge.execution"].search_count(
+                [("ai_bridge_id", "=", self.bridge.id)]
+            ),
+        )
+        with self.with_user("bridge_portal_user"), mock.patch(
+            "requests.post"
+        ) as mock_post:
+            mock_post.return_value.status_code = 200
+            mock_post.return_value.json.return_value = {"result": "success"}
+            # Create a test record
+            self.env["bridge.test"].create({"name": "Test Record"})
+            mock_post.assert_called_once()
+        self.assertEqual(
+            1,
+            self.env["ai.bridge.execution"].search_count(
+                [("ai_bridge_id", "=", self.bridge.id)]
+            ),
+        )
 
     def test_bridge_thread_creation(self):
         self.bridge.write({"usage": "ai_thread_create"})

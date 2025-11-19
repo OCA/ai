@@ -215,12 +215,16 @@ class AiBridge(models.Model):
             }
         record = self.env[res_model].browse(res_id).exists()
         if record:
-            execution = self.env["ai.bridge.execution"].create(
-                {
-                    "ai_bridge_id": self.id,
-                    "model_id": self.sudo().env["ir.model"]._get_id(res_model),
-                    "res_id": res_id,
-                }
+            execution = (
+                self.env["ai.bridge.execution"]
+                .sudo()
+                .create(
+                    {
+                        "ai_bridge_id": self.id,
+                        "model_id": self.sudo().env["ir.model"]._get_id(res_model),
+                        "res_id": res_id,
+                    }
+                )
             )
             result = execution._execute()
             if result:
