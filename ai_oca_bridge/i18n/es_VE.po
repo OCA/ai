@@ -114,21 +114,6 @@ msgid "AI Execution"
 msgstr "Ejecución de IA"
 
 #. module: ai_oca_bridge
-#: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__usage__ai_thread_create
-msgid "AI Thread Create"
-msgstr "Crear hilo de IA"
-
-#. module: ai_oca_bridge
-#: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__usage__ai_thread_unlink
-msgid "AI Thread Unlink"
-msgstr "Eliminar hilo de IA"
-
-#. module: ai_oca_bridge
-#: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__usage__ai_thread_write
-msgid "AI Thread Write"
-msgstr "Escribir hilo de IA"
-
-#. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__result_type__action
 msgid "Action"
 msgstr "Acción"
@@ -214,11 +199,6 @@ msgid "Ai Execution"
 msgstr "Ejecución de IA"
 
 #. module: ai_oca_bridge
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_ir_model__ai_usage
-msgid "Ai Usage"
-msgstr "Uso de IA"
-
-#. module: ai_oca_bridge
 #: model_terms:ir.ui.view,arch_db:ai_oca_bridge.ai_bridge_form_view
 #: model_terms:ir.ui.view,arch_db:ai_oca_bridge.ai_bridge_search_view
 msgid "Archived"
@@ -258,6 +238,11 @@ msgstr "Nombre de usuario de autenticación"
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__auth_type
 msgid "Authentication Type"
 msgstr "Tipo de autenticación"
+
+#. module: ai_oca_bridge
+#: model:ir.model,name:ai_oca_bridge.model_base
+msgid "Base"
+msgstr ""
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__auth_type__basic
@@ -440,11 +425,6 @@ msgid "Immediate"
 msgstr "Inmediato"
 
 #. module: ai_oca_bridge
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_ir_model__is_ai_bridge_thread
-msgid "Is Ai Bridge Thread"
-msgstr "Es un hilo del puente IA"
-
-#. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__message_is_follower
 msgid "Is Follower"
 msgstr "Es seguidor"
@@ -497,11 +477,6 @@ msgstr "Nombre del modelo"
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__model_required
 msgid "Model Required"
 msgstr "Modelo requerido"
-
-#. module: ai_oca_bridge
-#: model:ir.model,name:ai_oca_bridge.model_ir_model
-msgid "Models"
-msgstr "Modelos"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__my_activity_date_deadline
@@ -569,6 +544,21 @@ msgstr "Número de mensajes que requieren una acción"
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "Número de mensajes con error de entrega"
+
+#. module: ai_oca_bridge
+#: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__usage__ai_thread_create
+msgid "On Record Created"
+msgstr ""
+
+#. module: ai_oca_bridge
+#: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__usage__ai_thread_unlink
+msgid "On Record Deleted"
+msgstr ""
+
+#. module: ai_oca_bridge
+#: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__usage__ai_thread_write
+msgid "On Record Updated"
+msgstr ""
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__payload
@@ -772,7 +762,30 @@ msgstr "Historia de la comunicación en la web"
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
 #, python-format
 msgid ""
-"When usage is 'AI Thread Unlink', the Payload Type must be 'No payload'."
+"When usage is 'On Record Deleted', the Payload Type must be 'No payload'."
 msgstr ""
-"Cuando el uso es \"Hilo Puente IA\", el tipo de carga útil debe ser \"Sin "
-"carga útil\"."
+
+#~ msgid "AI Thread Create"
+#~ msgstr "Crear hilo de IA"
+
+#~ msgid "AI Thread Unlink"
+#~ msgstr "Eliminar hilo de IA"
+
+#~ msgid "AI Thread Write"
+#~ msgstr "Escribir hilo de IA"
+
+#~ msgid "Ai Usage"
+#~ msgstr "Uso de IA"
+
+#~ msgid "Is Ai Bridge Thread"
+#~ msgstr "Es un hilo del puente IA"
+
+#~ msgid "Models"
+#~ msgstr "Modelos"
+
+#, python-format
+#~ msgid ""
+#~ "When usage is 'AI Thread Unlink', the Payload Type must be 'No payload'."
+#~ msgstr ""
+#~ "Cuando el uso es \"Hilo Puente IA\", el tipo de carga útil debe ser \"Sin "
+#~ "carga útil\"."
