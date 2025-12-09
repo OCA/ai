@@ -9,8 +9,6 @@ class MailChannel(models.Model):
 
     def message_post(self, **kwargs):
         message = super().message_post(**kwargs)
-        if not message.body:
-            return message
         if message.author_id.user_ids.ai_bridge_id:
             # Don't answer AI agents
             return message

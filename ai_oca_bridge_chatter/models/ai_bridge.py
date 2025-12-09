@@ -28,5 +28,7 @@ class AiBridge(models.Model):
                 "subject": record.subject,
                 "date": record.date.isoformat(),
                 "author_name": record.author_id.name,
+                "attachment_ids": record.attachment_ids.ids,
+                "parent_id": record.parent_id.id if record.parent_id else False,
             }
         }
