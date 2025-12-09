@@ -22,15 +22,19 @@ class MailChannel(models.Model):
             recipient._notify_typing(is_typing=True)
             for user in recipient.partner_id.user_ids:
                 for bridge in user.ai_bridge_id:
-                    execution = self.env["ai.bridge.execution"].create(
-                        {
-                            "ai_bridge_id": bridge.id,
-                            "model_id": self.sudo()
-                            .env.ref("mail.model_mail_message")
-                            .id,
-                            "res_id": message.id,
-                            "chatter_user_id": user.id,
-                        }
+                    execution = (
+                        self.env["ai.bridge.execution"]
+                        .sudo()
+                        .create(
+                            {
+                                "ai_bridge_id": bridge.id,
+                                "model_id": self.sudo()
+                                .env.ref("mail.model_mail_message")
+                                .id,
+                                "res_id": message.id,
+                                "chatter_user_id": user.id,
+                            }
+                        )
                     )
                     execution._execute()
         return message
