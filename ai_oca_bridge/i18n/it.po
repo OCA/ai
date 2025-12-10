@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-09-28 16:42+0000\n"
+"PO-Revision-Date: 2025-12-10 11:43+0000\n"
 "Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
 "Language-Team: none\n"
 "Language: it\n"
@@ -222,7 +222,7 @@ msgstr "Tipo autenticazione"
 #. module: ai_oca_bridge
 #: model:ir.model,name:ai_oca_bridge.model_base
 msgid "Base"
-msgstr ""
+msgstr "Base"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__auth_type__basic
@@ -512,17 +512,17 @@ msgstr "Numero di messaggi con errore di consegna"
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__usage__ai_thread_create
 msgid "On Record Created"
-msgstr ""
+msgstr "Alla creazione del record"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__usage__ai_thread_unlink
 msgid "On Record Deleted"
-msgstr ""
+msgstr "Alla cancellazione del record"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__usage__ai_thread_write
 msgid "On Record Updated"
-msgstr ""
+msgstr "All'aggiornamento del record"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__payload
@@ -713,6 +713,8 @@ msgstr "Gruppi utente autorizzati ad usare questo collegamento IA."
 msgid ""
 "When usage is 'On Record Deleted', the Payload Type must be 'No payload'."
 msgstr ""
+"Quando si utilizza 'Alla cancellazione del record', il tipo contenuto deve "
+"essere 'Nessun contenuto'."
 
 #~ msgid "AI Thread Create"
 #~ msgstr "Creazione thread IA"
