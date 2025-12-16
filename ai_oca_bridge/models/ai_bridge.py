@@ -128,6 +128,20 @@ class AiBridge(models.Model):
         readonly=False,
         store=True,
     )
+    trigger_field_ids = fields.Many2many(
+        "ir.model.fields",
+        relation="ai_bridge_trigger_ir_model_fields_rel",
+        column1="bridge_id",
+        column2="field_id",
+        compute="_compute_trigger_field_ids",
+        store=True,
+        readonly=False,
+        string="Trigger Fields",
+        help=(
+            "When set and usage is 'On Record Updated', the bridge will only "
+            "trigger if any of these fields are present in the write values."
+        ),
+    )
 
     #######################################
     # Payload type 'record' specific fields
@@ -192,6 +206,11 @@ class AiBridge(models.Model):
     def _compute_field_ids(self):
         for record in self:
             record.field_ids = False
+
+    @api.depends("model_id")
+    def _compute_trigger_field_ids(self):
+        for record in self:
+            record.trigger_field_ids = False
 
     @api.depends("result_type")
     def _compute_server_action_id(self):

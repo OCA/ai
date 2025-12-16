@@ -6,3 +6,4 @@ class BridgeTest(models.Model):
     _description = "Test Model for AI Bridge"
 
     name = fields.Char()
+    description = fields.Char()
