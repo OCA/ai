@@ -35,6 +35,11 @@
                                 attrs="{'required': [('model_required', '=', 'True')]}"
                             />
                             <field name="model_required" invisible="1" />
+                            <field
+                                name="server_action_id"
+                                domain="[('model_id', '=', model_id)]"
+                                attrs="{'invisible': [('result_type', '!=', 'server_action')]}"
+                            />
                             <field name="description" />
                         </group>
                         <group>

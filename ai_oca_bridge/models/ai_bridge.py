@@ -63,6 +63,7 @@ class AiBridge(models.Model):
             ("none", "No processing"),
             ("message", "Post a Message"),
             ("action", "Action"),
+            ("server_action", "Run a Server Action"),
         ],
         required=True,
         default="none",
@@ -124,6 +125,13 @@ class AiBridge(models.Model):
         help="The model to which this bridge is associated.",
     )
     model_required = fields.Boolean(compute="_compute_model_fields")
+    server_action_id = fields.Many2one(
+        "ir.actions.server",
+        string="Server Action",
+        compute="_compute_server_action_id",
+        readonly=False,
+        store=True,
+    )
 
     #######################################
     # Payload type 'record' specific fields
@@ -188,6 +196,11 @@ class AiBridge(models.Model):
     def _compute_field_ids(self):
         for record in self:
             record.field_ids = False
+
+    @api.depends("result_type")
+    def _compute_server_action_id(self):
+        for record in self:
+            record.server_action_id = False
 
     @api.depends("field_ids", "model_id", "payload_type")
     def _compute_sample_payload(self):

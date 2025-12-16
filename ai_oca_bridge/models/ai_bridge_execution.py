@@ -216,6 +216,30 @@ class AiBridgeExecution(models.Model):
             return {"action": action}
         return {}
 
+    def _process_response_server_action(self, response):
+        action = self.ai_bridge_id.server_action_id
+
+        if not action:
+            return {"warning": "The Server Action to run has not been defined."}
+
+        model_name = self.sudo().model_id.model
+        if not model_name:
+            return {"warning": "No model found for this execution."}
+
+        ctx = dict(
+            self.env.context,
+            **{
+                "active_id": self.res_id,
+                "active_ids": [self.res_id],
+                "active_model": model_name,
+                "ai_response": response,
+            },
+        )
+
+        action.with_context(**ctx).run()
+
+        return {"status": "success", "action": action.name}
+
     def _get_channel(self):
         if self.model_id and self.res_id:
             return self.env[self.model_id.model].browse(self.res_id)
