@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="tag_helpdesk_spam" model="helpdesk.ticket.tag">
+        <field name="name">Spam</field>
+        <field name="color">1</field>
+    </record>
+
+    <record id="action_mark_ticket_as_spam" model="ir.actions.server">
+        <field name="name">AI Action: Mark Ticket as Spam</field>
+        <field name="model_id" ref="helpdesk_mgmt.model_helpdesk_ticket" />
+        <field name="state">code</field>
+        <field name="code">
+ai_data = env.context.get('ai_response', {})
+
+reason = ai_data.get('reason', 'AI System Flagged')
+confidence = ai_data.get('confidence', 'N/A')
+
+spam_tag = env.ref('ai_oca_bridge.tag_helpdesk_spam', raise_if_not_found=False)
+
+if spam_tag:
+    for ticket in records:
+        if spam_tag.id not in ticket.tag_ids.ids:
+            ticket.write({'tag_ids': [(4, spam_tag.id)]})
+
+            msg_body = f"🤖 &lt;b&gt;SPAM DETECTED&lt;/b&gt;&lt;br/&gt;Reason: {reason} (Confidence: {confidence})"
+            ticket.message_post(body=msg_body)
+        </field>
+    </record>
+
+    <record id="ai_bridge_helpdesk_ticket_spam_identify" model="ai.bridge">
+        <field name="name">Helpdesk Ticket Spam Identification</field>
+        <field name="model_id" ref="helpdesk_mgmt.model_helpdesk_ticket" />
+        <field name="usage">ai_thread_create</field>
+        <field name="result_kind">async</field>
+        <field name="result_type">server_action</field>
+        <field name="server_action_id" ref="ai_oca_bridge.action_mark_ticket_as_spam" />
+        <field
+            name="field_ids"
+            eval="[(6, 0, [ref('helpdesk_mgmt.field_helpdesk_ticket__id'), ref('helpdesk_mgmt.field_helpdesk_ticket__display_name'), ref('helpdesk_mgmt.field_helpdesk_ticket__description')])]"
+        />
+    </record>
+</odoo>

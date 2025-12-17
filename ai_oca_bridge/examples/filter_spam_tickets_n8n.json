@@ -1,0 +1,147 @@
+{
+  "name": "Spam Ticket Identification Flow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "helpdesk/check-spam/",
+        "options": {
+          "rawBody": true
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [-1264, 80],
+      "id": "960d09d1-c2a3-4710-9c9a-07aa0cd3f795",
+      "name": "Webhook",
+      "webhookId": "da674dc0-4dc8-4ed6-a51d-59afff4272e2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "99e8601c-e16b-4df6-9df9-f445ec130db8",
+              "leftValue": "={{ JSON.parse($json.message.content).is_spam }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [-688, 80],
+      "id": "982df316-3690-434c-85fa-c0c1da46dfdb",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "You are a strict Spam Detection Officer for an Odoo/IT Helpdesk.\n Your task is to analyze the incoming ticket description and determine whether it is spam.\nCRITERIA FOR SPAM — Return true when ANY of these is detected:\n1. SEO, marketing, backlink, or website ranking service offers.\n2. Unrelated service promotions (web design, mobile apps, logo design, copywriting, outsourcing not related to our project).\n3. Suspicious links, shortened URLs without context, or phishing-like messages.\n4. Bulk-generated outreach messages (generic, not referencing Odoo/IT context).\n5. Nonsense text, random characters, or obviously AI-generated gibberish.\n6. Messages unrelated to IT, Odoo, ERP, or our provided services.\nCRITERIA FOR HAM — Return false:\n1. Issues or questions related to Odoo, modules, customization, bugs, deployments, or integration.\n2. Questions about invoices, access, accounts, or contract-related matters.\n3. Complaints, feedback, or feature requests.\n4. Any message that resembles a genuine support request from a human.\nOUTPUT FORMAT:\nStrictly return a JSON object with this structure:\n{\n    \"is_spam\": boolean,\n    \"reason\": \"Short explanation why this is spam (max 1 sentence)\",\n    \"confidence\": \"Estimation from 0% to 100% (e.g. '98%')\"\n}\nExample: {\"is_spam\": true, \"reason\": \"Mentions prohibited drugs (Viagra).\", \"confidence\": \"99%\"}",
+              "role": "system"
+            },
+            {
+              "content": "={{ $json.body.record.display_name}} - {{ $json.body.record.description }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [-1056, 80],
+      "id": "e431b723-d2a4-4d3c-a8ae-420584da691c",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "t7lm95Kw7wmoj4xt",
+          "name": "OpenAi account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{$('Webhook').item.json.body._response_url}}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{$json.message.content}}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-432, -32],
+      "id": "a9e87afa-4907-436e-a241-f63c964af12b",
+      "name": "HTTP Request",
+      "alwaysOutputData": false
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d7f051a5-c962-44b6-87b1-54441763efef",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "95483db1596026047067fce31863479f616aaf310d370d2a94b0e438c3495911"
+  },
+  "id": "fWYne7mmDfzimDWd",
+  "tags": []
+}
