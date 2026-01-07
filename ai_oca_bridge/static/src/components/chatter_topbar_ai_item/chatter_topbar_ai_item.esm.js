@@ -3,6 +3,10 @@ import {usePopover} from "@web/core/popover/popover_hook";
 
 export class ChatterAIItemPopover extends Component {
     static template = "ai_oca_bridge.ChatterAIItemPopover";
+    static props = {
+        help: String,
+        close: Function,
+    };
 }
 
 export class ChatterAIItem extends Component {
@@ -11,25 +15,15 @@ export class ChatterAIItem extends Component {
 
     setup() {
         super.setup();
-        this.popover = usePopover();
-        this.tooltipPopover = null;
+        this.popover = usePopover(ChatterAIItemPopover);
     }
     get tooltipInfo() {
-        return {
-            help: markup(this.props.bridge.description || ""),
-        };
+        return markup(this.props.bridge.description || "");
     }
     onMouseEnter(ev) {
         this.closeTooltip();
-        this.tooltipPopover = this.popover.add(
-            ev.currentTarget,
-            ChatterAIItemPopover,
-            this.tooltipInfo,
-            {
-                closeOnClickAway: true,
-                position: "top",
-            }
-        );
+        const help = this.tooltipInfo;
+        this.popover.open(ev.currentTarget, {help});
     }
 
     onMouseLeave() {
@@ -37,9 +31,6 @@ export class ChatterAIItem extends Component {
     }
 
     closeTooltip() {
-        if (this.tooltipPopover) {
-            this.tooltipPopover();
-            this.tooltipPopover = null;
-        }
+        this.popover.close();
     }
 }

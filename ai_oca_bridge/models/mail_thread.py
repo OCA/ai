@@ -4,6 +4,7 @@
 from lxml import etree
 
 from odoo import api, fields, models
+from odoo.fields import Domain
 from odoo.tools.misc import frozendict
 
 
@@ -21,10 +22,16 @@ class MailThread(models.AbstractModel):
 
     def _get_ai_bridge_info(self):
         self.ensure_one()
-        model_id = self.env["ir.model"].sudo().search([("model", "=", self._name)]).id
+        model_id = (
+            self.env["ir.model"].sudo().search(Domain("model", "=", self._name)).id
+        )
         return (
             self.env["ai.bridge"]
-            .search([("model_id", "=", model_id), ("usage", "=", "thread")])
+            .search(
+                Domain.AND(
+                    [Domain("model_id", "=", model_id), Domain("usage", "=", "thread")]
+                )
+            )
             .filtered(lambda r: r._enabled_for(self))
         )
 

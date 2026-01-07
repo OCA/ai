@@ -5,6 +5,7 @@
 import logging
 
 from odoo import api, models
+from odoo.fields import Domain
 
 _logger = logging.getLogger(__name__)
 
@@ -46,7 +47,11 @@ class Base(models.AbstractModel):
         bridges = (
             self.env["ai.bridge"]
             .sudo()
-            .search([("model_id", "=", model_id), ("usage", "=", usage)])
+            .search(
+                Domain.AND(
+                    [Domain("model_id", "=", model_id), Domain("usage", "=", usage)]
+                )
+            )
         )
         for bridge in bridges:
             # If this is a write, and the bridge has trigger fields configured,
@@ -73,7 +78,12 @@ class Base(models.AbstractModel):
 
         model_id = self.env["ir.model"]._get_id(records._name)
         bridges = self.env["ai.bridge"].search(
-            [("model_id", "=", model_id), ("usage", "=", "ai_thread_unlink")]
+            Domain.AND(
+                [
+                    Domain("model_id", "=", model_id),
+                    Domain("usage", "=", "ai_thread_unlink"),
+                ]
+            )
         )
 
         executions = self.env["ai.bridge.execution"]

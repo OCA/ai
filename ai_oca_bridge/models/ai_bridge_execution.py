@@ -7,9 +7,9 @@ from datetime import timedelta
 from io import StringIO
 
 import requests
-from werkzeug import urls
 
-from odoo import _, api, fields, models, tools
+from odoo import api, fields, models, tools
+from odoo.tools import urls
 
 
 class AiBridgeExecution(models.Model):
@@ -92,7 +92,7 @@ class AiBridgeExecution(models.Model):
                 seconds=self.ai_bridge_id.async_timeout
             )
             token = self._generate_token()
-            payload["_response_url"] = urls.url_join(
+            payload["_response_url"] = urls.urljoin(
                 self.get_base_url(), f"/ai/response/{self.id}/{token}"
             )
         IrParamSudo = self.env["ir.config_parameter"].sudo()
@@ -163,7 +163,7 @@ class AiBridgeExecution(models.Model):
                 self.ai_bridge_id.sudo().auth_password,
             )
         else:
-            raise ValueError(_("Unsupported authentication type."))
+            raise ValueError(self.env._("Unsupported authentication type."))
 
     def _get_headers(self):
         """Return headers for the request."""

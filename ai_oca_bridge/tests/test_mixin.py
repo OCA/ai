@@ -3,22 +3,24 @@
 
 from unittest import mock
 
-from odoo_test_helper import FakeModelLoader
-
 from odoo.exceptions import ValidationError
+from odoo.fields import Domain
+from odoo.orm.model_classes import add_to_registry
 from odoo.tests import Form, TransactionCase, new_test_user
 
+from .common import TrackingDisabledMixin
 
-class TestBridge(TransactionCase):
+
+class TestBridge(TrackingDisabledMixin, TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        # Load fake models ->/
-        cls.loader = FakeModelLoader(cls.env, cls.__module__)
-        cls.loader.backup_registry()
         from .fake_models import BridgeTest
 
-        cls.loader.update_registry((BridgeTest,))
+        add_to_registry(cls.registry, BridgeTest)
+        cls.registry._setup_models__(cls.env.cr, ["bridge.test"])
+        cls.registry.init_models(cls.env.cr, ["bridge.test"], {"models_to_check": True})
+        cls.addClassCleanup(cls.registry.__delitem__, "bridge.test")
 
         cls.bridge = cls.env["ai.bridge"].create(
             {
@@ -50,17 +52,12 @@ class TestBridge(TransactionCase):
             }
         )
 
-    @classmethod
-    def tearDownClass(cls):
-        cls.loader.restore_registry()
-        super().tearDownClass()
-
     def test_bridge_creation_user(self):
         self.bridge.write({"usage": "ai_thread_create"})
         self.assertEqual(
             0,
             self.env["ai.bridge.execution"].search_count(
-                [("ai_bridge_id", "=", self.bridge.id)]
+                Domain("ai_bridge_id", "=", self.bridge.id)
             ),
         )
         with self.with_user("bridge_user"), mock.patch("requests.post") as mock_post:
@@ -72,7 +69,7 @@ class TestBridge(TransactionCase):
         self.assertEqual(
             1,
             self.env["ai.bridge.execution"].search_count(
-                [("ai_bridge_id", "=", self.bridge.id)]
+                Domain("ai_bridge_id", "=", self.bridge.id)
             ),
         )
 
@@ -81,7 +78,7 @@ class TestBridge(TransactionCase):
         self.assertEqual(
             0,
             self.env["ai.bridge.execution"].search_count(
-                [("ai_bridge_id", "=", self.bridge.id)]
+                Domain("ai_bridge_id", "=", self.bridge.id)
             ),
         )
         with (
@@ -96,7 +93,7 @@ class TestBridge(TransactionCase):
         self.assertEqual(
             1,
             self.env["ai.bridge.execution"].search_count(
-                [("ai_bridge_id", "=", self.bridge.id)]
+                Domain("ai_bridge_id", "=", self.bridge.id)
             ),
         )
 
@@ -108,7 +105,7 @@ class TestBridge(TransactionCase):
             self.assertEqual(
                 0,
                 self.env["ai.bridge.execution"].search_count(
-                    [("ai_bridge_id", "=", self.bridge.id)]
+                    Domain("ai_bridge_id", "=", self.bridge.id)
                 ),
             )
             # Create a test record
@@ -116,7 +113,7 @@ class TestBridge(TransactionCase):
             self.assertEqual(
                 1,
                 self.env["ai.bridge.execution"].search_count(
-                    [("ai_bridge_id", "=", self.bridge.id)]
+                    Domain("ai_bridge_id", "=", self.bridge.id)
                 ),
             )
             mock_post.assert_called_once()
@@ -124,14 +121,14 @@ class TestBridge(TransactionCase):
             self.assertEqual(
                 1,
                 self.env["ai.bridge.execution"].search_count(
-                    [("ai_bridge_id", "=", self.bridge.id)]
+                    Domain("ai_bridge_id", "=", self.bridge.id)
                 ),
             )
             record.unlink()
             self.assertEqual(
                 1,
                 self.env["ai.bridge.execution"].search_count(
-                    [("ai_bridge_id", "=", self.bridge.id)]
+                    Domain("ai_bridge_id", "=", self.bridge.id)
                 ),
             )
             mock_post.assert_called_once()
@@ -144,7 +141,7 @@ class TestBridge(TransactionCase):
             self.assertEqual(
                 0,
                 self.env["ai.bridge.execution"].search_count(
-                    [("ai_bridge_id", "=", self.bridge.id)]
+                    Domain("ai_bridge_id", "=", self.bridge.id)
                 ),
             )
             # Create a test record
@@ -152,21 +149,21 @@ class TestBridge(TransactionCase):
             self.assertEqual(
                 0,
                 self.env["ai.bridge.execution"].search_count(
-                    [("ai_bridge_id", "=", self.bridge.id)]
+                    Domain("ai_bridge_id", "=", self.bridge.id)
                 ),
             )
             record.write({"name": "Updated Record"})
             self.assertEqual(
                 1,
                 self.env["ai.bridge.execution"].search_count(
-                    [("ai_bridge_id", "=", self.bridge.id)]
+                    Domain("ai_bridge_id", "=", self.bridge.id)
                 ),
             )
             record.unlink()
             self.assertEqual(
                 1,
                 self.env["ai.bridge.execution"].search_count(
-                    [("ai_bridge_id", "=", self.bridge.id)]
+                    Domain("ai_bridge_id", "=", self.bridge.id)
                 ),
             )
             mock_post.assert_called_once()
@@ -182,7 +179,7 @@ class TestBridge(TransactionCase):
             self.assertEqual(
                 0,
                 self.env["ai.bridge.execution"].search_count(
-                    [("ai_bridge_id", "=", self.bridge.id)]
+                    Domain("ai_bridge_id", "=", self.bridge.id)
                 ),
             )
             # Create a test record
@@ -190,21 +187,21 @@ class TestBridge(TransactionCase):
             self.assertEqual(
                 0,
                 self.env["ai.bridge.execution"].search_count(
-                    [("ai_bridge_id", "=", self.bridge.id)]
+                    Domain("ai_bridge_id", "=", self.bridge.id)
                 ),
             )
             record.write({"name": "Updated Record"})
             self.assertEqual(
                 0,
                 self.env["ai.bridge.execution"].search_count(
-                    [("ai_bridge_id", "=", self.bridge.id)]
+                    Domain("ai_bridge_id", "=", self.bridge.id)
                 ),
             )
             record.unlink()
             self.assertEqual(
                 1,
                 self.env["ai.bridge.execution"].search_count(
-                    [("ai_bridge_id", "=", self.bridge.id)]
+                    Domain("ai_bridge_id", "=", self.bridge.id)
                 ),
             )
             mock_post.assert_called_once()
@@ -257,13 +254,13 @@ class TestBridge(TransactionCase):
         self.bridge.write({"usage": "ai_thread_unlink", "payload_type": "none"})
         empty_records = self.env["bridge.test"].browse([])
         initial_count = self.env["ai.bridge.execution"].search_count(
-            [("ai_bridge_id", "=", self.bridge.id)]
+            Domain("ai_bridge_id", "=", self.bridge.id)
         )
         result = empty_records._prepare_execution_ai_bridges_unlink(empty_records)
         self.assertEqual(len(result), 0)
         self.assertEqual(result._name, "ai.bridge.execution")
         final_count = self.env["ai.bridge.execution"].search_count(
-            [("ai_bridge_id", "=", self.bridge.id)]
+            Domain("ai_bridge_id", "=", self.bridge.id)
         )
         self.assertEqual(initial_count, final_count)
 
@@ -278,7 +275,7 @@ class TestBridge(TransactionCase):
             )
             mock_post.assert_not_called()
             execution_count = self.env["ai.bridge.execution"].search_count(
-                [("ai_bridge_id", "=", self.bridge.id)]
+                Domain("ai_bridge_id", "=", self.bridge.id)
             )
             self.assertEqual(execution_count, 0)
 

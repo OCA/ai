@@ -6,13 +6,17 @@
     "summary": """
     Makes a basic configuration to be used as bridge with external AI systems
     """,
-    "version": "18.0.2.0.0",
+    "version": "19.0.1.0.0",
     "license": "AGPL-3",
     "author": "Dixmit,Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/ai",
     "category": "AI",
     "development_status": "Beta",
-    "depends": ["mail"],
+    "depends": [
+        "base",
+        "mail",
+        "web",
+    ],
     "data": [
         "data/ir_module_category.xml",
         "security/ir.model.access.csv",

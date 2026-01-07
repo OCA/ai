@@ -15,10 +15,7 @@ export class AiBridge extends models.ServerModel {
         default: "none",
     });
     name = fields.Char();
-    _records = [
-        {id: 1, name: "Test AI Bridge", result_type: "none"},
-        {id: 2, name: "Test AI Bridge Action", result_type: "action"},
-    ];
+    _records = [];
     execute_ai_bridge(ids) {
         const record = this.browse(ids);
         if (record && record[0].result_type === "action") {

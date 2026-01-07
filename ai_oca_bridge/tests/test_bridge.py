@@ -4,10 +4,13 @@
 import json
 from unittest import mock
 
+from odoo.fields import Domain
 from odoo.tests.common import TransactionCase
 
+from .common import TrackingDisabledMixin
 
-class TestBridge(TransactionCase):
+
+class TestBridge(TrackingDisabledMixin, TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -50,7 +53,7 @@ class TestBridge(TransactionCase):
         )
         self.assertFalse(
             self.env["ai.bridge.execution"].search(
-                [("ai_bridge_id", "=", self.bridge.id)]
+                Domain("ai_bridge_id", "=", self.bridge.id)
             )
         )
         with mock.patch("requests.post") as mock_post:
@@ -58,11 +61,11 @@ class TestBridge(TransactionCase):
             mock_post.assert_called_once()
         self.assertTrue(
             self.env["ai.bridge.execution"].search(
-                [("ai_bridge_id", "=", self.bridge.id)]
+                Domain("ai_bridge_id", "=", self.bridge.id)
             )
         )
         execution = self.env["ai.bridge.execution"].search(
-            [("ai_bridge_id", "=", self.bridge.id)]
+            Domain("ai_bridge_id", "=", self.bridge.id)
         )
         self.assertEqual(execution.res_id, self.partner.id)
         self.assertNotIn("name", execution.payload)
@@ -85,7 +88,7 @@ class TestBridge(TransactionCase):
         )
         self.assertFalse(
             self.env["ai.bridge.execution"].search(
-                [("ai_bridge_id", "=", self.bridge.id)]
+                Domain("ai_bridge_id", "=", self.bridge.id)
             )
         )
         with mock.patch("requests.post") as mock_post:
@@ -93,11 +96,11 @@ class TestBridge(TransactionCase):
             mock_post.assert_called_once()
         self.assertTrue(
             self.env["ai.bridge.execution"].search(
-                [("ai_bridge_id", "=", self.bridge.id)]
+                Domain("ai_bridge_id", "=", self.bridge.id)
             )
         )
         execution = self.env["ai.bridge.execution"].search(
-            [("ai_bridge_id", "=", self.bridge.id)]
+            Domain("ai_bridge_id", "=", self.bridge.id)
         )
         self.assertEqual(execution.res_id, self.partner.id)
         self.assertIn("name", execution.payload["record"])
@@ -118,7 +121,7 @@ class TestBridge(TransactionCase):
         )
         self.assertFalse(
             self.env["ai.bridge.execution"].search(
-                [("ai_bridge_id", "=", self.bridge.id)]
+                Domain("ai_bridge_id", "=", self.bridge.id)
             )
         )
         with mock.patch("requests.post") as mock_post:
@@ -126,7 +129,7 @@ class TestBridge(TransactionCase):
             mock_post.assert_called_once()
         self.assertTrue(
             self.env["ai.bridge.execution"].search(
-                [("ai_bridge_id", "=", self.bridge.id)]
+                Domain("ai_bridge_id", "=", self.bridge.id)
             )
         )
 
@@ -143,7 +146,7 @@ class TestBridge(TransactionCase):
         )
         self.assertFalse(
             self.env["ai.bridge.execution"].search(
-                [("ai_bridge_id", "=", self.bridge.id)]
+                Domain("ai_bridge_id", "=", self.bridge.id)
             )
         )
         with mock.patch("requests.post") as mock_post:
@@ -151,7 +154,7 @@ class TestBridge(TransactionCase):
             mock_post.assert_called_once()
         self.assertTrue(
             self.env["ai.bridge.execution"].search(
-                [("ai_bridge_id", "=", self.bridge.id)]
+                Domain("ai_bridge_id", "=", self.bridge.id)
             )
         )
 
@@ -162,26 +165,26 @@ class TestBridge(TransactionCase):
         )
         self.assertFalse(
             self.env["ai.bridge.execution"].search(
-                [("ai_bridge_id", "=", self.bridge.id)]
+                Domain("ai_bridge_id", "=", self.bridge.id)
             )
         )
         self.bridge.execute_ai_bridge(self.partner._name, self.partner.id)
         execution = self.env["ai.bridge.execution"].search(
-            [("ai_bridge_id", "=", self.bridge.id)]
+            Domain("ai_bridge_id", "=", self.bridge.id)
         )
         self.assertTrue(execution)
         self.assertTrue(execution.error)
 
     def test_bridge_unactive(self):
-        self.bridge.toggle_active()
+        self.bridge.action_archive()
         self.assertFalse(
             self.env["ai.bridge.execution"].search(
-                [("ai_bridge_id", "=", self.bridge.id)]
+                Domain("ai_bridge_id", "=", self.bridge.id)
             )
         )
         self.bridge.execute_ai_bridge(self.partner._name, self.partner.id)
         execution = self.env["ai.bridge.execution"].search(
-            [("ai_bridge_id", "=", self.bridge.id)]
+            Domain("ai_bridge_id", "=", self.bridge.id)
         )
         self.assertFalse(execution)
 
@@ -189,12 +192,12 @@ class TestBridge(TransactionCase):
         self.bridge.group_ids = [(4, self.group.id)]
         self.assertFalse(
             self.env["ai.bridge.execution"].search(
-                [("ai_bridge_id", "=", self.bridge.id)]
+                Domain("ai_bridge_id", "=", self.bridge.id)
             )
         )
         self.bridge.execute_ai_bridge(self.partner._name, self.partner.id)
         execution = self.env["ai.bridge.execution"].search(
-            [("ai_bridge_id", "=", self.bridge.id)]
+            Domain("ai_bridge_id", "=", self.bridge.id)
         )
         self.assertFalse(execution)
 
@@ -219,7 +222,7 @@ class TestBridge(TransactionCase):
         self.assertNotIn(
             self.bridge.id, [bridge["id"] for bridge in self.partner.ai_bridge_info]
         )
-        self.env.user.groups_id |= self.group
+        self.env.user.group_ids |= self.group
         self.partner.invalidate_recordset()
         self.assertIn(
             self.bridge.id, [bridge["id"] for bridge in self.partner.ai_bridge_info]
@@ -238,12 +241,16 @@ class TestBridge(TransactionCase):
         self.bridge.write({"result_type": "message"})
         self.assertFalse(
             self.env["ai.bridge.execution"].search(
-                [("ai_bridge_id", "=", self.bridge.id)]
+                Domain("ai_bridge_id", "=", self.bridge.id)
             )
         )
-        message_count = self.env["mail.message"].search_count(
-            [("model", "=", self.partner._name), ("res_id", "=", self.partner.id)]
+        message_domain = Domain.AND(
+            [
+                Domain("model", "=", self.partner._name),
+                Domain("res_id", "=", self.partner.id),
+            ]
         )
+        message_count = self.env["mail.message"].search_count(message_domain)
         with mock.patch("requests.post") as mock_post:
             mock_post.return_value = mock.Mock(
                 status_code=200, json=lambda: {"body": "My message"}
@@ -251,9 +258,7 @@ class TestBridge(TransactionCase):
             self.bridge.execute_ai_bridge(self.partner._name, self.partner.id)
             mock_post.assert_called_once()
         self.assertEqual(
-            self.env["mail.message"].search_count(
-                [("model", "=", self.partner._name), ("res_id", "=", self.partner.id)]
-            ),
+            self.env["mail.message"].search_count(message_domain),
             message_count + 1,
         )
 
@@ -261,12 +266,16 @@ class TestBridge(TransactionCase):
         self.bridge.write({"result_type": "message", "result_kind": "async"})
         self.assertFalse(
             self.env["ai.bridge.execution"].search(
-                [("ai_bridge_id", "=", self.bridge.id)]
+                Domain("ai_bridge_id", "=", self.bridge.id)
             )
         )
-        message_count = self.env["mail.message"].search_count(
-            [("model", "=", self.partner._name), ("res_id", "=", self.partner.id)]
+        message_domain = Domain.AND(
+            [
+                Domain("model", "=", self.partner._name),
+                Domain("res_id", "=", self.partner.id),
+            ]
         )
+        message_count = self.env["mail.message"].search_count(message_domain)
         with mock.patch("requests.post") as mock_post:
             mock_post.return_value = mock.Mock(
                 status_code=200, json=lambda: {"body": "My message"}
@@ -274,20 +283,16 @@ class TestBridge(TransactionCase):
             self.bridge.execute_ai_bridge(self.partner._name, self.partner.id)
             mock_post.assert_called_once()
         self.assertEqual(
-            self.env["mail.message"].search_count(
-                [("model", "=", self.partner._name), ("res_id", "=", self.partner.id)]
-            ),
+            self.env["mail.message"].search_count(message_domain),
             message_count,
         )
         execution = self.env["ai.bridge.execution"].search(
-            [("ai_bridge_id", "=", self.bridge.id)]
+            Domain("ai_bridge_id", "=", self.bridge.id)
         )
         self.assertTrue(execution.expiration_date)
         execution._process_response({"body": "My message"})
         self.assertEqual(
-            self.env["mail.message"].search_count(
-                [("model", "=", self.partner._name), ("res_id", "=", self.partner.id)]
-            ),
+            self.env["mail.message"].search_count(message_domain),
             message_count + 1,
         )
         self.assertFalse(execution.expiration_date)
@@ -296,7 +301,7 @@ class TestBridge(TransactionCase):
         self.bridge.write({"result_type": "action", "result_kind": "immediate"})
         self.assertFalse(
             self.env["ai.bridge.execution"].search(
-                [("ai_bridge_id", "=", self.bridge.id)]
+                Domain("ai_bridge_id", "=", self.bridge.id)
             )
         )
         with mock.patch("requests.post") as mock_post:
@@ -323,7 +328,7 @@ class TestBridge(TransactionCase):
             self.bridge.execute_ai_bridge(self.partner._name, self.partner.id)
             mock_post.assert_called_once()
         execution = self.env["ai.bridge.execution"].search(
-            [("ai_bridge_id", "=", self.bridge.id)]
+            Domain("ai_bridge_id", "=", self.bridge.id)
         )
         self.assertEqual(
             execution.payload["_id"], json.loads(execution.payload_txt)["_id"]

@@ -3,13 +3,18 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 */
 import {click, queryAll} from "@odoo/hoot-dom";
-import {defineModels, fields, models, mountView} from "@web/../tests/web_test_helpers";
+import {
+    defineModels,
+    fields,
+    mountView,
+    webModels,
+} from "@web/../tests/web_test_helpers";
 import {expect, test} from "@odoo/hoot";
 import {defineBaseAIModels} from "../mock_server/define_ai_models.esm";
 import {startServer} from "@mail/../tests/mail_test_helpers";
 
-class ResPartner extends models.Model {
-    _name = "res.partner";
+class ResPartner extends webModels.ResPartner {
+    _inherit = ["mail.thread"];
     ai_bridge_info = fields.Generic({default: []});
 }
 
@@ -18,11 +23,23 @@ defineBaseAIModels();
 
 test("AI Notification", async () => {
     const pyEnv = await startServer();
+    const aiBridgeNotificationId = pyEnv["ai.bridge"].create({
+        name: "AI 1",
+        result_type: "notification",
+    });
+    const aiBridgeActionId = pyEnv["ai.bridge"].create({
+        name: "AI 2",
+        result_type: "action",
+    });
     const partnerId = pyEnv["res.partner"].create({
         name: "Awesome partner",
         ai_bridge_info: [
-            {id: 1, name: "AI 1", description: "test1 description"},
-            {id: 2, name: "AI 2"},
+            {
+                id: aiBridgeNotificationId,
+                name: "AI 1",
+                description: "test1 description",
+            },
+            {id: aiBridgeActionId, name: "AI 2"},
         ],
     });
     await mountView({
@@ -56,11 +73,23 @@ test("AI Notification", async () => {
 
 test("AI Action", async () => {
     const pyEnv = await startServer();
+    const aiBridgeNotificationId = pyEnv["ai.bridge"].create({
+        name: "AI 1",
+        result_type: "notification",
+    });
+    const aiBridgeActionId = pyEnv["ai.bridge"].create({
+        name: "AI 2",
+        result_type: "action",
+    });
     const partnerId = pyEnv["res.partner"].create({
         name: "Awesome partner",
         ai_bridge_info: [
-            {id: 1, name: "AI 1", description: "test1 description"},
-            {id: 2, name: "AI 2"},
+            {
+                id: aiBridgeNotificationId,
+                name: "AI 1",
+                description: "test1 description",
+            },
+            {id: aiBridgeActionId, name: "AI 2"},
         ],
     });
     await mountView({
