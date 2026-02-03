@@ -271,7 +271,6 @@ class TestAIExtraParameter(TransactionCase):
             "{partner.name}",
             "{obj.name}",
             "{user.name}",
-            "{env}",
             "{cr}",
         ]
 
