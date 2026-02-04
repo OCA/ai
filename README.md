@@ -24,7 +24,7 @@ addon | version | maintainers | summary
 [ai_oca_bridge](ai_oca_bridge/) | 17.0.2.0.0 |  | Makes a basic configuration to be used as bridge with external AI systems
 [ai_oca_bridge_chatter](ai_oca_bridge_chatter/) | 17.0.2.0.0 |  | Integrate a Bridge with a user that will use it on chatter
 [ai_oca_bridge_document_page](ai_oca_bridge_document_page/) | 17.0.2.0.0 |  | Adds Documents synchronization using AI Bridges
-[ai_oca_bridge_extra_parameters](ai_oca_bridge_extra_parameters/) | 17.0.1.0.0 | <a href='https://github.com/arielbarreiros96'><img src='https://github.com/arielbarreiros96.png' width='32' height='32' style='border-radius:50%;' alt='arielbarreiros96'/></a> | Adds extra parameters to the AI OCA Bridge payload.
+[ai_oca_bridge_extra_parameters](ai_oca_bridge_extra_parameters/) | 17.0.1.0.1 | <a href='https://github.com/arielbarreiros96'><img src='https://github.com/arielbarreiros96.png' width='32' height='32' style='border-radius:50%;' alt='arielbarreiros96'/></a> | Adds extra parameters to the AI OCA Bridge payload.
 
 [//]: # (end addons)
 
