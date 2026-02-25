@@ -41,6 +41,15 @@ class TestBridge(TransactionCase):
                 "name": "Test Group",
             }
         )
+        cls.form_btn_bridge = cls.env["ai.bridge"].create(
+            {
+                "name": "Test Form Btn",
+                "model_id": cls.env.ref("base.model_res_partner").id,
+                "url": "https://example.com/api",
+                "auth_type": "none",
+                "usage": "form_btn",
+            }
+        )
 
     def test_bridge_none_auth(self):
         self.assertEqual(self.bridge.auth_type, "none")
@@ -365,3 +374,54 @@ class TestBridge(TransactionCase):
         self.assertEqual(
             execution.payload["_id"], json.loads(execution.payload_txt)["_id"]
         )
+
+    def test_form_btn_info(self):
+        self.assertIn(
+            self.form_btn_bridge.id,
+            [b["id"] for b in self.partner.ai_form_btn_info],
+        )
+        self.assertTrue(self.partner.ai_has_form_btn)
+
+    def test_form_btn_domain_filtering(self):
+        self.assertIn(
+            self.form_btn_bridge.id,
+            [b["id"] for b in self.partner.ai_form_btn_info],
+        )
+        self.form_btn_bridge.domain = f"[('id', '!=', {self.partner.id})]"
+        self.partner.invalidate_recordset()
+        self.assertNotIn(
+            self.form_btn_bridge.id,
+            [b["id"] for b in (self.partner.ai_form_btn_info or [])],
+        )
+        self.assertFalse(self.partner.ai_has_form_btn)
+
+    def test_form_btn_group_filtering(self):
+        self.assertIn(
+            self.form_btn_bridge.id,
+            [b["id"] for b in self.partner.ai_form_btn_info],
+        )
+        self.form_btn_bridge.group_ids = [(4, self.group.id)]
+        self.partner.invalidate_recordset()
+        self.assertNotIn(
+            self.form_btn_bridge.id,
+            [b["id"] for b in (self.partner.ai_form_btn_info or [])],
+        )
+        self.env.user.groups_id |= self.group
+        self.partner.invalidate_recordset()
+        self.assertIn(
+            self.form_btn_bridge.id,
+            [b["id"] for b in self.partner.ai_form_btn_info],
+        )
+
+    def test_form_btn_view_injection(self):
+        view = self.partner.get_view(view_type="form")
+        self.assertIn("ai_form_btn_info", view["models"][self.partner._name])
+        self.assertIn("ai_has_form_btn", view["models"][self.partner._name])
+        self.assertIn(b'name="ai_form_btn_info"', view["arch"])
+
+    def test_form_btn_thread_isolation(self):
+        """form_btn bridges must not appear in ai_bridge_info and vice versa."""
+        thread_ids = [b["id"] for b in self.partner.ai_bridge_info]
+        form_btn_ids = [b["id"] for b in self.partner.ai_form_btn_info]
+        self.assertNotIn(self.form_btn_bridge.id, thread_ids)
+        self.assertNotIn(self.bridge.id, form_btn_ids)

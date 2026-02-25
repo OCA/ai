@@ -30,13 +30,20 @@ class AiBridge(models.Model):
         [
             ("none", "None"),
             ("thread", "Thread"),
+            ("form_btn", "Form Button"),
             ("ai_thread_create", "On Record Created"),
             ("ai_thread_write", "On Record Updated"),
             ("ai_thread_unlink", "On Record Deleted"),
         ],
         default="none",
         help="Defines how this bridge is used. "
-        "If 'Thread', it will be used in the mail thread context.",
+        "If 'Thread', it will be used in the mail thread context. "
+        "If 'Form Button', a button will be injected into the record's form view.",
+    )
+    form_btn_label = fields.Char(
+        string="Button Label",
+        translate=True,
+        help="Label shown on the form button. Defaults to the bridge name if empty.",
     )
     name = fields.Char(required=True, translate=True)
     active = fields.Boolean(default=True)
@@ -167,11 +174,13 @@ class AiBridge(models.Model):
             record.update(record._get_model_fields())
 
     def _get_model_fields(self):
-        if self.usage == "thread":
-            return {
-                "model_required": True,
-            }
-        if self.usage in ["ai_thread_create", "ai_thread_write", "ai_thread_unlink"]:
+        if self.usage in [
+            "thread",
+            "form_btn",
+            "ai_thread_create",
+            "ai_thread_write",
+            "ai_thread_unlink",
+        ]:
             return {
                 "model_required": True,
             }
@@ -203,6 +212,13 @@ class AiBridge(models.Model):
 
     def _get_info(self):
         return {"id": self.id, "name": self.name, "description": self.description}
+
+    def _get_form_btn_info(self):
+        return {
+            "id": self.id,
+            "label": self.form_btn_label or self.name,
+            "description": self.description,
+        }
 
     def execute_ai_bridge(self, res_model, res_id):
         self.ensure_one()

@@ -18,6 +18,7 @@
         "views/menu.xml",
         "views/ai_bridge_execution.xml",
         "views/ai_bridge.xml",
+        "templates/ai_form_btn_container.xml",
     ],
     "assets": {
         "web.assets_backend": [
