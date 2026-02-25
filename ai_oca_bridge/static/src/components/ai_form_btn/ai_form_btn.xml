@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="ai_oca_bridge.AiFormBtn" owl="1">
+        <span class="d-inline-flex gap-2">
+            <t t-foreach="props.value or []" t-as="bridge" t-key="bridge.id">
+                <button
+                    class="btn btn-secondary btn-sm"
+                    t-on-click="() => this.onClickBridge(bridge)"
+                    t-att-title="bridge.description or ''"
+                >
+                    <t t-esc="bridge.label" />
+                </button>
+            </t>
+        </span>
+    </t>
+</templates>

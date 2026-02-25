@@ -22,6 +22,10 @@
                         <group>
                             <field name="sequence" />
                             <field name="usage" />
+                            <field
+                                name="form_btn_label"
+                                attrs="{'invisible': [('usage', '!=', 'form_btn')]}"
+                            />
                             <field name="payload_type" />
                             <field name="result_kind" />
                             <field

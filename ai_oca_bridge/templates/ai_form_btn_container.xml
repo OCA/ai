@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id="ai_form_btn_container">
+        <div
+            class="alert alert-info"
+            role="alert"
+            style="margin-bottom:0px"
+            attrs="{'invisible': [('ai_has_form_btn', '=', False)]}"
+        >
+            <span class="pe-3"><i class="fa fa-bolt" /> AI actions</span>
+            <field name="ai_form_btn_info" widget="ai_form_btn" />
+        </div>
+    </template>
+</odoo>
