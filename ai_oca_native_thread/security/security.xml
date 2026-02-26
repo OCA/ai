@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    Copyright 2026 Pierre Verkest
+    License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html)
+-->
+<odoo>
+    <record id="ai_thread_user_rule" model="ir.rule">
+        <field name="name">AI Thread: User only</field>
+        <field name="model_id" ref="model_ai_thread" />
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]" />
+    </record>
+
+    <record id="ai_message_user_rule" model="ir.rule">
+        <field name="name">AI Message: User only</field>
+        <field name="model_id" ref="model_ai_message" />
+        <field name="domain_force">[('thread_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]" />
+    </record>
+</odoo>
