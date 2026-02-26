@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    Copyright 2026 Pierre Verkest
+    License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html)
+-->
+<templates xml:space="preserve">
+    <t t-name="ai_oca_native_thread.AiThread">
+        <div
+            class="o_ai_thread_container d-flex flex-column flex-grow-1 h-100 position-relative"
+            style="overflow: hidden;"
+        >
+            <!-- Thread Selector Header -->
+            <div
+                class="o_ai_thread_header d-flex align-items-center bg-light border-bottom p-2"
+            >
+                <select class="form-select me-2" t-on-change="onThreadChange">
+                    <option
+                        value="new"
+                        t-att-selected="!state.threadId"
+                    >New Thread</option>
+                    <t t-foreach="state.threads" t-as="th" t-key="th.id">
+                        <option
+                            t-att-value="th.id"
+                            t-att-selected="th.id === state.threadId"
+                        >
+                            <t t-esc="th.name" />
+                        </option>
+                    </t>
+                </select>
+                <button
+                    t-if="state.threadId"
+                    class="btn btn-outline-danger"
+                    t-on-click="deleteCurrentThread"
+                    title="Delete Thread"
+                >
+                    <i class="fa fa-trash" />
+                </button>
+            </div>
+
+            <!-- Messages Display -->
+            <div
+                class="o_ai_messages flex-grow-1 mb-2 px-3 pt-2"
+                style="overflow-y: auto;"
+            >
+                <t t-if="state.messages.length === 0">
+                    <div class="text-muted text-center pt-4">No AI history for this <t
+                        t-if="!state.threadId"
+                    >new thread</t><t t-else="">thread</t>. Say hi!</div>
+                </t>
+                <t t-foreach="state.messages" t-as="msg" t-key="msg.id || msg_index">
+                    <div
+                        t-attf-class="d-flex w-100 mb-2 {{ msg.role === 'user' ? 'justify-content-end' : 'justify-content-start' }}"
+                    >
+                        <div
+                            t-attf-class="p-2 rounded shadow-sm {{ msg.role === 'user' ? 'bg-primary text-white' : 'bg-light text-dark' }}"
+                            style="max-width: 80%;"
+                        >
+                            <strong><t
+                                t-esc="msg.role === 'user' ? 'You' : 'AI'"
+                            />:</strong>
+                            <div style="white-space: pre-wrap;">
+                                <t t-esc="msg.content" />
+                            </div>
+                        </div>
+                    </div>
+                </t>
+                <t t-if="state.isLoading">
+                    <div class="d-flex w-100 mb-2 justify-content-start">
+                        <div class="p-2 rounded shadow-sm bg-light text-muted">
+                            <i
+                            class="fa fa-circle-o-notch fa-spin me-2"
+                        /> AI is thinking...
+                        </div>
+                    </div>
+                </t>
+            </div>
+
+            <!-- Input Area -->
+            <div class="o_ai_input_area d-flex align-items-end mt-2 px-3 pb-3">
+                <textarea
+                    class="form-control me-2"
+                    rows="2"
+                    placeholder="Ask the AI about this record..."
+                    t-model="state.prompt"
+                    t-on-keydown="onKeydown"
+                    t-att-disabled="state.isLoading"
+                />
+                <button
+                    class="btn btn-primary"
+                    t-on-click="sendMessage"
+                    t-att-disabled="state.isLoading || !state.prompt.trim()"
+                >
+                    <i class="fa fa-paper-plane" /> Send
+                </button>
+            </div>
+        </div>
+    </t>
+</templates>

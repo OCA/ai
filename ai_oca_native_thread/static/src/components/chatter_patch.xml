@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+    Copyright 2026 Pierre Verkest
+    License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html)
+-->
+<templates xml:space="preserve">
+    <t t-inherit="mail.Chatter" t-inherit-mode="extension">
+        <!-- Add absolute positioned nav tabs at the top -->
+        <xpath expr="//div[hasclass('o-mail-Chatter-top')]" position="before">
+            <ul
+                class="nav nav-tabs o-mail-Chatter-aiNavTabs flex-nowrap"
+                role="tablist"
+            >
+                <li class="nav-item flex-grow-1 text-center" role="presentation">
+                    <button
+                        class="nav-link w-100 fw-bold o-mail-Chatter-tab-chatter rounded-0"
+                        t-att-class="{ 'active': state.aiMainTab === 'chatter' }"
+                        t-on-click="() => this.state.aiMainTab = 'chatter'"
+                        type="button"
+                    >
+                        <i class="fa fa-comments me-1" />
+                        <span>Chatter</span>
+                    </button>
+                </li>
+                <li class="nav-item flex-grow-1 text-center" role="presentation">
+                    <button
+                        class="nav-link w-100 fw-bold o-mail-Chatter-tab-ai rounded-0"
+                        t-att-class="{ 'active': state.aiMainTab === 'ai_thread' }"
+                        t-on-click="() => this.state.aiMainTab = 'ai_thread'"
+                        type="button"
+                    >
+                        <i class="fa fa-robot me-1" />
+                        <span>AI Assistant</span>
+                    </button>
+                </li>
+            </ul>
+        </xpath>
+
+        <!-- Hide the original top section when AI tab is active -->
+        <xpath expr="//div[hasclass('o-mail-Chatter-top')]" position="attributes">
+            <attribute
+                name="t-attf-class"
+                separator=" "
+                add="{{ state.aiMainTab === 'ai_thread' ? 'd-none' : '' }}"
+            />
+        </xpath>
+
+        <!-- Hide the original content section when AI tab is active -->
+        <xpath expr="//div[hasclass('o-mail-Chatter-content')]" position="attributes">
+            <attribute
+                name="t-attf-class"
+                separator=" "
+                add="{{ state.aiMainTab === 'ai_thread' ? 'd-none' : '' }}"
+            />
+        </xpath>
+
+        <!-- Add the AI Thread component at the bottom of the chatter root, which will take flex-grow space -->
+        <xpath expr="//div[hasclass('o-mail-Chatter')]" position="inside">
+            <div
+                t-attf-class="d-flex flex-column flex-grow-1 h-100 {{ state.aiMainTab !== 'ai_thread' ? 'd-none' : '' }}"
+            >
+                <AiThread threadModel="props.threadModel" recordId="props.threadId" />
+            </div>
+        </xpath>
+    </t>
+</templates>
