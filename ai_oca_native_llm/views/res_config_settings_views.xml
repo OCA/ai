@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+    Copyright 2026 Pierre Verkest
+    License LGPL-3.0 or later (https://www.gnu.org/licenses/lgpl.html)
+-->
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.ai.llm</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="90" />
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app
+                    data-string="Native AI"
+                    string="Native AI"
+                    name="ai_oca_native_llm"
+                >
+                    <block
+                        title="Local LLM (Ollama) Configuration"
+                        name="ai_llm_ollama_setting_container"
+                    >
+                        <setting
+                            id="ai_llm_ollama_url_setting"
+                            string="Ollama URL"
+                            help="URL to the local or remote Ollama instance"
+                        >
+                            <field name="ai_llm_ollama_url" class="w-100" />
+                        </setting>
+                        <setting
+                            id="ai_llm_ollama_model_setting"
+                            string="Default Model"
+                            help="Ollama model name (e.g., llama3, mistral)"
+                        >
+                            <field name="ai_llm_ollama_model" class="w-100" />
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_ai_llm_config_settings" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field
+            name="context"
+        >{'module' : 'ai_oca_native_llm', 'bin_size': False}</field>
+    </record>
+
+    <menuitem
+        id="menu_ai_oca_native_root"
+        name="AI Configuration"
+        parent="base.menu_administration"
+        sequence="50"
+    />
+
+    <menuitem
+        id="menu_ai_llm_settings"
+        name="LLM Settings"
+        parent="menu_ai_oca_native_root"
+        action="action_ai_llm_config_settings"
+        sequence="10"
+    />
+</odoo>
