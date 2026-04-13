@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2025-08-15 22:35+0000\n"
-"Last-Translator: \"Leonardo J. Caballero G.\" <leonardocaballero@gmail.com>\n"
+"PO-Revision-Date: 2026-04-13 07:50+0000\n"
+"Last-Translator: Ed-Spain <eduamoros@gmail.com>\n"
 "Language-Team: none\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.10.4\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__result_kind
@@ -218,7 +218,7 @@ msgstr "Tipo de autenticación"
 #. module: ai_oca_bridge
 #: model:ir.model,name:ai_oca_bridge.model_base
 msgid "Base"
-msgstr ""
+msgstr "Base"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__auth_type__basic
@@ -506,17 +506,17 @@ msgstr "Número de mensajes con error de entrega"
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__usage__ai_thread_create
 msgid "On Record Created"
-msgstr ""
+msgstr "Al crear registro"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__usage__ai_thread_unlink
 msgid "On Record Deleted"
-msgstr ""
+msgstr "Al eliminar registro"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__usage__ai_thread_write
 msgid "On Record Updated"
-msgstr ""
+msgstr "Al actualizar registro"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__payload
@@ -653,6 +653,8 @@ msgid ""
 "Timeout in seconds for asynchronous operations. If the operation does not "
 "complete within this time,            it will be considered failed."
 msgstr ""
+"Tiempo de espera en segundos para operaciones asíncronas. Si la operación no "
+"se completa dentro de este tiempo, se considerará fallida."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__auth_type__token
@@ -702,6 +704,8 @@ msgstr "Grupos de usuarios autorizados a utilizar este puente de IA."
 msgid ""
 "When usage is 'On Record Deleted', the Payload Type must be 'No payload'."
 msgstr ""
+"Cuando el uso es 'Al eliminar registro', el tipo de carga útil debe ser 'Sin "
+"carga útil'."
 
 #~ msgid "AI Thread Create"
 #~ msgstr "Crear hilo de IA"
