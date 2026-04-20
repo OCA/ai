@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Dixmit
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <record model="ir.ui.view" id="mcp_server_key_form_view">
+        <field name="model">mcp.server.key</field>
+        <field name="arch" type="xml">
+            <form edit="false">
+                <header>
+                    <button
+                        name="expire_key"
+                        type="object"
+                        string="Expire Key"
+                        states="active"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('state', '=', 'expired')]}"
+                    />
+                    <field name="state" widget="statusbar" />
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name" />
+                        <field name="server_id" />
+                        <field name="user_id" />
+                        <field name="expiration_date" />
+                        <field name="expired_on" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="mcp_server_key_tree_view">
+        <field name="model">mcp.server.key</field>
+        <field name="arch" type="xml">
+            <tree create="false" delete="false" decoration-muted="state == 'expired'">
+                <field name="name" />
+                <field name="state" />
+                <button
+                    name="expire_key"
+                    type="object"
+                    string="Expire Key"
+                    states="active"
+                    class="oe_highlight"
+                    attrs="{'invisible': [('state', '=', 'expired')]}"
+                />
+            </tree>
+        </field>
+    </record>
+
+</odoo>
