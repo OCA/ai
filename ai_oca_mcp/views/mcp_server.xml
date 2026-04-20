@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Dixmit
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <record model="ir.ui.view" id="mcp_server_form_view">
+        <field name="model">mcp.server</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                </header>
+                <sheet>
+                    <div name="button_box" class="oe_button_box" role="group">
+                        <button
+                            name="%(ai_oca_mcp.mcp_server_key_add_act_window)d"
+                            string="Add Key"
+                            type="action"
+                            class="btn-primary"
+                            icon="fa-key"
+                            context="{'default_server_id': active_id}"
+                        />
+                        <button
+                            name="%(ai_oca_mcp.mcp_server_log_server_filter_act_window)d"
+                            string="Show logs"
+                            type="action"
+                            icon="fa-list"
+                            class="btn-primary"
+                        />
+                    </div>
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="bg-danger"
+                        attrs="{'invisible': [('active', '=', True)]}"
+                    />
+                    <div class="oe_title">
+                        <label for="name" />
+                        <h1>
+                            <field name="name" placeholder="Name..." />
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="active" invisible="1" />
+                        <field name="description" />
+                        <field name="key" />
+                        <field name="url" widget="CopyClipboardChar" />
+                        <field name="tool_ids" widget="many2many_tags" />
+                    </group>
+                    <notebook>
+                        <page string="Keys">
+                            <field name="key_ids" />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="mcp_server_search_view">
+        <field name="model">mcp.server</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="mcp_server_tree_view">
+        <field name="model">mcp.server</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="mcp_server_act_window">
+        <field name="name">MCP Server</field>
+        <field name="res_model">mcp.server</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record model="ir.ui.menu" id="mcp_server_menu">
+        <field name="name">MCP Server</field>
+        <field name="parent_id" ref="ai_tool.ai_menu_root" />
+        <field name="action" ref="mcp_server_act_window" />
+        <field name="sequence" eval="80" />
+    </record>
+
+</odoo>
