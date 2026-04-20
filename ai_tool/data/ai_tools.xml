@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Dixmit
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <record model="ai.tool" id="current_date">
+        <field name="name">get_date</field>
+        <field name="description">Get the current date.</field>
+        <field name="model_id" ref="model_ai_tool" />
+        <field name="function_name">_ai_get_date</field>
+        <field name="kind">generic</field>
+    </record>
+
+    <record model="ai.tool" id="post_message">
+        <field name="name">post_message</field>
+        <field name="description">Post a message to a record.</field>
+        <field name="model_id" ref="model_ai_tool" />
+        <field name="function_name">_ai_post_message</field>
+        <field name="kind">generic_model</field>
+    </record>
+
+</odoo>

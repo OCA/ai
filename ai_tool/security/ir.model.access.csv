@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ai_tool,access_ai_tool,model_ai_tool,base.group_user,1,0,0,0
