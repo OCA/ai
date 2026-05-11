@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mcp_server,access_mcp_server,model_mcp_server,base.group_system,1,1,1,1
+access_mcp_server_key,access_mcp_server_key,model_mcp_server_key,base.group_system,1,1,1,1
+access_mcp_server_key_add,access_mcp_server_key_add,model_mcp_server_key_add,base.group_system,1,1,1,1
+access_mcp_server_log,access_mcp_server_log,model_mcp_server_log,base.group_system,1,0,0,0
