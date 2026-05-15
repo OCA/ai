@@ -31,6 +31,7 @@ addon | version | maintainers | summary
 [ai_oca_bridge_fieldservice](ai_oca_bridge_fieldservice/) | 16.0.2.0.0 | <a href='https://github.com/marcelsavegnago'><img src='https://github.com/marcelsavegnago.png' width='32' height='32' style='border-radius:50%;' alt='marcelsavegnago'/></a> | Integrate AI Bridge with Field Service
 [ai_oca_bridge_helpdesk_mgmt](ai_oca_bridge_helpdesk_mgmt/) | 16.0.1.0.0 |  | Integrate AI Bridge with Helpdesk Management
 [ai_oca_bridge_mrp](ai_oca_bridge_mrp/) | 16.0.2.0.0 | <a href='https://github.com/marcelsavegnago'><img src='https://github.com/marcelsavegnago.png' width='32' height='32' style='border-radius:50%;' alt='marcelsavegnago'/></a> | Adds MRP triggers for AI Bridges
+[ai_oca_mcp](ai_oca_mcp/) | 16.0.1.0.0 |  | MCP Interface for Odoo
 [ai_tool](ai_tool/) | 16.0.1.0.0 |  | We want to generate some specific AI Tools that might be used in other places, like MCP or native.
 
 [//]: # (end addons)
