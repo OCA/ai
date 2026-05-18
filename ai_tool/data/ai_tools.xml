@@ -2,7 +2,6 @@
 <!-- Copyright 2026 Dixmit
      License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
 <odoo>
-
     <record model="ai.tool" id="current_date">
         <field name="name">get_date</field>
         <field name="description">Get the current date.</field>
@@ -18,5 +17,4 @@
         <field name="function_name">_ai_post_message</field>
         <field name="kind">generic_model</field>
     </record>
-
 </odoo>
