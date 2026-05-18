@@ -16,7 +16,7 @@ For example, if we want to add on sales a functionality to find the sales on a p
 ```
 
 ```python
-from odoo.addons.ai_tool import aitool
+from odoo.addons.ai_tool.tools import aitool
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
