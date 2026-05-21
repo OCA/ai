@@ -8,6 +8,7 @@ setuptools.setup(
     description="Meta package for oca-ai Odoo addons",
     version=version,
     install_requires=[
+        'odoo-addon-ai_automation>=16.0dev,<16.1dev',
         'odoo-addon-ai_oca_bridge>=16.0dev,<16.1dev',
         'odoo-addon-ai_oca_bridge_chatter>=16.0dev,<16.1dev',
         'odoo-addon-ai_oca_bridge_crm_lead>=16.0dev,<16.1dev',
@@ -16,6 +17,8 @@ setuptools.setup(
         'odoo-addon-ai_oca_bridge_fieldservice>=16.0dev,<16.1dev',
         'odoo-addon-ai_oca_bridge_helpdesk_mgmt>=16.0dev,<16.1dev',
         'odoo-addon-ai_oca_bridge_mrp>=16.0dev,<16.1dev',
+        'odoo-addon-ai_oca_mcp>=16.0dev,<16.1dev',
+        'odoo-addon-ai_tool>=16.0dev,<16.1dev',
     ],
     classifiers=[
         'Programming Language :: Python',
