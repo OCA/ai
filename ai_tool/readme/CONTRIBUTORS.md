@@ -1,2 +1,6 @@
 - [Dixmit](https://www.dixmit.com)
   - Enric Tobella
+- [Vortex Dimensión Digital](https://www.dimensionvortex.com/):
+  - Jorge Rosado Julián \<<jorge.rosado@dimensionvortex.com>\>
+  - Juan L. Sánchez \<<juan.sanchez@dimensionvortex.com>\>
+  - Wang Zhong Jiang \<<wang.zhong@dimensionvortex.com>\>
