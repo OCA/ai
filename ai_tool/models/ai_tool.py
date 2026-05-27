@@ -15,7 +15,6 @@ except ImportError:
 
 
 class AiTool(models.Model):
-
     _name = "ai.tool"
     _description = "AI Tool"
 
@@ -89,6 +88,7 @@ class AiTool(models.Model):
             )
         elif record._name != self.model_id.model:
             raise ValueError(
-                f"Record model {record._name} does not match tool model {self.model_id.model}"
+                f"Record model {record._name} does not match tool model "
+                f"{self.model_id.model}"
             )
         return getattr(record, self.function_name)(*args, **kwargs) or {}
