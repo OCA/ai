@@ -27,7 +27,7 @@
         </field>
     </record>
 
-    <record model="ir.ui.view" id="ai_tool_list_view">
+    <record model="ir.ui.view" id="ai_tool_tree_view">
         <field name="model">ai.tool</field>
         <field name="arch" type="xml">
             <list>
