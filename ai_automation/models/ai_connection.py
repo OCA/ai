@@ -51,7 +51,8 @@ class AiConnection(models.Model):
                 return response.message.content
             messages.append(response.message)
             for call in response.message.tool_calls:
-                tool = tools.filtered(lambda t: t.name == call.function.name)
+                function_name = call.function.name
+                tool = tools.filtered(lambda t, name=function_name: t.name == name)
                 tool_output = tool._execute_tool(
                     record=record, **call.function.arguments
                 )
@@ -60,7 +61,7 @@ class AiConnection(models.Model):
                 messages.append(
                     {
                         "role": "tool",
-                        "tool_name": call.function.name,
+                        "tool_name": function_name,
                         "content": tool_output,
                     }
                 )

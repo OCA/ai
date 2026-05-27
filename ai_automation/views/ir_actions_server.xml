@@ -2,16 +2,12 @@
 <!-- Copyright 2026 Dixmit
      License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
 <odoo>
-
     <record model="ir.ui.view" id="ir_actions_server_form_view">
         <field name="model">ir.actions.server</field>
         <field name="inherit_id" ref="base.view_server_action_form" />
         <field name="arch" type="xml">
             <notebook position="inside">
-                <page
-                    string="AI OCA"
-                    attrs="{'invisible': [('state', '!=', 'ai_oca')]}"
-                >
+                <page string="AI OCA" invisible="state != 'ai_oca'">
                     <group>
                         <field name="ai_connection_id" />
                         <field
@@ -29,14 +25,11 @@
                         <field name="ai_result_action" />
                         <field
                             name="ai_update_record_field_id"
-                            attrs="{'invisible': [('ai_result_action', '!=', 'update_record')]}"
+                            invisible="ai_result_action != 'update_record'"
                         />
                     </group>
                 </page>
             </notebook>
         </field>
     </record>
-
-
-
 </odoo>
