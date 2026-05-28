@@ -37,7 +37,7 @@ class AIController(http.Controller):
                 execution._process_response(
                     json.loads(
                         request.httprequest.get_data().decode(
-                            request.httprequest.charset
+                            getattr(request.httprequest, "charset", None) or "utf-8"
                         )
                     )
                 )
