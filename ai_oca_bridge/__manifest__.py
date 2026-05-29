@@ -6,7 +6,7 @@
     "summary": """
     Makes a basic configuration to be used as bridge with external AI systems
     """,
-    "version": "18.0.2.0.0",
+    "version": "18.0.2.0.1",
     "license": "AGPL-3",
     "author": "Dixmit,Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/ai",
