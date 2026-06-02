@@ -16,6 +16,145 @@ _logger = logging.getLogger(__name__)
 class HermesWebhook(http.Controller):
     """Endpoint for Hermes gateway to post responses back to Odoo."""
 
+    @http.route("/hermes/notify/<string:token>", type="json", auth="public", csrf=False)
+    def hermes_notify(self, token, **kwargs):
+        """Send a web notification to an Odoo user.
+
+        This endpoint uses the web_notify module (soft dependency) to display
+        toast notifications in the user's browser. If web_notify is not
+        installed, it falls back to posting a message in the user's DM channel.
+
+        Expected JSON body:
+        {
+            "user_id": 2,
+            "message": "Production order blocked!",
+            "title": "Alert",
+            "type": "danger",  # success, warning, info, danger, default
+            "sticky": true,
+            "action": {        # optional: open a record on click
+                "type": "ir.actions.act_window",
+                "res_model": "mrp.production",
+                "res_id": 123,
+                "views": [[False, "form"]]
+            }
+        }
+        """
+        # Validate token
+        gateway = (
+            request.env["hermes.gateway"]
+            .sudo()
+            .search([("webhook_token", "=", token), ("active", "=", True)], limit=1)
+        )
+        if not gateway:
+            return {"status": "error", "message": "Invalid token"}, 403
+
+        data = request.get_json_data()
+        if not data:
+            return {"status": "error", "message": "No JSON data"}, 400
+
+        user_id = data.get("user_id")
+        if not user_id:
+            return {"status": "error", "message": "Missing user_id"}, 400
+
+        user = request.env["res.users"].sudo().browse(int(user_id))
+        if not user.exists():
+            return {"status": "error", "message": "User not found"}, 404
+
+        # Build notification parameters
+        notif_message = data.get("message", "")
+        notif_title = data.get("title", "Hermes")
+        notif_type = data.get("type", "info")
+        sticky = data.get("sticky", False)
+        action = data.get("action")
+
+        # Try web_notify first (soft dependency)
+        notify_method = getattr(user, f"notify_{notif_type}", None)
+        if notify_method:
+            try:
+                notify_method(
+                    notif_message,
+                    title=notif_title,
+                    sticky=sticky,
+                    action=action,
+                )
+                return {
+                    "status": "ok",
+                    "method": "web_notify",
+                    "user_id": user.id,
+                }
+            except Exception as e:
+                _logger.warning("web_notify failed, falling back to DM: %s", e)
+
+        # Fallback: post to user's DM channel
+        return self._notify_fallback(gateway, user, notif_title, notif_message)
+
+    def _notify_fallback(self, gateway, user, title, message):
+        """Fallback notification via DM when web_notify is not available."""
+        try:
+            channel = (
+                request.env["discuss.channel"]
+                .with_user(gateway.ai_user_id.id)
+                .sudo()
+                .channel_get(partner_ids=[user.partner_id.id])
+            )
+            posted = channel.message_post(
+                body=f"<p><b>{title}</b></p><p>{message}</p>",
+                message_type="comment",
+                subtype_xmlid="mail.mt_comment",
+            )
+            return {
+                "status": "ok",
+                "method": "dm_fallback",
+                "message_id": posted.id,
+                "channel_id": channel.id,
+            }
+        except Exception as e:
+            _logger.error("Fallback notification failed: %s", e)
+            return {"status": "error", "message": str(e)}, 500
+
+    @http.route("/hermes/push/<string:token>", type="json", auth="public", csrf=False)
+    def hermes_push(self, token, **kwargs):
+        """Push a proactive message from Hermes to a channel.
+
+        Unlike the webhook endpoint (which is a response to a queued message),
+        this endpoint allows Hermes to initiate a conversation or send
+        notifications without a prior user message.
+
+        Expected JSON body:
+        {
+            "channel_id": 42,
+            "body": "Alert: production order blocked!",
+            "action": "post_message"  # or "typing"
+        }
+        """
+        # Validate token
+        gateway = (
+            request.env["hermes.gateway"]
+            .sudo()
+            .search([("webhook_token", "=", token), ("active", "=", True)], limit=1)
+        )
+        if not gateway:
+            return {"status": "error", "message": "Invalid token"}, 403
+
+        data = request.get_json_data()
+        if not data:
+            return {"status": "error", "message": "No JSON data"}, 400
+
+        channel_id = data.get("channel_id")
+        if not channel_id:
+            return {"status": "error", "message": "Missing channel_id"}, 400
+
+        # Dispatch to action handler (same as webhook)
+        action = data.get("action", "post_message")
+        if action == "post_message":
+            return self._action_post_message(gateway, channel_id, data)
+        elif action == "typing":
+            return self._action_typing(
+                gateway, channel_id, data.get("is_typing", False)
+            )
+        else:
+            return {"status": "error", "message": f"Unknown action: {action}"}, 400
+
     @http.route(
         "/hermes/webhook/<string:token>", type="json", auth="public", csrf=False
     )
