@@ -46,6 +46,45 @@ class DiscussChannel(models.Model):
                         return gateway
         return False
 
+    def _is_ai_mentioned(self, message, gateway):
+        """Check if the AI user is explicitly mentioned in the message.
+
+        Returns True if the message partner_ids include the AI user's partner.
+        This handles @mentions in Discuss channels.
+        """
+        if not message.partner_ids:
+            return False
+        return gateway.ai_user_id.partner_id in message.partner_ids
+
+    def _should_queue_for_hermes(self, message, gateway):
+        """Determine whether this message should be queued for Hermes.
+
+        Rules:
+        - DM (chat): always respond (1-to-1 conversation)
+        - Group/channel with explicit mention (@Hermes): respond
+        - Group/channel without mention: only respond if auto-respond
+          is enabled AND the channel is explicitly monitored
+        """
+        # DMs always get a response
+        if self.channel_type == "chat":
+            return True
+
+        # If explicitly mentioned, always respond
+        if self._is_ai_mentioned(message, gateway):
+            return True
+
+        # In group channels without mention, only respond if:
+        # - auto-respond is enabled
+        # - the channel is explicitly in the gateway's monitored channels
+        if not self.hermes_auto_respond:
+            return False
+
+        # If gateway monitors specific channels, this one must be listed
+        if gateway.channel_ids and self not in gateway.channel_ids:
+            return False
+
+        return True
+
     def message_post(self, **kwargs):
         """Override to queue messages for Hermes when a gateway is configured."""
         message = super().message_post(**kwargs)
@@ -63,16 +102,8 @@ class DiscussChannel(models.Model):
         if not gateway.active or not gateway.ai_user_id:
             return message
 
-        # Check if gateway monitors specific channels (only for non-DM)
-        if (
-            gateway.channel_ids
-            and self.channel_type != "chat"
-            and self not in gateway.channel_ids
-        ):
-            return message
-
-        # Check auto-respond is enabled
-        if not self.hermes_auto_respond:
+        # Decide whether to queue this message
+        if not self._should_queue_for_hermes(message, gateway):
             return message
 
         # Queue the message for Hermes
