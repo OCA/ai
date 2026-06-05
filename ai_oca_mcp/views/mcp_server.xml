@@ -2,13 +2,11 @@
 <!-- Copyright 2026 Dixmit
      License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
 <odoo>
-
     <record model="ir.ui.view" id="mcp_server_form_view">
         <field name="model">mcp.server</field>
         <field name="arch" type="xml">
             <form>
-                <header>
-                </header>
+                <header />
                 <sheet>
                     <div name="button_box" class="oe_button_box" role="group">
                         <button
@@ -88,5 +86,4 @@
         <field name="action" ref="mcp_server_act_window" />
         <field name="sequence" eval="80" />
     </record>
-
 </odoo>
