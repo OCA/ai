@@ -11,9 +11,8 @@
                         name="expire_key"
                         type="object"
                         string="Expire Key"
-                        states="active"
                         class="oe_highlight"
-                        attrs="{'invisible': [('state', '=', 'expired')]}"
+                        invisible="state != 'active'"
                     />
                     <field name="state" widget="statusbar" />
                 </header>
@@ -33,18 +32,17 @@
     <record model="ir.ui.view" id="mcp_server_key_tree_view">
         <field name="model">mcp.server.key</field>
         <field name="arch" type="xml">
-            <tree create="false" delete="false" decoration-muted="state == 'expired'">
+            <list create="false" delete="false" decoration-muted="state == 'expired'">
                 <field name="name" />
                 <field name="state" />
                 <button
                     name="expire_key"
                     type="object"
                     string="Expire Key"
-                    states="active"
                     class="oe_highlight"
-                    attrs="{'invisible': [('state', '=', 'expired')]}"
+                    invisible="state != 'active'"
                 />
-            </tree>
+            </list>
         </field>
     </record>
 </odoo>
