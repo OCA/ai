@@ -2,7 +2,6 @@
 <!-- Copyright 2026 Dixmit
      License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
 <odoo>
-
     <record model="ir.ui.view" id="mcp_server_log_form_view">
         <field name="model">mcp.server.log</field>
         <field name="arch" type="xml">
@@ -71,12 +70,10 @@
         <field name="context">{}</field>
     </record>
 
-
     <record model="ir.ui.menu" id="mcp_server_log_menu">
         <field name="name">MCP Server Log</field>
         <field name="parent_id" ref="ai_tool.ai_menu_root" />
         <field name="action" ref="mcp_server_log_act_window" />
         <field name="sequence" eval="90" />
     </record>
-
 </odoo>
