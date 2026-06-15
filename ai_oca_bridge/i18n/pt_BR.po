@@ -6,13 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: Automatically generated\n"
+"PO-Revision-Date: 2026-06-15 11:02+0000\n"
+"Last-Translator: felipemotter <felipkin@gmail.com>\n"
 "Language-Team: none\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__result_kind
@@ -29,121 +31,133 @@ msgid ""
 "          No notification will be sent when it is finished.\n"
 "        "
 msgstr ""
+"\n"
+"        Define como o resultado do sistema de IA é processado.\n"
+"        - 'Imediato': O resultado é processado imediatamente após a resposta "
+"do sistema de IA.\n"
+"        - 'Assíncrono': O resultado é processado em segundo plano.\n"
+"          Permite operações mais longas.\n"
+"          O Odoo fornecerá uma URL ao sistema de IA para onde a resposta "
+"será enviada.\n"
+"          Os usuários receberão uma notificação quando a operação for "
+"iniciada.\n"
+"          Nenhuma notificação será enviada quando ela for concluída.\n"
+"        "
 
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
 #, python-format
 msgid "%s executed successfully."
-msgstr ""
+msgstr "%s executado com sucesso."
 
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
 #, python-format
 msgid "%s failed."
-msgstr ""
+msgstr "%s falhou."
 
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
 #, python-format
 msgid "%s is not active."
-msgstr ""
+msgstr "%s não está ativo."
 
 #. module: ai_oca_bridge
 #: model:ir.module.category,name:ai_oca_bridge.module_category_ai
 msgid "AI"
-msgstr ""
+msgstr "IA"
 
 #. module: ai_oca_bridge
 #: model:ir.actions.act_window,name:ai_oca_bridge.ai_bridge_act_window
 #: model:ir.ui.menu,name:ai_oca_bridge.ai_bridge_menu
 #: model:ir.ui.menu,name:ai_oca_bridge.ai_bridge_root_menu
 msgid "AI Bridge"
-msgstr ""
+msgstr "Ponte de IA"
 
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
 #, python-format
 msgid "AI Bridge Executed"
-msgstr ""
+msgstr "Ponte de IA Executada"
 
 #. module: ai_oca_bridge
 #: model:ir.ui.menu,name:ai_oca_bridge.ai_bridge_execution_menu
 msgid "AI Bridge Execution"
-msgstr ""
+msgstr "Execução da Ponte de IA"
 
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
 #, python-format
 msgid "AI Bridge Failed"
-msgstr ""
+msgstr "Ponte de IA Falhou"
 
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
 #, python-format
 msgid "AI Bridge Inactive"
-msgstr ""
+msgstr "Ponte de IA Inativa"
 
 #. module: ai_oca_bridge
 #: model:ir.model,name:ai_oca_bridge.model_ai_bridge_thread
 msgid "AI Bridge Mixin"
-msgstr ""
+msgstr "Mixin da Ponte de IA"
 
 #. module: ai_oca_bridge
 #: model:ir.actions.act_window,name:ai_oca_bridge.ai_bridge_execution_act_window
 msgid "AI Execution"
-msgstr ""
+msgstr "Execução de IA"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__result_type__action
 msgid "Action"
-msgstr ""
+msgstr "Ação"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "Ação Necessária"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__active
 #: model_terms:ir.ui.view,arch_db:ai_oca_bridge.ai_bridge_search_view
 msgid "Active"
-msgstr ""
+msgstr "Ativo"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__activity_ids
 msgid "Activities"
-msgstr ""
+msgstr "Atividades"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Decoração de Exceção de Atividade"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__activity_state
 msgid "Activity State"
-msgstr ""
+msgstr "Status da Atividade"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Ícone do Tipo de Atividade"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__ai_bridge_id
 msgid "Ai Bridge"
-msgstr ""
+msgstr "Ponte de IA"
 
 #. module: ai_oca_bridge
 #: model:ir.model,name:ai_oca_bridge.model_ai_bridge
 msgid "Ai Bridge Configuration"
-msgstr ""
+msgstr "Configuração da Ponte de IA"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__ai_bridge_info
@@ -177,81 +191,81 @@ msgstr ""
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_stock_picking__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_stock_scrap__ai_bridge_info
 msgid "Ai Bridge Info"
-msgstr ""
+msgstr "Informações da Ponte de IA"
 
 #. module: ai_oca_bridge
 #: model:ir.model,name:ai_oca_bridge.model_ai_bridge_execution
 msgid "Ai Execution"
-msgstr ""
+msgstr "Execução de IA"
 
 #. module: ai_oca_bridge
 #: model_terms:ir.ui.view,arch_db:ai_oca_bridge.ai_bridge_form_view
 #: model_terms:ir.ui.view,arch_db:ai_oca_bridge.ai_bridge_search_view
 msgid "Archived"
-msgstr ""
+msgstr "Arquivado"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__async_timeout
 msgid "Async Timeout"
-msgstr ""
+msgstr "Tempo Limite Assíncrono"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__result_kind__async
 msgid "Asynchronous"
-msgstr ""
+msgstr "Assíncrono"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "Contagem de Anexos"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__auth_password
 msgid "Auth Password"
-msgstr ""
+msgstr "Senha de Autenticação"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__auth_token
 msgid "Auth Token"
-msgstr ""
+msgstr "Token de Autenticação"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__auth_username
 msgid "Auth Username"
-msgstr ""
+msgstr "Nome de Usuário de Autenticação"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__auth_type
 msgid "Authentication Type"
-msgstr ""
+msgstr "Tipo de Autenticação"
 
 #. module: ai_oca_bridge
 #: model:ir.model,name:ai_oca_bridge.model_base
 msgid "Base"
-msgstr ""
+msgstr "Base"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__auth_type__basic
 msgid "Basic Authentication"
-msgstr ""
+msgstr "Autenticação Básica"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__company_id
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__company_id
 msgid "Company"
-msgstr ""
+msgstr "Empresa"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__create_uid
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Criado por"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__create_date
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Criado em"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__usage
@@ -259,366 +273,368 @@ msgid ""
 "Defines how this bridge is used. If 'Thread', it will be used in the mail "
 "thread context."
 msgstr ""
+"Define como esta ponte é utilizada. Se 'Thread', ela será usada no contexto "
+"da thread de e-mail."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__result_type
 msgid "Defines the type of result expected from the AI system."
-msgstr ""
+msgstr "Define o tipo de resultado esperado do sistema de IA."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__description
 msgid "Description"
-msgstr ""
+msgstr "Descrição"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__display_name
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nome exibido"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge_execution__state__done
 msgid "Done"
-msgstr ""
+msgstr "Concluído"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge_execution__state__draft
 msgid "Draft"
-msgstr ""
+msgstr "Rascunho"
 
 #. module: ai_oca_bridge
 #: model:ir.model,name:ai_oca_bridge.model_mail_thread
 msgid "Email Thread"
-msgstr ""
+msgstr "Thread de E-mail"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__error
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge_execution__state__error
 #: model_terms:ir.ui.view,arch_db:ai_oca_bridge.ai_bridge_execution_form_view
 msgid "Error"
-msgstr ""
+msgstr "Erro"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__execution_ids
 msgid "Execution"
-msgstr ""
+msgstr "Execução"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__execution_count
 msgid "Execution Count"
-msgstr ""
+msgstr "Contagem de Execuções"
 
 #. module: ai_oca_bridge
 #: model_terms:ir.ui.view,arch_db:ai_oca_bridge.ai_bridge_execution_form_view
 msgid "Execution Details"
-msgstr ""
+msgstr "Detalhes da Execução"
 
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/controllers/ai.py:0
 #, python-format
 msgid "Execution is expired."
-msgstr ""
+msgstr "A execução expirou."
 
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/controllers/ai.py:0
 #, python-format
 msgid "Execution not found."
-msgstr ""
+msgstr "Execução não encontrada."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__expiration_date
 msgid "Expiration Date"
-msgstr ""
+msgstr "Data de Expiração"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge_execution__expiration_date
 msgid "Expiration date for the async operation token."
-msgstr ""
+msgstr "Data de expiração do token da operação assíncrona."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__field_ids
 msgid "Field"
-msgstr ""
+msgstr "Campo"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__field_ids
 msgid "Fields to include in the AI bridge."
-msgstr ""
+msgstr "Campos a incluir na ponte de IA."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__domain
 msgid "Filter"
-msgstr ""
+msgstr "Filtro"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__message_follower_ids
 msgid "Followers"
-msgstr ""
+msgstr "Seguidores"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__message_partner_ids
 msgid "Followers (Partners)"
-msgstr ""
+msgstr "Seguidores (Parceiros)"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "Ícone do Font Awesome, ex.: fa-tasks"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__group_ids
 msgid "Group"
-msgstr ""
+msgstr "Grupo"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__has_message
 msgid "Has Message"
-msgstr ""
+msgstr "Possui Mensagem"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__id
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__activity_exception_icon
 msgid "Icon"
-msgstr ""
+msgstr "Ícone"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ícone para indicar uma atividade de exceção."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Se marcado, novas mensagens requerem sua atenção."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Se marcado, algumas mensagens têm um erro de entrega."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__result_kind__immediate
 msgid "Immediate"
-msgstr ""
+msgstr "Imediato"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__message_is_follower
 msgid "Is Follower"
-msgstr ""
+msgstr "É Seguidor"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge____last_update
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Última modificação em"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__write_uid
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Última atualização por"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__write_date
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Última atualização em"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Anexo Principal"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Erro de Entrega de Mensagem"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__message_ids
 msgid "Messages"
-msgstr ""
+msgstr "Mensagens"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__model_id
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__model_id
 msgid "Model"
-msgstr ""
+msgstr "Modelo"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__model
 msgid "Model Name"
-msgstr ""
+msgstr "Nome do Modelo"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__model_required
 msgid "Model Required"
-msgstr ""
+msgstr "Modelo Obrigatório"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr ""
+msgstr "Prazo da Minha Atividade"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__name
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__name
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__activity_calendar_event_id
 msgid "Next Activity Calendar Event"
-msgstr ""
+msgstr "Próximo Evento de Calendário da Atividade"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Prazo da Próxima Atividade"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__activity_summary
 msgid "Next Activity Summary"
-msgstr ""
+msgstr "Resumo da Próxima Atividade"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__activity_type_id
 msgid "Next Activity Type"
-msgstr ""
+msgstr "Tipo da Próxima Atividade"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__payload_type__none
 msgid "No payload"
-msgstr ""
+msgstr "Sem payload"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__result_type__none
 msgid "No processing"
-msgstr ""
+msgstr "Sem processamento"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__auth_type__none
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__usage__none
 msgid "None"
-msgstr ""
+msgstr "Nenhum"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__message_needaction_counter
 msgid "Number of Actions"
-msgstr ""
+msgstr "Número de Ações"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Número de erros"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__message_needaction_counter
 msgid "Number of messages requiring action"
-msgstr ""
+msgstr "Número de mensagens que requerem ação"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Número de mensagens com erro de entrega"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__usage__ai_thread_create
 msgid "On Record Created"
-msgstr ""
+msgstr "Ao Criar Registro"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__usage__ai_thread_unlink
 msgid "On Record Deleted"
-msgstr ""
+msgstr "Ao Excluir Registro"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__usage__ai_thread_write
 msgid "On Record Updated"
-msgstr ""
+msgstr "Ao Atualizar Registro"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__payload
 #: model_terms:ir.ui.view,arch_db:ai_oca_bridge.ai_bridge_execution_form_view
 msgid "Payload"
-msgstr ""
+msgstr "Payload"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__payload_txt
 msgid "Payload Txt"
-msgstr ""
+msgstr "Texto do Payload"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__payload_type
 msgid "Payload Type"
-msgstr ""
+msgstr "Tipo de Payload"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__result_type__message
 msgid "Post a Message"
-msgstr ""
+msgstr "Publicar uma Mensagem"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__payload_type__record
 msgid "Record"
-msgstr ""
+msgstr "Registro"
 
 #. module: ai_oca_bridge
 #: model_terms:ir.ui.view,arch_db:ai_oca_bridge.ai_bridge_form_view
 msgid "Record Payload"
-msgstr ""
+msgstr "Payload do Registro"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__payload_type__record_v0
 msgid "Record v0"
-msgstr ""
+msgstr "Registro v0"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__res_id
 msgid "Res"
-msgstr ""
+msgstr "Res"
 
 #. module: ai_oca_bridge
 #: model_terms:ir.ui.view,arch_db:ai_oca_bridge.ai_bridge_execution_form_view
 msgid "Response"
-msgstr ""
+msgstr "Resposta"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__activity_user_id
 msgid "Responsible User"
-msgstr ""
+msgstr "Usuário Responsável"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__result
 msgid "Result"
-msgstr ""
+msgstr "Resultado"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__result_kind
 msgid "Result Kind"
-msgstr ""
+msgstr "Tipo de Resultado"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__result_type
 msgid "Result Type"
-msgstr ""
+msgstr "Tipo de Resultado"
 
 #. module: ai_oca_bridge
 #: model_terms:ir.ui.view,arch_db:ai_oca_bridge.ai_bridge_form_view
 msgid "Sample"
-msgstr ""
+msgstr "Amostra"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__sample_payload
 msgid "Sample Payload"
-msgstr ""
+msgstr "Payload de Amostra"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__sample_payload
@@ -626,16 +642,18 @@ msgid ""
 "Sample payload to be sent to the AI system. This is used for testing and "
 "debugging purposes."
 msgstr ""
+"Payload de amostra a ser enviado ao sistema de IA. É utilizado para fins de "
+"teste e depuração."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__sequence
 msgid "Sequence"
-msgstr ""
+msgstr "Sequência"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__state
 msgid "State"
-msgstr ""
+msgstr "Status"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__activity_state
@@ -645,31 +663,35 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Status baseado em atividades\n"
+"Atrasada: A data de vencimento já passou\n"
+"Hoje: A data da atividade é hoje\n"
+"Planejada: Atividades futuras."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__url
 msgid "The URL of the external AI system to which this bridge connects."
-msgstr ""
+msgstr "A URL do sistema de IA externo ao qual esta ponte se conecta."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__model_id
 msgid "The model to which this bridge is associated."
-msgstr ""
+msgstr "O modelo ao qual esta ponte está associada."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__auth_type
 msgid "The type of authentication used to connect to the external AI system."
-msgstr ""
+msgstr "O tipo de autenticação usado para conectar ao sistema de IA externo."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__user_id
 msgid "The user that will be shown when executing this AI bridge."
-msgstr ""
+msgstr "O usuário que será exibido ao executar esta ponte de IA."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__usage__thread
 msgid "Thread"
-msgstr ""
+msgstr "Thread"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__async_timeout
@@ -677,60 +699,62 @@ msgid ""
 "Timeout in seconds for asynchronous operations. If the operation does not "
 "complete within this time, it will be considered failed."
 msgstr ""
+"Tempo limite em segundos para operações assíncronas. Se a operação não for "
+"concluída dentro desse tempo, ela será considerada como falha."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields.selection,name:ai_oca_bridge.selection__ai_bridge__auth_type__token
 msgid "Token Authentication"
-msgstr ""
+msgstr "Autenticação por Token"
 
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/controllers/ai.py:0
 #, python-format
 msgid "Token is not allowed for this execution."
-msgstr ""
+msgstr "O token não é permitido para esta execução."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Tipo da atividade de exceção no registro."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__url
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge_execution.py:0
 #, python-format
 msgid "Unsupported authentication type."
-msgstr ""
+msgstr "Tipo de autenticação não suportado."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__usage
 msgid "Usage"
-msgstr ""
+msgstr "Uso"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__user_id
 msgid "User"
-msgstr ""
+msgstr "Usuário"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__group_ids
 msgid "User groups allowed to use this AI bridge."
-msgstr ""
+msgstr "Grupos de usuários autorizados a usar esta ponte de IA."
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__website_message_ids
 msgid "Website Messages"
-msgstr ""
+msgstr "Mensagens do Site"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__website_message_ids
 msgid "Website communication history"
-msgstr ""
+msgstr "Histórico de comunicação do site"
 
 #. module: ai_oca_bridge
 #. odoo-python
@@ -739,3 +763,5 @@ msgstr ""
 msgid ""
 "When usage is 'On Record Deleted', the Payload Type must be 'No payload'."
 msgstr ""
+"Quando o uso é 'Ao Excluir Registro', o Tipo de Payload deve ser 'Sem "
+"payload'."
