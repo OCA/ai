@@ -6,44 +6,46 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: Automatically generated\n"
+"PO-Revision-Date: 2026-06-15 11:07+0000\n"
+"Last-Translator: felipemotter <felipkin@gmail.com>\n"
 "Language-Team: none\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #. module: ai_oca_mcp
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server__key_ids
 msgid "Access Keys"
-msgstr ""
+msgstr "Chaves de acesso"
 
 #. module: ai_oca_mcp
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server__active
 #: model:ir.model.fields.selection,name:ai_oca_mcp.selection__mcp_server_key__state__active
 msgid "Active"
-msgstr ""
+msgstr "Ativo"
 
 #. module: ai_oca_mcp
 #: model_terms:ir.ui.view,arch_db:ai_oca_mcp.mcp_server_form_view
 msgid "Add Key"
-msgstr ""
+msgstr "Adicionar chave"
 
 #. module: ai_oca_mcp
 #: model:ir.actions.act_window,name:ai_oca_mcp.mcp_server_key_add_act_window
 msgid "Add Security Key"
-msgstr ""
+msgstr "Adicionar chave de segurança"
 
 #. module: ai_oca_mcp
 #: model_terms:ir.ui.view,arch_db:ai_oca_mcp.mcp_server_form_view
 msgid "Archived"
-msgstr ""
+msgstr "Arquivado"
 
 #. module: ai_oca_mcp
 #: model_terms:ir.ui.view,arch_db:ai_oca_mcp.mcp_server_key_add_form_view
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #. module: ai_oca_mcp
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server__create_uid
@@ -51,7 +53,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_key_add__create_uid
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_log__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Criado por"
 
 #. module: ai_oca_mcp
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server__create_date
@@ -59,17 +61,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_key_add__create_date
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_log__create_date
 msgid "Created on"
-msgstr ""
+msgstr "Criado em"
 
 #. module: ai_oca_mcp
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_log__date
 msgid "Date"
-msgstr ""
+msgstr "Data"
 
 #. module: ai_oca_mcp
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server__description
 msgid "Description"
-msgstr ""
+msgstr "Descrição"
 
 #. module: ai_oca_mcp
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server__display_name
@@ -77,47 +79,47 @@ msgstr ""
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_key_add__display_name
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_log__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nome exibido"
 
 #. module: ai_oca_mcp
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_log__error
 #: model_terms:ir.ui.view,arch_db:ai_oca_mcp.mcp_server_log_form_view
 msgid "Error"
-msgstr ""
+msgstr "Erro"
 
 #. module: ai_oca_mcp
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_key__expiration_date
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_key_add__expiration_date
 msgid "Expiration Date"
-msgstr ""
+msgstr "Data de expiração"
 
 #. module: ai_oca_mcp
 #: model_terms:ir.ui.view,arch_db:ai_oca_mcp.mcp_server_key_form_view
 #: model_terms:ir.ui.view,arch_db:ai_oca_mcp.mcp_server_key_tree_view
 msgid "Expire Key"
-msgstr ""
+msgstr "Expirar chave"
 
 #. module: ai_oca_mcp
 #: model:ir.model.fields.selection,name:ai_oca_mcp.selection__mcp_server_key__state__expired
 msgid "Expired"
-msgstr ""
+msgstr "Expirada"
 
 #. module: ai_oca_mcp
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_key__expired_on
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_key_add__expired_on
 msgid "Expired On"
-msgstr ""
+msgstr "Expirada em"
 
 #. module: ai_oca_mcp
 #: model_terms:ir.ui.view,arch_db:ai_oca_mcp.mcp_server_key_add_form_view
 msgid "Generate Key"
-msgstr ""
+msgstr "Gerar chave"
 
 #. module: ai_oca_mcp
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_key__hashed_key
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_key_add__hashed_key
 msgid "Hashed Key"
-msgstr ""
+msgstr "Chave com hash"
 
 #. module: ai_oca_mcp
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server__id
@@ -125,23 +127,23 @@ msgstr ""
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_key_add__id
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_log__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: ai_oca_mcp
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server__key
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_key_add__key_id
 msgid "Key"
-msgstr ""
+msgstr "Chave"
 
 #. module: ai_oca_mcp
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_key_add__key
 msgid "Key to use"
-msgstr ""
+msgstr "Chave a usar"
 
 #. module: ai_oca_mcp
 #: model_terms:ir.ui.view,arch_db:ai_oca_mcp.mcp_server_form_view
 msgid "Keys"
-msgstr ""
+msgstr "Chaves"
 
 #. module: ai_oca_mcp
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server____last_update
@@ -149,7 +151,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_key_add____last_update
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_log____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Última modificação em"
 
 #. module: ai_oca_mcp
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server__write_uid
@@ -157,7 +159,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_key_add__write_uid
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_log__write_uid
 msgid "Last Updated by"
-msgstr ""
+msgstr "Última atualização por"
 
 #. module: ai_oca_mcp
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server__write_date
@@ -165,106 +167,106 @@ msgstr ""
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_key_add__write_date
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_log__write_date
 msgid "Last Updated on"
-msgstr ""
+msgstr "Última atualização em"
 
 #. module: ai_oca_mcp
 #: model:ir.actions.act_window,name:ai_oca_mcp.mcp_server_act_window
 #: model:ir.ui.menu,name:ai_oca_mcp.mcp_server_menu
 msgid "MCP Server"
-msgstr ""
+msgstr "Servidor MCP"
 
 #. module: ai_oca_mcp
 #: model:ir.ui.menu,name:ai_oca_mcp.mcp_server_log_menu
 msgid "MCP Server Log"
-msgstr ""
+msgstr "Log do servidor MCP"
 
 #. module: ai_oca_mcp
 #: model:ir.model,name:ai_oca_mcp.model_mcp_server
 msgid "Mcp Server"
-msgstr ""
+msgstr "Servidor MCP"
 
 #. module: ai_oca_mcp
 #: model:ir.model,name:ai_oca_mcp.model_mcp_server_key
 msgid "Mcp Server Key"
-msgstr ""
+msgstr "Chave do servidor MCP"
 
 #. module: ai_oca_mcp
 #: model:ir.actions.act_window,name:ai_oca_mcp.mcp_server_log_act_window
 #: model:ir.actions.act_window,name:ai_oca_mcp.mcp_server_log_server_filter_act_window
 #: model:ir.model,name:ai_oca_mcp.model_mcp_server_log
 msgid "Mcp Server Log"
-msgstr ""
+msgstr "Log do servidor MCP"
 
 #. module: ai_oca_mcp
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server__name
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_key__name
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_key_add__name
 msgid "Name"
-msgstr ""
+msgstr "Nome"
 
 #. module: ai_oca_mcp
 #: model_terms:ir.ui.view,arch_db:ai_oca_mcp.mcp_server_form_view
 msgid "Name..."
-msgstr ""
+msgstr "Nome..."
 
 #. module: ai_oca_mcp
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_log__request
 #: model_terms:ir.ui.view,arch_db:ai_oca_mcp.mcp_server_log_form_view
 msgid "Request"
-msgstr ""
+msgstr "Requisição"
 
 #. module: ai_oca_mcp
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_log__response
 #: model_terms:ir.ui.view,arch_db:ai_oca_mcp.mcp_server_log_form_view
 msgid "Response"
-msgstr ""
+msgstr "Resposta"
 
 #. module: ai_oca_mcp
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_key__server_id
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_key_add__server_id
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_log__server_id
 msgid "Server"
-msgstr ""
+msgstr "Servidor"
 
 #. module: ai_oca_mcp
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_log__server_key_id
 msgid "Server Key"
-msgstr ""
+msgstr "Chave do servidor"
 
 #. module: ai_oca_mcp
 #: model_terms:ir.ui.view,arch_db:ai_oca_mcp.mcp_server_form_view
 msgid "Show logs"
-msgstr ""
+msgstr "Mostrar logs"
 
 #. module: ai_oca_mcp
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_key__state
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_key_add__state
 msgid "State"
-msgstr ""
+msgstr "Estado"
 
 #. module: ai_oca_mcp
 #: model:ir.model.constraint,message:ai_oca_mcp.constraint_mcp_server_key_key_uniq
 #: model:ir.model.constraint,message:ai_oca_mcp.constraint_mcp_server_key_uniq
 msgid "The key must be unique"
-msgstr ""
+msgstr "A chave deve ser única"
 
 #. module: ai_oca_mcp
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server__tool_ids
 msgid "Tools"
-msgstr ""
+msgstr "Ferramentas"
 
 #. module: ai_oca_mcp
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server__url
 msgid "Url"
-msgstr ""
+msgstr "URL"
 
 #. module: ai_oca_mcp
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_key__user_id
 #: model:ir.model.fields,field_description:ai_oca_mcp.field_mcp_server_key_add__user_id
 msgid "User"
-msgstr ""
+msgstr "Usuário"
 
 #. module: ai_oca_mcp
 #: model:ir.model,name:ai_oca_mcp.model_mcp_server_key_add
 msgid "Wizard used to add a new key to an MCP Server"
-msgstr ""
+msgstr "Assistente usado para adicionar uma nova chave a um servidor MCP"
