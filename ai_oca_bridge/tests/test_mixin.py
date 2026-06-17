@@ -281,3 +281,29 @@ class TestBridge(TransactionCase):
                 [("ai_bridge_id", "=", self.bridge.id)]
             )
             self.assertEqual(execution_count, 0)
+
+    def test_trigger_field_ids_write_filters(self):
+        self.bridge.write({"usage": "ai_thread_write"})
+        # Only trigger when the 'name' field is present in values
+        name_field = self.env["ir.model.fields"].search(
+            [("model", "=", "bridge.test"), ("name", "=", "name")], limit=1
+        )
+        self.assertTrue(name_field, "Name field should exist for bridge.test")
+        self.bridge.trigger_field_ids = [(6, 0, [name_field.id])]
+
+        record = self.env["bridge.test"].create({"name": "N", "description": "d"})
+        with mock.patch("requests.post") as mock_post:
+            mock_post.return_value.status_code = 200
+            mock_post.return_value.json.return_value = {"result": "ok"}
+
+            # Write on non-configured field -> should NOT trigger
+            record.write({"description": "d2"})
+            self.assertEqual(mock_post.call_count, 0)
+
+            # Write on configured field -> should trigger once
+            record.write({"name": "N2"})
+            self.assertEqual(mock_post.call_count, 1)
+
+            # Write on both -> still triggers (presence of 'name')
+            record.write({"name": "N3", "description": "d3"})
+            self.assertEqual(mock_post.call_count, 2)

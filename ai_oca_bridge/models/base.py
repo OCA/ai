@@ -20,7 +20,7 @@ class Base(models.AbstractModel):
 
     def write(self, values):
         result = super().write(values)
-        self._execute_ai_bridges_for_records(self, "ai_thread_write")
+        self._execute_ai_bridges_for_records(self, "ai_thread_write", values=values)
         return result
 
     def unlink(self):
@@ -39,7 +39,7 @@ class Base(models.AbstractModel):
 
         return result
 
-    def _execute_ai_bridges_for_records(self, records, usage):
+    def _execute_ai_bridges_for_records(self, records, usage, values=None):
         if not records:
             return
         model_id = self.sudo().env["ir.model"]._get_id(records._name)
@@ -49,6 +49,14 @@ class Base(models.AbstractModel):
             .search([("model_id", "=", model_id), ("usage", "=", usage)])
         )
         for bridge in bridges:
+            # If this is a write, and the bridge has trigger fields configured,
+            # only proceed when at least one of those fields is present in values
+            if usage == "ai_thread_write" and values is not None:
+                trigger_fields = bridge.sudo().trigger_field_ids
+                if trigger_fields:
+                    trigger_names = set(trigger_fields.mapped("name"))
+                    if trigger_names.isdisjoint(values.keys()):
+                        continue
             for record in records:
                 if bridge._enabled_for(record):
                     try:

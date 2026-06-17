@@ -365,3 +365,39 @@ class TestBridge(TransactionCase):
         self.assertEqual(
             execution.payload["_id"], json.loads(execution.payload_txt)["_id"]
         )
+
+    def test_bridge_result_server_action_success(self):
+        # Create a server action and give it an external id
+        server_action = self.env["ir.actions.server"].create(
+            {
+                "name": "Test SA",
+                "model_id": self.env.ref("base.model_res_partner").id,
+                "state": "code",
+                "code": "records.ensure_one()\nresult = True",
+            }
+        )
+        # Configure bridge to use server_action immediate
+        self.bridge.write(
+            {
+                "result_type": "server_action",
+                "result_kind": "immediate",
+                "server_action_id": server_action.id,
+            }
+        )
+        self.env["ir.model.data"].create(
+            {
+                "name": "test_server_action_bridge",
+                "module": "ai_oca_bridge",
+                "model": "ir.actions.server",
+                "res_id": server_action.id,
+                "noupdate": True,
+            }
+        )
+        with mock.patch("requests.post") as mock_post:
+            mock_post.return_value = mock.Mock(
+                status_code=200,
+                json=lambda: {"body": "My message"},
+            )
+            result = self.bridge.execute_ai_bridge(self.partner._name, self.partner.id)
+            mock_post.assert_called_once()
+        self.assertEqual(result, {"status": "success", "action": server_action.name})
