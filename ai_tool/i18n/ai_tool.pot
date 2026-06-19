@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -68,11 +68,6 @@ msgstr ""
 #. module: ai_tool
 #: model:ir.model.fields,field_description:ai_tool.field_ai_tool__kind
 msgid "Kind"
-msgstr ""
-
-#. module: ai_tool
-#: model:ir.model.fields,field_description:ai_tool.field_ai_tool____last_update
-msgid "Last Modified on"
 msgstr ""
 
 #. module: ai_tool
