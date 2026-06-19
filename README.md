@@ -27,6 +27,7 @@ addon | version | maintainers | summary
 [ai_oca_bridge_document_page](ai_oca_bridge_document_page/) | 18.0.1.0.0 |  | Adds Documents synchronization using AI Bridges
 [ai_oca_bridge_extra_parameters](ai_oca_bridge_extra_parameters/) | 18.0.1.0.0 | <a href='https://github.com/arielbarreiros96'><img src='https://github.com/arielbarreiros96.png' width='32' height='32' style='border-radius:50%;' alt='arielbarreiros96'/></a> | Adds extra parameters to the AI OCA Bridge payload.
 [ai_oca_native_generate_ollama](ai_oca_native_generate_ollama/) | 18.0.1.0.0 |  | This module replaces AI from html_editor to use an Ollama server instead of OpenAI through Odoo IAP.
+[ai_tool](ai_tool/) | 18.0.1.0.0 |  | We want to generate some specific AI Tools that might be used in other places, like MCP or native.
 
 [//]: # (end addons)
 

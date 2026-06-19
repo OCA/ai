@@ -1,12 +1,13 @@
 [project]
 name = "odoo-addons-oca-ai"
-version = "18.0.20251111.0"
+version = "18.0.20260619.0"
 dependencies = [
     "odoo-addon-ai_oca_bridge==18.0.*",
     "odoo-addon-ai_oca_bridge_chatter==18.0.*",
     "odoo-addon-ai_oca_bridge_document_page==18.0.*",
     "odoo-addon-ai_oca_bridge_extra_parameters==18.0.*",
     "odoo-addon-ai_oca_native_generate_ollama==18.0.*",
+    "odoo-addon-ai_tool==18.0.*",
 ]
 classifiers=[
     "Programming Language :: Python",
