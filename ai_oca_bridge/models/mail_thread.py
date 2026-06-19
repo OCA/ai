@@ -10,7 +10,9 @@ from odoo.tools.misc import frozendict
 class MailThread(models.AbstractModel):
     _inherit = "mail.thread"
 
-    ai_bridge_info = fields.Json(compute="_compute_ai_bridge_info", store=False)
+    ai_bridge_info = fields.Json(
+        compute="_compute_ai_bridge_info", store=False, compute_sudo=True
+    )
 
     @api.depends()
     def _compute_ai_bridge_info(self):
