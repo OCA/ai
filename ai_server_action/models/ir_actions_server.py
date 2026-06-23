@@ -8,7 +8,6 @@ from odoo.addons.web_editor.models.ir_qweb_fields import html_to_text
 
 
 class IrActionsServer(models.Model):
-
     _inherit = "ir.actions.server"
 
     state = fields.Selection(
