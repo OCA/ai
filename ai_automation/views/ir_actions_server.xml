@@ -2,7 +2,6 @@
 <!-- Copyright 2026 Dixmit
      License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
 <odoo>
-
     <record model="ir.ui.view" id="ir_actions_server_form_view">
         <field name="model">ir.actions.server</field>
         <field name="inherit_id" ref="base.view_server_action_form" />
@@ -36,7 +35,4 @@
             </notebook>
         </field>
     </record>
-
-
-
 </odoo>
