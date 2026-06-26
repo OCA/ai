@@ -1,3 +1,5 @@
+import base64
+
 from odoo import fields, models
 
 from odoo.addons.ai_connection.client import AiConnectionClient
@@ -10,8 +12,12 @@ class AiClientDemo(AiConnectionClient):
 
     def handle_message(self, messages, **kwargs):
         last_message = messages[-1]
-        if any(tool.name == last_message["content"] for tool in self.tools):
-            content = last_message["content"]
+        content = last_message["content"]
+        if last_message.get("files"):
+            content = base64.b64decode(last_message["files"][0]["content"]).decode(
+                "utf-8"
+            )
+        if any(tool.name == content for tool in self.tools):
             return {
                 "message": {
                     "role": "assistant",
@@ -27,8 +33,7 @@ class AiClientDemo(AiConnectionClient):
         return {
             "message": {
                 "role": "assistant",
-                "content": "This is a demo response to the prompt: "
-                f"{last_message['content']}",
+                "content": "This is a demo response to the prompt: " f"{content}",
             },
         }
 

@@ -22,19 +22,30 @@ class AiConnection(models.Model):
 
     def _run(
         self,
-        prompt,
+        prompt=None,
         tools=None,
         record=None,
         system_prompt=None,
         messages=None,
         max_iterations=None,
+        attachments=None,
     ):
         if messages is None:
             messages = []
         if system_prompt:
             messages.append({"role": "system", "content": system_prompt})
-        if prompt:
-            messages.append({"role": "user", "content": prompt})
+        if prompt or attachments:
+            message = {"role": "user", "content": prompt or ""}
+            if attachments:
+                message["files"] = [
+                    {
+                        "name": attachment.name,
+                        "content": attachment.datas.decode("utf-8"),
+                        "mimetype": attachment.mimetype,
+                    }
+                    for attachment in attachments
+                ]
+            messages.append(message)
         return self._run_ai(
             messages=messages, tools=tools, record=record, max_iterations=max_iterations
         )
