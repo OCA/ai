@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Dixmit
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="ir_actions_server_form_view">
+        <field name="model">ir.actions.server</field>
+        <field name="inherit_id" ref="base.view_server_action_form" />
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="AI OCA" invisible="state != 'ai_oca'">
+                    <group>
+                        <field name="ai_connection_id" />
+                        <field
+                            name="ai_tool_ids"
+                            widget="many2many_tags"
+                            domain="['|', ('model_id', '=', model_id), ('kind', 'in', ['generic', 'generic_model'])]"
+                        />
+                        <field name="mailing_model_real" invisible="1" />
+                        <field
+                            name="ai_prompt"
+                            widget="html"
+                            class="oe-bordered-editor"
+                            options="{'style-inline': true, 'codeview': true, 'dynamic_placeholder': true}"
+                        />
+                        <field name="ai_result_action" />
+                        <field
+                            name="ai_update_record_field_id"
+                            invisible="ai_result_action != 'update_record'"
+                        />
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>
