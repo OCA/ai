@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026-TODAY Akretion - Raphael Valyi <raphael.valyi@akretion.com>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <!--
+    This data file registers Hermes tools as ai.tool records when ai_tool is installed.
+    The noupdate flag ensures these records are only created if ai_tool is available.
+    If ai_tool is not installed, this file is skipped during installation.
+    -->
+    <data noupdate="1">
+        <record model="ai.tool" id="tool_execute_odoo_query" forcecreate="0">
+            <field name="name">execute_odoo_query</field>
+            <field
+                name="description"
+            >Execute a safe Python query on Odoo data. Use env['model'].search(), browse(), read(), etc. Runs with the current user's permissions.</field>
+            <field name="model_id" ref="model_hermes_tools" />
+            <field name="function_name">_ai_execute_odoo_query</field>
+            <field name="kind">generic</field>
+        </record>
+
+        <record model="ai.tool" id="tool_search_records" forcecreate="0">
+            <field name="name">search_records</field>
+            <field
+                name="description"
+            >Search and read Odoo records with a domain filter. Returns matching records with specified fields.</field>
+            <field name="model_id" ref="model_hermes_tools" />
+            <field name="function_name">_ai_search_records</field>
+            <field name="kind">generic</field>
+        </record>
+
+        <record model="ai.tool" id="tool_read_record" forcecreate="0">
+            <field name="name">read_record</field>
+            <field
+                name="description"
+            >Read a single Odoo record by ID. Returns all readable fields or specified fields.</field>
+            <field name="model_id" ref="model_hermes_tools" />
+            <field name="function_name">_ai_read_record</field>
+            <field name="kind">generic</field>
+        </record>
+
+        <record model="ai.tool" id="tool_post_discuss_message" forcecreate="0">
+            <field name="name">post_discuss_message</field>
+            <field
+                name="description"
+            >Post a message to an Odoo Discuss channel. Useful for escalation and notifications.</field>
+            <field name="model_id" ref="model_hermes_tools" />
+            <field name="function_name">_ai_post_discuss_message</field>
+            <field name="kind">generic</field>
+        </record>
+    </data>
+</odoo>

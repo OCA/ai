@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026-TODAY Akretion - Raphael Valyi <raphael.valyi@akretion.com>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <menuitem
+        id="menu_hermes_root"
+        name="Hermes"
+        parent="ai_oca_bridge.ai_bridge_root_menu"
+        sequence="20"
+    />
+    <menuitem
+        id="menu_hermes_gateway"
+        name="Gateways"
+        parent="menu_hermes_root"
+        action="hermes_gateway_action"
+        sequence="10"
+    />
+</odoo>
