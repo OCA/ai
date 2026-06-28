@@ -1,0 +1,184 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ai_automation
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2026-06-15 11:09+0000\n"
+"Last-Translator: felipemotter <felipkin@gmail.com>\n"
+"Language-Team: none\n"
+"Language: pt_BR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 5.15.2\n"
+
+#. module: ai_automation
+#: model:ir.actions.act_window,name:ai_automation.ai_connection_act_window
+#: model:ir.model,name:ai_automation.model_ai_connection
+#: model:ir.model.fields,field_description:ai_automation.field_ir_actions_server__ai_connection_id
+#: model:ir.model.fields,field_description:ai_automation.field_ir_cron__ai_connection_id
+#: model:ir.ui.menu,name:ai_automation.ai_connection_menu
+msgid "AI Connection"
+msgstr "Conexão de IA"
+
+#. module: ai_automation
+#: model_terms:ir.ui.view,arch_db:ai_automation.ir_actions_server_form_view
+msgid "AI OCA"
+msgstr "AI OCA"
+
+#. module: ai_automation
+#: model:ir.model.fields.selection,name:ai_automation.selection__ir_actions_server__state__ai_oca
+msgid "AI OCA Action"
+msgstr "Ação AI OCA"
+
+#. module: ai_automation
+#: model:ir.model.fields,field_description:ai_automation.field_ir_actions_server__ai_prompt
+#: model:ir.model.fields,field_description:ai_automation.field_ir_cron__ai_prompt
+msgid "AI Prompt"
+msgstr "Prompt de IA"
+
+#. module: ai_automation
+#: model:ir.model.fields,field_description:ai_automation.field_ir_actions_server__ai_result_action
+#: model:ir.model.fields,field_description:ai_automation.field_ir_cron__ai_result_action
+msgid "AI Result Action"
+msgstr "Ação do resultado da IA"
+
+#. module: ai_automation
+#: model:ir.model.fields,field_description:ai_automation.field_ir_actions_server__ai_tool_ids
+#: model:ir.model.fields,field_description:ai_automation.field_ir_cron__ai_tool_ids
+msgid "AI Tools"
+msgstr "Ferramentas de IA"
+
+#. module: ai_automation
+#: model:ir.model.fields,field_description:ai_automation.field_ir_actions_server__ai_update_record_field_id
+#: model:ir.model.fields,field_description:ai_automation.field_ir_cron__ai_update_record_field_id
+msgid "AI Update Record Field"
+msgstr "Campo do registro a atualizar pela IA"
+
+#. module: ai_automation
+#: model:ir.model.fields,field_description:ai_automation.field_ir_actions_server__state
+#: model:ir.model.fields,field_description:ai_automation.field_ir_cron__state
+msgid "Action To Do"
+msgstr "Ação a executar"
+
+#. module: ai_automation
+#: model:ir.model.fields,field_description:ai_automation.field_ai_connection__active
+msgid "Active"
+msgstr "Ativo"
+
+#. module: ai_automation
+#: model:ir.model.fields,field_description:ai_automation.field_ai_connection__create_uid
+msgid "Created by"
+msgstr "Criado por"
+
+#. module: ai_automation
+#: model:ir.model.fields,field_description:ai_automation.field_ai_connection__create_date
+msgid "Created on"
+msgstr "Criado em"
+
+#. module: ai_automation
+#: model:ir.model.fields,field_description:ai_automation.field_ai_connection__display_name
+msgid "Display Name"
+msgstr "Nome exibido"
+
+#. module: ai_automation
+#: model:ir.model.fields,field_description:ai_automation.field_ai_connection__id
+msgid "ID"
+msgstr "ID"
+
+#. module: ai_automation
+#: model:ir.model.fields,field_description:ai_automation.field_ai_connection__kind
+msgid "Kind"
+msgstr "Tipo"
+
+#. module: ai_automation
+#: model:ir.model.fields,field_description:ai_automation.field_ai_connection____last_update
+msgid "Last Modified on"
+msgstr "Última modificação em"
+
+#. module: ai_automation
+#: model:ir.model.fields,field_description:ai_automation.field_ai_connection__write_uid
+msgid "Last Updated by"
+msgstr "Última atualização por"
+
+#. module: ai_automation
+#: model:ir.model.fields,field_description:ai_automation.field_ai_connection__write_date
+msgid "Last Updated on"
+msgstr "Última atualização em"
+
+#. module: ai_automation
+#: model:ir.model.fields,field_description:ai_automation.field_ir_actions_server__mailing_model_real
+#: model:ir.model.fields,field_description:ai_automation.field_ir_cron__mailing_model_real
+msgid "Mailing Model Real"
+msgstr "Modelo real de envio"
+
+#. module: ai_automation
+#: model:ir.model.fields,field_description:ai_automation.field_ai_connection__model
+msgid "Model"
+msgstr "Modelo"
+
+#. module: ai_automation
+#: model:ir.model.fields,field_description:ai_automation.field_ai_connection__name
+msgid "Name"
+msgstr "Nome"
+
+#. module: ai_automation
+#: model:ir.model.fields.selection,name:ai_automation.selection__ai_connection__kind__ollama
+msgid "Ollama"
+msgstr "Ollama"
+
+#. module: ai_automation
+#: model_terms:ir.ui.view,arch_db:ai_automation.ai_connection_form_view
+msgid "Ollama configuration"
+msgstr "Configuração do Ollama"
+
+#. module: ai_automation
+#: model:ir.model.fields.selection,name:ai_automation.selection__ir_actions_server__ai_result_action__post_message
+msgid "Post Message"
+msgstr "Publicar mensagem"
+
+#. module: ai_automation
+#: model:ir.model,name:ai_automation.model_ir_actions_server
+msgid "Server Action"
+msgstr "Ação de servidor"
+
+#. module: ai_automation
+#: model:ir.model.fields,help:ai_automation.field_ir_actions_server__state
+#: model:ir.model.fields,help:ai_automation.field_ir_cron__state
+msgid ""
+"Type of server action. The following values are available:\n"
+"- 'Execute Python Code': a block of python code that will be executed\n"
+"- 'Create a new Record': create a new record with new values\n"
+"- 'Update a Record': update the values of a record\n"
+"- 'Execute several actions': define an action that triggers several other server actions\n"
+"- 'Send Email': post a message, a note or send an email (Discuss)\n"
+"- 'Add Followers': add followers to a record (Discuss)\n"
+"- 'Create Next Activity': create an activity (Discuss)\n"
+"- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
+msgstr ""
+"Tipo de ação de servidor. Os seguintes valores estão disponíveis:\n"
+"- 'Executar código Python': um bloco de código python que será executado\n"
+"- 'Criar um novo registro': cria um novo registro com novos valores\n"
+"- 'Atualizar um registro': atualiza os valores de um registro\n"
+"- 'Executar várias ações': define uma ação que dispara várias outras ações "
+"de servidor\n"
+"- 'Enviar e-mail': publica uma mensagem, uma nota ou envia um e-mail "
+"(Discuss)\n"
+"- 'Adicionar seguidores': adiciona seguidores a um registro (Discuss)\n"
+"- 'Criar próxima atividade': cria uma atividade (Discuss)\n"
+"- 'Enviar mensagem de texto SMS': envia SMS e os registra nos documentos "
+"(SMS)"
+
+#. module: ai_automation
+#: model:ir.model.fields.selection,name:ai_automation.selection__ir_actions_server__ai_result_action__update_record
+msgid "Update Record"
+msgstr "Atualizar registro"
+
+#. module: ai_automation
+#: model:ir.model.fields,field_description:ai_automation.field_ai_connection__url
+msgid "Url"
+msgstr "URL"
