@@ -6,92 +6,102 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: Automatically generated\n"
+"PO-Revision-Date: 2026-06-28 12:24+0000\n"
+"Last-Translator: Ed-Spain <eduamoros@gmail.com>\n"
 "Language-Team: none\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #. module: ai_tool
 #: model:ir.ui.menu,name:ai_tool.ai_menu_root
 msgid "AI"
-msgstr ""
+msgstr "IA"
 
 #. module: ai_tool
 #: model:ir.actions.act_window,name:ai_tool.ai_tool_act_window
 #: model:ir.model,name:ai_tool.model_ai_tool
 #: model:ir.ui.menu,name:ai_tool.ai_tool_menu
 msgid "AI Tool"
-msgstr ""
+msgstr "Herramienta IA"
 
 #. module: ai_tool
 #: model:ir.model.fields,field_description:ai_tool.field_ai_tool__create_uid
 msgid "Created by"
-msgstr ""
+msgstr "Creado por"
 
 #. module: ai_tool
 #: model:ir.model.fields,field_description:ai_tool.field_ai_tool__create_date
+#, fuzzy
 msgid "Created on"
-msgstr ""
+msgstr "Creada el"
 
 #. module: ai_tool
 #: model:ir.model.fields,field_description:ai_tool.field_ai_tool__description
 msgid "Description"
-msgstr ""
+msgstr "Descripción"
 
 #. module: ai_tool
 #: model:ir.model.fields,field_description:ai_tool.field_ai_tool__display_name
+#, fuzzy
 msgid "Display Name"
-msgstr ""
+msgstr "Nombre a Mostrar"
 
 #. module: ai_tool
 #: model:ir.model.fields,field_description:ai_tool.field_ai_tool__function_name
 msgid "Function Name"
-msgstr ""
+msgstr "Nombre de la Función"
 
 #. module: ai_tool
 #: model:ir.model.fields.selection,name:ai_tool.selection__ai_tool__kind__generic
+#, fuzzy
 msgid "Generic"
-msgstr ""
+msgstr "Genérico"
 
 #. module: ai_tool
 #: model:ir.model.fields.selection,name:ai_tool.selection__ai_tool__kind__generic_model
 msgid "Generic but requires a record to work"
-msgstr ""
+msgstr "Genérico pero requiere un registro para funcionar"
 
 #. module: ai_tool
 #: model:ir.model.fields,field_description:ai_tool.field_ai_tool__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: ai_tool
 #: model:ir.model.fields,field_description:ai_tool.field_ai_tool__kind
 msgid "Kind"
-msgstr ""
+msgstr "Tipo"
 
 #. module: ai_tool
 #: model:ir.model.fields,field_description:ai_tool.field_ai_tool__write_uid
+#, fuzzy
 msgid "Last Updated by"
-msgstr ""
+msgstr "Modificado por última vez por"
 
 #. module: ai_tool
 #: model:ir.model.fields,field_description:ai_tool.field_ai_tool__write_date
+#, fuzzy
 msgid "Last Updated on"
-msgstr ""
+msgstr "Actualizado por Última vez el"
 
 #. module: ai_tool
 #: model:ir.model.fields,field_description:ai_tool.field_ai_tool__model_id
+#, fuzzy
 msgid "Model"
-msgstr ""
+msgstr "Modelo"
 
 #. module: ai_tool
 #: model:ir.model.fields,field_description:ai_tool.field_ai_tool__name
+#, fuzzy
 msgid "Name"
-msgstr ""
+msgstr "Nombre"
 
 #. module: ai_tool
 #: model:ir.model.fields.selection,name:ai_tool.selection__ai_tool__kind__record
+#, fuzzy
 msgid "Record"
-msgstr ""
+msgstr "Registro"
