@@ -357,7 +357,7 @@ class TestMcp(HttpCase):
                     "Authorization": f"Bearer {self.security_key}",
                 },
             )
-        self.assertEqual(request.status_code, 200)
+        self.assertEqual(request.status_code, 200, request.content.decode("utf-8"))
         response = json.loads(request.content.decode("utf-8"))
         self.assertIn("result", response)
         self.assertNotIn("error", response)
@@ -376,7 +376,7 @@ class TestMcp(HttpCase):
                     "Authorization": f"Bearer {self.security_key}",
                 },
             )
-        self.assertEqual(request.status_code, 200)
+        self.assertEqual(request.status_code, 200, request.content.decode("utf-8"))
         response = json.loads(request.content.decode("utf-8"))
         self.assertNotIn("result", response)
         self.assertIn("error", response)
