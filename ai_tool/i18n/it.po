@@ -1,0 +1,104 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ai_tool
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2026-05-29 13:46+0000\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
+"Language-Team: none\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.15.2\n"
+
+#. module: ai_tool
+#: model:ir.ui.menu,name:ai_tool.ai_menu_root
+msgid "AI"
+msgstr "IA"
+
+#. module: ai_tool
+#: model:ir.actions.act_window,name:ai_tool.ai_tool_act_window
+#: model:ir.model,name:ai_tool.model_ai_tool
+#: model:ir.ui.menu,name:ai_tool.ai_tool_menu
+msgid "AI Tool"
+msgstr "Strumento IA"
+
+#. module: ai_tool
+#: model:ir.model.fields,field_description:ai_tool.field_ai_tool__create_uid
+msgid "Created by"
+msgstr "Creato da"
+
+#. module: ai_tool
+#: model:ir.model.fields,field_description:ai_tool.field_ai_tool__create_date
+msgid "Created on"
+msgstr "Creato il"
+
+#. module: ai_tool
+#: model:ir.model.fields,field_description:ai_tool.field_ai_tool__description
+msgid "Description"
+msgstr "Descrizione"
+
+#. module: ai_tool
+#: model:ir.model.fields,field_description:ai_tool.field_ai_tool__display_name
+msgid "Display Name"
+msgstr "Nome visualizzato"
+
+#. module: ai_tool
+#: model:ir.model.fields,field_description:ai_tool.field_ai_tool__function_name
+msgid "Function Name"
+msgstr "Nome funzione"
+
+#. module: ai_tool
+#: model:ir.model.fields.selection,name:ai_tool.selection__ai_tool__kind__generic
+msgid "Generic"
+msgstr "Generico"
+
+#. module: ai_tool
+#: model:ir.model.fields.selection,name:ai_tool.selection__ai_tool__kind__generic_model
+msgid "Generic but requires a record to work"
+msgstr "Generico ma richiede un record per lavorare"
+
+#. module: ai_tool
+#: model:ir.model.fields,field_description:ai_tool.field_ai_tool__id
+msgid "ID"
+msgstr "ID"
+
+#. module: ai_tool
+#: model:ir.model.fields,field_description:ai_tool.field_ai_tool__kind
+msgid "Kind"
+msgstr "Genere"
+
+#. module: ai_tool
+#: model:ir.model.fields,field_description:ai_tool.field_ai_tool____last_update
+msgid "Last Modified on"
+msgstr "Ultima modifica il"
+
+#. module: ai_tool
+#: model:ir.model.fields,field_description:ai_tool.field_ai_tool__write_uid
+msgid "Last Updated by"
+msgstr "Ultimo aggiornamento di"
+
+#. module: ai_tool
+#: model:ir.model.fields,field_description:ai_tool.field_ai_tool__write_date
+msgid "Last Updated on"
+msgstr "Ultimo aggiornamento il"
+
+#. module: ai_tool
+#: model:ir.model.fields,field_description:ai_tool.field_ai_tool__model_id
+msgid "Model"
+msgstr "Modello"
+
+#. module: ai_tool
+#: model:ir.model.fields,field_description:ai_tool.field_ai_tool__name
+msgid "Name"
+msgstr "Nome"
+
+#. module: ai_tool
+#: model:ir.model.fields.selection,name:ai_tool.selection__ai_tool__kind__record
+msgid "Record"
+msgstr "Record"
