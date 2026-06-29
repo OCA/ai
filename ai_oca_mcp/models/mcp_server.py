@@ -7,7 +7,6 @@ from odoo import api, fields, models
 
 
 class McpServer(models.Model):
-
     _name = "mcp.server"
     _description = "Mcp Server"
 
