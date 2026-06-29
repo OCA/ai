@@ -15,7 +15,6 @@ except ImportError:
 
 
 class AiTool(models.Model):
-
     _name = "ai.tool"
     _description = "AI Tool"
 
