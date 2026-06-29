@@ -8,7 +8,6 @@ from odoo import api, fields, models, tools
 
 
 class McpServerKey(models.Model):
-
     _name = "mcp.server.key"
     _description = "Mcp Server Key"
 
