@@ -21,10 +21,7 @@
                         <page string="Response">
                             <field name="response" widget="text" />
                         </page>
-                        <page
-                            string="Error"
-                            attrs="{'invisible': [('error', '=', False)]}"
-                        >
+                        <page string="Error" invisible="not error">
                             <field name="error" widget="text" />
                         </page>
                     </notebook>

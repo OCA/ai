@@ -17,7 +17,7 @@
                             type="action"
                             class="btn-primary"
                             icon="fa-key"
-                            context="{'default_server_id': active_id}"
+                            context="{'default_server_id': id}"
                         />
                         <button
                             name="%(ai_oca_mcp.mcp_server_log_server_filter_act_window)d"
@@ -31,7 +31,7 @@
                         name="web_ribbon"
                         title="Archived"
                         bg_color="bg-danger"
-                        attrs="{'invisible': [('active', '=', True)]}"
+                        invisible="active"
                     />
                     <div class="oe_title">
                         <label for="name" />
