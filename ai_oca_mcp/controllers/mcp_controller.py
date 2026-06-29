@@ -40,8 +40,8 @@ class McpController(http.Controller):
                     "error": {"code": -32000, "message": "Connection failed"},
                 }
             )
-        server = request.env["mcp.server.key"].sudo().browse(server_id)
-        server = server.with_user(server.user_id.id)
+        mcp_server_key = request.env["mcp.server.key"].sudo().browse(server_id)
+        mcp_server_key = mcp_server_key.with_user(mcp_server_key.user_id.id)
         method = payload.get("method")
         if method == "initialize":
             return request.make_json_response(
@@ -57,10 +57,10 @@ class McpController(http.Controller):
             )
 
         if method == "tools/list":
-            return request.make_json_response(server._tools_list(payload))
+            return request.make_json_response(mcp_server_key._tools_list(payload))
 
         if method == "tools/call":
-            return request.make_json_response(server._tools_call(payload))
+            return request.make_json_response(mcp_server_key._tools_call(payload))
 
         return request.make_json_response(
             {
