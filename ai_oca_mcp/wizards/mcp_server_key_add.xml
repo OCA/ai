@@ -17,11 +17,7 @@
                 <attribute name="invisible">1</attribute>
             </header>
             <field name="server_id" position="after">
-            <field
-                    name="key"
-                    widget="CopyClipboardChar"
-                    attrs="{'invisible': [('key', '=', False)]}"
-                />
+            <field name="key" widget="CopyClipboardChar" invisible="not key" />
             </field>
             <form position="inside">
                 <footer>
@@ -30,7 +26,7 @@
                         type="object"
                         string="Generate Key"
                         class="btn-primary"
-                        attrs="{'invisible': [('key', '!=', False)]}"
+                        invisible="key"
                     />
                     <button string="Cancel" class="btn-secondary" special="cancel" />
                 </footer>

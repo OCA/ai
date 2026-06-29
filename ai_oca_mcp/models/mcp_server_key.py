@@ -28,7 +28,7 @@ class McpServerKey(models.Model):
                 "expired_on": fields.Datetime.now(),
             }
         )
-        self._get_mcp_server_by_key.clear_cache(self)
+        self.env.registry.clear_cache()
 
     _sql_constraints = [
         ("key_uniq", "unique(hashed_key)", "The key must be unique"),
