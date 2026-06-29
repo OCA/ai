@@ -12,9 +12,8 @@
                         name="expire_key"
                         type="object"
                         string="Expire Key"
-                        states="active"
                         class="oe_highlight"
-                        attrs="{'invisible': [('state', '=', 'expired')]}"
+                        invisible="state == 'expired'"
                     />
                     <field name="state" widget="statusbar" />
                 </header>
@@ -41,9 +40,8 @@
                     name="expire_key"
                     type="object"
                     string="Expire Key"
-                    states="active"
                     class="oe_highlight"
-                    attrs="{'invisible': [('state', '=', 'expired')]}"
+                    invisible="state == 'expired'"
                 />
             </tree>
         </field>

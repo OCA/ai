@@ -175,7 +175,7 @@ class TestMcp(HttpCase):
 
     def test_url(self):
         self.server.key = "newkey"
-        self.assertEqual(self.server.url, "http://127.0.0.1:8069/mcp/newkey")
+        self.assertEqual(self.server.url, f"{self.base_url()}/mcp/newkey")
 
     def test_expiration_handling(self):
         self.server.key_ids.write({"expiration_date": "2024-01-02 00:00:00"})
