@@ -50,7 +50,7 @@ class McpController(http.Controller):
                     "id": payload.get("id"),
                     "result": {
                         "protocolVersion": "2025-03-26",
-                        "capabilities": {"tools": {"listChanged": True}},
+                        "capabilities": {"tools": {}},
                         "serverInfo": {"name": "odoo-mcp", "version": "0.1.0"},
                     },
                 }
