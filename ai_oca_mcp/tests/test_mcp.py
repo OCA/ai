@@ -173,6 +173,43 @@ class TestMcp(HttpCase):
         self.assertIn("structuredContent", response["result"])
         self.assertEqual(response["result"]["structuredContent"]["date"], "2024-01-01")
 
+    def test_execute_tool_returns_error_when_tool_execution_raises_exception(self):
+        from unittest.mock import patch
+
+        with patch(
+            "odoo.addons.ai_tool.models.ai_tool.AiTool._execute_tool",
+            side_effect=Exception("Test execution error"),
+        ):
+            request = self.url_open(
+                f"/mcp/{self.server.key}",
+                data=json.dumps(
+                    {
+                        "jsonrpc": "2.0",
+                        "id": "1",
+                        "method": "tools/call",
+                        "params": {
+                            "name": "get_date",
+                            "arguments": {},
+                        },
+                    }
+                ),
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": f"Bearer {self.security_key}",
+                },
+            )
+        self.assertEqual(request.status_code, 200)
+        response = json.loads(request.content.decode("utf-8"))
+        self.assertNotIn("result", response)
+        self.assertIn("error", response)
+        self.assertEqual(response["error"]["message"], "Test execution error")
+
+        log = self.env["mcp.server.log"].search(
+            [("server_id", "=", self.server.id)], order="id desc", limit=1
+        )
+        self.assertTrue(log)
+        self.assertEqual(log.error, "Test execution error")
+
     def test_url(self):
         self.server.key = "newkey"
         self.assertEqual(self.server.url, f"{self.base_url()}/mcp/newkey")
