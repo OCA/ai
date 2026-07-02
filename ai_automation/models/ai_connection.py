@@ -18,10 +18,14 @@ class AiConnection(models.Model):
     url = fields.Char(groups="base.group_system")
     model = fields.Char(groups="base.group_system")
 
-    def _run(self, prompt, tools=None, record=None):
-        return getattr(self, f"_run_{self.kind}")(prompt, tools=tools, record=record)
+    def _run(self, prompt, tools=None, record=None, system_prompt=None):
+        return getattr(self, f"_run_{self.kind}")(
+            prompt, tools=tools, record=record, system_prompt=system_prompt
+        )
 
-    def _run_ollama(self, prompt, tools=None, messages=None, record=None):
+    def _run_ollama(
+        self, prompt, tools=None, messages=None, record=None, system_prompt=None
+    ):
         tool_definition = []
         for tool in tools or []:
             definition = tool._get_tool_definition()
@@ -40,6 +44,8 @@ class AiConnection(models.Model):
         ollama_client = ollama.Client(**self._get_ollama_client_parameters())
         if messages is None:
             messages = []
+        if system_prompt:
+            messages.append({"role": "system", "content": system_prompt})
         messages.append({"role": "user", "content": prompt})
         while True:
             response = ollama_client.chat(
