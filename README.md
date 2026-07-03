@@ -22,7 +22,7 @@ Available addons
 ----------------
 addon | version | maintainers | summary
 --- | --- | --- | ---
-[ai_automation](ai_automation/) | 16.0.1.0.0 |  | Integrate `ai_tools` with server actions to automate tasks using AI.
+[ai_automation](ai_automation/) | 16.0.1.0.1 |  | Integrate `ai_tools` with server actions to automate tasks using AI.
 [ai_oca_bridge](ai_oca_bridge/) | 16.0.3.0.1 |  | Makes a basic configuration to be used as bridge with external AI systems
 [ai_oca_bridge_chatter](ai_oca_bridge_chatter/) | 16.0.1.0.1 |  | Integrate a Bridge with a user that will use it on chatter
 [ai_oca_bridge_crm_lead](ai_oca_bridge_crm_lead/) | 16.0.2.0.0 |  | Adds CRM Lead triggers for AI Bridges

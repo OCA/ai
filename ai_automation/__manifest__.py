@@ -4,7 +4,7 @@
 {
     "name": "Ai Automation",
     "summary": """Integrate `ai_tools` with server actions to automate tasks using AI.""",
-    "version": "16.0.1.0.0",
+    "version": "16.0.1.0.1",
     "license": "AGPL-3",
     "author": "Dixmit,Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/ai",
