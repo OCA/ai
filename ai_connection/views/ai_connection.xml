@@ -6,7 +6,15 @@
         <field name="model">ai.connection</field>
         <field name="arch" type="xml">
             <form>
-                <header />
+                <header>
+                    <button
+                        name="%(action_ai_connection_run_wizard)d"
+                        string="Test Connection"
+                        type="action"
+                        class="oe_highlight"
+                        context="{'default_connection_id': id}"
+                    />
+                </header>
                 <sheet>
                     <group>
                         <field name="name" />

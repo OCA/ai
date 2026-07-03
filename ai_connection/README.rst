@@ -62,6 +62,7 @@ Authors
 -------
 
 * Dixmit
+* SDi
 
 Contributors
 ------------

@@ -1,3 +1,6 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_ai_connection,access_ai_connection,model_ai_connection,base.group_user,1,0,0,0
 manage_ai_connection,manage_ai_connection,model_ai_connection,base.group_system,1,1,1,0
+access_ai_connection_execution,access_ai_connection_execution,model_ai_connection_execution,base.group_user,1,1,1,1
+access_ai_connection_execution_iteration,access_ai_connection_execution_iteration,model_ai_connection_execution_iteration,base.group_user,1,1,1,1
+access_ai_connection_run_wizard,access_ai_connection_run_wizard,model_ai_connection_run_wizard,base.group_user,1,1,1,1

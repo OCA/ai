@@ -29,13 +29,26 @@ class AiClientDemo(AiConnectionClient):
                         "arguments": {},
                     }
                 ],
+                "usage": {"prompt_tokens": 10, "completion_tokens": 5},
             }
         return {
             "message": {
                 "role": "assistant",
                 "content": "This is a demo response to the prompt: " f"{content}",
             },
+            "usage": {"prompt_tokens": 10, "completion_tokens": 5},
         }
+
+    def handle_message_stream(self, messages, **kwargs):
+        res = self.handle_message(messages, **kwargs)
+        content = res.get("message", {}).get("content", "")
+        if content:
+            yield {"type": "content", "content": content[: len(content) // 2]}
+            yield {"type": "content", "content": content[len(content) // 2 :]}
+        if res.get("tool_calls"):
+            yield {"type": "tool_calls", "tool_calls": res["tool_calls"]}
+        if res.get("usage"):
+            yield {"type": "usage", "usage": res["usage"]}
 
 
 class AiConnection(models.Model):
