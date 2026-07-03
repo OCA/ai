@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_ai_connection_run_wizard_form" model="ir.ui.view">
+        <field name="name">ai.connection.run.wizard.form</field>
+        <field name="model">ai.connection.run.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Test AI Connection">
+                <group>
+                    <field name="connection_id" invisible="1" />
+                    <field name="prompt" />
+                    <field name="system_prompt" />
+                    <field name="tool_ids" widget="many2many_tags" />
+                </group>
+                <group string="Options">
+                    <group>
+                        <field name="store" />
+                        <field name="is_async" invisible="not store" />
+                        <field name="stepwise" invisible="not store" />
+                        <field name="debug" invisible="not store" />
+                    </group>
+                    <group>
+                        <field name="stream" />
+                        <field name="stream_batch_size" invisible="not stream" />
+                        <field name="max_iterations" />
+                    </group>
+                </group>
+                <group string="Response" invisible="not response_content">
+                    <field name="response_content" nolabel="1" />
+                </group>
+                <footer>
+                    <button
+                        name="action_run"
+                        type="object"
+                        string="Run"
+                        class="btn-primary"
+                        invisible="response_content"
+                    />
+                    <button string="Close" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ai_connection_run_wizard" model="ir.actions.act_window">
+        <field name="name">Test Connection</field>
+        <field name="res_model">ai.connection.run.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

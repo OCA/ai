@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 SDi <amoya@sdi.es>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_ai_connection_execution_form" model="ir.ui.view">
+        <field name="name">ai.connection.execution.form</field>
+        <field name="model">ai.connection.execution</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button
+                        name="action_step"
+                        type="object"
+                        string="Step"
+                        invisible="state not in ('paused','pending_tool_approval')"
+                        class="oe_highlight"
+                    />
+                    <button
+                        name="action_resume"
+                        type="object"
+                        string="Resume Auto"
+                        invisible="state not in ('paused','pending_tool_approval')"
+                    />
+                    <field name="state" widget="statusbar" />
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="connection_id" />
+                            <field name="res_model" />
+                            <field name="res_id" />
+                            <field name="tool_ids" widget="many2many_tags" />
+                        </group>
+                        <group>
+                            <field name="stepwise" />
+                            <field name="debug" />
+                            <field name="current_iteration" />
+                            <field name="max_iterations" />
+                            <field name="total_tokens" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Result">
+                            <field name="result_content" widget="text" />
+                        </page>
+                        <page string="Error" invisible="state != 'failed'">
+                            <field name="error_message" widget="text" />
+                        </page>
+                        <page string="Iterations" invisible="not debug">
+                            <field name="iteration_ids" readonly="1">
+                                <list>
+                                    <field name="step_number" />
+                                    <field name="create_date" />
+                                </list>
+                                <form>
+                                    <sheet>
+                                        <group>
+                                            <field name="step_number" />
+                                            <field name="create_date" />
+                                        </group>
+                                        <notebook>
+                                            <page string="Request Messages">
+                                                <field
+                                                    name="request_messages_txt"
+                                                    widget="text"
+                                                />
+                                            </page>
+                                            <page string="Response Message">
+                                                <field
+                                                    name="response_message_txt"
+                                                    widget="text"
+                                                />
+                                            </page>
+                                            <page string="Tool Calls">
+                                                <field
+                                                    name="tool_calls_txt"
+                                                    widget="text"
+                                                />
+                                            </page>
+                                            <page string="Tool Results">
+                                                <field
+                                                    name="tool_results_txt"
+                                                    widget="text"
+                                                />
+                                            </page>
+                                        </notebook>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ai_connection_execution_list" model="ir.ui.view">
+        <field name="name">ai.connection.execution.list</field>
+        <field name="model">ai.connection.execution</field>
+        <field name="arch" type="xml">
+            <list
+                decoration-danger="state=='failed'"
+                decoration-info="state in ('running','paused','pending_tool_approval')"
+                decoration-success="state=='done'"
+            >
+                <field name="name" />
+                <field name="connection_id" />
+                <field name="state" />
+                <field name="current_iteration" />
+                <field name="total_tokens" />
+                <field name="create_date" />
+            </list>
+        </field>
+    </record>
+
+    <record id="action_ai_connection_execution" model="ir.actions.act_window">
+        <field name="name">AI Executions</field>
+        <field name="res_model">ai.connection.execution</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem
+        id="menu_ai_connection_execution"
+        name="Executions"
+        parent="ai_tool.ai_menu_root"
+        action="action_ai_connection_execution"
+        sequence="20"
+    />
+</odoo>
