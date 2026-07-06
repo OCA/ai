@@ -12,32 +12,38 @@ class Base(models.AbstractModel):
     _inherit = "base"
 
     @api.model
-    @api.readonly
     @api.returns("self")
     def search_vector(self, field_name, data, domain=None, limit=5, minim=0.5):
         if domain is None:
             domain = []
         if not isinstance(self._fields[field_name], ComputedVector):
             raise UserError(f"Field {field_name} is not a computed_vector field")
-        to_search = self._encode_vector(field_name, data, is_search=True)[0]
+        to_search = (
+            "["
+            + ",".join(
+                map(str, self._encode_vector(field_name, data, is_search=True)[0])
+            )
+            + "]"
+        )
         query = self._search(domain, limit=limit)
         distance = sql.SQL(
-            "%s <=> %s::vector",
-            self._field_to_sql(self._table, field_name, query),
-            to_search,
-        )
+            "%s <=> '%s'::vector"
+            % (
+                sql.Identifier(self._table, field_name).as_string(self.env.cr._obj),
+                to_search,
+            )
+        ).as_string(self.env.cr._obj)
         sql_terms = [
-            self._field_to_sql(self._table, "id", "query"),
-            sql.SQL("%s as distance", distance),
+            sql.Identifier(self._table, "id").as_string(self.env.cr._obj),
+            sql.SQL("%s as distance" % distance).as_string(self.env.cr._obj),
         ]
         query.order = "distance ASC"
         if minim:
-            query.add_where(sql.SQL("%s < %s", distance, minim))
-        self.env.cr.execute(query.select(*sql_terms))
+            query.add_where("%s < %s" % (distance, minim))
+        self.env.cr.execute(*query.select(*sql_terms))
         return self.browse([row[0] for row in self.env.cr.fetchall()])
 
     @api.model
-    @api.readonly
     @api.returns("self")
     def search_vector_grouped(
         self, field_name, data, final_field, domain=None, limit=5, minim=0.5
@@ -48,22 +54,34 @@ class Base(models.AbstractModel):
             raise UserError(f"Field {field_name} is not a computed_vector field")
         if not isinstance(self._fields[final_field], fields.Many2one):
             raise UserError(f"Field {final_field} is not a Many2one field")
-        to_search = self._encode_vector(field_name, data, is_search=True)[0]
-        query = self._search(domain, limit=limit)
-        distance = sql.SQL(
-            "MIN(%s <=> %s::vector)",
-            self._field_to_sql(self._table, field_name, query),
-            to_search,
+        to_search = (
+            "["
+            + ",".join(
+                map(str, self._encode_vector(field_name, data, is_search=True)[0])
+            )
+            + "]"
         )
+        query = self._search(domain)
+        query.order = ""
+        distance = sql.SQL(
+            "MIN(%s <=> '%s'::vector)"
+            % (
+                sql.Identifier(self._table, field_name).as_string(self.env.cr._obj),
+                to_search,
+            )
+        ).as_string(self.env.cr._obj)
         sql_terms = [
-            self._field_to_sql(self._table, final_field, "query"),
-            sql.SQL("%s as distance", distance),
+            sql.Identifier(self._table, final_field).as_string(self.env.cr._obj),
+            sql.SQL("%s as distance" % distance).as_string(self.env.cr._obj),
         ]
-        query.order = "distance ASC"
-        query.groupby = self._field_to_sql(self._table, final_field, query)
+        query_str, params = query.select(*sql_terms)
+        query_str += " GROUP BY %s" % sql_terms[0]
         if minim:
-            query.having = sql.SQL("%s < %s", distance, minim)
-        self.env.cr.execute(query.select(*sql_terms))
+            query_str += " HAVING %s < %s" % (distance, minim)
+        query_str += " ORDER BY distance ASC"
+        if limit:
+            query_str += f" LIMIT {limit}"
+        self.env.cr.execute(query_str, params)
         rows = self.env.cr.fetchall()
         return self[final_field].browse([row[0] for row in rows])
 

@@ -18,7 +18,7 @@
                         type="object"
                         string="Compute Values"
                         class="oe_highlight"
-                        invisible="not compute"
+                        attrs="{'invisible': [('compute', '=', False)]}"
                     />
                 </header>
                 <sheet>
@@ -31,7 +31,7 @@
                     <notebook>
                         <page
                             string="OpenAI"
-                            invisible="vector_method != 'openai' and vector_method != 'openai_search'"
+                            attrs="{'invisible': [('vector_method', '!=', 'openai'), ('vector_method', '!=', 'openai_search')]}"
                         >
                             <group>
                                 <field name="openai_url" />
@@ -41,7 +41,7 @@
                         </page>
                         <page
                             string="FastEmbed"
-                            invisible="vector_method != 'fastembed'"
+                            attrs="{'invisible': [('vector_method', '!=', 'fastembed')]}"
                         >
                             <group>
                                 <field name="fastembed_model" />
@@ -66,10 +66,10 @@
     <record model="ir.ui.view" id="ir_model_field_vector_tree_view">
         <field name="model">ir.model.field.vector</field>
         <field name="arch" type="xml">
-            <list>
+            <tree>
                 <field name="field_id" />
                 <field name="dimensions" />
-            </list>
+            </tree>
         </field>
     </record>
 

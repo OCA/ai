@@ -8,6 +8,10 @@ try:
     import openai
 except ImportError:
     openai = None
+try:
+    import fastembed
+except ImportError:
+    fastembed = None
 
 
 class IrModelFieldVector(models.Model):
@@ -79,6 +83,8 @@ class IrModelFieldVector(models.Model):
         methods = []
         if openai:
             methods.append(("openai", "OpenAI"))
+        if fastembed:
+            methods.append(("fastembed", "FastEmbed"))
         return methods
 
     def update_column(self):
@@ -108,3 +114,9 @@ class IrModelFieldVector(models.Model):
         if self.openai_api_key:
             params["api_key"] = self.openai_api_key
         return params
+
+    def _encode_vector_fastembed(self, text):
+        model = fastembed.TextEmbedding(self.fastembed_model)
+
+        embeddings = list(model.embed([text.lower().strip()]))
+        return embeddings
