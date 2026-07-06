@@ -6,13 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: Automatically generated\n"
+"PO-Revision-Date: 2026-07-06 23:46+0000\n"
+"Last-Translator: Cándido Martínez <candido@supermercadoscooperativos.com>\n"
 "Language-Team: none\n"
 "Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #. module: ai_automation
 #: model:ir.actions.act_window,name:ai_automation.ai_connection_act_window
@@ -21,12 +23,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:ai_automation.field_ir_cron__ai_connection_id
 #: model:ir.ui.menu,name:ai_automation.ai_connection_menu
 msgid "AI Connection"
-msgstr ""
+msgstr "Conexión IA"
 
 #. module: ai_automation
 #: model_terms:ir.ui.view,arch_db:ai_automation.ir_actions_server_form_view
 msgid "AI OCA"
-msgstr ""
+msgstr "OCA IA"
 
 #. module: ai_automation
 #: model:ir.model.fields.selection,name:ai_automation.selection__ir_actions_server__state__ai_oca
