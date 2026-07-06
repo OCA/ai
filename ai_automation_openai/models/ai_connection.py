@@ -55,6 +55,8 @@ class AiConnection(models.Model):
             messages.append(response_message)
             for call in tool_calls:
                 tool = tools.filtered(lambda t, call=call: t.name == call.function.name)
+                if not tool:
+                    continue
                 tool_output = tool._execute_tool(
                     record=record, **json.loads(call.function.arguments)
                 )
