@@ -6,25 +6,27 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: Automatically generated\n"
+"PO-Revision-Date: 2026-07-06 23:46+0000\n"
+"Last-Translator: Cándido Martínez <candido@supermercadoscooperativos.com>\n"
 "Language-Team: none\n"
 "Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #. module: ai_tool
 #: model:ir.ui.menu,name:ai_tool.ai_menu_root
 msgid "AI"
-msgstr ""
+msgstr "IA"
 
 #. module: ai_tool
 #: model:ir.actions.act_window,name:ai_tool.ai_tool_act_window
 #: model:ir.model,name:ai_tool.model_ai_tool
 #: model:ir.ui.menu,name:ai_tool.ai_tool_menu
 msgid "AI Tool"
-msgstr ""
+msgstr "Ferramenta IA"
 
 #. module: ai_tool
 #: model:ir.model.fields,field_description:ai_tool.field_ai_tool__create_uid
