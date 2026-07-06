@@ -6,23 +6,25 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: Automatically generated\n"
+"PO-Revision-Date: 2026-07-06 23:46+0000\n"
+"Last-Translator: Cándido Martínez <candido@supermercadoscooperativos.com>\n"
 "Language-Team: none\n"
 "Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #. module: ai_oca_bridge_chatter
 #: model:ir.model.fields,field_description:ai_oca_bridge_chatter.field_res_users__ai_bridge_id
 msgid "AI Bridge"
-msgstr ""
+msgstr "Ponte da IA"
 
 #. module: ai_oca_bridge_chatter
 #: model:ir.model,name:ai_oca_bridge_chatter.model_ai_bridge
 msgid "Ai Bridge Configuration"
-msgstr ""
+msgstr "Configuración da ponte de IA"
 
 #. module: ai_oca_bridge_chatter
 #: model:ir.model,name:ai_oca_bridge_chatter.model_ai_bridge_execution
