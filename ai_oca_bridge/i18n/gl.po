@@ -6,13 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: Automatically generated\n"
+"PO-Revision-Date: 2026-07-06 23:46+0000\n"
+"Last-Translator: Cándido Martínez <candido@supermercadoscooperativos.com>\n"
 "Language-Team: none\n"
 "Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #. module: ai_oca_bridge
 #: model:ir.model.fields,help:ai_oca_bridge.field_ai_bridge__result_kind
@@ -27,13 +29,25 @@ msgid ""
 "          No notification will be sent when it is finished.\n"
 "        "
 msgstr ""
+"\n"
+"        Define como se procesa o resultado do sistema de IA.\n"
+"        - 'Inmediato': O resultado procesase inmediatamente despois de que o "
+"sistema de IA responda.\n"
+"        - 'Asíncrono': O resultado procesase en segundo plano.\n"
+"          Permite operacións máis longas.\n"
+"          Odoo proporcionará unha URL ao sistema de IA onde se enviará a "
+"resposta.\n"
+"          Os usuarios recibirán una notificación cando se inicie a "
+"operación.\n"
+"          Non se enviará ningunha notificación cando finalice.\n"
+"        "
 
 #. module: ai_oca_bridge
 #. odoo-python
 #: code:addons/ai_oca_bridge/models/ai_bridge.py:0
 #, python-format
 msgid "%s executed successfully."
-msgstr ""
+msgstr "%s executado correctamente."
 
 #. module: ai_oca_bridge
 #. odoo-python
