@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 SDi - Angel Moya <amoya@sdi.es>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="ai_connection_form_view">
+        <field name="model">ai.connection</field>
+        <field name="inherit_id" ref="ai_connection.ai_connection_form_view" />
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Ollama" name="ollama_page" invisible="kind != 'ollama'">
+                    <group>
+                        <field name="url" />
+                        <field name="model" />
+                        <field name="temperature" />
+                        <field name="api_key" />
+                        <field name="ollama_options" widget="json" />
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>
