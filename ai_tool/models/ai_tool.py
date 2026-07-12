@@ -48,7 +48,7 @@ class AiTool(models.Model):
     @aitool(
         input_schema={},
         output_schema={
-            "date": {"type": "date"},
+            "date": {"type": "string", "format": "date"},
         },
     )
     def _ai_get_date(self):
