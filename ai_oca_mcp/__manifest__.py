@@ -14,6 +14,7 @@
     "data": [
         "views/mcp_server_log.xml",
         "security/ir.model.access.csv",
+        "security/security.xml",
         "views/mcp_server_key.xml",
         "wizards/mcp_server_key_add.xml",
         "views/mcp_server.xml",
