@@ -1,0 +1,32 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ai_oca_bridge_fieldservice
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2026-07-06 23:46+0000\n"
+"Last-Translator: Cándido Martínez <candido@supermercadoscooperativos.com>\n"
+"Language-Team: none\n"
+"Language: gl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.15.2\n"
+
+#. module: ai_oca_bridge_fieldservice
+#: model_terms:ai.bridge,description:ai_oca_bridge_fieldservice.demo_ai_bridge_fsm_order
+msgid "Demo AI Bridge for Field Service Orders"
+msgstr "Demostración de ponte de IA para ordes de servizo de campo"
+
+#. module: ai_oca_bridge_fieldservice
+#: model:ai.bridge,name:ai_oca_bridge_fieldservice.demo_ai_bridge_fsm_order
+msgid "FSM Order AI Bridge - Demo"
+msgstr "FSM Order AI Bridge - Demo"
+
+#. module: ai_oca_bridge_fieldservice
+#: model:ir.model,name:ai_oca_bridge_fieldservice.model_fsm_order
+msgid "Field Service Order"
+msgstr ""
