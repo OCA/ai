@@ -37,7 +37,10 @@ class AiTool(models.Model):
     )
 
     def _get_tool_definition(self):
-        func = getattr(self.env[self.model_id.model], self.function_name)
+        # model_id points to ir.model, which non-admin users cannot read.
+        # The model name is only metadata, so resolve it as sudo.
+        model = self.sudo().model_id.model
+        func = getattr(self.env[model], self.function_name)
         return {
             "name": self.name,
             "description": self.description,
@@ -77,18 +80,20 @@ class AiTool(models.Model):
         return plaintext2html(message)
 
     def _execute_tool(self, *args, record=None, **kwargs):
+        # model_id points to ir.model, which non-admin users cannot read.
+        # Resolve the model name as sudo (metadata only); the call below
+        # still runs with the caller's own rights via self.env[model].
+        model = self.sudo().model_id.model
         if self.kind == "generic":
-            return getattr(self.env[self.model_id.model], self.function_name)(
-                *args, **kwargs
-            )
+            return getattr(self.env[model], self.function_name)(*args, **kwargs)
         if not record:
             raise ValueError("Record must be provided for non-generic tools")
         if self.kind == "generic_model":
-            return getattr(self.env[self.model_id.model], self.function_name)(
+            return getattr(self.env[model], self.function_name)(
                 *args, record=record, **kwargs
             )
-        elif record._name != self.model_id.model:
+        elif record._name != model:
             raise ValueError(
-                f"Record model {record._name} does not match tool model {self.model_id.model}"
+                f"Record model {record._name} does not match tool model {model}"
             )
         return getattr(record, self.function_name)(*args, **kwargs) or {}
