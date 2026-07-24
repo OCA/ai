@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"PO-Revision-Date: 2026-06-28 12:24+0000\n"
+"PO-Revision-Date: 2026-07-24 17:27+0000\n"
 "Last-Translator: Ed-Spain <eduamoros@gmail.com>\n"
 "Language-Team: none\n"
 "Language: es\n"
@@ -35,7 +35,6 @@ msgstr "Creado por"
 
 #. module: ai_tool
 #: model:ir.model.fields,field_description:ai_tool.field_ai_tool__create_date
-#, fuzzy
 msgid "Created on"
 msgstr "Creada el"
 
@@ -46,7 +45,6 @@ msgstr "Descripción"
 
 #. module: ai_tool
 #: model:ir.model.fields,field_description:ai_tool.field_ai_tool__display_name
-#, fuzzy
 msgid "Display Name"
 msgstr "Nombre a Mostrar"
 
@@ -57,7 +55,6 @@ msgstr "Nombre de la Función"
 
 #. module: ai_tool
 #: model:ir.model.fields.selection,name:ai_tool.selection__ai_tool__kind__generic
-#, fuzzy
 msgid "Generic"
 msgstr "Genérico"
 
@@ -84,7 +81,6 @@ msgstr "Modificado por última vez por"
 
 #. module: ai_tool
 #: model:ir.model.fields,field_description:ai_tool.field_ai_tool__write_date
-#, fuzzy
 msgid "Last Updated on"
 msgstr "Actualizado por Última vez el"
 
@@ -96,7 +92,6 @@ msgstr "Modelo"
 
 #. module: ai_tool
 #: model:ir.model.fields,field_description:ai_tool.field_ai_tool__name
-#, fuzzy
 msgid "Name"
 msgstr "Nombre"
 
