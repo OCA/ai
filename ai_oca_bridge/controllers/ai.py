@@ -6,7 +6,6 @@ import json
 from odoo import fields, http
 from odoo.http import request
 from odoo.tools import consteq
-from odoo.tools.translate import _
 
 
 class AIController(http.Controller):
@@ -22,16 +21,20 @@ class AIController(http.Controller):
     def ai_process_response(self, execution_id, token):
         execution = request.env["ai.bridge.execution"].sudo().browse(execution_id)
         if not execution.exists():
-            return request.make_response(_("Execution not found."), status=404)
+            return request.make_response(
+                request.env._("Execution not found."), status=404
+            )
         if not consteq(execution._generate_token(), token):
             return request.make_response(
-                _("Token is not allowed for this execution."), status=404
+                request.env._("Token is not allowed for this execution."), status=404
             )
         if (
             not execution.expiration_date
             or execution.expiration_date < fields.Datetime.now()
         ):
-            return request.make_response(_("Execution is expired."), status=404)
+            return request.make_response(
+                request.env._("Execution is expired."), status=404
+            )
         return request.make_response(
             json.dumps(
                 execution._process_response(

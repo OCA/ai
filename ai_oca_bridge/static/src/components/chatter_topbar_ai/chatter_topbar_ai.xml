@@ -11,7 +11,7 @@
             </button>
             <t t-set-slot="content">
                 <t
-                    t-foreach="props.record.props.webRecord.data.ai_bridge_info"
+                    t-foreach="props.record.props.record.data.ai_bridge_info"
                     t-as="aiBridge"
                     t-key="aiBridge.id"
                 >

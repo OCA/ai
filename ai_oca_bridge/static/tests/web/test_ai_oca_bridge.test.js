@@ -3,18 +3,18 @@
     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 */
 import {click, queryAll} from "@odoo/hoot-dom";
-import {defineModels, fields, models, mountView} from "@web/../tests/web_test_helpers";
+import {defineModels, fields, mountView} from "@web/../tests/web_test_helpers";
 import {expect, test} from "@odoo/hoot";
-import {defineBaseAIModels} from "../mock_server/define_ai_models.esm";
-import {startServer} from "@mail/../tests/mail_test_helpers";
+import {mailModels, startServer} from "@mail/../tests/mail_test_helpers";
+import {baseAIModels} from "../mock_server/define_ai_models.esm";
 
-class ResPartner extends models.Model {
-    _name = "res.partner";
+// ``mailModels.ResPartner`` must be extended (instead of ``models.Model``), so
+// that the computed fields it declares keep their compute functions.
+class ResPartner extends mailModels.ResPartner {
     ai_bridge_info = fields.Generic({default: []});
 }
 
-defineModels([ResPartner]);
-defineBaseAIModels();
+defineModels({...mailModels, ...baseAIModels, ResPartner});
 
 test("AI Notification", async () => {
     const pyEnv = await startServer();

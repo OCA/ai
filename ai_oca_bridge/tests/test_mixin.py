@@ -3,9 +3,8 @@
 
 from unittest import mock
 
-from odoo_test_helper import FakeModelLoader
-
 from odoo.exceptions import ValidationError
+from odoo.orm.model_classes import add_to_registry
 from odoo.tests import Form, TransactionCase, new_test_user
 
 
@@ -14,11 +13,9 @@ class TestBridge(TransactionCase):
     def setUpClass(cls):
         super().setUpClass()
         # Load fake models ->/
-        cls.loader = FakeModelLoader(cls.env, cls.__module__)
-        cls.loader.backup_registry()
         from .fake_models import BridgeTest
 
-        cls.loader.update_registry((BridgeTest,))
+        cls._load_fake_models(BridgeTest)
 
         cls.bridge = cls.env["ai.bridge"].create(
             {
@@ -51,9 +48,27 @@ class TestBridge(TransactionCase):
         )
 
     @classmethod
-    def tearDownClass(cls):
-        cls.loader.restore_registry()
-        super().tearDownClass()
+    def _load_fake_models(cls, *model_defs):
+        """Register test-only models on the registry and create their tables.
+
+        Replaces ``odoo_test_helper.FakeModelLoader``, which relies on registry
+        internals that no longer exist in 19.0.
+        """
+        model_names = [add_to_registry(cls.registry, m)._name for m in model_defs]
+        # Registered before the setup so that it runs before the registry reset
+        # scheduled by ``TransactionCase.setUpClass``.
+        cls.addClassCleanup(cls._unload_fake_models, model_names)
+        cls.registry._setup_models__(cls.env.cr, model_names)
+        cls.registry.init_models(
+            cls.env.cr, model_names, dict(cls.env.context, module="ai_oca_bridge")
+        )
+
+    @classmethod
+    def _unload_fake_models(cls, model_names):
+        for model_name in model_names:
+            del cls.registry[model_name]
+        # Force ``TransactionCase`` to rebuild the registry without the fake models.
+        cls.registry.registry_invalidated = True
 
     def test_bridge_creation_user(self):
         self.bridge.write({"usage": "ai_thread_create"})

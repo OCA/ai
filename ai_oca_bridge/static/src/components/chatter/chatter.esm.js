@@ -5,9 +5,9 @@ patch(Chatter.prototype, {
     async onClickAiBridge(aiBridge) {
         let saved = true;
 
-        if (this.props.webRecord && this.props.webRecord.save) {
+        if (this.props.saveRecord) {
             try {
-                await this.props.webRecord.save();
+                saved = await this.props.saveRecord();
             } catch (error) {
                 saved = false;
                 console.error("Error saving record:", error);
@@ -18,8 +18,8 @@ patch(Chatter.prototype, {
             return;
         }
 
-        const model = this.props.webRecord.resModel;
-        const id = this.props.webRecord.resId;
+        const model = this.props.record.resModel;
+        const id = this.props.record.resId;
 
         const result = await this.env.services.orm.call(
             "ai.bridge",

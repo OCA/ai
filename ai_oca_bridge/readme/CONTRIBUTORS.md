@@ -10,3 +10,7 @@
 
   - Ariel Barreiros
   - Adria Hortoneda
+
+- [Escodoo](https://www.escodoo.com.br)
+
+  - Gabriel Medice

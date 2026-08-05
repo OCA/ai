@@ -3,9 +3,8 @@
 
 from unittest import mock
 
-from werkzeug import urls
-
 from odoo.tests.common import HttpCase, tagged
+from odoo.tools.urls import urljoin
 
 
 @tagged("post_install", "-at_install")
@@ -106,9 +105,7 @@ class TestAsyncConnection(HttpCase):
         execution.expiration_date = "2020-01-01 00:00:00"
         token = execution._generate_token()
         result = self.opener.post(
-            urls.url_join(
-                execution.get_base_url(), f"/ai/response/{execution.id}/{token}"
-            ),
+            urljoin(execution.get_base_url(), f"/ai/response/{execution.id}/{token}"),
             json={"body": "Test response"},
         )
         self.assertEqual(

@@ -6,7 +6,8 @@ import json
 import logging
 from datetime import date, datetime
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
+from odoo.exceptions import ValidationError
 from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -114,7 +115,6 @@ class AiBridge(models.Model):
     )
     model_id = fields.Many2one(
         "ir.model",
-        string="Model",
         required=False,
         ondelete="cascade",
         help="The model to which this bridge is associated.",
@@ -150,8 +150,8 @@ class AiBridge(models.Model):
     def _check_payload_type_usage_compatibility(self):
         for record in self:
             if record.usage == "ai_thread_unlink" and record.payload_type != "none":
-                raise models.ValidationError(
-                    _(
+                raise ValidationError(
+                    self.env._(
                         "When usage is 'On Record Deleted', "
                         "the Payload Type must be 'No payload'."
                     )
@@ -203,11 +203,14 @@ class AiBridge(models.Model):
     def execute_ai_bridge(self, res_model, res_id):
         self.ensure_one()
         if not self.active or (
-            self.group_ids and not self.env.user.groups_id & self.group_ids
+            self.group_ids and not self.env.user.all_group_ids & self.group_ids
         ):
             return {
-                "body": _("%s is not active.", self.name),
-                "args": {"type": "warning", "title": _("AI Bridge Inactive")},
+                "body": self.env._("%s is not active.", self.name),
+                "args": {
+                    "type": "warning",
+                    "title": self.env._("AI Bridge Inactive"),
+                },
             }
         record = self.env[res_model].browse(res_id).exists()
         if record:
@@ -228,14 +231,20 @@ class AiBridge(models.Model):
             if execution.state == "done":
                 return {
                     "notification": {
-                        "body": _("%s executed successfully.", self.name),
-                        "args": {"type": "success", "title": _("AI Bridge Executed")},
+                        "body": self.env._("%s executed successfully.", self.name),
+                        "args": {
+                            "type": "success",
+                            "title": self.env._("AI Bridge Executed"),
+                        },
                     }
                 }
             return {
                 "notification": {
-                    "body": _("%s failed.", self.name),
-                    "args": {"type": "danger", "title": _("AI Bridge Failed")},
+                    "body": self.env._("%s failed.", self.name),
+                    "args": {
+                        "type": "danger",
+                        "title": self.env._("AI Bridge Failed"),
+                    },
                 }
             }
 
@@ -243,7 +252,7 @@ class AiBridge(models.Model):
         """Check if the bridge is enabled for the given record."""
         self.ensure_one()
         domain = safe_eval(self.domain)
-        if self.group_ids and not self.env.user.groups_id & self.group_ids:
+        if self.group_ids and not self.env.user.all_group_ids & self.group_ids:
             return False
         if domain:
             return bool(record.filtered_domain(domain))

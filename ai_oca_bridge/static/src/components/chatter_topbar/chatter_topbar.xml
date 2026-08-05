@@ -8,7 +8,7 @@
         <xpath expr="//div/div/div/button" position="before">
             <ChatterAITopbar
                 record="this"
-                t-if="props.webRecord and props.webRecord.data.ai_bridge_info and props.webRecord.data.ai_bridge_info.length > 0"
+                t-if="props.record and props.record.data.ai_bridge_info and props.record.data.ai_bridge_info.length > 0"
             />
         </xpath>
     </t>

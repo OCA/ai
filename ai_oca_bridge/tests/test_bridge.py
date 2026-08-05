@@ -173,7 +173,7 @@ class TestBridge(TransactionCase):
         self.assertTrue(execution.error)
 
     def test_bridge_unactive(self):
-        self.bridge.toggle_active()
+        self.bridge.action_archive()
         self.assertFalse(
             self.env["ai.bridge.execution"].search(
                 [("ai_bridge_id", "=", self.bridge.id)]
@@ -219,7 +219,7 @@ class TestBridge(TransactionCase):
         self.assertNotIn(
             self.bridge.id, [bridge["id"] for bridge in self.partner.ai_bridge_info]
         )
-        self.env.user.groups_id |= self.group
+        self.env.user.group_ids |= self.group
         self.partner.invalidate_recordset()
         self.assertIn(
             self.bridge.id, [bridge["id"] for bridge in self.partner.ai_bridge_info]
