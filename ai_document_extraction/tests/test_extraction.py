@@ -20,9 +20,7 @@ class TestImagePreprocessor(TransactionCase):
         return path
 
     def test_preprocess_returns_file(self):
-        from odoo.addons.ai_document_extraction.services.image_preprocessor import (
-            preprocess_image,
-        )
+        from ..services.image_preprocessor import preprocess_image
 
         source = self._sample_image()
         result = preprocess_image(source)
