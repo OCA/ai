@@ -29,7 +29,7 @@ def preprocess_image(image_path):
 
     img = cv2.imread(image_path)
     if img is None:
-        raise ValueError("Could not read image: %s" % image_path)
+        raise ValueError(f"Could not read image: {image_path}")
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8, 8))
     enhanced = clahe.apply(gray)
