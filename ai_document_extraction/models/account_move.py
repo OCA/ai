@@ -107,23 +107,26 @@ class AccountMove(models.Model):
             order="create_date desc",
         )
         for attachment in attachments:
-            name = attachment.name or ""
             if attachment.mimetype and attachment.mimetype.split("/")[-1] in (
                 _IMAGE_EXTENSIONS
             ):
                 return attachment
-            if name.rsplit(".", 1)[-1].lower() in _IMAGE_EXTENSIONS:
+            if self._ai_file_extension(attachment.name) in _IMAGE_EXTENSIONS:
                 return attachment
         return None
 
-    def _ai_is_processable(self, filename):
-        """Whether the uploaded file can be handled by the AI extraction.
+    def _ai_file_extension(self, filename):
+        """Return the lower-cased file extension of ``filename``.
 
         Odoo renames duplicate attachments with a " (N)" suffix (e.g.
         "invoice.pdf (1)"), so it is stripped before reading the extension.
         """
         name = re.sub(r"\s+\(\d+\)$", "", filename or "")
-        return name.rsplit(".", 1)[-1].lower() in _IMAGE_EXTENSIONS
+        return name.rsplit(".", 1)[-1].lower()
+
+    def _ai_is_processable(self, filename):
+        """Whether the uploaded file can be handled by the AI extraction."""
+        return self._ai_file_extension(filename) in _IMAGE_EXTENSIONS
 
     def _extend_with_attachments(self, files_data, new=False):
         """Don't show the generic import error for files handled by the AI.
@@ -226,7 +229,7 @@ class AccountMove(models.Model):
 
     def _ai_prepare_image(self, attachment):
         data = attachment.with_context(bin_size=False).raw
-        extension = (attachment.name or "file").rsplit(".", 1)[-1].lower()
+        extension = self._ai_file_extension(attachment.name)
         handle, file_path = tempfile.mkstemp(suffix=f".{extension}")
         os.close(handle)
         try:

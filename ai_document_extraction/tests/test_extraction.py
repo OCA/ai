@@ -701,6 +701,30 @@ class TestAccountMoveExtraction(TransactionCase):
         )
         self.assertTrue(any("Extract with AI" in body for body in bodies))
 
+    def test_ai_prepare_image_recognizes_duplicate_suffixed_pdf(self):
+        import base64
+        import io
+        from unittest import mock
+
+        from PIL import Image
+
+        png = (
+            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8B"
+            "QDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+        )
+        attachment = self.env["ir.attachment"].create(
+            {
+                "name": "receipt_90b5ba57-31c0-4373-a61f-d4b84adea60e.pdf (1)",
+                "datas": base64.b64encode(b"%PDF-1.4 fake receipt"),
+                "mimetype": "application/pdf",
+            }
+        )
+        with mock.patch("pdf2image.convert_from_path") as mock_convert:
+            mock_convert.return_value = [Image.open(io.BytesIO(base64.b64decode(png)))]
+            path = self.move._ai_prepare_image(attachment)
+        self.assertTrue(path.endswith(".png"))
+        mock_convert.assert_called_once()
+
     def test_action_extract_with_ai_allows_customer_invoice(self):
         from unittest import mock
 
