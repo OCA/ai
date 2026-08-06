@@ -3,7 +3,6 @@
 
 import base64
 import json
-import re
 from datetime import date, datetime
 
 import requests
@@ -74,8 +73,6 @@ _LEGAL_SUFFIXES = (
     "co.",
 )
 
-_HASH_INVOICE_NUMBER = re.compile(r"[0-9a-fA-F]{16,}")
-
 
 def _build_user_prompt(available_taxes=None, available_currencies=None):
     tax_block = ""
@@ -128,15 +125,15 @@ def _parse_json_response(content):
     raise ValueError(f"No JSON object found in LLM response: {content[:200]}")
 
 
-def _validate_invoice_number(data):
-    candidate = str(data.get("invoice_number") or "").strip()
-    if (
-        _HASH_INVOICE_NUMBER.fullmatch(candidate)
-        or "://" in candidate
-        or "%" in candidate
-        or "\\" in candidate
-    ):
-        data["invoice_number"] = None
+def _validate_reference(data, field):
+    """Drop a reference that is empty or looks like a URL/path, not a printed number.
+
+    Real receipt numbers can legitimately be long hex codes, so we no longer
+    reject hashes; we only reject clearly non-business strings.
+    """
+    candidate = str(data.get(field) or "").strip()
+    if not candidate or "://" in candidate or "%" in candidate or "\\" in candidate:
+        data[field] = None
 
 
 def _validate_partner_name(data):
@@ -201,7 +198,8 @@ def _validate_lines(data, available_taxes):
 
 def _validate_data(data, available_taxes=None, available_currencies=None):
     """Drop hallucinated values so only trustworthy fields reach the move."""
-    _validate_invoice_number(data)
+    _validate_reference(data, "invoice_number")
+    _validate_reference(data, "payment_reference")
     _validate_partner_name(data)
     _validate_invoice_date(data)
     _validate_currency(data, available_currencies)

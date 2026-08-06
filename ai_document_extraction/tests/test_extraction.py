@@ -317,7 +317,7 @@ class TestLlmExtractor(TransactionCase):
         self.assertIn("Available currencies", text)
         self.assertIn("USD", text)
 
-    def test_validate_rejects_hash_invoice_number(self):
+    def test_validate_keeps_hash_invoice_number(self):
         from ..services import llm_extractor
 
         data = {
@@ -326,7 +326,7 @@ class TestLlmExtractor(TransactionCase):
             "invoice_date": "2023-10-25",
         }
         result = llm_extractor._validate_data(data)
-        self.assertIsNone(result["invoice_number"])
+        self.assertEqual(result["invoice_number"], "2054148b703b43e690b244ff544d2a9f")
 
     def test_validate_rejects_url_invoice_number(self):
         from ..services import llm_extractor
@@ -335,6 +335,14 @@ class TestLlmExtractor(TransactionCase):
             {"invoice_number": "https://files.example.com/invoice.pdf"}
         )
         self.assertIsNone(result["invoice_number"])
+
+    def test_validate_rejects_url_payment_reference(self):
+        from ..services import llm_extractor
+
+        result = llm_extractor._validate_data(
+            {"payment_reference": "https://files.example.com/pay.pdf"}
+        )
+        self.assertIsNone(result["payment_reference"])
 
     def test_validate_rejects_model_name_partner(self):
         from ..services import llm_extractor
