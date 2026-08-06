@@ -61,3 +61,26 @@ class TestOcrEngine(TransactionCase):
         self.assertIn("[HEADER] voslo", result)
         self.assertIn("[BODY] Invoice No: 123", result)
         self.assertIn("[FOOTER] page 1 of 1", result)
+
+    def test_get_ocr_caches_instance_per_language(self):
+        import sys
+        from unittest import mock
+
+        from ..services import ocr_engine
+
+        class FakePaddle:
+            def __init__(self, **kwargs):
+                self.kwargs = kwargs
+
+        fake_module = mock.Mock()
+        fake_module.PaddleOCR = FakePaddle
+        with mock.patch.dict(sys.modules, {"paddleocr": fake_module}):
+            ocr_engine._thread_local.ocr = None
+            ocr_engine._thread_local.ocr_lang = None
+            first = ocr_engine._get_ocr("tur+eng")
+            second = ocr_engine._get_ocr("tur+eng")
+            self.assertIs(first, second)
+            self.assertEqual(first.kwargs["lang"], "latin")
+            other = ocr_engine._get_ocr("eng")
+            self.assertIsNot(first, other)
+            self.assertEqual(other.kwargs["lang"], "en")

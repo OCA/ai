@@ -41,6 +41,8 @@ def extract_text_with_layout(image_path, ocr_language="tur+eng", image_height=No
         if img is None:
             raise ValueError(f"Could not read image: {image_path}")
         image_height = img.shape[0]
+    if image_height <= 0:
+        raise ValueError(f"Invalid image height: {image_height}")
     ocr = _get_ocr(ocr_language)
     result = ocr.ocr(image_path, cls=True)
     lines = []
