@@ -4,6 +4,7 @@
 import json
 import logging
 import os
+import re
 import tempfile
 
 from odoo import api, fields, models
@@ -116,8 +117,13 @@ class AccountMove(models.Model):
         return None
 
     def _ai_is_processable(self, filename):
-        """Whether the uploaded file can be handled by the AI extraction."""
-        return (filename or "").rsplit(".", 1)[-1].lower() in _IMAGE_EXTENSIONS
+        """Whether the uploaded file can be handled by the AI extraction.
+
+        Odoo renames duplicate attachments with a " (N)" suffix (e.g.
+        "invoice.pdf (1)"), so it is stripped before reading the extension.
+        """
+        name = re.sub(r"\s+\(\d+\)$", "", filename or "")
+        return name.rsplit(".", 1)[-1].lower() in _IMAGE_EXTENSIONS
 
     def _extend_with_attachments(self, files_data, new=False):
         """Don't show the generic import error for files handled by the AI.

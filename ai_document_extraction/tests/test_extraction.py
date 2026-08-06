@@ -670,6 +670,37 @@ class TestAccountMoveExtraction(TransactionCase):
         bodies = [message.body or "" for message in move.message_ids]
         self.assertTrue(any("error while importing" in body.lower() for body in bodies))
 
+    def test_ai_is_processable_ignores_duplicate_suffix(self):
+        self.assertTrue(self.move._ai_is_processable("receipt_90b5ba57.pdf (1)"))
+        self.assertTrue(self.move._ai_is_processable("invoice.PNG (2)"))
+        self.assertFalse(self.move._ai_is_processable("edifact.xml"))
+        self.assertFalse(self.move._ai_is_processable("archive"))
+
+    def test_upload_duplicate_suffixed_file_posts_informative_message(self):
+        import base64
+
+        attachment = self.env["ir.attachment"].create(
+            {
+                "name": "receipt_90b5ba57-31c0-4373-a61f-d4b84adea60e.pdf (1)",
+                "datas": base64.b64encode(b"%PDF-1.4 fake receipt"),
+                "mimetype": "application/pdf",
+            }
+        )
+        journal = self.env["account.journal"].search(
+            [("type", "=", "purchase")], limit=1
+        )
+        records = (
+            self.env["account.move"]
+            .with_context(default_journal_id=journal.id)
+            ._create_records_from_attachments(attachment)
+        )
+        move = records[0]
+        bodies = [message.body or "" for message in move.message_ids]
+        self.assertFalse(
+            any("error while importing" in body.lower() for body in bodies)
+        )
+        self.assertTrue(any("Extract with AI" in body for body in bodies))
+
     def test_action_extract_with_ai_allows_customer_invoice(self):
         from unittest import mock
 
