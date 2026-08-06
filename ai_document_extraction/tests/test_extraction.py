@@ -112,3 +112,75 @@ class TestLlmExtractor(TransactionCase):
 
         with self.assertRaises(ValueError):
             llm_extractor._parse_json_response("I am sorry, I cannot do that.")
+
+    def test_parse_json_ignores_trailing_braces(self):
+        from ..services import llm_extractor
+
+        content = '{"invoice_number": "FT-1"} but note {this} and more'
+        data = llm_extractor._parse_json_response(content)
+        self.assertEqual(data["invoice_number"], "FT-1")
+
+    def test_parse_json_code_fence(self):
+        from ..services import llm_extractor
+
+        content = '```json\n{"invoice_number": "FT-2"}\n```'
+        data = llm_extractor._parse_json_response(content)
+        self.assertEqual(data["invoice_number"], "FT-2")
+
+    def test_parse_json_raises_for_list(self):
+        from ..services import llm_extractor
+
+        with self.assertRaises(ValueError):
+            llm_extractor._parse_json_response("[1, 2, 3]")
+
+    def test_extract_invoice_data_posts_and_parses(self):
+        from unittest import mock
+
+        from ..services import llm_extractor
+
+        response = mock.Mock()
+        response.status_code = 200
+        response.json.return_value = {
+            "choices": [
+                {
+                    "message": {
+                        "content": '{"partner_name": "Voslo", "amount_total": 118.0}'
+                    }
+                }
+            ]
+        }
+        with mock.patch.object(
+            llm_extractor.requests, "post", return_value=response
+        ) as post_mock:
+            data = llm_extractor.extract_invoice_data(
+                "[BODY] Invoice No: 1",
+                "http://ollama:11434/v1",
+                "qwen3:4b",
+            )
+        self.assertEqual(data["partner_name"], "Voslo")
+        post_mock.assert_called_once()
+        payload = post_mock.call_args.kwargs["json"]
+        self.assertEqual(payload["model"], "qwen3:4b")
+        self.assertEqual(payload["temperature"], 0)
+        self.assertNotIn("Authorization", post_mock.call_args.kwargs["headers"])
+
+    def test_extract_invoice_data_sends_api_key(self):
+        from unittest import mock
+
+        from ..services import llm_extractor
+
+        response = mock.Mock()
+        response.status_code = 200
+        response.json.return_value = {
+            "choices": [{"message": {"content": '{"invoice_number": "X"}'}}]
+        }
+        with mock.patch.object(
+            llm_extractor.requests, "post", return_value=response
+        ) as post_mock:
+            llm_extractor.extract_invoice_data(
+                "text", "http://host:11434/v1", "m", api_key="secret"
+            )
+        self.assertEqual(
+            post_mock.call_args.kwargs["headers"]["Authorization"],
+            "Bearer secret",
+        )

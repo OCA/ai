@@ -2,7 +2,6 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 import json
-import re
 
 import requests
 
@@ -40,15 +39,21 @@ def _build_user_prompt(processed_text):
 
 
 def _parse_json_response(content):
-    match = re.search(r"\{.*\}", content, re.DOTALL)
-    if not match:
-        raise ValueError(f"No JSON object found in LLM response: {content[:200]}")
-    data = json.loads(match.group(0))
-    if not isinstance(data, dict):
-        raise ValueError("LLM response is not a JSON object")
-    for field in EXPECTED_FIELDS:
-        data.setdefault(field, None)
-    return data
+    decoder = json.JSONDecoder()
+    # Find the first valid JSON object, ignoring leading/trailing noise (e.g.
+    # "Sure! Here is the JSON:" or trailing prose with extra braces).
+    for position in range(len(content)):
+        if content[position] == "{":
+            try:
+                data, _ = decoder.raw_decode(content, position)
+            except json.JSONDecodeError:
+                continue
+            if not isinstance(data, dict):
+                raise ValueError("LLM response is not a JSON object")
+            for field in EXPECTED_FIELDS:
+                data.setdefault(field, None)
+            return data
+    raise ValueError(f"No JSON object found in LLM response: {content[:200]}")
 
 
 def extract_invoice_data(
