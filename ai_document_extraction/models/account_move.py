@@ -107,6 +107,36 @@ class AccountMove(models.Model):
                 return attachment
         return None
 
+    def _ai_is_processable(self, filename):
+        """Whether the uploaded file can be handled by the AI extraction."""
+        return (filename or "").rsplit(".", 1)[-1].lower() in _IMAGE_EXTENSIONS
+
+    def _extend_with_attachments(self, files_data, new=False):
+        """Don't show the generic import error for files handled by the AI.
+
+        Odoo posts "There was an error while importing the bill..." whenever no
+        EDI decoder applies to an uploaded file. Images and PDFs have no EDI
+        decoder but are perfectly valid for our AI extraction, so treat them as
+        successfully imported and guide the user to the AI button instead.
+        """
+        result = super()._extend_with_attachments(files_data, new=new)
+        if (
+            not result
+            and files_data
+            and all(
+                self._ai_is_processable(file_data.get("name"))
+                for file_data in files_data
+            )
+        ):
+            self.message_post(
+                body=self.env._(
+                    "The uploaded file is ready for AI extraction. "
+                    "Use 'Extract with AI' to fill the invoice."
+                )
+            )
+            return True
+        return result
+
     def action_extract_with_ai(self):
         self.ensure_one()
         if self.state != "draft":
