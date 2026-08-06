@@ -10,7 +10,7 @@ const CHANNEL_PREFIX = "ai_document_extraction.move.";
 
 patch(FormController.prototype, {
     setup() {
-        this._super(...arguments);
+        super.setup(...arguments);
         if (this.props.resModel !== "account.move") {
             return;
         }
