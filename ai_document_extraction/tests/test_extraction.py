@@ -149,7 +149,8 @@ class TestLlmExtractor(TransactionCase):
             "choices": [
                 {
                     "message": {
-                        "content": '{"partner_name": "Voslo", "amount_total": 118.0}'
+                        "content": '{"partner_name": "Voslo Lojistik A.S.", '
+                        '"amount_total": 118.0}'
                     }
                 }
             ]
@@ -162,7 +163,7 @@ class TestLlmExtractor(TransactionCase):
                 "http://ollama:11434/v1",
                 "qwen3:4b",
             )
-        self.assertEqual(data["partner_name"], "Voslo")
+        self.assertEqual(data["partner_name"], "Voslo Lojistik A.S.")
         post_mock.assert_called_once()
         payload = post_mock.call_args.kwargs["json"]
         self.assertEqual(payload["model"], "qwen3:4b")
@@ -189,6 +190,106 @@ class TestLlmExtractor(TransactionCase):
             post_mock.call_args.kwargs["headers"]["Authorization"],
             "Bearer secret",
         )
+
+    def test_extract_invoice_data_sends_available_context(self):
+        from unittest import mock
+
+        from ..services import llm_extractor
+
+        response = mock.Mock()
+        response.status_code = 200
+        response.json.return_value = {
+            "choices": [
+                {"message": {"content": '{"partner_name": "Voslo", "lines": []}'}}
+            ]
+        }
+        with mock.patch.object(
+            llm_extractor.requests, "post", return_value=response
+        ) as post_mock:
+            llm_extractor.extract_invoice_data(
+                "[BODY] x",
+                "http://ollama:11434/v1",
+                "qwen3:4b",
+                available_taxes=[{"id": 34, "name": "20%", "amount": 20.0}],
+                available_currencies=["TRY", "USD"],
+            )
+        user_content = post_mock.call_args.kwargs["json"]["messages"][1]["content"]
+        self.assertIn("Available taxes", user_content)
+        self.assertIn("20%", user_content)
+        self.assertIn("Available currencies", user_content)
+        self.assertIn("USD", user_content)
+
+    def test_validate_rejects_hash_invoice_number(self):
+        from ..services import llm_extractor
+
+        data = {
+            "invoice_number": "2054148b703b43e690b244ff544d2a9f",
+            "partner_name": "VOSLO LOJISTIK A.S.",
+            "invoice_date": "2023-10-25",
+        }
+        result = llm_extractor._validate_data(data)
+        self.assertIsNone(result["invoice_number"])
+
+    def test_validate_rejects_url_invoice_number(self):
+        from ..services import llm_extractor
+
+        result = llm_extractor._validate_data(
+            {"invoice_number": "https://files.example.com/invoice.pdf"}
+        )
+        self.assertIsNone(result["invoice_number"])
+
+    def test_validate_rejects_model_name_partner(self):
+        from ..services import llm_extractor
+
+        result = llm_extractor._validate_data(
+            {"partner_name": "DeepSeek", "invoice_date": "2023-10-25"}
+        )
+        self.assertIsNone(result["partner_name"])
+
+    def test_validate_rejects_single_token_logo_partner(self):
+        from ..services import llm_extractor
+
+        result = llm_extractor._validate_data({"partner_name": "voslo"})
+        self.assertIsNone(result["partner_name"])
+
+    def test_validate_keeps_full_company_issuer(self):
+        from ..services import llm_extractor
+
+        result = llm_extractor._validate_data({"partner_name": "VOSLO LOJISTIK A.S."})
+        self.assertEqual(result["partner_name"], "VOSLO LOJISTIK A.S.")
+
+    def test_validate_rejects_out_of_range_date(self):
+        from ..services import llm_extractor
+
+        result = llm_extractor._validate_data({"invoice_date": "2099-01-01"})
+        self.assertIsNone(result["invoice_date"])
+
+    def test_validate_rejects_bad_date_format(self):
+        from ..services import llm_extractor
+
+        result = llm_extractor._validate_data({"invoice_date": "25.10.2023"})
+        self.assertIsNone(result["invoice_date"])
+
+    def test_validate_drops_unknown_currency(self):
+        from ..services import llm_extractor
+
+        result = llm_extractor._validate_data(
+            {"currency": "ZZZ"}, available_currencies=["TRY", "USD"]
+        )
+        self.assertIsNone(result["currency"])
+
+    def test_validate_removes_unknown_tax_id(self):
+        from ..services import llm_extractor
+
+        data = {
+            "lines": [
+                {"name": "Nakliye", "tax_id": 999},
+                {"name": "Depolama", "tax_id": 34},
+            ]
+        }
+        result = llm_extractor._validate_data(data, available_tax_ids={34})
+        self.assertNotIn("tax_id", result["lines"][0])
+        self.assertEqual(result["lines"][1]["tax_id"], 34)
 
 
 class TestAccountMoveExtraction(TransactionCase):
@@ -270,6 +371,80 @@ class TestAccountMoveExtraction(TransactionCase):
         line_names = [line.name for line in self.move.line_ids if line.price_subtotal]
         self.assertIn("Nakliye Hizmeti", line_names)
         self.assertIn("Depolama", line_names)
+
+    def test_apply_extraction_sets_currency(self):
+        data = {"currency": "USD"}
+        self.move._apply_extraction(data)
+        self.assertEqual(self.move.currency_id.name, "USD")
+
+    def test_apply_extraction_ignores_unknown_currency(self):
+        data = {"currency": "ZZZ"}
+        self.move._apply_extraction(data)
+        self.assertEqual(self.move.currency_id, self.move.company_id.currency_id)
+
+    def test_apply_extraction_applies_line_tax(self):
+        tax = self.env["account.tax"].search(
+            [
+                ("type_tax_use", "=", "purchase"),
+                ("amount", "=", 20.0),
+                ("amount_type", "=", "percent"),
+            ],
+            limit=1,
+        )
+        self.assertTrue(tax)
+        data = {
+            "lines": [
+                {
+                    "name": "Nakliye Hizmeti",
+                    "quantity": 1,
+                    "price_unit": 100.0,
+                    "tax_id": tax.id,
+                }
+            ]
+        }
+        self.move._apply_extraction(data)
+        line = self.move.line_ids.filtered(lambda line: line.price_subtotal)
+        self.assertEqual(line.tax_ids, tax)
+        self.assertEqual(self.move.amount_tax, 20.0)
+        self.assertEqual(self.move.amount_total, 120.0)
+
+    def test_apply_extraction_line_untaxed_when_tax_unknown(self):
+        data = {
+            "lines": [
+                {
+                    "name": "Nakliye Hizmeti",
+                    "quantity": 1,
+                    "price_unit": 100.0,
+                    "tax_id": 999,
+                }
+            ]
+        }
+        self.move._apply_extraction(data)
+        line = self.move.line_ids.filtered(lambda line: line.price_subtotal)
+        self.assertFalse(line.tax_ids)
+
+    def test_apply_extraction_fallback_line_uses_description(self):
+        data = {"amount_untaxed": 100.0, "description": "Nakliye Hizmeti"}
+        self.move._apply_extraction(data)
+        line = self.move.line_ids.filtered(lambda line: line.price_subtotal)
+        self.assertEqual(len(line), 1)
+        self.assertEqual(line.name, "Nakliye Hizmeti")
+        self.assertEqual(line.price_subtotal, 100.0)
+
+    def test_apply_extraction_never_uses_default_line_name(self):
+        data = {
+            "lines": [{"name": "Nakliye Hizmeti", "quantity": 1, "price_unit": 90.0}],
+            "amount_untaxed": 90.0,
+        }
+        self.move._apply_extraction(data)
+        self.assertFalse(
+            self.move.line_ids.filtered(lambda line: line.name == "AI extracted amount")
+        )
+
+    def test_apply_extraction_warns_when_date_missing(self):
+        self.move._apply_extraction({"lines": []})
+        bodies = [message.body or "" for message in self.move.message_ids]
+        self.assertTrue(any("invoice date" in body.lower() for body in bodies))
 
     def test_action_extract_with_ai_allows_customer_invoice(self):
         from unittest import mock

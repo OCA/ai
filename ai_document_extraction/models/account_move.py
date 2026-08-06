@@ -14,7 +14,6 @@ from ..services import image_preprocessor, llm_extractor, ocr_engine
 _logger = logging.getLogger(__name__)
 
 _IMAGE_EXTENSIONS = ("pdf", "png", "jpg", "jpeg", "gif", "bmp")
-_DEFAULT_LINE_NAME = "AI extracted amount"
 
 
 class AccountMove(models.Model):
@@ -255,37 +254,55 @@ class AccountMove(models.Model):
             )
         return account
 
-    def _ai_set_untaxed_line(self, untaxed):
+    def _ai_available_taxes(self):
+        """Taxes the LLM may assign to invoice lines, keyed for the prompt."""
         self.ensure_one()
-        account = self._ai_get_line_account()
-        stale = self.line_ids.filtered(lambda line: line.name == _DEFAULT_LINE_NAME)
-        commands = [(2, line.id) for line in stale]
-        commands.append(
-            (
-                0,
-                0,
-                {
-                    "name": _DEFAULT_LINE_NAME,
-                    "account_id": account.id,
-                    "quantity": 1,
-                    "price_unit": untaxed,
-                },
-            )
+        use = (
+            "sale"
+            if self.move_type in ("out_invoice", "out_receipt", "out_refund")
+            else "purchase"
         )
-        self.line_ids = commands
+        taxes = self.env["account.tax"].search(
+            [
+                ("type_tax_use", "=", use),
+                ("amount_type", "!=", "group"),
+                ("amount", ">=", 0.0),
+                ("active", "=", True),
+                "|",
+                ("company_id", "=", self.company_id.id),
+                ("company_id", "=", False),
+            ]
+        )
+        return [{"id": tax.id, "name": tax.name, "amount": tax.amount} for tax in taxes]
 
-    def _ai_set_lines(self, lines):
+    def _ai_available_currencies(self):
+        return self.env["res.currency"].search([("active", "=", True)]).mapped("name")
+
+    def _ai_resolve_tax(self, tax_id):
+        """Resolve an LLM-selected tax id to an account.tax record (exact match)."""
+        self.ensure_one()
+        if not tax_id:
+            return self.env["account.tax"]
+        try:
+            tax_id = int(tax_id)
+        except (ValueError, TypeError):
+            return self.env["account.tax"]
+        available_ids = {tax["id"] for tax in self._ai_available_taxes()}
+        if tax_id not in available_ids:
+            return self.env["account.tax"]
+        return self.env["account.tax"].browse(tax_id)
+
+    def _ai_set_lines(self, lines, description=None):
         self.ensure_one()
         account = self._ai_get_line_account()
         commands = [(2, line.id) for line in self.line_ids]
         for line in lines:
-            name = (line.get("name") or _DEFAULT_LINE_NAME).strip()
-            if not name:
-                continue
+            name = (line.get("name") or description or "").strip()
             quantity = self._ai_to_float(line.get("quantity"))
             price_unit = self._ai_to_float(line.get("price_unit"))
             if quantity is None and price_unit is None:
                 continue
+            tax = self._ai_resolve_tax(line.get("tax_id"))
             commands.append(
                 (
                     0,
@@ -295,11 +312,11 @@ class AccountMove(models.Model):
                         "account_id": account.id,
                         "quantity": quantity if quantity else 1.0,
                         "price_unit": price_unit if price_unit else 0.0,
+                        "tax_ids": [(6, 0, tax.ids)] if tax else [],
                     },
                 )
             )
-        if len(commands) > 1:
-            self.line_ids = commands
+        self.line_ids = commands
 
     def _apply_extraction(self, data):
         self.ensure_one()
@@ -314,6 +331,13 @@ class AccountMove(models.Model):
                     self.id,
                     invoice_date,
                 )
+        else:
+            self.message_post(
+                body=self.env._(
+                    "The invoice date could not be extracted; "
+                    "please review the draft before posting."
+                )
+            )
         if data.get("invoice_number"):
             values["ref"] = data["invoice_number"]
         partner = None
@@ -324,15 +348,23 @@ class AccountMove(models.Model):
             )
             if partner:
                 values["partner_id"] = partner.id
+        currency_code = data.get("currency")
+        if currency_code:
+            currency = self.env["res.currency"].search(
+                [("name", "=", str(currency_code).strip().upper())], limit=1
+            )
+            if currency and currency != self.company_id.currency_id:
+                values["currency_id"] = currency.id
         if values:
             self.write(values)
         lines = data.get("lines") or []
+        description = data.get("description")
         if lines:
-            self._ai_set_lines(lines)
+            self._ai_set_lines(lines, description=description)
         else:
             untaxed = self._ai_to_float(data.get("amount_untaxed"))
             if untaxed and untaxed > 0:
-                self._ai_set_untaxed_line(untaxed)
+                self._ai_set_lines([{"name": description or "", "price_unit": untaxed}])
         self.ai_extracted_tax = self._ai_to_float(data.get("amount_tax")) or 0.0
         self.ai_extracted_total = self._ai_to_float(data.get("amount_total")) or 0.0
         return partner
@@ -356,6 +388,8 @@ class AccountMove(models.Model):
                 settings["api_base_url"],
                 settings["model_name"],
                 settings["api_key"],
+                available_taxes=self._ai_available_taxes(),
+                available_currencies=self._ai_available_currencies(),
             )
             self._ai_store_processed_image(processed_path)
             self._apply_extraction(data)
