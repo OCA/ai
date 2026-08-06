@@ -7,5 +7,5 @@
 5. If the partner could not be matched, click **Review Extraction** and pick or
    create the partner in the wizard.
 
-Configure the AI backend under *Settings > Technical > AI Document Extraction*
-(API base URL, model name, OCR language, fuzzy match threshold).
+Configure the AI backend under *Settings > General Settings > AI Document
+Extraction* (API base URL, model name, OCR language, fuzzy match threshold).

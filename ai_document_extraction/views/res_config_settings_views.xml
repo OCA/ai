@@ -8,6 +8,7 @@
             <xpath expr="//app[@name='general_settings']" position="inside">
                 <block title="AI Document Extraction">
                     <setting
+                        id="ai_document_extraction"
                         string="AI Document Extraction"
                         help="Extract invoice data from PDFs and images using a local OCR engine and an LLM."
                     >

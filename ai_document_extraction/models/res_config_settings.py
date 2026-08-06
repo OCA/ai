@@ -35,5 +35,7 @@ class ResConfigSettings(models.TransientModel):
     fuzzy_match_threshold = fields.Integer(
         string="Partner Match Threshold",
         default=85,
+        help="Minimum similarity percentage (0-100) required to auto-match the "
+        "extracted partner name with an existing partner.",
         config_parameter="ai_document_extraction.fuzzy_match_threshold",
     )
