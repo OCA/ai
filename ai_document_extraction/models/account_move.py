@@ -9,7 +9,7 @@ import tempfile
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 
-from ..services import image_preprocessor, llm_extractor, ocr_engine
+from ..services import llm_extractor
 
 _logger = logging.getLogger(__name__)
 
@@ -68,8 +68,7 @@ class AccountMove(models.Model):
                 "api_base_url", "http://ollama:11434/v1"
             ),
             "api_key": self._ai_get_param("api_key", "dummy"),
-            "model_name": self._ai_get_param("model_name", "qwen3:4b"),
-            "ocr_language": self._ai_get_param("ocr_language", "tur+eng"),
+            "model_name": self._ai_get_param("model_name", "qwen3-vl:8b"),
             "fuzzy_match_threshold": int(
                 self._ai_get_param("fuzzy_match_threshold", "85")
             ),
@@ -189,6 +188,27 @@ class AccountMove(models.Model):
             "target": "new",
         }
 
+    def _ai_resize_image(self, path, max_dimension=1568):
+        """Cap the image size to keep vision-model tokens and latency low."""
+        from PIL import Image
+
+        with Image.open(path) as image:
+            image = image.convert("RGB")
+            width, height = image.size
+            if max(width, height) <= max_dimension:
+                return path
+            ratio = max_dimension / max(width, height)
+            image = image.resize(
+                (
+                    max(1, round(width * ratio)),
+                    max(1, round(height * ratio)),
+                )
+            )
+            resized = f"{path}.resized.png"
+            image.save(resized, "PNG")
+        os.unlink(path)
+        return resized
+
     def _ai_prepare_image(self, attachment):
         data = attachment.with_context(bin_size=False).raw
         extension = (attachment.name or "file").rsplit(".", 1)[-1].lower()
@@ -201,17 +221,17 @@ class AccountMove(models.Model):
                 from pdf2image import convert_from_path
 
                 images = convert_from_path(
-                    file_path, dpi=300, first_page=1, last_page=1
+                    file_path, dpi=200, first_page=1, last_page=1
                 )
                 if not images:
                     raise UserError(self.env._("The PDF could not be rendered."))
                 png_path = f"{file_path}.png"
                 images[0].save(png_path, "PNG")
                 os.unlink(file_path)
-                return png_path
-            return file_path
+                file_path = png_path
+            return self._ai_resize_image(file_path)
         except Exception:
-            os.unlink(file_path)
+            self._ai_cleanup_tmp(file_path)
             raise
 
     def _ai_cleanup_tmp(self, path):
@@ -303,24 +323,45 @@ class AccountMove(models.Model):
                 ("company_id", "=", False),
             ]
         )
-        return [{"id": tax.id, "name": tax.name, "amount": tax.amount} for tax in taxes]
+        return [
+            {
+                "id": tax.id,
+                "name": tax.name,
+                "amount": tax.amount,
+                "amount_type": tax.amount_type,
+            }
+            for tax in taxes
+        ]
 
     def _ai_available_currencies(self):
         return self.env["res.currency"].search([("active", "=", True)]).mapped("name")
 
-    def _ai_resolve_tax(self, tax_id):
-        """Resolve an LLM-selected tax id to an account.tax record (exact match)."""
+    def _ai_resolve_tax(self, tax_id=None, tax_rate=None):
+        """Resolve an LLM tax reference to an account.tax record.
+
+        Exact match only: by tax id, or by tax rate against the available
+        percent taxes. Unknown references yield an empty recordset so the
+        line stays untaxed.
+        """
         self.ensure_one()
-        if not tax_id:
-            return self.env["account.tax"]
-        try:
-            tax_id = int(tax_id)
-        except (ValueError, TypeError):
-            return self.env["account.tax"]
-        available_ids = {tax["id"] for tax in self._ai_available_taxes()}
-        if tax_id not in available_ids:
-            return self.env["account.tax"]
-        return self.env["account.tax"].browse(tax_id)
+        available = self._ai_available_taxes()
+        if tax_id:
+            try:
+                tax_id = int(tax_id)
+            except (ValueError, TypeError):
+                tax_id = None
+            for tax in available:
+                if tax["id"] == tax_id:
+                    return self.env["account.tax"].browse(tax_id)
+        if tax_rate:
+            try:
+                rate = float(tax_rate)
+            except (ValueError, TypeError):
+                return self.env["account.tax"]
+            for tax in available:
+                if tax["amount_type"] == "percent" and abs(tax["amount"] - rate) < 1e-9:
+                    return self.env["account.tax"].browse(tax["id"])
+        return self.env["account.tax"]
 
     def _ai_set_lines(self, lines, description=None):
         self.ensure_one()
@@ -332,7 +373,7 @@ class AccountMove(models.Model):
             price_unit = self._ai_to_float(line.get("price_unit"))
             if quantity is None and price_unit is None:
                 continue
-            tax = self._ai_resolve_tax(line.get("tax_id"))
+            tax = self._ai_resolve_tax(line.get("tax_id"), line.get("tax_rate"))
             commands.append(
                 (
                     0,
@@ -402,26 +443,19 @@ class AccountMove(models.Model):
     def _extract_with_ai_job(self, attachment_id):
         self.ensure_one()
         attachment = self.env["ir.attachment"].browse(attachment_id)
-        file_path = None
-        processed_path = None
+        image_path = None
         try:
-            file_path = self._ai_prepare_image(attachment)
-            processed_path = image_preprocessor.preprocess_image(file_path)
+            image_path = self._ai_prepare_image(attachment)
             settings = self._ai_settings()
-            ocr_text = ocr_engine.extract_text_with_layout(
-                processed_path, settings["ocr_language"]
-            )
-            if not ocr_text.strip():
-                raise UserError(self.env._("No text was detected in the document."))
-            data = llm_extractor.extract_invoice_data(
-                ocr_text,
+            data = llm_extractor.extract_invoice_data_from_image(
+                image_path,
                 settings["api_base_url"],
                 settings["model_name"],
                 settings["api_key"],
                 available_taxes=self._ai_available_taxes(),
                 available_currencies=self._ai_available_currencies(),
             )
-            self._ai_store_processed_image(processed_path)
+            self._ai_store_processed_image(image_path)
             self._apply_extraction(data)
             self.ai_raw_extraction = json.dumps(data, indent=2)
             self.ai_extraction_state = "done"
@@ -433,7 +467,5 @@ class AccountMove(models.Model):
             )
             self.message_post(body=self.env._("AI extraction failed: %s", error))
         finally:
-            if processed_path:
-                self._ai_cleanup_tmp(processed_path)
-            if file_path:
-                self._ai_cleanup_tmp(file_path)
+            if image_path:
+                self._ai_cleanup_tmp(image_path)

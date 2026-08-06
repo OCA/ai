@@ -3,7 +3,7 @@
 
 {
     "name": "AI Document Extraction",
-    "summary": "Extract invoice data from PDFs and images using local OCR and an LLM",
+    "summary": "Extract invoice data from PDFs and images using a vision LLM",
     "version": "19.0.1.0.0",
     "category": "Accounting/Accounting",
     "website": "https://github.com/OCA/ai",
@@ -14,7 +14,7 @@
     "installable": True,
     "depends": ["base", "account", "queue_job"],
     "external_dependencies": {
-        "python": ["paddleocr", "pdf2image", "rapidfuzz", "requests"],
+        "python": ["Pillow", "pdf2image", "rapidfuzz", "requests"],
     },
     "data": [
         "security/ir.model.access.csv",

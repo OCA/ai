@@ -10,7 +10,7 @@
                     <setting
                         id="ai_document_extraction"
                         string="AI Document Extraction"
-                        help="Extract invoice data from PDFs and images using a local OCR engine and an LLM."
+                        help="Extract invoice data from PDFs and images using a vision LLM."
                     >
                         <div class="content-group">
                             <div class="row mt16">
@@ -40,14 +40,6 @@
                                     for="ai_model_name"
                                 />
                                 <field name="ai_model_name" class="col-lg-8" />
-                            </div>
-                            <div class="row mt16">
-                                <label
-                                    string="OCR Language"
-                                    class="col-lg-4 o_light_label"
-                                    for="ocr_language"
-                                />
-                                <field name="ocr_language" class="col-lg-8" />
                             </div>
                             <div class="row mt16">
                                 <label

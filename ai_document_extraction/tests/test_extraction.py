@@ -6,92 +6,18 @@ import os
 from odoo.tests import TransactionCase
 
 
-class TestImagePreprocessor(TransactionCase):
-    def _sample_image(self):
+class TestLlmExtractor(TransactionCase):
+    def _sample_png(self, path="/tmp/ai_sample_vl.png"):
         import base64
 
         png = (
             "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8B"
             "QDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
         )
-        path = "/tmp/test_sample.png"
         with open(path, "wb") as handle:
             handle.write(base64.b64decode(png))
         return path
 
-    def test_preprocess_returns_file(self):
-        from ..services.image_preprocessor import preprocess_image
-
-        source = self._sample_image()
-        try:
-            result = preprocess_image(source)
-        except ImportError:
-            # cv2 (transitively pulled by paddleocr) may be unimportable in
-            # some environments, e.g. OCA CI images without libGL.
-            self.skipTest("OpenCV (cv2) not importable")
-        try:
-            self.assertTrue(os.path.exists(result))
-            self.assertTrue(result.endswith(".png"))
-        finally:
-            os.unlink(result)
-
-
-class TestOcrEngine(TransactionCase):
-    def test_layout_tags(self):
-        from unittest import mock
-
-        from ..services import ocr_engine
-
-        def fake_ocr(image_path, cls=True):
-            return [
-                [
-                    ([(0, 10), (100, 10), (100, 30), (0, 30)], ("voslo", 0.99)),
-                    (
-                        [(0, 300), (100, 300), (100, 320), (0, 320)],
-                        ("Invoice No: 123", 0.99),
-                    ),
-                    (
-                        [(0, 650), (100, 650), (100, 670), (0, 670)],
-                        ("page 1 of 1", 0.99),
-                    ),
-                ]
-            ]
-
-        with mock.patch.object(
-            ocr_engine, "_get_ocr", return_value=mock.Mock(ocr=fake_ocr)
-        ):
-            result = ocr_engine.extract_text_with_layout(
-                "/tmp/fake.png", image_height=700
-            )
-        self.assertIn("[HEADER] voslo", result)
-        self.assertIn("[BODY] Invoice No: 123", result)
-        self.assertIn("[FOOTER] page 1 of 1", result)
-
-    def test_get_ocr_caches_instance_per_language(self):
-        import sys
-        from unittest import mock
-
-        from ..services import ocr_engine
-
-        class FakePaddle:
-            def __init__(self, **kwargs):
-                self.kwargs = kwargs
-
-        fake_module = mock.Mock()
-        fake_module.PaddleOCR = FakePaddle
-        with mock.patch.dict(sys.modules, {"paddleocr": fake_module}):
-            ocr_engine._thread_local.ocr = None
-            ocr_engine._thread_local.ocr_lang = None
-            first = ocr_engine._get_ocr("tur+eng")
-            second = ocr_engine._get_ocr("tur+eng")
-            self.assertIs(first, second)
-            self.assertEqual(first.kwargs["lang"], "latin")
-            other = ocr_engine._get_ocr("eng")
-            self.assertIsNot(first, other)
-            self.assertEqual(other.kwargs["lang"], "en")
-
-
-class TestLlmExtractor(TransactionCase):
     def test_parse_json_from_noisy_content(self):
         from ..services import llm_extractor
 
@@ -138,7 +64,7 @@ class TestLlmExtractor(TransactionCase):
         with self.assertRaises(ValueError):
             llm_extractor._parse_json_response("[1, 2, 3]")
 
-    def test_extract_invoice_data_posts_and_parses(self):
+    def test_extract_invoice_data_from_image_posts_and_parses(self):
         from unittest import mock
 
         from ..services import llm_extractor
@@ -155,22 +81,24 @@ class TestLlmExtractor(TransactionCase):
                 }
             ]
         }
+        path = self._sample_png()
         with mock.patch.object(
             llm_extractor.requests, "post", return_value=response
         ) as post_mock:
-            data = llm_extractor.extract_invoice_data(
-                "[BODY] Invoice No: 1",
-                "http://ollama:11434/v1",
-                "qwen3:4b",
+            data = llm_extractor.extract_invoice_data_from_image(
+                path, "http://ollama:11434/v1", "qwen3-vl:8b"
             )
         self.assertEqual(data["partner_name"], "Voslo Lojistik A.S.")
         post_mock.assert_called_once()
         payload = post_mock.call_args.kwargs["json"]
-        self.assertEqual(payload["model"], "qwen3:4b")
+        self.assertEqual(payload["model"], "qwen3-vl:8b")
         self.assertEqual(payload["temperature"], 0)
+        user_content = payload["messages"][1]["content"]
+        self.assertEqual(user_content[0]["type"], "image_url")
+        self.assertIn("data:image/png;base64,", user_content[0]["image_url"]["url"])
         self.assertNotIn("Authorization", post_mock.call_args.kwargs["headers"])
 
-    def test_extract_invoice_data_sends_api_key(self):
+    def test_extract_invoice_data_from_image_sends_api_key(self):
         from unittest import mock
 
         from ..services import llm_extractor
@@ -180,18 +108,19 @@ class TestLlmExtractor(TransactionCase):
         response.json.return_value = {
             "choices": [{"message": {"content": '{"invoice_number": "X"}'}}]
         }
+        path = self._sample_png()
         with mock.patch.object(
             llm_extractor.requests, "post", return_value=response
         ) as post_mock:
-            llm_extractor.extract_invoice_data(
-                "text", "http://host:11434/v1", "m", api_key="secret"
+            llm_extractor.extract_invoice_data_from_image(
+                path, "http://host:11434/v1", "m", api_key="secret"
             )
         self.assertEqual(
             post_mock.call_args.kwargs["headers"]["Authorization"],
             "Bearer secret",
         )
 
-    def test_extract_invoice_data_sends_available_context(self):
+    def test_extract_invoice_data_from_image_sends_available_context(self):
         from unittest import mock
 
         from ..services import llm_extractor
@@ -200,24 +129,37 @@ class TestLlmExtractor(TransactionCase):
         response.status_code = 200
         response.json.return_value = {
             "choices": [
-                {"message": {"content": '{"partner_name": "Voslo", "lines": []}'}}
+                {
+                    "message": {
+                        "content": '{"partner_name": "Voslo Lojistik A.S.", '
+                        '"lines": []}'
+                    }
+                }
             ]
         }
+        path = self._sample_png()
         with mock.patch.object(
             llm_extractor.requests, "post", return_value=response
         ) as post_mock:
-            llm_extractor.extract_invoice_data(
-                "[BODY] x",
+            llm_extractor.extract_invoice_data_from_image(
+                path,
                 "http://ollama:11434/v1",
-                "qwen3:4b",
-                available_taxes=[{"id": 34, "name": "20%", "amount": 20.0}],
+                "qwen3-vl:8b",
+                available_taxes=[
+                    {
+                        "id": 34,
+                        "name": "20%",
+                        "amount": 20.0,
+                        "amount_type": "percent",
+                    }
+                ],
                 available_currencies=["TRY", "USD"],
             )
-        user_content = post_mock.call_args.kwargs["json"]["messages"][1]["content"]
-        self.assertIn("Available taxes", user_content)
-        self.assertIn("20%", user_content)
-        self.assertIn("Available currencies", user_content)
-        self.assertIn("USD", user_content)
+        text = post_mock.call_args.kwargs["json"]["messages"][1]["content"][1]["text"]
+        self.assertIn("Available tax rates", text)
+        self.assertIn("20%", text)
+        self.assertIn("Available currencies", text)
+        self.assertIn("USD", text)
 
     def test_validate_rejects_hash_invoice_number(self):
         from ..services import llm_extractor
@@ -278,18 +220,35 @@ class TestLlmExtractor(TransactionCase):
         )
         self.assertIsNone(result["currency"])
 
-    def test_validate_removes_unknown_tax_id(self):
+    def test_validate_removes_unknown_tax_rate(self):
         from ..services import llm_extractor
 
         data = {
             "lines": [
-                {"name": "Nakliye", "tax_id": 999},
-                {"name": "Depolama", "tax_id": 34},
+                {"name": "Nakliye", "tax_rate": 18},
+                {"name": "Depolama", "tax_rate": 20},
             ]
         }
-        result = llm_extractor._validate_data(data, available_tax_ids={34})
+        result = llm_extractor._validate_data(
+            data,
+            available_taxes=[
+                {"id": 34, "name": "20%", "amount": 20.0, "amount_type": "percent"}
+            ],
+        )
+        self.assertNotIn("tax_rate", result["lines"][0])
+        self.assertEqual(result["lines"][1]["tax_rate"], 20)
+
+    def test_validate_removes_unknown_tax_id(self):
+        from ..services import llm_extractor
+
+        data = {"lines": [{"name": "Nakliye", "tax_id": 999}]}
+        result = llm_extractor._validate_data(
+            data,
+            available_taxes=[
+                {"id": 34, "name": "20%", "amount": 20.0, "amount_type": "percent"}
+            ],
+        )
         self.assertNotIn("tax_id", result["lines"][0])
-        self.assertEqual(result["lines"][1]["tax_id"], 34)
 
 
 class TestAccountMoveExtraction(TransactionCase):
@@ -398,7 +357,7 @@ class TestAccountMoveExtraction(TransactionCase):
                     "name": "Nakliye Hizmeti",
                     "quantity": 1,
                     "price_unit": 100.0,
-                    "tax_id": tax.id,
+                    "tax_rate": 20.0,
                 }
             ]
         }
@@ -415,7 +374,7 @@ class TestAccountMoveExtraction(TransactionCase):
                     "name": "Nakliye Hizmeti",
                     "quantity": 1,
                     "price_unit": 100.0,
-                    "tax_id": 999,
+                    "tax_rate": 18.0,
                 }
             ]
         }
@@ -509,7 +468,7 @@ class TestAccountMoveExtraction(TransactionCase):
         import base64
         from unittest import mock
 
-        from ..services import image_preprocessor, llm_extractor, ocr_engine
+        from ..services import llm_extractor
 
         png_path = "/tmp/ai_processed_test.png"
         png = (
@@ -519,22 +478,10 @@ class TestAccountMoveExtraction(TransactionCase):
         with open(png_path, "wb") as handle:
             handle.write(base64.b64decode(png))
         attachment = self._attach()
-        with (
-            mock.patch.object(
-                image_preprocessor,
-                "preprocess_image",
-                return_value=png_path,
-            ),
-            mock.patch.object(
-                ocr_engine,
-                "extract_text_with_layout",
-                return_value="[BODY] Voslo Lojistik",
-            ),
-            mock.patch.object(
-                llm_extractor,
-                "extract_invoice_data",
-                return_value={"partner_name": "Voslo Lojistik", "lines": []},
-            ),
+        with mock.patch.object(
+            llm_extractor,
+            "extract_invoice_data_from_image",
+            return_value={"partner_name": "Voslo Lojistik", "lines": []},
         ):
             self.move._extract_with_ai_job(attachment.id)
         if os.path.exists(png_path):
@@ -552,33 +499,21 @@ class TestAccountMoveExtraction(TransactionCase):
     def test_job_happy_path(self):
         from unittest import mock
 
-        from ..services import image_preprocessor, llm_extractor, ocr_engine
+        from ..services import llm_extractor
 
         attachment = self._attach()
-        with (
-            mock.patch.object(
-                image_preprocessor,
-                "preprocess_image",
-                return_value="/tmp/pp.png",
-            ),
-            mock.patch.object(
-                ocr_engine,
-                "extract_text_with_layout",
-                return_value="[BODY] Voslo Lojistik\n[BODY] Invoice No: FT-123",
-            ),
-            mock.patch.object(
-                llm_extractor,
-                "extract_invoice_data",
-                return_value={
-                    "partner_name": "Voslo Lojistik",
-                    "invoice_number": "FT-123",
-                    "invoice_date": "2023-10-25",
-                    "amount_untaxed": 100.0,
-                    "amount_tax": 18.0,
-                    "amount_total": 118.0,
-                    "currency": "TRY",
-                },
-            ),
+        with mock.patch.object(
+            llm_extractor,
+            "extract_invoice_data_from_image",
+            return_value={
+                "partner_name": "Voslo Lojistik",
+                "invoice_number": "FT-123",
+                "invoice_date": "2023-10-25",
+                "amount_untaxed": 100.0,
+                "amount_tax": 18.0,
+                "amount_total": 118.0,
+                "currency": "TRY",
+            },
         ):
             self.move._extract_with_ai_job(attachment.id)
         self.assertEqual(self.move.ai_extraction_state, "done")
@@ -588,25 +523,13 @@ class TestAccountMoveExtraction(TransactionCase):
     def test_job_error_path(self):
         from unittest import mock
 
-        from ..services import image_preprocessor, llm_extractor, ocr_engine
+        from ..services import llm_extractor
 
         attachment = self._attach()
-        with (
-            mock.patch.object(
-                image_preprocessor,
-                "preprocess_image",
-                return_value="/tmp/pp.png",
-            ),
-            mock.patch.object(
-                ocr_engine,
-                "extract_text_with_layout",
-                return_value="[BODY] x",
-            ),
-            mock.patch.object(
-                llm_extractor,
-                "extract_invoice_data",
-                side_effect=RuntimeError("boom"),
-            ),
+        with mock.patch.object(
+            llm_extractor,
+            "extract_invoice_data_from_image",
+            side_effect=RuntimeError("boom"),
         ):
             self.move._extract_with_ai_job(attachment.id)
         self.assertEqual(self.move.ai_extraction_state, "error")

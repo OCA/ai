@@ -1,5 +1,5 @@
 # generated from manifests external_dependencies
-paddleocr
+Pillow
 pdf2image
 rapidfuzz
 requests

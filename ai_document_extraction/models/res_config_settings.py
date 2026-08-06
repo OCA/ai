@@ -19,18 +19,8 @@ class ResConfigSettings(models.TransientModel):
     )
     ai_model_name = fields.Char(
         string="AI Model Name",
-        default="qwen3:4b",
+        default="qwen3-vl:8b",
         config_parameter="ai_document_extraction.model_name",
-    )
-    ocr_language = fields.Selection(
-        [
-            ("tur+eng", "Turkish + English"),
-            ("tur", "Turkish"),
-            ("eng", "English"),
-        ],
-        string="OCR Language",
-        default="tur+eng",
-        config_parameter="ai_document_extraction.ocr_language",
     )
     fuzzy_match_threshold = fields.Integer(
         string="Partner Match Threshold",
