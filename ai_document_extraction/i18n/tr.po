@@ -6,107 +6,108 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0-20260723\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-06 13:43+0000\n"
-"PO-Revision-Date: 2026-08-06 13:43+0000\n"
+"POT-Creation-Date: 2026-08-06 13:39+0000\n"
+"PO-Revision-Date: 2026-08-06 13:39+0000\n"
 "Last-Translator: \n"
-"Language-Team: \n"
+"Language-Team: Turkish\n"
+"Language: tr_TR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: \n"
-"Plural-Forms: \n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: ai_document_extraction
 #: model:ir.model.fields,field_description:ai_document_extraction.field_res_config_settings__ai_api_base_url
 msgid "AI API Base URL"
-msgstr ""
+msgstr "AI API Temel URL"
 
 #. module: ai_document_extraction
 #: model:ir.model.fields,field_description:ai_document_extraction.field_res_config_settings__ai_api_key
 msgid "AI API Key"
-msgstr ""
+msgstr "AI API Anahtarı"
 
 #. module: ai_document_extraction
 #: model_terms:ir.ui.view,arch_db:ai_document_extraction.res_config_settings_view_form_ai_extraction
 msgid "AI Document Extraction"
-msgstr ""
+msgstr "AI Belge Çıkarma"
 
 #. module: ai_document_extraction
 #: model_terms:ir.ui.view,arch_db:ai_document_extraction.account_move_form_ai_extraction
 msgid "AI Extraction"
-msgstr ""
+msgstr "AI Çıkarma"
 
 #. module: ai_document_extraction
 #: model:ir.model.fields,field_description:ai_document_extraction.field_account_bank_statement_line__ai_extraction_state
 #: model:ir.model.fields,field_description:ai_document_extraction.field_account_move__ai_extraction_state
 msgid "AI Extraction State"
-msgstr ""
+msgstr "AI Çıkarma Durumu"
 
 #. module: ai_document_extraction
 #: model:ir.model.fields,field_description:ai_document_extraction.field_res_config_settings__ai_model_name
 msgid "AI Model Name"
-msgstr ""
+msgstr "AI Model Adı"
 
 #. module: ai_document_extraction
 #: model:ir.model.fields,field_description:ai_document_extraction.field_account_bank_statement_line__ai_raw_extraction
 #: model:ir.model.fields,field_description:ai_document_extraction.field_account_move__ai_raw_extraction
 msgid "AI Raw Extraction"
-msgstr ""
+msgstr "AI Ham Çıkarma"
 
 #. module: ai_document_extraction
 #. odoo-python
 #: code:addons/ai_document_extraction/models/account_move.py:0
 msgid "AI extraction completed."
-msgstr ""
+msgstr "AI çıkarma işlemi tamamlandı."
 
 #. module: ai_document_extraction
 #. odoo-python
 #: code:addons/ai_document_extraction/models/account_move.py:0
 msgid "AI extraction failed: %s"
-msgstr ""
+msgstr "AI çıkarma işlemi başarısız: %s"
 
 #. module: ai_document_extraction
 #. odoo-python
 #: code:addons/ai_document_extraction/models/account_move.py:0
 msgid "AI extraction is only available on draft moves."
-msgstr ""
+msgstr "AI çıkarma yalnızca taslak hareketlerde kullanılabilir."
 
 #. module: ai_document_extraction
 #. odoo-python
 #: code:addons/ai_document_extraction/models/account_move.py:0
 msgid "AI extraction is only available on invoices."
-msgstr ""
+msgstr "AI çıkarma yalnızca faturalarda kullanılabilir."
 
 #. module: ai_document_extraction
 #. odoo-python
 #: code:addons/ai_document_extraction/models/account_move.py:0
 msgid "AI extraction started."
-msgstr ""
+msgstr "AI çıkarma işlemi başladı."
 
 #. module: ai_document_extraction
 #: model_terms:ir.ui.view,arch_db:ai_document_extraction.res_config_settings_view_form_ai_extraction
 msgid "API Base URL"
-msgstr ""
+msgstr "API Temel URL"
 
 #. module: ai_document_extraction
 #: model_terms:ir.ui.view,arch_db:ai_document_extraction.res_config_settings_view_form_ai_extraction
 msgid "API Key"
-msgstr ""
+msgstr "API Anahtarı"
 
 #. module: ai_document_extraction
 #: model_terms:ir.ui.view,arch_db:ai_document_extraction.extraction_wizard_view_form
 msgid "Apply"
-msgstr ""
+msgstr "Uygula"
 
 #. module: ai_document_extraction
 #. odoo-python
 #: code:addons/ai_document_extraction/models/account_move.py:0
 msgid "Attach the invoice PDF or image to the chatter first."
-msgstr ""
+msgstr "Önce fatura PDF'sini veya görselini konuşmaya ekleyin."
 
 #. module: ai_document_extraction
 #: model_terms:ir.ui.view,arch_db:ai_document_extraction.extraction_wizard_view_form
 msgid "Cancel"
-msgstr ""
+msgstr "İptal"
 
 #. module: ai_document_extraction
 #: model:ir.model,name:ai_document_extraction.model_res_config_settings
@@ -133,12 +134,12 @@ msgstr ""
 #. module: ai_document_extraction
 #: model:ir.model.fields.selection,name:ai_document_extraction.selection__account_move__ai_extraction_state__done
 msgid "Done"
-msgstr ""
+msgstr "Tamamlandı"
 
 #. module: ai_document_extraction
 #: model:ir.model.fields.selection,name:ai_document_extraction.selection__account_move__ai_extraction_state__error
 msgid "Error"
-msgstr ""
+msgstr "Hata"
 
 #. module: ai_document_extraction
 #: model_terms:ir.ui.view,arch_db:ai_document_extraction.res_config_settings_view_form_ai_extraction
@@ -146,28 +147,30 @@ msgid ""
 "Extract invoice data from PDFs and images using a vision LLM (OpenRouter by "
 "default; local Ollama is also supported)."
 msgstr ""
+"PDF ve görsellerden görüntü tabanlı bir LLM ile fatura verisi çıkarın "
+"(varsayılan OpenRouter; yerel Ollama da desteklenir)."
 
 #. module: ai_document_extraction
 #: model_terms:ir.ui.view,arch_db:ai_document_extraction.account_move_form_ai_extraction
 msgid "Extract with AI"
-msgstr ""
+msgstr "AI ile Çıkar"
 
 #. module: ai_document_extraction
 #: model:ir.model.fields,field_description:ai_document_extraction.field_extraction_wizard__extracted_partner_name
 msgid "Extracted Partner Name"
-msgstr ""
+msgstr "Çıkarılan İş Ortağı Adı"
 
 #. module: ai_document_extraction
 #: model:ir.model.fields,field_description:ai_document_extraction.field_account_bank_statement_line__ai_extracted_tax
 #: model:ir.model.fields,field_description:ai_document_extraction.field_account_move__ai_extracted_tax
 msgid "Extracted Tax Amount"
-msgstr ""
+msgstr "Çıkarılan Vergi Tutarı"
 
 #. module: ai_document_extraction
 #: model:ir.model.fields,field_description:ai_document_extraction.field_account_bank_statement_line__ai_extracted_total
 #: model:ir.model.fields,field_description:ai_document_extraction.field_account_move__ai_extracted_total
 msgid "Extracted Total Amount"
-msgstr ""
+msgstr "Çıkarılan Toplam Tutar"
 
 #. module: ai_document_extraction
 #: model:ir.model.fields,field_description:ai_document_extraction.field_account_move__id
@@ -179,13 +182,13 @@ msgstr ""
 #. module: ai_document_extraction
 #: model:ir.model.fields,field_description:ai_document_extraction.field_extraction_wizard__move_id
 msgid "Invoice"
-msgstr ""
+msgstr "Fatura"
 
 #. module: ai_document_extraction
 #: model:ir.model.fields,field_description:ai_document_extraction.field_account_bank_statement_line__invoice_date
 #: model:ir.model.fields,field_description:ai_document_extraction.field_account_move__invoice_date
 msgid "Invoice/Bill Date"
-msgstr ""
+msgstr "Fatura/Fiş Tarihi"
 
 #. module: ai_document_extraction
 #: model:ir.model,name:ai_document_extraction.model_account_move
@@ -208,38 +211,40 @@ msgid ""
 "Minimum similarity percentage (0-100) required to auto-match the extracted "
 "partner name with an existing partner."
 msgstr ""
+"Çıkarılan iş ortağı adının mevcut bir iş ortağıyla otomatik eşleşmesi için "
+"gereken minimum benzerlik yüzdesi (0-100)."
 
 #. module: ai_document_extraction
 #: model_terms:ir.ui.view,arch_db:ai_document_extraction.res_config_settings_view_form_ai_extraction
 msgid "Model Name"
-msgstr ""
+msgstr "Model Adı"
 
 #. module: ai_document_extraction
 #. odoo-python
 #: code:addons/ai_document_extraction/models/account_move.py:0
 msgid "No invoice/receipt number found; payment reference was used."
-msgstr ""
+msgstr "Fatura/makbuz numarası bulunamadı; ödeme referansı kullanıldı."
 
 #. module: ai_document_extraction
 #: model:ir.model.fields.selection,name:ai_document_extraction.selection__account_move__ai_extraction_state__draft
 msgid "Not processed"
-msgstr ""
+msgstr "İşlenmedi"
 
 #. module: ai_document_extraction
 #: model:ir.model.fields,field_description:ai_document_extraction.field_extraction_wizard__partner_id
 msgid "Partner"
-msgstr ""
+msgstr "İş Ortağı"
 
 #. module: ai_document_extraction
 #: model:ir.model.fields,field_description:ai_document_extraction.field_res_config_settings__fuzzy_match_threshold
 #: model_terms:ir.ui.view,arch_db:ai_document_extraction.res_config_settings_view_form_ai_extraction
 msgid "Partner Match Threshold"
-msgstr ""
+msgstr "İş Ortağı Eşleştirme Eşiği"
 
 #. module: ai_document_extraction
 #: model:ir.model.fields.selection,name:ai_document_extraction.selection__account_move__ai_extraction_state__processing
 msgid "Processing"
-msgstr ""
+msgstr "İşleniyor"
 
 #. module: ai_document_extraction
 #. odoo-python
@@ -247,18 +252,18 @@ msgstr ""
 #: model:ir.model,name:ai_document_extraction.model_extraction_wizard
 #: model_terms:ir.ui.view,arch_db:ai_document_extraction.extraction_wizard_view_form
 msgid "Review AI Extraction"
-msgstr ""
+msgstr "AI Çıkarmasını İncele"
 
 #. module: ai_document_extraction
 #: model_terms:ir.ui.view,arch_db:ai_document_extraction.account_move_form_ai_extraction
 msgid "Review Extraction"
-msgstr ""
+msgstr "Çıkarmayı İncele"
 
 #. module: ai_document_extraction
 #. odoo-python
 #: code:addons/ai_document_extraction/models/account_move.py:0
 msgid "The PDF could not be rendered."
-msgstr ""
+msgstr "PDF işlenemedi."
 
 #. module: ai_document_extraction
 #. odoo-python
@@ -267,6 +272,8 @@ msgid ""
 "The invoice date could not be extracted; please review the draft before "
 "posting."
 msgstr ""
+"Fatura tarihi çıkarılamadı; lütfen deftere nakletmeden önce taslağı "
+"inceleyin."
 
 #. module: ai_document_extraction
 #. odoo-python
@@ -275,3 +282,5 @@ msgid ""
 "The uploaded file is ready for AI extraction. Use 'Extract with AI' to fill "
 "the invoice."
 msgstr ""
+"Yüklenen dosya AI çıkarmaya hazır. Faturayı doldurmak için 'AI ile "
+"Çıkar'ı kullanın."
