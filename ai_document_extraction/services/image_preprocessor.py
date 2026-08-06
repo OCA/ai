@@ -16,12 +16,11 @@ def preprocess_image(image_path):
 
     Returns the path to the processed PNG. The caller must delete it.
     """
-    # Limit OpenMP/OpenCV to a single thread. OpenCV's parallel thread pool
-    # crashes in forked worker processes (e.g. the Odoo test runner) where the
-    # thread pool state is inherited from the parent, and in containerized
-    # environments with restricted thread limits. The environment variable must
-    # be set before ``import cv2`` (the lazy import below) so the native OpenMP
-    # runtime picks it up.
+    # Limit the OpenMP runtime to a single thread before OpenCV is imported.
+    # In forked worker processes (e.g. the Odoo test runner) the inherited
+    # OpenMP thread-pool state crashes at import time with a SIGSEGV; the env
+    # variable must be set before ``import cv2`` and cv2.setNumThreads(1) alone
+    # does NOT prevent it.
     os.environ["OMP_NUM_THREADS"] = "1"
     import cv2
 
@@ -45,5 +44,7 @@ def preprocess_image(image_path):
         )
     handle, out_path = tempfile.mkstemp(suffix=".png")
     os.close(handle)
-    cv2.imwrite(out_path, binary)
+    if not cv2.imwrite(out_path, binary):
+        os.unlink(out_path)
+        raise ValueError(f"Could not write processed image: {out_path}")
     return out_path
