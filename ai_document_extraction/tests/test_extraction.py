@@ -377,3 +377,62 @@ class TestAccountMoveExtraction(TransactionCase):
         delay_mock.return_value._extract_with_ai_job.assert_called_once_with(
             attachment.id
         )
+
+
+class TestExtractionWizard(TransactionCase):
+    def test_wizard_apply_partner(self):
+        move = self.env["account.move"].create({"move_type": "in_invoice"})
+        partner = self.env["res.partner"].create(
+            {"name": "Yeni Firma", "is_company": True}
+        )
+        wizard = self.env["extraction.wizard"].create(
+            {
+                "move_id": move.id,
+                "extracted_partner_name": "Yeni Firma",
+                "partner_id": partner.id,
+            }
+        )
+        result = wizard.action_apply()
+        self.assertEqual(move.partner_id, partner)
+        self.assertEqual(move.ai_extraction_state, "done")
+        self.assertEqual(result["res_id"], move.id)
+
+    def test_wizard_apply_ignores_non_draft(self):
+        partner = self.env["res.partner"].create({"name": "Firma", "is_company": True})
+        move = self.env["account.move"].create(
+            {
+                "move_type": "in_invoice",
+                "partner_id": partner.id,
+            }
+        )
+        move.invoice_date = "2023-10-25"
+        account = self.env["account.account"].search(
+            [("internal_group", "=", "expense")], limit=1
+        )
+        move.write(
+            {
+                "line_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "name": "Test",
+                            "account_id": account.id,
+                            "quantity": 1,
+                            "price_unit": 10.0,
+                        },
+                    )
+                ]
+            }
+        )
+        move.with_context(skip_invoice_sync=True).action_post()
+        wizard = self.env["extraction.wizard"].create(
+            {
+                "move_id": move.id,
+                "partner_id": partner.id,
+            }
+        )
+        result = wizard.action_apply()
+        self.assertEqual(move.partner_id.id, partner.id)
+        # move is posted; do not change its state
+        self.assertEqual(result["type"], "ir.actions.act_window_close")
