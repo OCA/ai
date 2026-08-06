@@ -69,6 +69,19 @@ class AccountMove(models.Model):
             ),
         }
 
+    def _ai_to_float(self, value):
+        """Coerce an extracted amount to float, or None if not numeric."""
+        if isinstance(value, bool):
+            return None
+        if isinstance(value, (int, float)):
+            return float(value)
+        if isinstance(value, str):
+            try:
+                return float(value.replace(",", ".").strip())
+            except ValueError:
+                return None
+        return None
+
     def _ai_get_attachment(self):
         self.ensure_one()
         attachments = self.env["ir.attachment"].search(
@@ -242,11 +255,11 @@ class AccountMove(models.Model):
                 values["partner_id"] = partner.id
         if values:
             self.write(values)
-        untaxed = data.get("amount_untaxed")
-        if isinstance(untaxed, (int, float)) and untaxed > 0:
+        untaxed = self._ai_to_float(data.get("amount_untaxed"))
+        if untaxed and untaxed > 0:
             self._ai_set_untaxed_line(untaxed)
-        self.ai_extracted_tax = data.get("amount_tax") or 0.0
-        self.ai_extracted_total = data.get("amount_total") or 0.0
+        self.ai_extracted_tax = self._ai_to_float(data.get("amount_tax")) or 0.0
+        self.ai_extracted_total = self._ai_to_float(data.get("amount_total")) or 0.0
         return partner
 
     def _extract_with_ai_job(self, attachment_id):
