@@ -230,8 +230,14 @@ def extract_invoice_data_from_image(
     timeout=120,
     available_taxes=None,
     available_currencies=None,
+    num_ctx=None,
 ):
-    """Send the invoice image to a vision LLM and return the extracted dict."""
+    """Send the invoice image to a vision LLM and return the extracted dict.
+
+    The request is retried once when the model returns an empty or
+    unparseable response (e.g. the context window was exceeded), which is
+    usually transient.
+    """
     with open(image_path, "rb") as image_file:
         encoded = base64.b64encode(image_file.read()).decode()
     url = f"{api_base_url.rstrip('/')}/chat/completions"
@@ -258,13 +264,32 @@ def extract_invoice_data_from_image(
         "temperature": 0,
         "stream": False,
     }
+    if num_ctx:
+        try:
+            num_ctx = int(num_ctx)
+        except (TypeError, ValueError):
+            num_ctx = None
+        if num_ctx:
+            payload["options"] = {"num_ctx": num_ctx}
     headers = {}
     if api_key and api_key != "dummy":
         headers["Authorization"] = f"Bearer {api_key}"
-    response = requests.post(url, json=payload, headers=headers, timeout=timeout)
-    response.raise_for_status()
-    content = response.json()["choices"][0]["message"]["content"]
-    data = _parse_json_response(content)
-    return _validate_data(
-        data, available_taxes=available_taxes, available_currencies=available_currencies
-    )
+    last_error = None
+    for _attempt in range(2):
+        try:
+            response = requests.post(
+                url, json=payload, headers=headers, timeout=timeout
+            )
+            response.raise_for_status()
+            content = response.json()["choices"][0]["message"]["content"]
+            if not (content or "").strip():
+                raise ValueError("The vision model returned an empty response.")
+            data = _parse_json_response(content)
+            return _validate_data(
+                data,
+                available_taxes=available_taxes,
+                available_currencies=available_currencies,
+            )
+        except ValueError as error:
+            last_error = error
+    raise last_error

@@ -19,7 +19,7 @@ class ResConfigSettings(models.TransientModel):
     )
     ai_model_name = fields.Char(
         string="AI Model Name",
-        default="qwen3-vl:8b",
+        default="qwen3-vl:8b-32k",
         config_parameter="ai_document_extraction.model_name",
     )
     fuzzy_match_threshold = fields.Integer(

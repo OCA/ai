@@ -120,6 +120,64 @@ class TestLlmExtractor(TransactionCase):
             "Bearer secret",
         )
 
+    def test_extract_invoice_data_from_image_sends_num_ctx(self):
+        from unittest import mock
+
+        from ..services import llm_extractor
+
+        response = mock.Mock()
+        response.status_code = 200
+        response.json.return_value = {
+            "choices": [{"message": {"content": '{"ok": 1}'}}]
+        }
+        path = self._sample_png()
+        with mock.patch.object(
+            llm_extractor.requests, "post", return_value=response
+        ) as post_mock:
+            llm_extractor.extract_invoice_data_from_image(
+                path, "http://ollama:11434/v1", "qwen3-vl:8b-32k", num_ctx=32768
+            )
+        payload = post_mock.call_args.kwargs["json"]
+        self.assertEqual(payload["options"], {"num_ctx": 32768})
+
+    def test_extract_invoice_data_from_image_retries_on_empty_response(self):
+        from unittest import mock
+
+        from ..services import llm_extractor
+
+        empty = mock.Mock()
+        empty.status_code = 200
+        empty.json.return_value = {"choices": [{"message": {"content": ""}}]}
+        good = mock.Mock()
+        good.status_code = 200
+        good.json.return_value = {
+            "choices": [{"message": {"content": '{"invoice_number": "FT-1"}'}}]
+        }
+        path = self._sample_png()
+        with mock.patch.object(
+            llm_extractor.requests, "post", side_effect=[empty, good]
+        ) as post_mock:
+            data = llm_extractor.extract_invoice_data_from_image(
+                path, "http://ollama:11434/v1", "qwen3-vl:8b-32k"
+            )
+        self.assertEqual(post_mock.call_count, 2)
+        self.assertEqual(data["invoice_number"], "FT-1")
+
+    def test_extract_invoice_data_from_image_raises_after_empty_retries(self):
+        from unittest import mock
+
+        from ..services import llm_extractor
+
+        empty = mock.Mock()
+        empty.status_code = 200
+        empty.json.return_value = {"choices": [{"message": {"content": ""}}]}
+        path = self._sample_png()
+        with mock.patch.object(llm_extractor.requests, "post", return_value=empty):
+            with self.assertRaises(ValueError):
+                llm_extractor.extract_invoice_data_from_image(
+                    path, "http://ollama:11434/v1", "qwen3-vl:8b-32k"
+                )
+
     def test_extract_invoice_data_from_image_sends_available_context(self):
         from unittest import mock
 
