@@ -12,7 +12,7 @@
     "development_status": "Alpha",
     "application": False,
     "installable": True,
-    "depends": ["base", "account", "queue_job"],
+    "depends": ["base", "account", "bus", "queue_job"],
     "external_dependencies": {
         "python": ["Pillow", "pdf2image", "rapidfuzz", "requests"],
     },
@@ -22,5 +22,10 @@
         "views/res_config_settings_views.xml",
         "wizards/extraction_wizard_views.xml",
     ],
+    "assets": {
+        "web.assets_backend": [
+            "ai_document_extraction/static/src/account_move_form_ai_extraction.js",
+        ],
+    },
     "demo": [],
 }
