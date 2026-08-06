@@ -502,6 +502,34 @@ class TestAccountMoveExtraction(TransactionCase):
         self.assertIn("Nakliye Hizmeti", line_names)
         self.assertIn("Depolama", line_names)
 
+    def test_apply_sets_payment_reference_field(self):
+        data = {
+            "invoice_number": "FT-123",
+            "payment_reference": "PAY-XYZ",
+        }
+        self.move._apply_extraction(data)
+        self.assertEqual(self.move.ref, "FT-123")
+        self.assertEqual(self.move.payment_reference, "PAY-XYZ")
+
+    def test_apply_falls_back_to_payment_reference(self):
+        data = {
+            "invoice_number": None,
+            "payment_reference": "9e06cda8-3e39-492f-9863-11c6b4a0ad3e",
+        }
+        self.move._apply_extraction(data)
+        self.assertEqual(self.move.ref, "9e06cda8-3e39-492f-9863-11c6b4a0ad3e")
+        self.assertEqual(
+            self.move.payment_reference, "9e06cda8-3e39-492f-9863-11c6b4a0ad3e"
+        )
+        bodies = [message.body or "" for message in self.move.message_ids]
+        self.assertTrue(any("payment reference" in body.lower() for body in bodies))
+
+    def test_apply_no_fallback_note_when_invoice_number_present(self):
+        data = {"invoice_number": "FT-123", "payment_reference": "PAY-XYZ"}
+        self.move._apply_extraction(data)
+        bodies = [message.body or "" for message in self.move.message_ids]
+        self.assertFalse(any("payment reference" in body.lower() for body in bodies))
+
     def test_ai_settings_includes_llm_timeout(self):
         settings = self.move._ai_settings()
         self.assertEqual(settings["llm_timeout"], 300)

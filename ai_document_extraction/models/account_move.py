@@ -418,8 +418,19 @@ class AccountMove(models.Model):
                     "please review the draft before posting."
                 )
             )
-        if data.get("invoice_number"):
-            values["ref"] = data["invoice_number"]
+        invoice_number = data.get("invoice_number")
+        payment_reference = data.get("payment_reference")
+        if invoice_number:
+            values["ref"] = invoice_number
+        elif payment_reference:
+            values["ref"] = payment_reference
+            self.message_post(
+                body=self.env._(
+                    "No invoice/receipt number found; payment reference was used."
+                )
+            )
+        if payment_reference:
+            values["payment_reference"] = payment_reference
         partner = None
         settings = self._ai_settings()
         if data.get("partner_name"):
