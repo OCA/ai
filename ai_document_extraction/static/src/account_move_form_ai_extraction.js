@@ -50,10 +50,13 @@ patch(FormController.prototype, {
         this._aiSubscribedResId = null;
     },
 
-    _aiHandler(payload) {
+    async _aiHandler(payload) {
+        if (!this.model.root) {
+            return;
+        }
         if (
-            payload.move_id === this.model.root?.resId &&
-            !this.model.root?.isInEdition
+            payload.move_id === this.model.root.resId &&
+            !(await this.model.root.isDirty())
         ) {
             this.model.load();
         }
