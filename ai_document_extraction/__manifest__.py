@@ -9,11 +9,12 @@
     "website": "https://github.com/OCA/ai",
     "author": "VSL, Odoo Community Association (OCA)",
     "license": "AGPL-3",
+    "development_status": "Alpha",
     "application": False,
     "installable": True,
     "depends": ["base", "account", "queue_job"],
     "external_dependencies": {
-        "python": ["cv2", "paddleocr", "pdf2image", "rapidfuzz", "requests"],
+        "python": ["paddleocr", "pdf2image", "rapidfuzz", "requests"],
     },
     "data": [
         "security/ir.model.access.csv",
