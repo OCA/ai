@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import {onWillUnmount, onWillUpdateProps} from "@odoo/owl";
+import {onWillUnmount, useEffect} from "@odoo/owl";
 import {FormController} from "@web/views/form/form_controller";
 import {patch} from "@web/core/utils/patch";
 import {useService} from "@web/core/utils/hooks";
@@ -17,18 +17,27 @@ patch(FormController.prototype, {
         this._aiBusService = useService("bus_service");
         this._aiHandler = this._aiHandler.bind(this);
         this._aiSubscribedResId = null;
-        this._aiSubscribe();
-        onWillUpdateProps((nextProps) => this._aiSubscribe(nextProps.resId));
+        useEffect(
+            () => {
+                this._aiSyncSubscription(this.model.root?.resId);
+            },
+            () => [this.model.root?.resId]
+        );
         onWillUnmount(() => this._aiUnsubscribe());
     },
 
-    _aiSubscribe(resId = this.props.resId) {
-        if (!resId || resId === this._aiSubscribedResId) {
+    _aiSyncSubscription(resId) {
+        if (resId === this._aiSubscribedResId) {
             return;
         }
         this._aiUnsubscribe();
         this._aiSubscribedResId = resId;
-        this._aiBusService.addChannel(`${CHANNEL_PREFIX}${resId}`);
+        if (!resId) {
+            return;
+        }
+        this._aiBusService
+            .addChannel(`${CHANNEL_PREFIX}${resId}`)
+            .catch(() => undefined);
         this._aiBusService.subscribe(NOTIFICATION_TYPE, this._aiHandler);
     },
 
@@ -42,7 +51,7 @@ patch(FormController.prototype, {
     },
 
     _aiHandler(payload) {
-        if (payload.move_id === this.props.resId) {
+        if (payload.move_id === this.model.root?.resId) {
             this.model.load();
         }
     },
