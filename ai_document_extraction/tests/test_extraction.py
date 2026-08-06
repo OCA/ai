@@ -84,3 +84,31 @@ class TestOcrEngine(TransactionCase):
             other = ocr_engine._get_ocr("eng")
             self.assertIsNot(first, other)
             self.assertEqual(other.kwargs["lang"], "en")
+
+
+class TestLlmExtractor(TransactionCase):
+    def test_parse_json_from_noisy_content(self):
+        from ..services import llm_extractor
+
+        content = (
+            "Sure! Here is the JSON:\n"
+            '{"partner_name": "Voslo Lojistik", "invoice_number": "FT-123", '
+            '"invoice_date": "2023-10-25", "amount_untaxed": 100.0, '
+            '"amount_tax": 18.0, "amount_total": 118.0, "currency": "TRY"}'
+        )
+        data = llm_extractor._parse_json_response(content)
+        self.assertEqual(data["partner_name"], "Voslo Lojistik")
+        self.assertEqual(data["amount_total"], 118.0)
+
+    def test_parse_json_missing_fields_defaults_null(self):
+        from ..services import llm_extractor
+
+        data = llm_extractor._parse_json_response('{"invoice_number": "X1"}')
+        for field in llm_extractor.EXPECTED_FIELDS:
+            self.assertIn(field, data)
+
+    def test_parse_json_raises_without_object(self):
+        from ..services import llm_extractor
+
+        with self.assertRaises(ValueError):
+            llm_extractor._parse_json_response("I am sorry, I cannot do that.")
