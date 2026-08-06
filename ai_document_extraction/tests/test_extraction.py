@@ -1,11 +1,16 @@
 # Copyright 2026 VSL
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
+import importlib.util
 import os
+from unittest import skipUnless
 
 from odoo.tests import TransactionCase
 
+_HAVE_CV2 = importlib.util.find_spec("cv2") is not None
 
+
+@skipUnless(_HAVE_CV2, "OpenCV (cv2) not available")
 class TestImagePreprocessor(TransactionCase):
     def _sample_image(self):
         import base64

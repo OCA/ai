@@ -34,9 +34,9 @@ def extract_text_with_layout(image_path, ocr_language="tur+eng", image_height=No
 
     Returns one "[TAG] text" line per OCR line, joined by newlines.
     """
-    import cv2
-
     if image_height is None:
+        import cv2
+
         img = cv2.imread(image_path)
         if img is None:
             raise ValueError(f"Could not read image: {image_path}")
