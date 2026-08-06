@@ -760,6 +760,55 @@ class TestAccountMoveExtraction(TransactionCase):
             self.move._extract_with_ai_job(attachment.id)
         self.assertEqual(self.move.ai_extraction_state, "error")
 
+    def test_job_notifies_bus_on_done(self):
+        from unittest import mock
+
+        from ..services import llm_extractor
+
+        attachment = self._attach()
+        with mock.patch.object(
+            llm_extractor,
+            "extract_invoice_data_from_image",
+            return_value={
+                "partner_name": "Voslo Lojistik",
+                "invoice_number": "FT-123",
+                "invoice_date": "2023-10-25",
+                "amount_untaxed": 100.0,
+                "amount_tax": 18.0,
+                "amount_total": 118.0,
+            },
+        ):
+            with mock.patch.object(
+                type(self.env["bus.bus"]), "_sendone"
+            ) as mock_sendone:
+                self.move._extract_with_ai_job(attachment.id)
+        mock_sendone.assert_called_once_with(
+            f"ai_document_extraction.move.{self.move.id}",
+            "ai_document_extraction",
+            {"move_id": self.move.id, "state": "done"},
+        )
+
+    def test_job_notifies_bus_on_error(self):
+        from unittest import mock
+
+        from ..services import llm_extractor
+
+        attachment = self._attach()
+        with mock.patch.object(
+            llm_extractor,
+            "extract_invoice_data_from_image",
+            side_effect=RuntimeError("boom"),
+        ):
+            with mock.patch.object(
+                type(self.env["bus.bus"]), "_sendone"
+            ) as mock_sendone:
+                self.move._extract_with_ai_job(attachment.id)
+        mock_sendone.assert_called_once_with(
+            f"ai_document_extraction.move.{self.move.id}",
+            "ai_document_extraction",
+            {"move_id": self.move.id, "state": "error"},
+        )
+
     def test_apply_extraction_keeps_partner_if_not_matched(self):
         data = {
             "partner_name": "Var Olmayan Firma",

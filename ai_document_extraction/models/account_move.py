@@ -492,3 +492,20 @@ class AccountMove(models.Model):
         finally:
             if image_path:
                 self._ai_cleanup_tmp(image_path)
+        self._ai_notify_state_change()
+
+    def _ai_notify_state_change(self):
+        """Notify the web client that the AI extraction state changed."""
+        try:
+            self.env["bus.bus"]._sendone(
+                f"ai_document_extraction.move.{self.id}",
+                "ai_document_extraction",
+                {"move_id": self.id, "state": self.ai_extraction_state},
+            )
+        except Exception as error:  # noqa: BLE001 - notification must not break the job
+            _logger.warning(
+                "Could not notify AI extraction state change for move %s: %s",
+                self.id,
+                error,
+                exc_info=True,
+            )
