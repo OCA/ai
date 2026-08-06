@@ -51,7 +51,10 @@ patch(FormController.prototype, {
     },
 
     _aiHandler(payload) {
-        if (payload.move_id === this.model.root?.resId) {
+        if (
+            payload.move_id === this.model.root?.resId &&
+            !this.model.root?.isInEdition
+        ) {
             this.model.load();
         }
     },
