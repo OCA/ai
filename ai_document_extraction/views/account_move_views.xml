@@ -1,2 +1,49 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<odoo />
+<odoo>
+    <record id="account_move_form_ai_extraction" model="ir.ui.view">
+        <field name="name">account.move.form.ai.extraction</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button
+                    name="action_extract_with_ai"
+                    type="object"
+                    string="Extract with AI"
+                    icon="fa-magic"
+                />
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button
+                    name="action_review_extraction"
+                    type="object"
+                    string="Review Extraction"
+                    icon="fa-pencil"
+                    invisible="ai_extraction_state != 'done'"
+                />
+            </xpath>
+            <xpath expr="//field[@name='invoice_date'][@required]" position="after">
+                <group name="ai_extraction" string="AI Extraction">
+                    <group>
+                        <field name="ai_extraction_state" widget="badge" />
+                        <field name="ai_extracted_tax" />
+                        <field name="ai_extracted_total" />
+                    </group>
+                    <group>
+                        <field name="ai_raw_extraction" />
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+    <record id="account_move_tree_ai_extraction" model="ir.ui.view">
+        <field name="name">account.move.tree.ai.extraction</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <field name="ai_extraction_state" />
+            </xpath>
+        </field>
+    </record>
+</odoo>
