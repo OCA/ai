@@ -228,6 +228,15 @@ class TestAccountMoveExtraction(TransactionCase):
         match = self.move._match_partner("Bilinmeyen Firma", 85)
         self.assertIsNone(match)
 
+    def test_new_vendor_bill_defaults_invoice_date(self):
+        from odoo import fields as odoo_fields
+
+        move = self.env["account.move"].create({"move_type": "in_invoice"})
+        self.assertEqual(
+            move.invoice_date,
+            odoo_fields.Date.context_today(self.env["account.move"]),
+        )
+
     def test_apply_extraction(self):
         data = {
             "partner_name": "Voslo Lojistik",

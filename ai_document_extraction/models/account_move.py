@@ -20,6 +20,13 @@ _DEFAULT_LINE_NAME = "AI extracted amount"
 class AccountMove(models.Model):
     _inherit = "account.move"
 
+    invoice_date = fields.Date(
+        string="Invoice/Bill Date",
+        index=True,
+        copy=False,
+        default=lambda self: fields.Date.context_today(self),
+    )
+
     ai_extraction_state = fields.Selection(
         [
             ("draft", "Not processed"),
