@@ -38,6 +38,12 @@ class TestLlmExtractor(TransactionCase):
         for field in llm_extractor.EXPECTED_FIELDS:
             self.assertIn(field, data)
 
+    def test_parse_defaults_payment_reference_to_none(self):
+        from ..services import llm_extractor
+
+        data = llm_extractor._parse_json_response('{"invoice_number": "X1"}')
+        self.assertIsNone(data["payment_reference"])
+
     def test_parse_json_raises_without_object(self):
         from ..services import llm_extractor
 

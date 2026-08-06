@@ -28,6 +28,7 @@ SYSTEM_PROMPT = (
 EXPECTED_FIELDS = (
     "partner_name",
     "invoice_number",
+    "payment_reference",
     "invoice_date",
     "amount_untaxed",
     "amount_tax",
@@ -95,6 +96,7 @@ def _build_user_prompt(available_taxes=None, available_currencies=None):
         "Extract the following fields from the invoice image as a single JSON "
         "object:\n"
         '{"partner_name": <str or null>, "invoice_number": <str or null>, '
+        '"payment_reference": <str or null>, '
         '"invoice_date": <"YYYY-MM-DD" or null>, "amount_untaxed": <number or null>, '
         '"amount_tax": <number or null>, "amount_total": <number or null>, '
         '"currency": <ISO code or null>, "description": <str or null>, '
