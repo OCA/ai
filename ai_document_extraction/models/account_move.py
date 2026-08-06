@@ -140,19 +140,25 @@ class AccountMove(models.Model):
         extension = (attachment.name or "file").rsplit(".", 1)[-1].lower()
         handle, file_path = tempfile.mkstemp(suffix=f".{extension}")
         os.close(handle)
-        with open(file_path, "wb") as file_handle:
-            file_handle.write(data)
-        if extension == "pdf":
-            from pdf2image import convert_from_path
+        try:
+            with open(file_path, "wb") as file_handle:
+                file_handle.write(data)
+            if extension == "pdf":
+                from pdf2image import convert_from_path
 
-            images = convert_from_path(file_path, dpi=300, first_page=1, last_page=1)
-            if not images:
-                raise UserError(self.env._("The PDF could not be rendered."))
-            png_path = f"{file_path}.png"
-            images[0].save(png_path, "PNG")
+                images = convert_from_path(
+                    file_path, dpi=300, first_page=1, last_page=1
+                )
+                if not images:
+                    raise UserError(self.env._("The PDF could not be rendered."))
+                png_path = f"{file_path}.png"
+                images[0].save(png_path, "PNG")
+                os.unlink(file_path)
+                return png_path
+            return file_path
+        except Exception:
             os.unlink(file_path)
-            return png_path
-        return file_path
+            raise
 
     def _ai_cleanup_tmp(self, path):
         for candidate in (path, f"{path}.png"):
@@ -184,10 +190,16 @@ class AccountMove(models.Model):
     def _ai_set_untaxed_line(self, untaxed):
         self.ensure_one()
         account = self.env["account.account"].search(
-            [("internal_group", "=", "expense")], limit=1
+            [
+                ("internal_group", "=", "expense"),
+                ("company_ids", "in", self.company_id.id),
+            ],
+            limit=1,
         )
         if not account:
-            account = self.env["account.account"].search([], limit=1)
+            account = self.env["account.account"].search(
+                [("company_ids", "in", self.company_id.id)], limit=1
+            )
         stale = self.line_ids.filtered(lambda line: line.name == _DEFAULT_LINE_NAME)
         commands = [(2, line.id) for line in stale]
         commands.append(

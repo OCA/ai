@@ -311,3 +311,69 @@ class TestAccountMoveExtraction(TransactionCase):
         self.move._apply_extraction(data)
         self.assertEqual(self.move.partner_id, self.partner)
         self.assertEqual(self.move.ref, "FT-999")
+
+    def test_action_extract_with_ai_requires_draft(self):
+        from odoo.exceptions import UserError
+
+        self.move.invoice_date = "2023-10-25"
+        account = self.env["account.account"].search(
+            [("internal_group", "=", "expense")], limit=1
+        )
+        self.move.write(
+            {
+                "line_ids": [
+                    (
+                        0,
+                        0,
+                        {
+                            "name": "Test",
+                            "account_id": account.id,
+                            "quantity": 1,
+                            "price_unit": 10.0,
+                        },
+                    )
+                ]
+            }
+        )
+        self.move.with_context(skip_invoice_sync=True).action_post()
+        with self.assertRaises(UserError):
+            self.move.action_extract_with_ai()
+
+    def test_action_extract_with_ai_requires_vendor_bill(self):
+        from odoo.exceptions import UserError
+
+        move = self.env["account.move"].create({"move_type": "out_invoice"})
+        with self.assertRaises(UserError):
+            move.action_extract_with_ai()
+
+    def test_action_extract_with_ai_requires_attachment(self):
+        from odoo.exceptions import UserError
+
+        move = self.env["account.move"].create({"move_type": "in_invoice"})
+        with self.assertRaises(UserError):
+            move.action_extract_with_ai()
+
+    def test_action_extract_with_ai_enqueues(self):
+        from unittest import mock
+
+        move = self.env["account.move"].create({"move_type": "in_invoice"})
+        attachment = self.env["ir.attachment"].create(
+            {
+                "name": "invoice.png",
+                "datas": (
+                    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8"
+                    "z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+                ),
+                "mimetype": "image/png",
+                "res_model": "account.move",
+                "res_id": move.id,
+            }
+        )
+        with mock.patch.object(
+            type(move), "with_delay", return_value=mock.Mock()
+        ) as delay_mock:
+            move.action_extract_with_ai()
+        self.assertEqual(move.ai_extraction_state, "processing")
+        delay_mock.return_value._extract_with_ai_job.assert_called_once_with(
+            attachment.id
+        )
