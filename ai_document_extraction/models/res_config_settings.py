@@ -9,17 +9,17 @@ class ResConfigSettings(models.TransientModel):
 
     ai_api_base_url = fields.Char(
         string="AI API Base URL",
-        default="http://ollama:11434/v1",
+        default="https://openrouter.ai/api/v1",
         config_parameter="ai_document_extraction.api_base_url",
     )
     ai_api_key = fields.Char(
         string="AI API Key",
-        default="dummy",
+        default="",
         config_parameter="ai_document_extraction.api_key",
     )
     ai_model_name = fields.Char(
         string="AI Model Name",
-        default="qwen3-vl:8b-32k",
+        default="qwen/qwen3-vl-32b-instruct",
         config_parameter="ai_document_extraction.model_name",
     )
     fuzzy_match_threshold = fields.Integer(

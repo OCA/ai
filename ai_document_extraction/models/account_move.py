@@ -64,16 +64,19 @@ class AccountMove(models.Model):
     def _ai_settings(self):
         self.ensure_one()
         try:
-            num_ctx = int(self._ai_get_param("num_ctx", "32768"))
+            num_ctx = int(self._ai_get_param("num_ctx", "8192"))
         except (TypeError, ValueError):
             num_ctx = None
         return {
             "api_base_url": self._ai_get_param(
-                "api_base_url", "http://ollama:11434/v1"
+                "api_base_url", "https://openrouter.ai/api/v1"
             ),
-            "api_key": self._ai_get_param("api_key", "dummy"),
-            "model_name": self._ai_get_param("model_name", "qwen3-vl:8b-32k"),
+            "api_key": self._ai_get_param("api_key", ""),
+            "model_name": self._ai_get_param(
+                "model_name", "qwen/qwen3-vl-32b-instruct"
+            ),
             "num_ctx": num_ctx,
+            "keep_alive": self._ai_get_param("keep_alive", "30m"),
             "llm_timeout": int(self._ai_get_param("llm_timeout", "300")),
             "fuzzy_match_threshold": int(
                 self._ai_get_param("fuzzy_match_threshold", "85")
@@ -461,6 +464,7 @@ class AccountMove(models.Model):
                 available_taxes=self._ai_available_taxes(),
                 available_currencies=self._ai_available_currencies(),
                 num_ctx=settings["num_ctx"],
+                keep_alive=settings["keep_alive"],
                 timeout=settings["llm_timeout"],
             )
             self._ai_store_processed_image(image_path)

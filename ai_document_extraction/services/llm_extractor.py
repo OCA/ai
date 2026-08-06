@@ -10,34 +10,19 @@ import requests
 
 SYSTEM_PROMPT = (
     "/no_think\n"
-    "You are a strict invoice data extraction assistant. You will receive an "
-    "image of an invoice or receipt. Extract the requested fields from the "
-    "image as a single JSON object.\n"
-    "- partner_name is the name of the company that issued the invoice (the "
-    "supplier for a vendor bill, the customer for a customer invoice). A "
-    "short logo or slogan in the document (e.g. 'voslo') MUST NOT be used as "
-    "the partner_name; only a full company name with a legal suffix such as "
-    "A.Ş., Ltd., GmbH, Inc., S.L. is the issuer. Never use your own model "
-    "name as the issuer.\n"
-    "- Extract real invoice data only. Do not calculate missing values; "
-    "output null if unknown.\n"
-    "- invoice_number must be exactly as printed on the document (e.g. "
-    "'FT-2023-0042'). It can never be a URL, a file token or a long hex "
-    "hash; if it looks like one of those, output null.\n"
-    "- invoice_date must be 'YYYY-MM-DD' as printed on the document; null if "
-    "not visible.\n"
-    "- amount_untaxed is the subtotal (before tax), amount_tax the tax amount, "
-    "amount_total the final total. Read them from the document, never compute "
-    "them.\n"
-    "- description is a short free-text summary of what the invoice is for "
-    "(e.g. the service or product category), or null.\n"
-    "- lines: each visible line item with its product or service name, "
-    "quantity and unit price. tax_rate must be a number matching one of the "
-    "provided 'Available tax rates' (e.g. 20 for 20%), or null when the line "
-    "has no tax.\n"
-    "- currency must be one of the provided 'Available currencies' (ISO code) "
-    "or null.\n"
-    "Respond ONLY with a valid JSON object."
+    "Extract invoice data from the image as a JSON object. "
+    "partner_name is the company that issued the invoice (the seller/supplier "
+    "for a vendor bill, the customer for a customer invoice); never use a "
+    "logo, slogan or model name. "
+    "invoice_number exactly as printed, never a URL or hash. "
+    "invoice_date as YYYY-MM-DD when a date is visible on the document, else "
+    "null. "
+    "amount_untaxed, amount_tax and amount_total read from the document. "
+    "lines: each visible line item with name, quantity, price_unit and "
+    "tax_rate from the provided tax rates (or null when untaxed). "
+    "currency from the provided currency codes (or null). "
+    "description: a short summary of what the document is for. "
+    "Output ONLY the JSON object."
 )
 
 EXPECTED_FIELDS = (
@@ -222,6 +207,11 @@ def _validate_data(data, available_taxes=None, available_currencies=None):
     return data
 
 
+def _is_ollama(api_base_url):
+    """Ollama-specific options (num_ctx, keep_alive) only apply to Ollama."""
+    return "ollama" in (api_base_url or "").lower()
+
+
 def extract_invoice_data_from_image(
     image_path,
     api_base_url,
@@ -231,15 +221,32 @@ def extract_invoice_data_from_image(
     available_taxes=None,
     available_currencies=None,
     num_ctx=None,
+    keep_alive=None,
 ):
     """Send the invoice image to a vision LLM and return the extracted dict.
 
+    Cloud providers (e.g. OpenRouter) are OpenAI-compatible but reject
+    Ollama-specific fields; those are only sent when the endpoint is Ollama.
     The request is retried once when the model returns an empty or
-    unparseable response (e.g. the context window was exceeded), which is
-    usually transient.
+    unparseable response (e.g. the context window was exceeded).
     """
-    with open(image_path, "rb") as image_file:
-        encoded = base64.b64encode(image_file.read()).decode()
+    is_ollama = _is_ollama(api_base_url)
+    if is_ollama:
+        with open(image_path, "rb") as image_file:
+            encoded = base64.b64encode(image_file.read()).decode()
+        mime = "image/png"
+    else:
+        # Compress the image for cloud providers to respect request size
+        # limits (base64 PNGs of scanned documents can be several MB).
+        import io
+
+        from PIL import Image
+
+        buffer = io.BytesIO()
+        with Image.open(image_path) as image:
+            image.convert("RGB").save(buffer, "JPEG", quality=90)
+        encoded = base64.b64encode(buffer.getvalue()).decode()
+        mime = "image/jpeg"
     url = f"{api_base_url.rstrip('/')}/chat/completions"
     payload = {
         "model": api_model_name,
@@ -250,7 +257,7 @@ def extract_invoice_data_from_image(
                 "content": [
                     {
                         "type": "image_url",
-                        "image_url": {"url": f"data:image/png;base64,{encoded}"},
+                        "image_url": {"url": f"data:{mime};base64,{encoded}"},
                     },
                     {
                         "type": "text",
@@ -264,13 +271,16 @@ def extract_invoice_data_from_image(
         "temperature": 0,
         "stream": False,
     }
-    if num_ctx:
-        try:
-            num_ctx = int(num_ctx)
-        except (TypeError, ValueError):
-            num_ctx = None
+    if is_ollama:
         if num_ctx:
-            payload["options"] = {"num_ctx": num_ctx}
+            try:
+                num_ctx = int(num_ctx)
+            except (TypeError, ValueError):
+                num_ctx = None
+            if num_ctx:
+                payload["options"] = {"num_ctx": num_ctx}
+        if keep_alive:
+            payload["keep_alive"] = keep_alive
     headers = {}
     if api_key and api_key != "dummy":
         headers["Authorization"] = f"Bearer {api_key}"

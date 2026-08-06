@@ -140,6 +140,76 @@ class TestLlmExtractor(TransactionCase):
         payload = post_mock.call_args.kwargs["json"]
         self.assertEqual(payload["options"], {"num_ctx": 32768})
 
+    def test_extract_invoice_data_from_image_sends_keep_alive(self):
+        from unittest import mock
+
+        from ..services import llm_extractor
+
+        response = mock.Mock()
+        response.status_code = 200
+        response.json.return_value = {
+            "choices": [{"message": {"content": '{"ok": 1}'}}]
+        }
+        path = self._sample_png()
+        with mock.patch.object(
+            llm_extractor.requests, "post", return_value=response
+        ) as post_mock:
+            llm_extractor.extract_invoice_data_from_image(
+                path,
+                "http://ollama:11434/v1",
+                "qwen3-vl:8b-32k",
+                keep_alive="30m",
+            )
+        payload = post_mock.call_args.kwargs["json"]
+        self.assertEqual(payload["keep_alive"], "30m")
+
+    def test_extract_invoice_data_from_image_omits_ollama_options_on_openrouter(self):
+        from unittest import mock
+
+        from ..services import llm_extractor
+
+        response = mock.Mock()
+        response.status_code = 200
+        response.json.return_value = {
+            "choices": [{"message": {"content": '{"ok": 1}'}}]
+        }
+        path = self._sample_png()
+        with mock.patch.object(
+            llm_extractor.requests, "post", return_value=response
+        ) as post_mock:
+            llm_extractor.extract_invoice_data_from_image(
+                path,
+                "https://openrouter.ai/api/v1",
+                "qwen/qwen3-vl-32b-instruct",
+                num_ctx=8192,
+                keep_alive="30m",
+            )
+        payload = post_mock.call_args.kwargs["json"]
+        self.assertNotIn("options", payload)
+        self.assertNotIn("keep_alive", payload)
+
+    def test_extract_invoice_data_from_image_uses_jpeg_for_cloud(self):
+        from unittest import mock
+
+        from ..services import llm_extractor
+
+        response = mock.Mock()
+        response.status_code = 200
+        response.json.return_value = {
+            "choices": [{"message": {"content": '{"ok": 1}'}}]
+        }
+        path = self._sample_png()
+        with mock.patch.object(
+            llm_extractor.requests, "post", return_value=response
+        ) as post_mock:
+            llm_extractor.extract_invoice_data_from_image(
+                path, "https://openrouter.ai/api/v1", "qwen/qwen3-vl-32b-instruct"
+            )
+        url = post_mock.call_args.kwargs["json"]["messages"][1]["content"][0][
+            "image_url"
+        ]["url"]
+        self.assertIn("data:image/jpeg;base64,", url)
+
     def test_extract_invoice_data_from_image_passes_timeout(self):
         from unittest import mock
 
@@ -412,7 +482,17 @@ class TestAccountMoveExtraction(TransactionCase):
         self.assertIn("Depolama", line_names)
 
     def test_ai_settings_includes_llm_timeout(self):
-        self.assertEqual(self.move._ai_settings()["llm_timeout"], 300)
+        settings = self.move._ai_settings()
+        self.assertEqual(settings["llm_timeout"], 300)
+
+    def test_ai_settings_defaults(self):
+        settings = self.move._ai_settings()
+        self.assertEqual(settings["api_base_url"], "https://openrouter.ai/api/v1")
+        self.assertEqual(settings["api_key"], "")
+        self.assertEqual(settings["model_name"], "qwen/qwen3-vl-32b-instruct")
+        self.assertEqual(settings["num_ctx"], 8192)
+        self.assertEqual(settings["keep_alive"], "30m")
+        self.assertEqual(settings["llm_timeout"], 300)
 
     def test_ai_resize_caps_at_1280(self):
         from PIL import Image
