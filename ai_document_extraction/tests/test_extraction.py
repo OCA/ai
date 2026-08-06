@@ -383,15 +383,15 @@ class TestAccountMoveExtraction(TransactionCase):
         self.assertEqual(self.move.currency_id, self.move.company_id.currency_id)
 
     def test_apply_extraction_applies_line_tax(self):
-        tax = self.env["account.tax"].search(
-            [
-                ("type_tax_use", "=", "purchase"),
-                ("amount", "=", 20.0),
-                ("amount_type", "=", "percent"),
-            ],
-            limit=1,
+        tax = self.env["account.tax"].create(
+            {
+                "name": "AI Test 20%",
+                "amount": 20.0,
+                "amount_type": "percent",
+                "type_tax_use": "purchase",
+                "company_id": self.env.company.id,
+            }
         )
-        self.assertTrue(tax)
         data = {
             "lines": [
                 {
