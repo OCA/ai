@@ -29,3 +29,35 @@ class TestImagePreprocessor(TransactionCase):
             self.assertTrue(result.endswith(".png"))
         finally:
             os.unlink(result)
+
+
+class TestOcrEngine(TransactionCase):
+    def test_layout_tags(self):
+        from unittest import mock
+
+        from ..services import ocr_engine
+
+        def fake_ocr(image_path, cls=True):
+            return [
+                [
+                    ([(0, 10), (100, 10), (100, 30), (0, 30)], ("voslo", 0.99)),
+                    (
+                        [(0, 300), (100, 300), (100, 320), (0, 320)],
+                        ("Invoice No: 123", 0.99),
+                    ),
+                    (
+                        [(0, 650), (100, 650), (100, 670), (0, 670)],
+                        ("page 1 of 1", 0.99),
+                    ),
+                ]
+            ]
+
+        with mock.patch.object(
+            ocr_engine, "_get_ocr", return_value=mock.Mock(ocr=fake_ocr)
+        ):
+            result = ocr_engine.extract_text_with_layout(
+                "/tmp/fake.png", image_height=700
+            )
+        self.assertIn("[HEADER] voslo", result)
+        self.assertIn("[BODY] Invoice No: 123", result)
+        self.assertIn("[FOOTER] page 1 of 1", result)
