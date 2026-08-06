@@ -11,6 +11,7 @@
                     type="object"
                     string="Extract with AI"
                     icon="fa-magic"
+                    invisible="ai_extraction_state in ('processing', 'done')"
                 />
             </xpath>
             <xpath expr="//header" position="inside">
@@ -22,17 +23,32 @@
                     invisible="ai_extraction_state != 'done'"
                 />
             </xpath>
-            <xpath expr="//field[@name='invoice_date'][@required]" position="after">
-                <group name="ai_extraction" string="AI Extraction">
+            <xpath expr="//group[@id='header_right_group']" position="inside">
+                <field
+                    name="ai_extraction_state"
+                    widget="badge"
+                    nolabel="1"
+                    invisible="ai_extraction_state == 'draft'"
+                />
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page
+                    id="ai_extraction_page"
+                    name="ai_extraction_page"
+                    string="AI Extraction"
+                    invisible="ai_extraction_state == 'draft'"
+                >
                     <group>
-                        <field name="ai_extraction_state" widget="badge" />
-                        <field name="ai_extracted_tax" />
-                        <field name="ai_extracted_total" />
+                        <group>
+                            <field name="ai_extraction_state" widget="badge" />
+                            <field name="ai_extracted_tax" />
+                            <field name="ai_extracted_total" />
+                        </group>
+                        <group>
+                            <field name="ai_raw_extraction" />
+                        </group>
                     </group>
-                    <group>
-                        <field name="ai_raw_extraction" />
-                    </group>
-                </group>
+                </page>
             </xpath>
         </field>
     </record>

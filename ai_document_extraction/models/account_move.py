@@ -114,16 +114,20 @@ class AccountMove(models.Model):
             raise UserError(
                 self.env._("AI extraction is only available on draft moves.")
             )
-        if self.move_type not in ("in_invoice", "in_receipt"):
-            raise UserError(
-                self.env._("AI extraction is only available on vendor bills.")
-            )
+        if self.move_type not in (
+            "in_invoice",
+            "in_receipt",
+            "out_invoice",
+            "out_receipt",
+        ):
+            raise UserError(self.env._("AI extraction is only available on invoices."))
         attachment = self._ai_get_attachment()
         if not attachment:
             raise UserError(
                 self.env._("Attach the invoice PDF or image to the chatter first.")
             )
         self.ai_extraction_state = "processing"
+        self.message_post(body=self.env._("AI extraction started."))
         self.with_delay()._extract_with_ai_job(attachment.id)
         return True
 
@@ -189,6 +193,25 @@ class AccountMove(models.Model):
                 except OSError:
                     _logger.debug("Could not remove temporary file %s", candidate)
 
+    def _ai_store_processed_image(self, processed_path):
+        """Store the OCR-ready image as an attachment on the move."""
+        self.ensure_one()
+        if not processed_path or not os.path.exists(processed_path):
+            return
+        import base64
+
+        with open(processed_path, "rb") as image_file:
+            datas = base64.b64encode(image_file.read())
+        self.env["ir.attachment"].create(
+            {
+                "name": f"{self.name or 'move'}-ai-processed.png",
+                "datas": datas,
+                "mimetype": "image/png",
+                "res_model": "account.move",
+                "res_id": self.id,
+            }
+        )
+
     def _match_partner(self, name, threshold):
         if not name:
             return None
@@ -208,19 +231,33 @@ class AccountMove(models.Model):
             return best
         return None
 
-    def _ai_set_untaxed_line(self, untaxed):
+    def _ai_get_line_account(self):
         self.ensure_one()
-        account = self.env["account.account"].search(
-            [
-                ("internal_group", "=", "expense"),
-                ("company_ids", "in", self.company_id.id),
-            ],
-            limit=1,
-        )
+        if self.move_type in ("out_invoice", "out_receipt", "out_refund"):
+            account = self.env["account.account"].search(
+                [
+                    ("internal_group", "=", "income"),
+                    ("company_ids", "in", self.company_id.id),
+                ],
+                limit=1,
+            )
+        else:
+            account = self.env["account.account"].search(
+                [
+                    ("internal_group", "=", "expense"),
+                    ("company_ids", "in", self.company_id.id),
+                ],
+                limit=1,
+            )
         if not account:
             account = self.env["account.account"].search(
                 [("company_ids", "in", self.company_id.id)], limit=1
             )
+        return account
+
+    def _ai_set_untaxed_line(self, untaxed):
+        self.ensure_one()
+        account = self._ai_get_line_account()
         stale = self.line_ids.filtered(lambda line: line.name == _DEFAULT_LINE_NAME)
         commands = [(2, line.id) for line in stale]
         commands.append(
@@ -236,6 +273,33 @@ class AccountMove(models.Model):
             )
         )
         self.line_ids = commands
+
+    def _ai_set_lines(self, lines):
+        self.ensure_one()
+        account = self._ai_get_line_account()
+        commands = [(2, line.id) for line in self.line_ids]
+        for line in lines:
+            name = (line.get("name") or _DEFAULT_LINE_NAME).strip()
+            if not name:
+                continue
+            quantity = self._ai_to_float(line.get("quantity"))
+            price_unit = self._ai_to_float(line.get("price_unit"))
+            if quantity is None and price_unit is None:
+                continue
+            commands.append(
+                (
+                    0,
+                    0,
+                    {
+                        "name": name,
+                        "account_id": account.id,
+                        "quantity": quantity if quantity else 1.0,
+                        "price_unit": price_unit if price_unit else 0.0,
+                    },
+                )
+            )
+        if len(commands) > 1:
+            self.line_ids = commands
 
     def _apply_extraction(self, data):
         self.ensure_one()
@@ -262,9 +326,13 @@ class AccountMove(models.Model):
                 values["partner_id"] = partner.id
         if values:
             self.write(values)
-        untaxed = self._ai_to_float(data.get("amount_untaxed"))
-        if untaxed and untaxed > 0:
-            self._ai_set_untaxed_line(untaxed)
+        lines = data.get("lines") or []
+        if lines:
+            self._ai_set_lines(lines)
+        else:
+            untaxed = self._ai_to_float(data.get("amount_untaxed"))
+            if untaxed and untaxed > 0:
+                self._ai_set_untaxed_line(untaxed)
         self.ai_extracted_tax = self._ai_to_float(data.get("amount_tax")) or 0.0
         self.ai_extracted_total = self._ai_to_float(data.get("amount_total")) or 0.0
         return partner
@@ -289,6 +357,7 @@ class AccountMove(models.Model):
                 settings["model_name"],
                 settings["api_key"],
             )
+            self._ai_store_processed_image(processed_path)
             self._apply_extraction(data)
             self.ai_raw_extraction = json.dumps(data, indent=2)
             self.ai_extraction_state = "done"

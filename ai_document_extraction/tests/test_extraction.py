@@ -255,6 +255,86 @@ class TestAccountMoveExtraction(TransactionCase):
         self.assertEqual(self.move.ai_extracted_tax, 18.0)
         self.assertIsNotNone(matched)
 
+    def test_apply_extraction_with_lines(self):
+        data = {
+            "partner_name": "Voslo Lojistik",
+            "invoice_number": "FT-456",
+            "amount_tax": 18.0,
+            "amount_total": 118.0,
+            "lines": [
+                {"name": "Nakliye Hizmeti", "quantity": 1, "price_unit": 90.0},
+                {"name": "Depolama", "quantity": 2, "price_unit": 5.0},
+            ],
+        }
+        self.move._apply_extraction(data)
+        line_names = [line.name for line in self.move.line_ids if line.price_subtotal]
+        self.assertIn("Nakliye Hizmeti", line_names)
+        self.assertIn("Depolama", line_names)
+
+    def test_action_extract_with_ai_allows_customer_invoice(self):
+        from unittest import mock
+
+        move = self.env["account.move"].create({"move_type": "out_invoice"})
+        self.env["ir.attachment"].create(
+            {
+                "name": "invoice.png",
+                "datas": (
+                    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8"
+                    "z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+                ),
+                "mimetype": "image/png",
+                "res_model": "account.move",
+                "res_id": move.id,
+            }
+        )
+        with mock.patch.object(type(move), "with_delay", return_value=mock.Mock()):
+            move.action_extract_with_ai()
+        self.assertEqual(move.ai_extraction_state, "processing")
+
+    def test_job_stores_processed_image(self):
+        import base64
+        from unittest import mock
+
+        from ..services import image_preprocessor, llm_extractor, ocr_engine
+
+        png_path = "/tmp/ai_processed_test.png"
+        png = (
+            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8B"
+            "QDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+        )
+        with open(png_path, "wb") as handle:
+            handle.write(base64.b64decode(png))
+        attachment = self._attach()
+        with (
+            mock.patch.object(
+                image_preprocessor,
+                "preprocess_image",
+                return_value=png_path,
+            ),
+            mock.patch.object(
+                ocr_engine,
+                "extract_text_with_layout",
+                return_value="[BODY] Voslo Lojistik",
+            ),
+            mock.patch.object(
+                llm_extractor,
+                "extract_invoice_data",
+                return_value={"partner_name": "Voslo Lojistik", "lines": []},
+            ),
+        ):
+            self.move._extract_with_ai_job(attachment.id)
+        if os.path.exists(png_path):
+            os.unlink(png_path)
+        stored = self.env["ir.attachment"].search(
+            [
+                ("res_model", "=", "account.move"),
+                ("res_id", "=", self.move.id),
+                ("name", "like", "-ai-processed.png"),
+            ]
+        )
+        self.assertTrue(stored)
+        self.assertEqual(stored.mimetype, "image/png")
+
     def test_job_happy_path(self):
         from unittest import mock
 
