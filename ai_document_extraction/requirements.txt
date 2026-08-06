@@ -1,0 +1,6 @@
+paddleocr>=2.7.0,<3.0.0
+paddlepaddle
+rapidfuzz
+pdf2image
+opencv-python-headless
+requests
