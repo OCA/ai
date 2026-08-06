@@ -22,12 +22,11 @@ class ExtractionWizard(models.TransientModel):
         move = self.move_id
         if move.state != "draft":
             return {"type": "ir.actions.act_window_close"}
-        move.write(
-            {
-                "partner_id": self.partner_id.id,
-                "ai_extraction_state": "done",
-            }
-        )
+        values = {}
+        if self.partner_id:
+            values["partner_id"] = self.partner_id.id
+        values["ai_extraction_state"] = "done"
+        move.write(values)
         return {
             "type": "ir.actions.act_window",
             "res_model": "account.move",

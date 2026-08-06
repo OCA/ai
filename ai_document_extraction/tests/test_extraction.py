@@ -436,3 +436,38 @@ class TestExtractionWizard(TransactionCase):
         self.assertEqual(move.partner_id.id, partner.id)
         # move is posted; do not change its state
         self.assertEqual(result["type"], "ir.actions.act_window_close")
+
+    def test_wizard_apply_empty_partner_keeps_existing(self):
+        move = self.env["account.move"].create({"move_type": "in_invoice"})
+        existing = self.env["res.partner"].create(
+            {"name": "Mevcut Firma", "is_company": True}
+        )
+        move.partner_id = existing.id
+        wizard = self.env["extraction.wizard"].create(
+            {
+                "move_id": move.id,
+                "extracted_partner_name": "Bilinmeyen",
+            }
+        )
+        wizard.action_apply()
+        self.assertEqual(move.partner_id, existing)
+        self.assertEqual(move.ai_extraction_state, "done")
+
+    def test_action_review_extraction_creates_wizard(self):
+        move = self.env["account.move"].create({"move_type": "in_invoice"})
+        partner = self.env["res.partner"].create(
+            {"name": "Voslo Lojistik", "is_company": True}
+        )
+        move.write(
+            {
+                "partner_id": partner.id,
+                "ai_raw_extraction": '{"partner_name": "Voslo Lojistik"}',
+            }
+        )
+        result = move.action_review_extraction()
+        self.assertEqual(result["res_model"], "extraction.wizard")
+        self.assertEqual(result["target"], "new")
+        wizard = self.env["extraction.wizard"].browse(result["res_id"])
+        self.assertEqual(wizard.move_id, move)
+        self.assertEqual(wizard.extracted_partner_name, "Voslo Lojistik")
+        self.assertEqual(wizard.partner_id, partner)

@@ -124,6 +124,7 @@ class AccountMove(models.Model):
             {
                 "move_id": self.id,
                 "extracted_partner_name": partner_name or "",
+                "partner_id": self.partner_id.id,
             }
         )
         return {
