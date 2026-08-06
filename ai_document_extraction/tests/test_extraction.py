@@ -70,6 +70,13 @@ class TestLlmExtractor(TransactionCase):
         with self.assertRaises(ValueError):
             llm_extractor._parse_json_response("[1, 2, 3]")
 
+    def test_prompt_asks_for_receipt_and_payment_reference(self):
+        from ..services import llm_extractor
+
+        self.assertIn("Receipt", llm_extractor.SYSTEM_PROMPT)
+        self.assertIn("payment_reference", llm_extractor.SYSTEM_PROMPT)
+        self.assertNotIn("never a URL or hash", llm_extractor.SYSTEM_PROMPT)
+
     def test_extract_invoice_data_from_image_posts_and_parses(self):
         from unittest import mock
 
