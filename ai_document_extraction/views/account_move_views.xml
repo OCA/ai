@@ -11,7 +11,7 @@
                     type="object"
                     string="Extract with AI"
                     icon="fa-magic"
-                    invisible="ai_extraction_state in ('processing', 'done')"
+                    invisible="ai_extraction_state in ('processing', 'done') or state != 'draft'"
                 />
             </xpath>
             <xpath expr="//header" position="inside">
@@ -20,7 +20,7 @@
                     type="object"
                     string="Review Extraction"
                     icon="fa-pencil"
-                    invisible="ai_extraction_state != 'done'"
+                    invisible="ai_extraction_state != 'done' or state != 'draft'"
                 />
             </xpath>
             <xpath expr="//group[@id='header_right_group']" position="inside">

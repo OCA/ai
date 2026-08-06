@@ -796,6 +796,28 @@ class TestAccountMoveExtraction(TransactionCase):
         with self.assertRaises(UserError):
             self.move.action_extract_with_ai()
 
+    def test_ai_buttons_hidden_on_non_draft(self):
+        from lxml import etree
+
+        view = self.env.ref("ai_document_extraction.account_move_form_ai_extraction")
+        arch = etree.fromstring(view.arch)
+        buttons = {
+            button.get("name"): button.get("invisible", "")
+            for button in arch.iter("button")
+            if button.get("name")
+            in ("action_extract_with_ai", "action_review_extraction")
+        }
+        self.assertEqual(
+            set(buttons),
+            {"action_extract_with_ai", "action_review_extraction"},
+        )
+        for name, invisible in buttons.items():
+            self.assertIn(
+                "state != 'draft'",
+                invisible,
+                f"{name} should be hidden on non-draft moves",
+            )
+
     def test_action_extract_with_ai_requires_vendor_bill(self):
         from odoo.exceptions import UserError
 
