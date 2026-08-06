@@ -200,6 +200,13 @@ const config = [{
         ecmaVersion: 2024,
         sourceType: "module",
     },
+}, {
+    files: ["**/static/**/*.js"],
+
+    languageOptions: {
+        ecmaVersion: 2024,
+        sourceType: "module",
+    },
 }];
 
 module.exports = config

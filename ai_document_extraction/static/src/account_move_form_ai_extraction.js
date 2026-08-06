@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
 import {onWillUnmount, onWillUpdateProps} from "@odoo/owl";
-import {useService} from "@web/core/utils/hooks";
-import {patch} from "@web/core/utils/patch";
 import {FormController} from "@web/views/form/form_controller";
+import {patch} from "@web/core/utils/patch";
+import {useService} from "@web/core/utils/hooks";
 
 const NOTIFICATION_TYPE = "ai_document_extraction";
 const CHANNEL_PREFIX = "ai_document_extraction.move.";
