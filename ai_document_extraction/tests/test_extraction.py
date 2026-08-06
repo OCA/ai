@@ -140,6 +140,28 @@ class TestLlmExtractor(TransactionCase):
         payload = post_mock.call_args.kwargs["json"]
         self.assertEqual(payload["options"], {"num_ctx": 32768})
 
+    def test_extract_invoice_data_from_image_passes_timeout(self):
+        from unittest import mock
+
+        from ..services import llm_extractor
+
+        response = mock.Mock()
+        response.status_code = 200
+        response.json.return_value = {
+            "choices": [{"message": {"content": '{"ok": 1}'}}]
+        }
+        path = self._sample_png()
+        with mock.patch.object(
+            llm_extractor.requests, "post", return_value=response
+        ) as post_mock:
+            llm_extractor.extract_invoice_data_from_image(
+                path,
+                "http://ollama:11434/v1",
+                "qwen3-vl:8b-32k",
+                timeout=300,
+            )
+        self.assertEqual(post_mock.call_args.kwargs["timeout"], 300)
+
     def test_extract_invoice_data_from_image_retries_on_empty_response(self):
         from unittest import mock
 
@@ -388,6 +410,23 @@ class TestAccountMoveExtraction(TransactionCase):
         line_names = [line.name for line in self.move.line_ids if line.price_subtotal]
         self.assertIn("Nakliye Hizmeti", line_names)
         self.assertIn("Depolama", line_names)
+
+    def test_ai_settings_includes_llm_timeout(self):
+        self.assertEqual(self.move._ai_settings()["llm_timeout"], 300)
+
+    def test_ai_resize_caps_at_1280(self):
+        from PIL import Image
+
+        path = "/tmp/ai_resize_test.png"
+        Image.new("RGB", (2000, 2600), "white").save(path)
+        try:
+            result = self.move._ai_resize_image(path)
+            width, height = Image.open(result).size
+            self.assertLessEqual(max(width, height), 1280)
+        finally:
+            for candidate in (path, f"{path}.resized.png"):
+                if os.path.exists(candidate):
+                    os.unlink(candidate)
 
     def test_apply_extraction_sets_currency(self):
         data = {"currency": "USD"}

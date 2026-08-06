@@ -227,7 +227,7 @@ def extract_invoice_data_from_image(
     api_base_url,
     api_model_name,
     api_key="dummy",
-    timeout=120,
+    timeout=300,
     available_taxes=None,
     available_currencies=None,
     num_ctx=None,

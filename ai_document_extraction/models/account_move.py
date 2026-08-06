@@ -74,6 +74,7 @@ class AccountMove(models.Model):
             "api_key": self._ai_get_param("api_key", "dummy"),
             "model_name": self._ai_get_param("model_name", "qwen3-vl:8b-32k"),
             "num_ctx": num_ctx,
+            "llm_timeout": int(self._ai_get_param("llm_timeout", "300")),
             "fuzzy_match_threshold": int(
                 self._ai_get_param("fuzzy_match_threshold", "85")
             ),
@@ -193,7 +194,7 @@ class AccountMove(models.Model):
             "target": "new",
         }
 
-    def _ai_resize_image(self, path, max_dimension=1568):
+    def _ai_resize_image(self, path, max_dimension=1280):
         """Cap the image size to keep vision-model tokens and latency low."""
         from PIL import Image
 
@@ -460,6 +461,7 @@ class AccountMove(models.Model):
                 available_taxes=self._ai_available_taxes(),
                 available_currencies=self._ai_available_currencies(),
                 num_ctx=settings["num_ctx"],
+                timeout=settings["llm_timeout"],
             )
             self._ai_store_processed_image(image_path)
             self._apply_extraction(data)
