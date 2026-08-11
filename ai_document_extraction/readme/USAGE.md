@@ -8,4 +8,4 @@
    create the partner in the wizard.
 
 Configure the AI backend under *Settings > General Settings > AI Document
-Extraction* (API base URL, model name, OCR language, fuzzy match threshold).
+Extraction* (API base URL, API key, model name, partner match threshold).

@@ -1,8 +1,7 @@
 This module extracts structured invoice data (partner, invoice number, date and
-amounts) from uploaded PDF, JPG or PNG documents using a fully local AI pipeline:
-OpenCV image preprocessing, PaddleOCR for text + layout detection, and an
-OpenAI-compatible LLM (e.g. Ollama running `qwen3:4b`) that converts the OCR text
-into a strict JSON payload.
+amounts) from uploaded PDF, JPG or PNG documents by sending the rendered document
+image to an OpenAI-compatible vision LLM (e.g. Ollama running `qwen3-vl` or a
+cloud provider such as OpenRouter) that returns a strict JSON payload.
 
 The result is applied to a draft vendor bill (`account.move`): partner, date,
 reference and a single amount line are set automatically. Processing runs in the
