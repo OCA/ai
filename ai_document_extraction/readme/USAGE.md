@@ -20,7 +20,8 @@ Configure the AI backend as follows:
      Window* and *Ollama Keep Alive*.
 2. Link the connection under *Settings > General Settings > AI Document
    Extraction* in the *AI Connection* field. The partner match threshold can also
-   be set there.
+   be set there. This settings block is only visible in *Developer Mode*
+   (enable it at the bottom of Settings, or add `?debug=1` to the URL).
 
 The extraction flow is unchanged: upload the invoice, then click **Extract with
 AI**.
