@@ -300,6 +300,13 @@ class TestAccountMoveExtraction(TransactionCase):
         self.assertEqual(loaded.ai_connection_id, self.connection)
         self.assertEqual(loaded.fuzzy_match_threshold, 90)
 
+    def test_settings_get_values_false_when_no_connection(self):
+        self.env["ir.config_parameter"].sudo().set_param(
+            "ai_document_extraction.ai_connection_id", "0"
+        )
+        loaded = self.env["res.config.settings"].create({})
+        self.assertFalse(loaded.ai_connection_id)
+
     def test_ai_settings_defaults(self):
         settings = self.move._ai_settings()
         self.assertEqual(settings["ai_connection_id"], self.connection.id)

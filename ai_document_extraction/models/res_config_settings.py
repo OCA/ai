@@ -25,9 +25,14 @@ class ResConfigSettings(models.TransientModel):
         param = (
             self.env["ir.config_parameter"]
             .sudo()
-            .get_param("ai_document_extraction.ai_connection_id", "0")
+            .get_param("ai_document_extraction.ai_connection_id", "")
         )
-        res["ai_connection_id"] = int(param) if param else False
+        # Return False (not 0) when unset: a plain 0 on a many2one creates a
+        # phantom record and crashes the settings onchange in Odoo 19.
+        connection_id = False
+        if param and param.isdigit():
+            connection_id = int(param) or False
+        res["ai_connection_id"] = connection_id
         return res
 
     def set_values(self):
