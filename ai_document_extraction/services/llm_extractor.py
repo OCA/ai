@@ -1,11 +1,8 @@
 # Copyright 2026 VSL
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-import base64
 import json
 from datetime import date, datetime
-
-import requests
 
 SYSTEM_PROMPT = (
     "/no_think\n"
@@ -213,99 +210,11 @@ def _validate_data(data, available_taxes=None, available_currencies=None):
     return data
 
 
-def _is_ollama(api_base_url):
-    """Ollama-specific options (num_ctx, keep_alive) only apply to Ollama."""
-    return "ollama" in (api_base_url or "").lower()
-
-
-def extract_invoice_data_from_image(
-    image_path,
-    api_base_url,
-    api_model_name,
-    api_key="dummy",
-    timeout=300,
-    available_taxes=None,
-    available_currencies=None,
-    num_ctx=None,
-    keep_alive=None,
-):
-    """Send the invoice image to a vision LLM and return the extracted dict.
-
-    Cloud providers (e.g. OpenRouter) are OpenAI-compatible but reject
-    Ollama-specific fields; those are only sent when the endpoint is Ollama.
-    The request is retried once when the model returns an empty or
-    unparseable response (e.g. the context window was exceeded).
-    """
-    is_ollama = _is_ollama(api_base_url)
-    if is_ollama:
-        with open(image_path, "rb") as image_file:
-            encoded = base64.b64encode(image_file.read()).decode()
-        mime = "image/png"
-    else:
-        # Compress the image for cloud providers to respect request size
-        # limits (base64 PNGs of scanned documents can be several MB).
-        import io
-
-        from PIL import Image
-
-        buffer = io.BytesIO()
-        with Image.open(image_path) as image:
-            image.convert("RGB").save(buffer, "JPEG", quality=90)
-        encoded = base64.b64encode(buffer.getvalue()).decode()
-        mime = "image/jpeg"
-    url = f"{api_base_url.rstrip('/')}/chat/completions"
-    payload = {
-        "model": api_model_name,
-        "messages": [
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "type": "image_url",
-                        "image_url": {"url": f"data:{mime};base64,{encoded}"},
-                    },
-                    {
-                        "type": "text",
-                        "text": _build_user_prompt(
-                            available_taxes, available_currencies
-                        ),
-                    },
-                ],
-            },
-        ],
-        "temperature": 0,
-        "stream": False,
-    }
-    if is_ollama:
-        if num_ctx:
-            try:
-                num_ctx = int(num_ctx)
-            except (TypeError, ValueError):
-                num_ctx = None
-            if num_ctx:
-                payload["options"] = {"num_ctx": num_ctx}
-        if keep_alive:
-            payload["keep_alive"] = keep_alive
-    headers = {}
-    if api_key and api_key != "dummy":
-        headers["Authorization"] = f"Bearer {api_key}"
-    last_error = None
-    for _attempt in range(2):
-        try:
-            response = requests.post(
-                url, json=payload, headers=headers, timeout=timeout
-            )
-            response.raise_for_status()
-            content = response.json()["choices"][0]["message"]["content"]
-            if not (content or "").strip():
-                raise ValueError("The vision model returned an empty response.")
-            data = _parse_json_response(content)
-            return _validate_data(
-                data,
-                available_taxes=available_taxes,
-                available_currencies=available_currencies,
-            )
-        except ValueError as error:
-            last_error = error
-    raise last_error
+def parse_and_validate(content, available_taxes=None, available_currencies=None):
+    """Parse raw LLM output into a validated extraction dict."""
+    data = _parse_json_response(content)
+    return _validate_data(
+        data,
+        available_taxes=available_taxes,
+        available_currencies=available_currencies,
+    )
