@@ -2,6 +2,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 import os
+from unittest import mock
 
 from odoo.tests import TransactionCase
 
@@ -78,8 +79,6 @@ class TestLlmExtractor(TransactionCase):
         self.assertNotIn("never a URL or hash", llm_extractor.SYSTEM_PROMPT)
 
     def test_extract_invoice_data_from_image_posts_and_parses(self):
-        from unittest import mock
-
         from ..services import llm_extractor
 
         response = mock.Mock()
@@ -112,8 +111,6 @@ class TestLlmExtractor(TransactionCase):
         self.assertNotIn("Authorization", post_mock.call_args.kwargs["headers"])
 
     def test_extract_invoice_data_from_image_sends_api_key(self):
-        from unittest import mock
-
         from ..services import llm_extractor
 
         response = mock.Mock()
@@ -134,8 +131,6 @@ class TestLlmExtractor(TransactionCase):
         )
 
     def test_extract_invoice_data_from_image_sends_num_ctx(self):
-        from unittest import mock
-
         from ..services import llm_extractor
 
         response = mock.Mock()
@@ -154,8 +149,6 @@ class TestLlmExtractor(TransactionCase):
         self.assertEqual(payload["options"], {"num_ctx": 32768})
 
     def test_extract_invoice_data_from_image_sends_keep_alive(self):
-        from unittest import mock
-
         from ..services import llm_extractor
 
         response = mock.Mock()
@@ -177,8 +170,6 @@ class TestLlmExtractor(TransactionCase):
         self.assertEqual(payload["keep_alive"], "30m")
 
     def test_extract_invoice_data_from_image_omits_ollama_options_on_openrouter(self):
-        from unittest import mock
-
         from ..services import llm_extractor
 
         response = mock.Mock()
@@ -202,8 +193,6 @@ class TestLlmExtractor(TransactionCase):
         self.assertNotIn("keep_alive", payload)
 
     def test_extract_invoice_data_from_image_uses_jpeg_for_cloud(self):
-        from unittest import mock
-
         from ..services import llm_extractor
 
         response = mock.Mock()
@@ -224,8 +213,6 @@ class TestLlmExtractor(TransactionCase):
         self.assertIn("data:image/jpeg;base64,", url)
 
     def test_extract_invoice_data_from_image_passes_timeout(self):
-        from unittest import mock
-
         from ..services import llm_extractor
 
         response = mock.Mock()
@@ -246,8 +233,6 @@ class TestLlmExtractor(TransactionCase):
         self.assertEqual(post_mock.call_args.kwargs["timeout"], 300)
 
     def test_extract_invoice_data_from_image_retries_on_empty_response(self):
-        from unittest import mock
-
         from ..services import llm_extractor
 
         empty = mock.Mock()
@@ -269,8 +254,6 @@ class TestLlmExtractor(TransactionCase):
         self.assertEqual(data["invoice_number"], "FT-1")
 
     def test_extract_invoice_data_from_image_raises_after_empty_retries(self):
-        from unittest import mock
-
         from ..services import llm_extractor
 
         empty = mock.Mock()
@@ -284,8 +267,6 @@ class TestLlmExtractor(TransactionCase):
                 )
 
     def test_extract_invoice_data_from_image_sends_available_context(self):
-        from unittest import mock
-
         from ..services import llm_extractor
 
         response = mock.Mock()
@@ -704,7 +685,6 @@ class TestAccountMoveExtraction(TransactionCase):
     def test_ai_prepare_image_recognizes_duplicate_suffixed_pdf(self):
         import base64
         import io
-        from unittest import mock
 
         from PIL import Image
 
@@ -726,8 +706,6 @@ class TestAccountMoveExtraction(TransactionCase):
         mock_convert.assert_called_once()
 
     def test_action_extract_with_ai_allows_customer_invoice(self):
-        from unittest import mock
-
         move = self.env["account.move"].create({"move_type": "out_invoice"})
         self.env["ir.attachment"].create(
             {
@@ -747,7 +725,6 @@ class TestAccountMoveExtraction(TransactionCase):
 
     def test_job_stores_processed_image(self):
         import base64
-        from unittest import mock
 
         from ..services import llm_extractor
 
@@ -778,8 +755,6 @@ class TestAccountMoveExtraction(TransactionCase):
         self.assertEqual(stored.mimetype, "image/png")
 
     def test_job_happy_path(self):
-        from unittest import mock
-
         from ..services import llm_extractor
 
         attachment = self._attach()
@@ -802,8 +777,6 @@ class TestAccountMoveExtraction(TransactionCase):
         self.assertIn("partner_name", self.move.ai_raw_extraction)
 
     def test_job_error_path(self):
-        from unittest import mock
-
         from ..services import llm_extractor
 
         attachment = self._attach()
@@ -816,8 +789,6 @@ class TestAccountMoveExtraction(TransactionCase):
         self.assertEqual(self.move.ai_extraction_state, "error")
 
     def test_job_notifies_bus_on_done(self):
-        from unittest import mock
-
         from ..services import llm_extractor
 
         attachment = self._attach()
@@ -844,8 +815,6 @@ class TestAccountMoveExtraction(TransactionCase):
         )
 
     def test_job_notifies_bus_on_error(self):
-        from unittest import mock
-
         from ..services import llm_extractor
 
         attachment = self._attach()
@@ -937,8 +906,6 @@ class TestAccountMoveExtraction(TransactionCase):
             move.action_extract_with_ai()
 
     def test_action_extract_with_ai_enqueues(self):
-        from unittest import mock
-
         move = self.env["account.move"].create({"move_type": "in_invoice"})
         attachment = self.env["ir.attachment"].create(
             {
@@ -1054,3 +1021,131 @@ class TestExtractionWizard(TransactionCase):
         self.assertEqual(wizard.move_id, move)
         self.assertEqual(wizard.extracted_partner_name, "Voslo Lojistik")
         self.assertEqual(wizard.partner_id, partner)
+
+
+class TestAiConnection(TransactionCase):
+    def test_openai_compatible_kind_builds_client(self):
+        connection = self.env["ai.connection"].create(
+            {
+                "name": "OpenRouter",
+                "kind": "openai_compatible",
+                "url": "https://openrouter.ai/api/v1",
+                "model": "qwen/qwen3-vl-32b-instruct",
+            }
+        )
+        client = connection._get_client_openai_compatible(None)
+        self.assertEqual(client.url, "https://openrouter.ai/api/v1")
+        self.assertEqual(client.model, "qwen/qwen3-vl-32b-instruct")
+        self.assertEqual(client.api_key, "")
+
+
+class TestAiOpenAICompatibleClient(TransactionCase):
+    def _client(self, **kw):
+        defaults = {
+            "url": "https://openrouter.ai/api/v1",
+            "model": "qwen/qwen3-vl-32b-instruct",
+        }
+        defaults.update(kw)
+        from ..services.ai_openai_compatible_client import (
+            AiOpenAICompatibleClient,
+        )
+
+        return AiOpenAICompatibleClient(**defaults)
+
+    def _mock_response(self, content):
+        response = mock.Mock()
+        response.status_code = 200
+        response.json.return_value = {"choices": [{"message": {"content": content}}]}
+        return response
+
+    def test_handle_message_posts_openai_payload(self):
+        from ..services import ai_openai_compatible_client as client_mod
+
+        response = self._mock_response('{"ok": 1}')
+        messages = [{"role": "user", "content": "hello"}]
+        with mock.patch.object(
+            client_mod.requests, "post", return_value=response
+        ) as post_mock:
+            result = self._client().handle_message(messages, temperature=0)
+        self.assertEqual(result["message"]["content"], '{"ok": 1}')
+        self.assertEqual(result["tool_calls"], [])
+        payload = post_mock.call_args.kwargs["json"]
+        self.assertEqual(payload["model"], "qwen/qwen3-vl-32b-instruct")
+        self.assertEqual(payload["temperature"], 0)
+        self.assertEqual(payload["messages"], messages)
+        self.assertNotIn("options", payload)
+
+    def test_handle_message_sends_api_key(self):
+        from ..services import ai_openai_compatible_client as client_mod
+
+        response = self._mock_response('{"ok": 1}')
+        with mock.patch.object(
+            client_mod.requests, "post", return_value=response
+        ) as post_mock:
+            self._client(api_key="secret").handle_message(
+                [{"role": "user", "content": "hi"}]
+            )
+        self.assertEqual(
+            post_mock.call_args.kwargs["headers"]["Authorization"], "Bearer secret"
+        )
+
+    def test_handle_message_adds_ollama_options(self):
+        from ..services import ai_openai_compatible_client as client_mod
+
+        response = self._mock_response('{"ok": 1}')
+        with mock.patch.object(
+            client_mod.requests, "post", return_value=response
+        ) as post_mock:
+            self._client(
+                url="http://ollama:11434/v1", num_ctx=32768, keep_alive="30m"
+            ).handle_message([{"role": "user", "content": "hi"}])
+        payload = post_mock.call_args.kwargs["json"]
+        self.assertEqual(payload["options"], {"num_ctx": 32768})
+        self.assertEqual(payload["keep_alive"], "30m")
+
+    def test_handle_message_omits_ollama_options_on_cloud(self):
+        from ..services import ai_openai_compatible_client as client_mod
+
+        response = self._mock_response('{"ok": 1}')
+        with mock.patch.object(
+            client_mod.requests, "post", return_value=response
+        ) as post_mock:
+            self._client(num_ctx=8192, keep_alive="30m").handle_message(
+                [{"role": "user", "content": "hi"}]
+            )
+        payload = post_mock.call_args.kwargs["json"]
+        self.assertNotIn("options", payload)
+        self.assertNotIn("keep_alive", payload)
+
+    def test_handle_message_retries_once_on_empty_content(self):
+        from ..services import ai_openai_compatible_client as client_mod
+
+        with mock.patch.object(
+            client_mod.requests,
+            "post",
+            side_effect=[self._mock_response(""), self._mock_response('{"ok": 1}')],
+        ) as post_mock:
+            result = self._client().handle_message([{"role": "user", "content": "hi"}])
+        self.assertEqual(post_mock.call_count, 2)
+        self.assertEqual(result["message"]["content"], '{"ok": 1}')
+
+    def test_handle_message_raises_after_empty_retries(self):
+        from ..services import ai_openai_compatible_client as client_mod
+
+        with mock.patch.object(
+            client_mod.requests, "post", return_value=self._mock_response("")
+        ):
+            with self.assertRaises(ValueError):
+                self._client().handle_message([{"role": "user", "content": "hi"}])
+
+    def test_handle_message_passes_timeout(self):
+        from ..services import ai_openai_compatible_client as client_mod
+
+        response = self._mock_response('{"ok": 1}')
+        with mock.patch.object(
+            client_mod.requests, "post", return_value=response
+        ) as post_mock:
+            self._client(timeout=300).handle_message(
+                [{"role": "user", "content": "hi"}]
+            )
+        self.assertEqual(post_mock.call_args.kwargs["timeout"], 300)
