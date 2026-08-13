@@ -66,7 +66,6 @@ class AccountMove(models.Model):
         self.ensure_one()
         return {
             "ai_connection_id": int(self._ai_get_param("ai_connection_id", "0") or 0),
-            "llm_timeout": int(self._ai_get_param("llm_timeout", "300")),
             "fuzzy_match_threshold": int(
                 self._ai_get_param("fuzzy_match_threshold", "85")
             ),
@@ -255,6 +254,16 @@ class AccountMove(models.Model):
             self._ai_cleanup_tmp(file_path)
             raise
 
+    def _ai_mime_from_extension(self, path):
+        extension = os.path.splitext(path)[1].lower()
+        return {
+            ".png": "image/png",
+            ".jpg": "image/jpeg",
+            ".jpeg": "image/jpeg",
+            ".gif": "image/gif",
+            ".bmp": "image/bmp",
+        }.get(extension, "image/png")
+
     def _ai_vision_message(self, image_path, connection):
         """Build the user message carrying the (resized) invoice image."""
         import base64
@@ -263,7 +272,7 @@ class AccountMove(models.Model):
         if is_ollama:
             with open(image_path, "rb") as image_file:
                 encoded = base64.b64encode(image_file.read()).decode()
-            mime = "image/png"
+            mime = self._ai_mime_from_extension(image_path)
         else:
             import io
 
@@ -294,6 +303,8 @@ class AccountMove(models.Model):
         """Run the vision LLM and parse the result, retrying once on failure."""
         last_error = None
         for _attempt in range(2):
+            # On an empty response the client already retried once, so a full
+            # re-run means at most 4 HTTP calls total (accepted, rare).
             try:
                 content = connection._run(
                     system_prompt=llm_extractor.SYSTEM_PROMPT,

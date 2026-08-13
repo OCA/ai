@@ -300,15 +300,10 @@ class TestAccountMoveExtraction(TransactionCase):
         self.assertEqual(loaded.ai_connection_id, self.connection)
         self.assertEqual(loaded.fuzzy_match_threshold, 90)
 
-    def test_ai_settings_includes_llm_timeout(self):
-        settings = self.move._ai_settings()
-        self.assertEqual(settings["llm_timeout"], 300)
-
     def test_ai_settings_defaults(self):
         settings = self.move._ai_settings()
         self.assertEqual(settings["ai_connection_id"], self.connection.id)
         self.assertEqual(settings["fuzzy_match_threshold"], 85)
-        self.assertEqual(settings["llm_timeout"], 300)
 
     def test_ai_vision_message_builds_png_for_ollama(self):
         import base64
@@ -409,6 +404,54 @@ class TestAccountMoveExtraction(TransactionCase):
                 os.unlink(path)
         self.assertEqual(run_mock.call_count, 2)
         self.assertEqual(data["invoice_number"], "FT-1")
+
+    def test_ai_extract_data_raises_after_both_attempts(self):
+        import base64
+
+        from odoo.addons.ai_connection.models.ai_connection import AiConnection
+
+        path = "/tmp/ai_extract_data_both.png"
+        png = (
+            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8B"
+            "QDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+        )
+        with open(path, "wb") as handle:
+            handle.write(base64.b64decode(png))
+        try:
+            with mock.patch.object(
+                AiConnection,
+                "_run",
+                side_effect=[("not json", 0, 0, 1), ("still not json", 0, 0, 1)],
+            ) as run_mock:
+                with self.assertRaises(ValueError):
+                    self.move._ai_extract_data(self.connection, path)
+        finally:
+            if os.path.exists(path):
+                os.unlink(path)
+        self.assertEqual(run_mock.call_count, 2)
+
+    def test_ai_extract_data_does_not_retry_non_parse_errors(self):
+        import base64
+
+        from odoo.addons.ai_connection.models.ai_connection import AiConnection
+
+        path = "/tmp/ai_extract_data_runtime.png"
+        png = (
+            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8B"
+            "QDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+        )
+        with open(path, "wb") as handle:
+            handle.write(base64.b64decode(png))
+        try:
+            with mock.patch.object(
+                AiConnection, "_run", side_effect=RuntimeError("boom")
+            ) as run_mock:
+                with self.assertRaises(RuntimeError):
+                    self.move._ai_extract_data(self.connection, path)
+        finally:
+            if os.path.exists(path):
+                os.unlink(path)
+        self.assertEqual(run_mock.call_count, 1)
 
     def test_ai_connection_raises_when_not_configured(self):
         from odoo.exceptions import UserError
@@ -930,6 +973,17 @@ class TestExtractionWizard(TransactionCase):
 
 
 class TestAiConnection(TransactionCase):
+    def test_openai_compatible_defaults_temperature_to_zero(self):
+        connection = self.env["ai.connection"].create(
+            {
+                "name": "Deterministic",
+                "kind": "openai_compatible",
+                "url": "https://openrouter.ai/api/v1",
+                "model": "qwen/qwen3-vl-32b-instruct",
+            }
+        )
+        self.assertEqual(connection.temperature, 0.0)
+
     def test_openai_compatible_kind_builds_client(self):
         connection = self.env["ai.connection"].create(
             {

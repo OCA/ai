@@ -24,6 +24,7 @@ class AiConnection(models.Model):
         groups="base.group_system",
         help="Ollama keep_alive duration, e.g. 30m.",
     )
+    temperature = fields.Float(default=0.0)
 
     def _get_client_openai_compatible(self, tools):
         return AiOpenAICompatibleClient(
