@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="ai_document_extraction_settings_view_form" model="ir.ui.view">
+        <field name="name">ai.document.extraction.settings.view.form</field>
+        <field name="model">ai.document.extraction.settings</field>
+        <field name="arch" type="xml">
+            <form string="AI Document Extraction">
+                <group>
+                    <field name="ai_connection_id" />
+                    <field name="fuzzy_match_threshold" />
+                </group>
+                <footer>
+                    <button
+                        string="Save"
+                        name="action_save"
+                        type="object"
+                        class="btn-primary"
+                    />
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="ai_document_extraction_settings_action" model="ir.actions.act_window">
+        <field name="name">AI Document Extraction</field>
+        <field name="res_model">ai.document.extraction.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+    </record>
+
+    <menuitem
+        id="ai_document_extraction_settings_menu"
+        name="AI Document Extraction"
+        parent="ai_tool.ai_menu_root"
+        action="ai_document_extraction_settings_action"
+        sequence="20"
+    />
+</odoo>

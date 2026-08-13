@@ -17,12 +17,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: ai_document_extraction
-#: model:ir.model.fields,field_description:ai_document_extraction.field_res_config_settings__ai_connection_id
+#: model:ir.model.fields,field_description:ai_document_extraction.field_ai_document_extraction_settings__ai_connection_id
 msgid "AI Connection"
 msgstr "AI Bağlantısı"
 
 #. module: ai_document_extraction
-#: model_terms:ir.ui.view,arch_db:ai_document_extraction.res_config_settings_view_form_ai_extraction
+#: model:ir.actions.act_window,name:ai_document_extraction.ai_document_extraction_settings_action
+#: model:ir.ui.menu,name:ai_document_extraction.ai_document_extraction_settings_menu
+#: model_terms:ir.ui.view,arch_db:ai_document_extraction.ai_document_extraction_settings_view_form
 msgid "AI Document Extraction"
 msgstr "AI Belge Çıkarma"
 
@@ -85,17 +87,18 @@ msgid "Attach the invoice PDF or image to the chatter first."
 msgstr "Önce fatura PDF'sini veya görselini konuşmaya ekleyin."
 
 #. module: ai_document_extraction
+#: model_terms:ir.ui.view,arch_db:ai_document_extraction.ai_document_extraction_settings_view_form
 #: model_terms:ir.ui.view,arch_db:ai_document_extraction.extraction_wizard_view_form
 msgid "Cancel"
 msgstr "İptal"
 
 #. module: ai_document_extraction
-#: model:ir.model,name:ai_document_extraction.model_res_config_settings
-msgid "Config Settings"
-msgstr ""
+#: model:ir.model,name:ai_document_extraction.model_ai_document_extraction_settings
+msgid "AI Document Extraction Settings"
+msgstr "AI Belge Çıkarma Ayarları"
 
 #. module: ai_document_extraction
-#: model:ir.model.fields,help:ai_document_extraction.field_res_config_settings__ai_connection_id
+#: model:ir.model.fields,help:ai_document_extraction.field_ai_document_extraction_settings__ai_connection_id
 msgid "Connection used to extract invoice data from documents."
 msgstr "Belgelerden fatura verilerini çıkarmak için kullanılan bağlantı."
 
@@ -111,8 +114,8 @@ msgstr ""
 
 #. module: ai_document_extraction
 #: model:ir.model.fields,field_description:ai_document_extraction.field_account_move__display_name
+#: model:ir.model.fields,field_description:ai_document_extraction.field_ai_document_extraction_settings__display_name
 #: model:ir.model.fields,field_description:ai_document_extraction.field_extraction_wizard__display_name
-#: model:ir.model.fields,field_description:ai_document_extraction.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -125,17 +128,6 @@ msgstr "Tamamlandı"
 #: model:ir.model.fields.selection,name:ai_document_extraction.selection__account_move__ai_extraction_state__error
 msgid "Error"
 msgstr "Hata"
-
-#. module: ai_document_extraction
-#: model_terms:ir.ui.view,arch_db:ai_document_extraction.res_config_settings_view_form_ai_extraction
-msgid ""
-"Extract invoice data from PDFs and images using a vision LLM. Link an AI "
-"Connection (OpenRouter or local Ollama) configured in Settings > AI > AI "
-"Connection."
-msgstr ""
-"PDF ve görsellerden bir görüntü LLM'i ile fatura verilerini çıkarın. "
-"Ayarlar > AI > AI Bağlantısı bölümünde yapılandırılmış bir AI Bağlantısı "
-"(OpenRouter veya yerel Ollama) bağlayın."
 
 #. module: ai_document_extraction
 #: model_terms:ir.ui.view,arch_db:ai_document_extraction.account_move_form_ai_extraction
@@ -161,8 +153,8 @@ msgstr "Çıkarılan Toplam Tutar"
 
 #. module: ai_document_extraction
 #: model:ir.model.fields,field_description:ai_document_extraction.field_account_move__id
+#: model:ir.model.fields,field_description:ai_document_extraction.field_ai_document_extraction_settings__id
 #: model:ir.model.fields,field_description:ai_document_extraction.field_extraction_wizard__id
-#: model:ir.model.fields,field_description:ai_document_extraction.field_res_config_settings__id
 msgid "ID"
 msgstr ""
 
@@ -193,7 +185,7 @@ msgid "Last Updated on"
 msgstr ""
 
 #. module: ai_document_extraction
-#: model:ir.model.fields,help:ai_document_extraction.field_res_config_settings__fuzzy_match_threshold
+#: model:ir.model.fields,help:ai_document_extraction.field_ai_document_extraction_settings__fuzzy_match_threshold
 msgid ""
 "Minimum similarity percentage (0-100) required to auto-match the extracted "
 "partner name with an existing partner."
@@ -206,8 +198,10 @@ msgstr ""
 #: code:addons/ai_document_extraction/models/account_move.py:0
 msgid ""
 "No AI Connection is configured for document extraction. Set one in Settings "
-"> General Settings > AI Document Extraction."
+"> Technical > AI > AI Document Extraction."
 msgstr ""
+"Belge çıkarma için yapılandırılmış bir AI Bağlantısı yok. Ayarlar > Teknik > "
+"AI > AI Belge Çıkarma bölümünden bir tane belirleyin."
 "Belge çıkarma için yapılandırılmış bir AI Bağlantısı yok. Ayarlar > Genel "
 "Ayarlar > AI Belge Çıkarma bölümünden bir tane belirleyin."
 
@@ -243,8 +237,8 @@ msgid "Partner"
 msgstr "İş Ortağı"
 
 #. module: ai_document_extraction
-#: model:ir.model.fields,field_description:ai_document_extraction.field_res_config_settings__fuzzy_match_threshold
-#: model_terms:ir.ui.view,arch_db:ai_document_extraction.res_config_settings_view_form_ai_extraction
+#: model:ir.model.fields,field_description:ai_document_extraction.field_ai_document_extraction_settings__fuzzy_match_threshold
+#: model_terms:ir.ui.view,arch_db:ai_document_extraction.ai_document_extraction_settings_view_form
 msgid "Partner Match Threshold"
 msgstr "İş Ortağı Eşleştirme Eşiği"
 
@@ -265,6 +259,11 @@ msgstr "AI Çıkarmasını İncele"
 #: model_terms:ir.ui.view,arch_db:ai_document_extraction.account_move_form_ai_extraction
 msgid "Review Extraction"
 msgstr "Çıkarmayı İncele"
+
+#. module: ai_document_extraction
+#: model_terms:ir.ui.view,arch_db:ai_document_extraction.ai_document_extraction_settings_view_form
+msgid "Save"
+msgstr "Kaydet"
 
 #. module: ai_document_extraction
 #. odoo-python
@@ -291,3 +290,12 @@ msgid ""
 msgstr ""
 "Yüklenen dosya AI çıkarmaya hazır. Faturayı doldurmak için 'AI ile Çıkar'ı "
 "kullanın."
+
+#~ msgid ""
+#~ "Extract invoice data from PDFs and images using a vision LLM. Link an AI "
+#~ "Connection (OpenRouter or local Ollama) configured in Settings > AI > AI "
+#~ "Connection."
+#~ msgstr ""
+#~ "PDF ve görsellerden bir görüntü LLM'i ile fatura verilerini çıkarın. "
+#~ "Ayarlar > AI > AI Bağlantısı bölümünde yapılandırılmış bir AI Bağlantısı "
+#~ "(OpenRouter veya yerel Ollama) bağlayın."

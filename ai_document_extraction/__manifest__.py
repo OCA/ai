@@ -19,8 +19,8 @@
     "data": [
         "security/ir.model.access.csv",
         "views/account_move_views.xml",
-        "views/res_config_settings_views.xml",
         "views/ai_connection_views.xml",
+        "views/ai_document_extraction_settings_views.xml",
         "wizards/extraction_wizard_views.xml",
     ],
     "assets": {

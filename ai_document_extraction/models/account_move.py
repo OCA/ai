@@ -80,7 +80,7 @@ class AccountMove(models.Model):
             raise UserError(
                 self.env._(
                     "No AI Connection is configured for document extraction. "
-                    "Set one in Settings > General Settings > AI Document "
+                    "Set one in Settings > Technical > AI > AI Document "
                     "Extraction."
                 )
             )

@@ -288,24 +288,41 @@ class TestAccountMoveExtraction(TransactionCase):
         bodies = [message.body or "" for message in self.move.message_ids]
         self.assertFalse(any("payment reference" in body.lower() for body in bodies))
 
-    def test_settings_ai_connection_link(self):
-        settings = self.env["res.config.settings"].create(
+    def test_settings_default_get_loads_connection(self):
+        settings = self.env["ai.document.extraction.settings"].create({})
+        self.assertEqual(settings.ai_connection_id, self.connection)
+        self.assertEqual(settings.fuzzy_match_threshold, 85)
+
+    def test_settings_default_get_false_when_no_connection(self):
+        self.env["ir.config_parameter"].sudo().set_param(
+            "ai_document_extraction.ai_connection_id", "0"
+        )
+        settings = self.env["ai.document.extraction.settings"].create({})
+        self.assertFalse(settings.ai_connection_id)
+
+    def test_settings_save_writes_params(self):
+        self.env["ir.config_parameter"].sudo().set_param(
+            "ai_document_extraction.ai_connection_id", "0"
+        )
+        settings = self.env["ai.document.extraction.settings"].create(
             {
                 "ai_connection_id": self.connection.id,
                 "fuzzy_match_threshold": 90,
             }
         )
-        settings.execute()
-        loaded = self.env["res.config.settings"].create({})
-        self.assertEqual(loaded.ai_connection_id, self.connection)
-        self.assertEqual(loaded.fuzzy_match_threshold, 90)
-
-    def test_settings_get_values_false_when_no_connection(self):
-        self.env["ir.config_parameter"].sudo().set_param(
-            "ai_document_extraction.ai_connection_id", "0"
+        settings.action_save()
+        self.assertEqual(
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("ai_document_extraction.ai_connection_id"),
+            str(self.connection.id),
         )
-        loaded = self.env["res.config.settings"].create({})
-        self.assertFalse(loaded.ai_connection_id)
+        self.assertEqual(
+            self.env["ir.config_parameter"]
+            .sudo()
+            .get_param("ai_document_extraction.fuzzy_match_threshold"),
+            "90",
+        )
 
     def test_ai_settings_defaults(self):
         settings = self.move._ai_settings()

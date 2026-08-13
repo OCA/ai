@@ -18,10 +18,9 @@ Configure the AI backend as follows:
    - Set the API key for cloud providers only (leave it empty for local Ollama)
      and set the temperature to 0. For Ollama you can also set the *Ollama Context
      Window* and *Ollama Keep Alive*.
-2. Link the connection under *Settings > General Settings > AI Document
-   Extraction* in the *AI Connection* field. The partner match threshold can also
-   be set there. This settings block is only visible in *Developer Mode*
-   (enable it at the bottom of Settings, or add `?debug=1` to the URL).
+2. Link the connection under *Settings > Technical > AI > AI Document
+   Extraction* in the *AI Connection* field (developer mode is required to see
+   the Technical menu). The partner match threshold can also be set there.
 
 The extraction flow is unchanged: upload the invoice, then click **Extract with
 AI**.
