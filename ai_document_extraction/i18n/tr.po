@@ -74,16 +74,6 @@ msgid "AI extraction started."
 msgstr "AI çıkarma işlemi başladı."
 
 #. module: ai_document_extraction
-#: model_terms:ir.ui.view,arch_db:ai_document_extraction.res_config_settings_view_form_ai_extraction
-msgid "API Base URL"
-msgstr "API Temel URL"
-
-#. module: ai_document_extraction
-#: model_terms:ir.ui.view,arch_db:ai_document_extraction.res_config_settings_view_form_ai_extraction
-msgid "API Key"
-msgstr "API Anahtarı"
-
-#. module: ai_document_extraction
 #: model_terms:ir.ui.view,arch_db:ai_document_extraction.extraction_wizard_view_form
 msgid "Apply"
 msgstr "Uygula"
@@ -210,11 +200,6 @@ msgid ""
 msgstr ""
 "Çıkarılan iş ortağı adının mevcut bir iş ortağıyla otomatik eşleşmesi için "
 "gereken minimum benzerlik yüzdesi (0-100)."
-
-#. module: ai_document_extraction
-#: model_terms:ir.ui.view,arch_db:ai_document_extraction.res_config_settings_view_form_ai_extraction
-msgid "Model Name"
-msgstr "Model Adı"
 
 #. module: ai_document_extraction
 #. odoo-python

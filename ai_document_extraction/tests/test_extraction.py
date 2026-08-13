@@ -462,6 +462,37 @@ class TestAccountMoveExtraction(TransactionCase):
         with self.assertRaises(UserError):
             self.move._ai_connection()
 
+    def test_job_works_for_non_admin_user(self):
+        from odoo.tests.common import new_test_user
+
+        from odoo.addons.ai_connection.models.ai_connection import AiConnection
+
+        user = new_test_user(
+            self.env,
+            login="accountant_ai_test",
+            groups="account.group_account_invoice,base.group_user",
+        )
+        move = (
+            self.env["account.move"].with_user(user).create({"move_type": "in_invoice"})
+        )
+        attachment = self.env["ir.attachment"].create(
+            {
+                "name": "invoice.png",
+                "datas": (
+                    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8"
+                    "z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+                ),
+                "mimetype": "image/png",
+                "res_model": "account.move",
+                "res_id": move.id,
+            }
+        )
+        with mock.patch.object(
+            AiConnection, "_run", return_value=('{"invoice_number": "FT-1"}', 0, 0, 1)
+        ):
+            move.with_user(user)._extract_with_ai_job(attachment.id)
+        self.assertEqual(move.ai_extraction_state, "done")
+
     def test_ai_resize_caps_at_1280(self):
         from PIL import Image
 

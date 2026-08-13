@@ -84,7 +84,7 @@ class AccountMove(models.Model):
                     "Extraction."
                 )
             )
-        return connection
+        return connection.sudo()
 
     def _ai_to_float(self, value):
         """Coerce an extracted amount to float, or None if not numeric."""
