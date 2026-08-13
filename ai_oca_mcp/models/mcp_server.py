@@ -28,9 +28,10 @@ class McpServer(models.Model):
     )
     key_ids = fields.One2many("mcp.server.key", "server_id", string="Access Keys")
 
-    _sql_constraints = [
-        ("key_uniq", "unique(key)", "The key must be unique"),
-    ]
+    _key_uniq = models.Constraint(
+        "unique (key)",
+        "The key must be unique",
+    )
 
     @api.depends("key")
     def _compute_url(self):

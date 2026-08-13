@@ -21,6 +21,11 @@ class McpServerKey(models.Model):
     expiration_date = fields.Datetime()
     expired_on = fields.Datetime(readonly=True)
 
+    _key_uniq = models.Constraint(
+        "unique (hashed_key)",
+        "The key must be unique",
+    )
+
     def expire_key(self):
         self.filtered(lambda key: key.state == "active").write(
             {
@@ -28,11 +33,7 @@ class McpServerKey(models.Model):
                 "expired_on": fields.Datetime.now(),
             }
         )
-        self._get_mcp_server_by_key.clear_cache(self)
-
-    _sql_constraints = [
-        ("key_uniq", "unique(hashed_key)", "The key must be unique"),
-    ]
+        self.env.registry.clear_cache()
 
     @api.model
     def _hash_key(self, key):
