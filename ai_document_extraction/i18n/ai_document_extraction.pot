@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 19.0-20260723\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-06 13:43+0000\n"
-"PO-Revision-Date: 2026-08-06 13:43+0000\n"
+"POT-Creation-Date: 2026-08-13 00:00+0000\n"
+"PO-Revision-Date: 2026-08-13 00:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,13 +16,8 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: ai_document_extraction
-#: model:ir.model.fields,field_description:ai_document_extraction.field_res_config_settings__ai_api_base_url
-msgid "AI API Base URL"
-msgstr ""
-
-#. module: ai_document_extraction
-#: model:ir.model.fields,field_description:ai_document_extraction.field_res_config_settings__ai_api_key
-msgid "AI API Key"
+#: model:ir.model.fields,field_description:ai_document_extraction.field_res_config_settings__ai_connection_id
+msgid "AI Connection"
 msgstr ""
 
 #. module: ai_document_extraction
@@ -39,11 +34,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:ai_document_extraction.field_account_bank_statement_line__ai_extraction_state
 #: model:ir.model.fields,field_description:ai_document_extraction.field_account_move__ai_extraction_state
 msgid "AI Extraction State"
-msgstr ""
-
-#. module: ai_document_extraction
-#: model:ir.model.fields,field_description:ai_document_extraction.field_res_config_settings__ai_model_name
-msgid "AI Model Name"
 msgstr ""
 
 #. module: ai_document_extraction
@@ -114,6 +104,11 @@ msgid "Config Settings"
 msgstr ""
 
 #. module: ai_document_extraction
+#: model:ir.model.fields,help:ai_document_extraction.field_res_config_settings__ai_connection_id
+msgid "Connection used to extract invoice data from documents."
+msgstr ""
+
+#. module: ai_document_extraction
 #: model:ir.model.fields,field_description:ai_document_extraction.field_extraction_wizard__create_uid
 msgid "Created by"
 msgstr ""
@@ -143,8 +138,9 @@ msgstr ""
 #. module: ai_document_extraction
 #: model_terms:ir.ui.view,arch_db:ai_document_extraction.res_config_settings_view_form_ai_extraction
 msgid ""
-"Extract invoice data from PDFs and images using a vision LLM (OpenRouter by "
-"default; local Ollama is also supported)."
+"Extract invoice data from PDFs and images using a vision LLM. Link an AI "
+"Connection (OpenRouter or local Ollama) configured in Settings > AI > AI "
+"Connection."
 msgstr ""
 
 #. module: ai_document_extraction
@@ -217,12 +213,33 @@ msgstr ""
 #. module: ai_document_extraction
 #. odoo-python
 #: code:addons/ai_document_extraction/models/account_move.py:0
+msgid "No AI Connection is configured for document extraction. Set one in Settings > General Settings > AI Document Extraction."
+msgstr ""
+
+#. module: ai_document_extraction
+#. odoo-python
+#: code:addons/ai_document_extraction/models/account_move.py:0
 msgid "No invoice/receipt number found; payment reference was used."
 msgstr ""
 
 #. module: ai_document_extraction
 #: model:ir.model.fields.selection,name:ai_document_extraction.selection__account_move__ai_extraction_state__draft
 msgid "Not processed"
+msgstr ""
+
+#. module: ai_document_extraction
+#: model:ir.model.fields,field_description:ai_document_extraction.field_ai_connection__num_ctx
+msgid "Ollama Context Window"
+msgstr ""
+
+#. module: ai_document_extraction
+#: model:ir.model.fields,field_description:ai_document_extraction.field_ai_connection__keep_alive
+msgid "Ollama Keep Alive"
+msgstr ""
+
+#. module: ai_document_extraction
+#: model:ir.model.fields,selection:ai_connection.field_ai_connection__kind
+msgid "OpenAI-compatible"
 msgstr ""
 
 #. module: ai_document_extraction
