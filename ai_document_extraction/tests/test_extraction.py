@@ -178,6 +178,18 @@ class TestAccountMoveExtraction(TransactionCase):
                 "partner_id": cls.partner.id,
             }
         )
+        cls.connection = cls.env["ai.connection"].create(
+            {
+                "name": "Test Connection",
+                "kind": "openai_compatible",
+                "url": "http://ollama:11434/v1",
+                "model": "qwen3-vl:8b",
+                "temperature": 0,
+            }
+        )
+        cls.env["ir.config_parameter"].sudo().set_param(
+            "ai_document_extraction.ai_connection_id", str(cls.connection.id)
+        )
 
     def _attach(self):
         png = (
@@ -272,6 +284,18 @@ class TestAccountMoveExtraction(TransactionCase):
         self.move._apply_extraction(data)
         bodies = [message.body or "" for message in self.move.message_ids]
         self.assertFalse(any("payment reference" in body.lower() for body in bodies))
+
+    def test_settings_ai_connection_link(self):
+        settings = self.env["res.config.settings"].create(
+            {
+                "ai_connection_id": self.connection.id,
+                "fuzzy_match_threshold": 90,
+            }
+        )
+        settings.execute()
+        loaded = self.env["res.config.settings"].create({})
+        self.assertEqual(loaded.ai_connection_id, self.connection)
+        self.assertEqual(loaded.fuzzy_match_threshold, 90)
 
     def test_ai_settings_includes_llm_timeout(self):
         settings = self.move._ai_settings()

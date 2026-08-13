@@ -10,36 +10,16 @@
                     <setting
                         id="ai_document_extraction"
                         string="AI Document Extraction"
-                        help="Extract invoice data from PDFs and images using a vision LLM (OpenRouter by default; local Ollama is also supported)."
+                        help="Extract invoice data from PDFs and images using a vision LLM. Link an AI Connection (OpenRouter or local Ollama) configured in Settings > AI > AI Connection."
                     >
                         <div class="content-group">
                             <div class="row mt16">
                                 <label
-                                    string="API Base URL"
+                                    string="AI Connection"
                                     class="col-lg-4 o_light_label"
-                                    for="ai_api_base_url"
+                                    for="ai_connection_id"
                                 />
-                                <field name="ai_api_base_url" class="col-lg-8" />
-                            </div>
-                            <div class="row mt16">
-                                <label
-                                    string="API Key"
-                                    class="col-lg-4 o_light_label"
-                                    for="ai_api_key"
-                                />
-                                <field
-                                    name="ai_api_key"
-                                    class="col-lg-8"
-                                    password="True"
-                                />
-                            </div>
-                            <div class="row mt16">
-                                <label
-                                    string="Model Name"
-                                    class="col-lg-4 o_light_label"
-                                    for="ai_model_name"
-                                />
-                                <field name="ai_model_name" class="col-lg-8" />
+                                <field name="ai_connection_id" class="col-lg-8" />
                             </div>
                             <div class="row mt16">
                                 <label
