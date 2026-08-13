@@ -64,25 +64,28 @@ class AccountMove(models.Model):
 
     def _ai_settings(self):
         self.ensure_one()
-        try:
-            num_ctx = int(self._ai_get_param("num_ctx", "8192"))
-        except (TypeError, ValueError):
-            num_ctx = None
         return {
-            "api_base_url": self._ai_get_param(
-                "api_base_url", "https://openrouter.ai/api/v1"
-            ),
-            "api_key": self._ai_get_param("api_key", ""),
-            "model_name": self._ai_get_param(
-                "model_name", "qwen/qwen3-vl-32b-instruct"
-            ),
-            "num_ctx": num_ctx,
-            "keep_alive": self._ai_get_param("keep_alive", "30m"),
+            "ai_connection_id": int(self._ai_get_param("ai_connection_id", "0") or 0),
             "llm_timeout": int(self._ai_get_param("llm_timeout", "300")),
             "fuzzy_match_threshold": int(
                 self._ai_get_param("fuzzy_match_threshold", "85")
             ),
         }
+
+    def _ai_connection(self):
+        self.ensure_one()
+        connection = self.env["ai.connection"].browse(
+            self._ai_settings()["ai_connection_id"]
+        )
+        if not connection.exists():
+            raise UserError(
+                self.env._(
+                    "No AI Connection is configured for document extraction. "
+                    "Set one in Settings > General Settings > AI Document "
+                    "Extraction."
+                )
+            )
+        return connection
 
     def _ai_to_float(self, value):
         """Coerce an extracted amount to float, or None if not numeric."""
@@ -251,6 +254,59 @@ class AccountMove(models.Model):
         except Exception:
             self._ai_cleanup_tmp(file_path)
             raise
+
+    def _ai_vision_message(self, image_path, connection):
+        """Build the user message carrying the (resized) invoice image."""
+        import base64
+
+        is_ollama = "ollama" in (connection.url or "").lower()
+        if is_ollama:
+            with open(image_path, "rb") as image_file:
+                encoded = base64.b64encode(image_file.read()).decode()
+            mime = "image/png"
+        else:
+            import io
+
+            from PIL import Image
+
+            buffer = io.BytesIO()
+            with Image.open(image_path) as image:
+                image.convert("RGB").save(buffer, "JPEG", quality=90)
+            encoded = base64.b64encode(buffer.getvalue()).decode()
+            mime = "image/jpeg"
+        return {
+            "role": "user",
+            "content": [
+                {
+                    "type": "image_url",
+                    "image_url": {"url": f"data:{mime};base64,{encoded}"},
+                },
+                {
+                    "type": "text",
+                    "text": llm_extractor._build_user_prompt(
+                        self._ai_available_taxes(), self._ai_available_currencies()
+                    ),
+                },
+            ],
+        }
+
+    def _ai_extract_data(self, connection, image_path):
+        """Run the vision LLM and parse the result, retrying once on failure."""
+        last_error = None
+        for _attempt in range(2):
+            try:
+                content = connection._run(
+                    system_prompt=llm_extractor.SYSTEM_PROMPT,
+                    messages=[self._ai_vision_message(image_path, connection)],
+                )[0]
+                return llm_extractor.parse_and_validate(
+                    content,
+                    available_taxes=self._ai_available_taxes(),
+                    available_currencies=self._ai_available_currencies(),
+                )
+            except ValueError as error:
+                last_error = error
+        raise last_error
 
     def _ai_cleanup_tmp(self, path):
         for candidate in (path, f"{path}.png"):
@@ -475,18 +531,8 @@ class AccountMove(models.Model):
         image_path = None
         try:
             image_path = self._ai_prepare_image(attachment)
-            settings = self._ai_settings()
-            data = llm_extractor.extract_invoice_data_from_image(
-                image_path,
-                settings["api_base_url"],
-                settings["model_name"],
-                settings["api_key"],
-                available_taxes=self._ai_available_taxes(),
-                available_currencies=self._ai_available_currencies(),
-                num_ctx=settings["num_ctx"],
-                keep_alive=settings["keep_alive"],
-                timeout=settings["llm_timeout"],
-            )
+            connection = self._ai_connection()
+            data = self._ai_extract_data(connection, image_path)
             self._ai_store_processed_image(image_path)
             self._apply_extraction(data)
             self.ai_raw_extraction = json.dumps(data, indent=2)

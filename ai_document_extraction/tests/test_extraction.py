@@ -1,10 +1,13 @@
 # Copyright 2026 VSL
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
+import json
 import os
 from unittest import mock
 
 from odoo.tests import TransactionCase
+
+from ..services import llm_extractor
 
 
 class TestLlmExtractor(TransactionCase):
@@ -303,12 +306,118 @@ class TestAccountMoveExtraction(TransactionCase):
 
     def test_ai_settings_defaults(self):
         settings = self.move._ai_settings()
-        self.assertEqual(settings["api_base_url"], "https://openrouter.ai/api/v1")
-        self.assertEqual(settings["api_key"], "")
-        self.assertEqual(settings["model_name"], "qwen/qwen3-vl-32b-instruct")
-        self.assertEqual(settings["num_ctx"], 8192)
-        self.assertEqual(settings["keep_alive"], "30m")
+        self.assertEqual(settings["ai_connection_id"], self.connection.id)
+        self.assertEqual(settings["fuzzy_match_threshold"], 85)
         self.assertEqual(settings["llm_timeout"], 300)
+
+    def test_ai_vision_message_builds_png_for_ollama(self):
+        import base64
+
+        path = "/tmp/ai_vision_msg.png"
+        png = (
+            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8B"
+            "QDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+        )
+        with open(path, "wb") as handle:
+            handle.write(base64.b64decode(png))
+        try:
+            message = self.move._ai_vision_message(path, self.connection)
+        finally:
+            if os.path.exists(path):
+                os.unlink(path)
+        self.assertEqual(message["role"], "user")
+        content = message["content"]
+        self.assertEqual(content[0]["type"], "image_url")
+        self.assertIn("data:image/png;base64,", content[0]["image_url"]["url"])
+        self.assertEqual(content[1]["type"], "text")
+
+    def test_ai_vision_message_uses_jpeg_for_cloud(self):
+        from PIL import Image
+
+        path = "/tmp/ai_vision_msg_cloud.png"
+        Image.new("RGB", (100, 100), "white").save(path)
+        cloud = self.env["ai.connection"].create(
+            {
+                "name": "Cloud",
+                "kind": "openai_compatible",
+                "url": "https://openrouter.ai/api/v1",
+                "model": "qwen/qwen3-vl-32b-instruct",
+            }
+        )
+        try:
+            message = self.move._ai_vision_message(path, cloud)
+        finally:
+            if os.path.exists(path):
+                os.unlink(path)
+        self.assertIn(
+            "data:image/jpeg;base64,", message["content"][0]["image_url"]["url"]
+        )
+
+    def test_job_happy_path_uses_connection(self):
+        from odoo.addons.ai_connection.models.ai_connection import AiConnection
+
+        attachment = self._attach()
+        content = (
+            '{"partner_name": "Voslo Lojistik", "invoice_number": "FT-123", '
+            '"invoice_date": "2023-10-25", "amount_untaxed": 100.0, '
+            '"amount_tax": 18.0, "amount_total": 118.0, "currency": "TRY"}'
+        )
+        with mock.patch.object(
+            AiConnection, "_run", return_value=(content, 0, 0, 1)
+        ) as run_mock:
+            self.move._extract_with_ai_job(attachment.id)
+        self.assertEqual(self.move.ai_extraction_state, "done")
+        self.assertEqual(self.move.ref, "FT-123")
+        self.assertIn("partner_name", self.move.ai_raw_extraction)
+        self.assertEqual(
+            run_mock.call_args.kwargs["system_prompt"], llm_extractor.SYSTEM_PROMPT
+        )
+        self.assertEqual(run_mock.call_args.kwargs["messages"][0]["role"], "user")
+
+    def test_job_error_path_uses_connection(self):
+        from odoo.addons.ai_connection.models.ai_connection import AiConnection
+
+        attachment = self._attach()
+        with mock.patch.object(AiConnection, "_run", side_effect=RuntimeError("boom")):
+            self.move._extract_with_ai_job(attachment.id)
+        self.assertEqual(self.move.ai_extraction_state, "error")
+
+    def test_ai_extract_data_retries_once_on_unparseable(self):
+        import base64
+
+        from odoo.addons.ai_connection.models.ai_connection import AiConnection
+
+        path = "/tmp/ai_extract_data_retry.png"
+        png = (
+            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8B"
+            "QDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="
+        )
+        with open(path, "wb") as handle:
+            handle.write(base64.b64decode(png))
+        try:
+            with mock.patch.object(
+                AiConnection,
+                "_run",
+                side_effect=[
+                    ("I am sorry, I cannot do that.", 0, 0, 1),
+                    ('{"invoice_number": "FT-1"}', 0, 0, 1),
+                ],
+            ) as run_mock:
+                data = self.move._ai_extract_data(self.connection, path)
+        finally:
+            if os.path.exists(path):
+                os.unlink(path)
+        self.assertEqual(run_mock.call_count, 2)
+        self.assertEqual(data["invoice_number"], "FT-1")
+
+    def test_ai_connection_raises_when_not_configured(self):
+        from odoo.exceptions import UserError
+
+        self.env["ir.config_parameter"].sudo().set_param(
+            "ai_document_extraction.ai_connection_id", "0"
+        )
+        with self.assertRaises(UserError):
+            self.move._ai_connection()
 
     def test_ai_resize_caps_at_1280(self):
         from PIL import Image
@@ -512,7 +621,7 @@ class TestAccountMoveExtraction(TransactionCase):
     def test_job_stores_processed_image(self):
         import base64
 
-        from ..services import llm_extractor
+        from odoo.addons.ai_connection.models.ai_connection import AiConnection
 
         png_path = "/tmp/ai_processed_test.png"
         png = (
@@ -523,9 +632,14 @@ class TestAccountMoveExtraction(TransactionCase):
             handle.write(base64.b64decode(png))
         attachment = self._attach()
         with mock.patch.object(
-            llm_extractor,
-            "extract_invoice_data_from_image",
-            return_value={"partner_name": "Voslo Lojistik", "lines": []},
+            AiConnection,
+            "_run",
+            return_value=(
+                json.dumps({"partner_name": "Voslo Lojistik", "lines": []}),
+                0,
+                0,
+                1,
+            ),
         ):
             self.move._extract_with_ai_job(attachment.id)
         if os.path.exists(png_path):
@@ -541,21 +655,28 @@ class TestAccountMoveExtraction(TransactionCase):
         self.assertEqual(stored.mimetype, "image/png")
 
     def test_job_happy_path(self):
-        from ..services import llm_extractor
+        from odoo.addons.ai_connection.models.ai_connection import AiConnection
 
         attachment = self._attach()
         with mock.patch.object(
-            llm_extractor,
-            "extract_invoice_data_from_image",
-            return_value={
-                "partner_name": "Voslo Lojistik",
-                "invoice_number": "FT-123",
-                "invoice_date": "2023-10-25",
-                "amount_untaxed": 100.0,
-                "amount_tax": 18.0,
-                "amount_total": 118.0,
-                "currency": "TRY",
-            },
+            AiConnection,
+            "_run",
+            return_value=(
+                json.dumps(
+                    {
+                        "partner_name": "Voslo Lojistik",
+                        "invoice_number": "FT-123",
+                        "invoice_date": "2023-10-25",
+                        "amount_untaxed": 100.0,
+                        "amount_tax": 18.0,
+                        "amount_total": 118.0,
+                        "currency": "TRY",
+                    }
+                ),
+                0,
+                0,
+                1,
+            ),
         ):
             self.move._extract_with_ai_job(attachment.id)
         self.assertEqual(self.move.ai_extraction_state, "done")
@@ -563,32 +684,35 @@ class TestAccountMoveExtraction(TransactionCase):
         self.assertIn("partner_name", self.move.ai_raw_extraction)
 
     def test_job_error_path(self):
-        from ..services import llm_extractor
+        from odoo.addons.ai_connection.models.ai_connection import AiConnection
 
         attachment = self._attach()
-        with mock.patch.object(
-            llm_extractor,
-            "extract_invoice_data_from_image",
-            side_effect=RuntimeError("boom"),
-        ):
+        with mock.patch.object(AiConnection, "_run", side_effect=RuntimeError("boom")):
             self.move._extract_with_ai_job(attachment.id)
         self.assertEqual(self.move.ai_extraction_state, "error")
 
     def test_job_notifies_bus_on_done(self):
-        from ..services import llm_extractor
+        from odoo.addons.ai_connection.models.ai_connection import AiConnection
 
         attachment = self._attach()
         with mock.patch.object(
-            llm_extractor,
-            "extract_invoice_data_from_image",
-            return_value={
-                "partner_name": "Voslo Lojistik",
-                "invoice_number": "FT-123",
-                "invoice_date": "2023-10-25",
-                "amount_untaxed": 100.0,
-                "amount_tax": 18.0,
-                "amount_total": 118.0,
-            },
+            AiConnection,
+            "_run",
+            return_value=(
+                json.dumps(
+                    {
+                        "partner_name": "Voslo Lojistik",
+                        "invoice_number": "FT-123",
+                        "invoice_date": "2023-10-25",
+                        "amount_untaxed": 100.0,
+                        "amount_tax": 18.0,
+                        "amount_total": 118.0,
+                    }
+                ),
+                0,
+                0,
+                1,
+            ),
         ):
             with mock.patch.object(
                 type(self.env["bus.bus"]), "_sendone"
@@ -601,14 +725,10 @@ class TestAccountMoveExtraction(TransactionCase):
         )
 
     def test_job_notifies_bus_on_error(self):
-        from ..services import llm_extractor
+        from odoo.addons.ai_connection.models.ai_connection import AiConnection
 
         attachment = self._attach()
-        with mock.patch.object(
-            llm_extractor,
-            "extract_invoice_data_from_image",
-            side_effect=RuntimeError("boom"),
-        ):
+        with mock.patch.object(AiConnection, "_run", side_effect=RuntimeError("boom")):
             with mock.patch.object(
                 type(self.env["bus.bus"]), "_sendone"
             ) as mock_sendone:
