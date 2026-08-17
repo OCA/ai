@@ -27,7 +27,7 @@ addon | version | maintainers | summary
 [ai_oca_bridge_chatter](ai_oca_bridge_chatter/) | 16.0.1.0.1 |  | Integrate a Bridge with a user that will use it on chatter
 [ai_oca_bridge_crm_lead](ai_oca_bridge_crm_lead/) | 16.0.2.0.0 |  | Adds CRM Lead triggers for AI Bridges
 [ai_oca_bridge_document_page](ai_oca_bridge_document_page/) | 16.0.2.0.0 |  | Adds Documents synchronization using AI Bridges
-[ai_oca_bridge_extra_parameters](ai_oca_bridge_extra_parameters/) | 16.0.1.0.0 | <a href='https://github.com/arielbarreiros96'><img src='https://github.com/arielbarreiros96.png' width='32' height='32' style='border-radius:50%;' alt='arielbarreiros96'/></a> | Adds extra parameters to the AI OCA Bridge payload.
+[ai_oca_bridge_extra_parameters](ai_oca_bridge_extra_parameters/) | 16.0.1.0.1 | <a href='https://github.com/arielbarreiros96'><img src='https://github.com/arielbarreiros96.png' width='32' height='32' style='border-radius:50%;' alt='arielbarreiros96'/></a> | Adds extra parameters to the AI OCA Bridge payload.
 [ai_oca_bridge_fieldservice](ai_oca_bridge_fieldservice/) | 16.0.2.0.0 | <a href='https://github.com/marcelsavegnago'><img src='https://github.com/marcelsavegnago.png' width='32' height='32' style='border-radius:50%;' alt='marcelsavegnago'/></a> | Integrate AI Bridge with Field Service
 [ai_oca_bridge_helpdesk_mgmt](ai_oca_bridge_helpdesk_mgmt/) | 16.0.1.0.0 |  | Integrate AI Bridge with Helpdesk Management
 [ai_oca_bridge_mrp](ai_oca_bridge_mrp/) | 16.0.2.0.0 | <a href='https://github.com/marcelsavegnago'><img src='https://github.com/marcelsavegnago.png' width='32' height='32' style='border-radius:50%;' alt='marcelsavegnago'/></a> | Adds MRP triggers for AI Bridges

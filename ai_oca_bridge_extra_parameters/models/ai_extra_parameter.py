@@ -78,6 +78,7 @@ class AIExtraParameter(models.Model):
         "sorted",
         "enumerate",
         "range",
+        "env",
     }
 
     ALLOWED_FORMULA_CONTEXT_VARS = {
@@ -116,6 +117,7 @@ class AIExtraParameter(models.Model):
         "KeyError",
         "IndexError",
         "ZeroDivisionError",
+        "env",
     }
 
     @staticmethod
@@ -247,6 +249,7 @@ class AIExtraParameter(models.Model):
                 "True": True,
                 "False": False,
                 "None": None,
+                "env": self.env,
             }
 
             try:
@@ -314,6 +317,7 @@ class AIExtraParameter(models.Model):
             "True": True,
             "False": False,
             "None": None,
+            "env": self.env,
         }
 
         try:
