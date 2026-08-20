@@ -1,1 +1,1 @@
-This module is used to create a bridge between Odoo and other AI systems like n8n.
+This module creates a bridge between Odoo and other AI systems, such as n8n.
