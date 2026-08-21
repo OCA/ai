@@ -31,9 +31,9 @@
                         <field name="weighted_percent" readonly="1"/>
                     </group>
                     <group string="Key breakdown">
-                        <field name="matched_keys" widget="ace" options="{'mode': 'json'}" readonly="1"/>
-                        <field name="mismatched_keys" widget="ace" options="{'mode': 'json'}" readonly="1"/>
-                        <field name="missing_keys" widget="ace" options="{'mode': 'json'}" readonly="1"/>
+                        <field name="matched_keys" widget="ace" options="{'mode': 'javascript'}" readonly="1"/>
+                        <field name="mismatched_keys" widget="ace" options="{'mode': 'javascript'}" readonly="1"/>
+                        <field name="missing_keys" widget="ace" options="{'mode': 'javascript'}" readonly="1"/>
                     </group>
                     <footer>
                         <button name="action_add_to_order" string="Add to Order" type="object" class="oe_highlight"/>

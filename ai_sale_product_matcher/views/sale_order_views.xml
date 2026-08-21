@@ -11,7 +11,7 @@
             <xpath expr="//page[@name='order_lines']" position="after">
                 <page name="ai_matches" string="AI Matches">
                     <field name="ai_requirement_state" readonly="1"/>
-                    <field name="ai_requirement_json" readonly="1" widget="ace" options="{'mode': 'json'}"/>
+                    <field name="ai_requirement_json" readonly="1" widget="ace" options="{'mode': 'javascript'}"/>
                     <field name="ai_match_ids" readonly="1">
                         <list string="Top Matches">
                             <field name="product_tmpl_id"/>
