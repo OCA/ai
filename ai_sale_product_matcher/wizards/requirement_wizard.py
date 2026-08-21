@@ -19,7 +19,7 @@ class AiSaleRequirementWizard(models.TransientModel):
         string="Extracted Requirements (JSON)", help="Edit before matching"
     )
     ai_connection_id = fields.Many2one(
-        "ai.connection", string="AI Connection", required=True
+        "ai.connection", string="AI Connection", required=False
     )
     state = fields.Selection(
         [("draft", "Draft"), ("extracting", "Extracting"), ("done", "Done")],
@@ -48,8 +48,11 @@ class AiSaleRequirementWizard(models.TransientModel):
         self.ensure_one()
         if not self.attachment_ids and not (self.requirement_text or "").strip():
             raise UserError(self.env._("Attach a file or enter requirement text."))
-        # Trigger extraction on order
-        self.order_id.write({"ai_connection_id": self.ai_connection_id.id})
+        # Use wizard connection if chosen, otherwise order's or default (field now optional/invisible)
+        connection = self.ai_connection_id or self.order_id.ai_connection_id or self.order_id._ai_default_connection()
+        if not connection or not connection.exists():
+            raise UserError(self.env._("No AI Connection configured. Set one in Settings."))
+        self.order_id.write({"ai_connection_id": connection.id})
         self.order_id.action_extract_requirements(
             attachment_ids=self.attachment_ids.ids,
             requirement_text=self.requirement_text or "",

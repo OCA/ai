@@ -112,6 +112,45 @@ msgid "Category"
 msgstr "Kategori"
 
 #. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_sale_requirement_wizard__order_id
+msgid "Order"
+msgstr "Sipariş"
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_sale_requirement_wizard__state
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_sale_order__ai_requirement_state
+msgid "State"
+msgstr "Durum"
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields.selection,name:ai_sale_product_matcher.selection__ai_sale_requirement_wizard__state__draft
+#: model:ir.model.fields.selection,name:ai_sale_product_matcher.selection__sale_order__ai_requirement_state__draft
+msgid "Draft"
+msgstr "Taslak"
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields.selection,name:ai_sale_product_matcher.selection__ai_sale_requirement_wizard__state__extracting
+#: model:ir.model.fields.selection,name:ai_sale_product_matcher.selection__sale_order__ai_requirement_state__extracting
+msgid "Extracting"
+msgstr "Çıkarılıyor"
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields.selection,name:ai_sale_product_matcher.selection__ai_sale_requirement_wizard__state__done
+#: model:ir.model.fields.selection,name:ai_sale_product_matcher.selection__sale_order__ai_requirement_state__done
+msgid "Done"
+msgstr "Tamamlandı"
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields.selection,name:ai_sale_product_matcher.selection__sale_order__ai_requirement_state__error
+msgid "Error"
+msgstr "Hata"
+
+#. module: ai_sale_product_matcher
+#: model:ir.actions.act_window,name:ai_sale_product_matcher.action_ai_sale_requirement_wizard
+msgid "Find Products with AI"
+msgstr "AI ile Ürün Bul"
+
+#. module: ai_sale_product_matcher
 #: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_sale_requirement_wizard_form
 msgid "Find Products with AI"
 msgstr "AI ile Ürün Bul"
