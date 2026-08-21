@@ -16,10 +16,10 @@ SYSTEM_PROMPT = (
     "Normalize units to the key's expected unit: pressure_bar in bar, flow_rate_l_h in L/h, "
     "power in kW or W as per key, dimensions in cm, weight in kg, capacity in L, noise in dB(A). "
     "For example '120 bar' -> pressure_bar: 120, '2.3 kW' -> motor_power_kw: 2.3, 'Monofaze' -> phase: 'Monofaze (M)'. "
-    "For boolean features, use true/false. For missing information, use null — never hallucinate. "
+    "For boolean features, use true/false. For missing information, OMIT the key — never output null and never hallucinate. "
     "If the document is in Turkish or English, map to the canonical English keys correctly. "
     "If a value is a range like '250 - 540', keep the string '250 - 540'. "
-    "Output ONLY the JSON object, no markdown or extra text."
+    "CRITICAL: Output ONLY the JSON object with ONLY the keys that have a clear value in the document; DO NOT include keys with null; keep output under 20 keys; no markdown or extra text."
 )
 
 
@@ -35,10 +35,10 @@ def _build_user_prompt(requirement_text=None):
         "Extract customer requirements as a JSON object using ONLY keys from this schema:\n"
         f"{schema_block}\n"
         f"{extra}"
-        'Output format: {"<canonical_key>": <value or null>, ...} '
-        "Include ONLY keys where a requirement is expressed; omit unmentioned keys or set to null. "
+        'Output format: {"<canonical_key>": <value>, ...} '
+        "Include ONLY keys where a requirement is clearly expressed with a value; DO NOT include keys with null, unknown or missing values; DO NOT invent keys; skip irrelevant keys. "
         "Values must respect the type hint (integer, float, boolean, char, selection). "
-        "Output ONLY the JSON object."
+        "Output ONLY the JSON object, no markdown, max 20 keys."
     )
 
 
