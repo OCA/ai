@@ -23,8 +23,9 @@ SYSTEM_PROMPT = (
 )
 
 
-def _build_user_prompt(requirement_text=None):
-    schema_block = get_schema_prompt_block()
+def _build_user_prompt(requirement_text=None, env=None):
+    # Sector-independent, always English: fetch live PIM keys when env is available
+    schema_block = get_schema_prompt_block(env=env)
     extra = ""
     if requirement_text and requirement_text.strip():
         extra = (
@@ -56,13 +57,13 @@ def _parse_json_response(content):
     raise ValueError(f"No JSON object found in LLM response: {content[:500]}")
 
 
-def _validate_requirements(data):
+def _validate_requirements(data, env=None):
     """Drop hallucinated keys and coerce types lightly; keep nulls out."""
     valid = {}
     for key, value in list(data.items()):
         if value is None:
             continue
-        meta = get_attribute_meta(key)
+        meta = get_attribute_meta(key, env=env)
         if not meta:
             # Hallucinated key - drop
             continue
@@ -121,9 +122,9 @@ def _validate_requirements(data):
     return valid
 
 
-def parse_and_validate(content):
+def parse_and_validate(content, env=None):
     data = _parse_json_response(content)
-    return _validate_requirements(data)
+    return _validate_requirements(data, env=env)
 
 
 def _encode_image(image_path, connection):
@@ -148,7 +149,7 @@ def _encode_image(image_path, connection):
     return mime, encoded
 
 
-def build_vision_message(image_path, connection, requirement_text=None):
+def build_vision_message(image_path, connection, requirement_text=None, env=None):
     """Build OpenAI-compatible vision message with image + requirement text."""
     mime, encoded = _encode_image(image_path, connection)
     return {
@@ -160,13 +161,15 @@ def build_vision_message(image_path, connection, requirement_text=None):
             },
             {
                 "type": "text",
-                "text": _build_user_prompt(requirement_text=requirement_text),
+                "text": _build_user_prompt(requirement_text=requirement_text, env=env),
             },
         ],
     }
 
 
-def build_vision_message_multi(image_paths, connection, requirement_text=None):
+def build_vision_message_multi(
+    image_paths, connection, requirement_text=None, env=None
+):
     """Build a single user message carrying multiple page images (for multi-page PDFs)."""
     content = []
     for path in image_paths:
@@ -180,14 +183,14 @@ def build_vision_message_multi(image_paths, connection, requirement_text=None):
     content.append(
         {
             "type": "text",
-            "text": _build_user_prompt(requirement_text=requirement_text),
+            "text": _build_user_prompt(requirement_text=requirement_text, env=env),
         }
     )
     return {"role": "user", "content": content}
 
 
-def build_text_message(requirement_text):
+def build_text_message(requirement_text, env=None):
     return {
         "role": "user",
-        "content": _build_user_prompt(requirement_text=requirement_text),
+        "content": _build_user_prompt(requirement_text=requirement_text, env=env),
     }
