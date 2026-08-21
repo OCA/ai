@@ -7,8 +7,8 @@
             <form string="Find Products with AI">
                 <group>
                     <field name="order_id" readonly="1"/>
-                    <field name="ai_connection_id" required="1" options="{'no_create': True}"/>
                     <field name="state" readonly="1"/>
+                    <field name="ai_connection_id" invisible="1"/>
                 </group>
                 <group string="Filters (optional)">
                     <field name="brand_id" placeholder="All brands" options="{'no_create': True}"/>
