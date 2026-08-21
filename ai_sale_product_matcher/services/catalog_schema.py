@@ -38,65 +38,50 @@ def _load_catalog_schema():
 
 
 def get_attributes(env=None):
-    """Sector-independent: if env provided, fetch live PIM attributes; else fallback to bundled file."""
-    if env is not None:
-        try:
-            # Live PIM: attribute.attribute holds all typed attributes (via attribute_set)
-            attrs = env["attribute.attribute"].search([])
-            result = []
-            for attr in attrs:
-                # field_name is like x_pressure_bar -> key is without x_
-                key = (
-                    attr.field_id.name[2:]
-                    if attr.field_id and attr.field_id.name.startswith("x_")
-                    else attr.name
-                )
-                # Map attribute_type to catalog type
-                type_map = {
-                    "char": "char",
-                    "text": "text",
-                    "select": "selection",
-                    "multiselect": "multiselect",
-                    "boolean": "boolean",
-                    "integer": "integer",
-                    "float": "float",
-                    "date": "date",
-                    "datetime": "datetime",
-                    "binary": "binary",
-                    "many2one": "many2one",
-                    "many2many": "many2many",
+    """Sector-independent, always English prompt: key set is live PIM when env given, otherwise bundled file.
+
+    For this deployment the bundled file (232 keys) is the PIM snapshot for cleaning machines,
+    so live and file are identical (232). We keep file as primary for stable Turkish labels
+    (e.g. 'Temiz Su Tankı') which help LLM map Turkish specs, and merge live keys if any new.
+    """
+    file_attrs = _load_catalog_schema().get("attributes", [])
+    if env is None:
+        return file_attrs
+    try:
+        live_attrs = env["attribute.attribute"].search([])
+        if not live_attrs:
+            return file_attrs
+        live_keys = set()
+        for attr in live_attrs:
+            key = (
+                attr.field_id.name[2:]
+                if attr.field_id and attr.field_id.name.startswith("x_")
+                else attr.name
+            )
+            live_keys.add(key)
+        file_keys = set(a.get("key") for a in file_attrs)
+        if live_keys == file_keys:
+            return file_attrs
+        merged = {a["key"]: a for a in file_attrs}
+        for attr in live_attrs:
+            key = (
+                attr.field_id.name[2:]
+                if attr.field_id and attr.field_id.name.startswith("x_")
+                else attr.name
+            )
+            if key not in merged:
+                merged[key] = {
+                    "key": key,
+                    "label_tr": attr.field_id.field_description
+                    if attr.field_id
+                    else attr.name,
+                    "label_en": attr.name,
+                    "type": attr.attribute_type,
+                    "group": "genel",
                 }
-                typ = type_map.get(attr.attribute_type, "char")
-                group = (
-                    attr.attribute_group_id.name.lower()
-                    if attr.attribute_group_id
-                    else "genel"
-                )
-                # Normalize group to our 4 buckets for weighting
-                if "teknik" in group:
-                    group = "teknik"
-                elif "donan" in group:
-                    group = "donanim"
-                elif "akses" in group:
-                    group = "aksesuar"
-                else:
-                    group = "genel"
-                result.append(
-                    {
-                        "key": key,
-                        "label_tr": attr.field_id.field_description
-                        if attr.field_id
-                        else attr.name,
-                        "label_en": attr.name,
-                        "type": typ,
-                        "group": group,
-                    }
-                )
-            if result:
-                return result
-        except Exception:
-            pass
-    return _load_catalog_schema().get("attributes", [])
+        return list(merged.values())
+    except Exception:
+        return file_attrs
 
 
 def get_groups(env=None):
@@ -124,14 +109,15 @@ def get_sets(env=None):
 def get_schema_prompt_block(env=None):
     """Build compressed prompt block: key | label | type | group.
 
-    Always English prompt, sector-independent: keys are live PIM attribute keys.
-    If env is given, fetch live; otherwise fallback to bundled file (for tests).
+    Always English prompt, sector-independent: keys are PIM attribute keys.
+    Labels are Turkish (from PIM) to help LLM map Turkish specs to English keys.
     """
     attrs = get_attributes(env=env)
     lines = []
     for attr in attrs:
         key = attr.get("key", "")
-        label = attr.get("label_en") or attr.get("label_tr") or key
+        # Prefer Turkish label for Turkish specs, even though prompt is English
+        label = attr.get("label_tr") or attr.get("label_en") or key
         typ = attr.get("type", "char")
         group = attr.get("group", "genel")
         extra = ""
