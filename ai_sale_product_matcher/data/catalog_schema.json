@@ -1,0 +1,2070 @@
+{
+  "meta": {
+    "schema": "katalog-sablonu/1.0",
+    "kaynaklar": [
+      "nilfisk-products.json",
+      "nilfisk-supurger.json",
+      "rottest-products.json",
+      "viper-products.json"
+    ],
+    "urun_sayisi": 163,
+    "ozellik_sayisi": 232,
+    "not": "Kanonik anahtarlar tüm dosyalarda aynı kavram için tektir. Set hiyerarşisi: common -> marka -> kategori; ürünler kendi kategori setine bağlıdır, üst setler miras alınır. Her özellik kendisini kullanan tüm ürünleri kapsayan EN ALT sete atanır (LCA): üç katalogda olanlar + iki markada birden kullanılanlar common'a, tek markanın birden çok kategorisinde olanlar marka setine, diğerleri kategori setine. Rottest Özellik matrisi feature_* boolean'larına dönüştürüldü (model adı eşleşmesinde VEYA mantığı)."
+  },
+  "groups": [
+    {
+      "key": "genel",
+      "label_tr": "Genel",
+      "sequence": 10
+    },
+    {
+      "key": "teknik",
+      "label_tr": "Teknik Değerler",
+      "sequence": 20
+    },
+    {
+      "key": "donanim",
+      "label_tr": "Donanım Özellikleri",
+      "sequence": 30
+    },
+    {
+      "key": "aksesuar",
+      "label_tr": "Standart Aksesuarlar",
+      "sequence": 40
+    }
+  ],
+  "sets": [
+    {
+      "key": "common",
+      "label_tr": "Ortak Özellikler (Tüm Kataloglar)",
+      "parent": null,
+      "brand": null
+    },
+    {
+      "key": "brand_nilfisk",
+      "label_tr": "Nilfisk Ortak",
+      "parent": "common",
+      "brand": "Nilfisk"
+    },
+    {
+      "key": "brand_viper",
+      "label_tr": "Viper Ortak",
+      "parent": "common",
+      "brand": "Viper"
+    },
+    {
+      "key": "brand_rottest",
+      "label_tr": "Rottest Ortak",
+      "parent": "common",
+      "brand": "Rottest"
+    },
+    {
+      "key": "grp_nilfisk_basinc",
+      "label_tr": "Basınçlı Yıkama (Soğuk/Sıcak Sulu)",
+      "parent": "brand_nilfisk",
+      "brand": "Nilfisk"
+    },
+    {
+      "key": "grp_nilfisk_basincli_yikama_makineleri",
+      "label_tr": "Basınçlı Yıkama Makineleri",
+      "parent": "brand_nilfisk",
+      "brand": "Nilfisk"
+    },
+    {
+      "key": "grp_nilfisk_cila_ve_parlatma_makineleri",
+      "label_tr": "Cila ve Parlatma Makineleri",
+      "parent": "brand_nilfisk",
+      "brand": "Nilfisk"
+    },
+    {
+      "key": "grp_nilfisk_elektrikli_supurgeler",
+      "label_tr": "Elektrikli Süpürgeler",
+      "parent": "brand_nilfisk",
+      "brand": "Nilfisk"
+    },
+    {
+      "key": "grp_nilfisk_endustriyel_vakum_makineleri",
+      "label_tr": "Endüstriyel Vakum Makineleri",
+      "parent": "brand_nilfisk",
+      "brand": "Nilfisk"
+    },
+    {
+      "key": "grp_nilfisk_hali_temizleme_makineleri",
+      "label_tr": "Halı Temizleme Makineleri",
+      "parent": "brand_nilfisk",
+      "brand": "Nilfisk"
+    },
+    {
+      "key": "grp_nilfisk_islak_kuru_tip_elektrikli_supurgeler",
+      "label_tr": "Islak Kuru Tip Elektrikli Süpürgeler",
+      "parent": "brand_nilfisk",
+      "brand": "Nilfisk"
+    },
+    {
+      "key": "grp_nilfisk_islak_ve_kuru_supurgeler",
+      "label_tr": "Islak ve Kuru Süpürgeler",
+      "parent": "brand_nilfisk",
+      "brand": "Nilfisk"
+    },
+    {
+      "key": "grp_nilfisk_kablosuz_supurgeler",
+      "label_tr": "Kablosuz Süpürgeler",
+      "parent": "brand_nilfisk",
+      "brand": "Nilfisk"
+    },
+    {
+      "key": "grp_nilfisk_kuru_tip_elektrikli_supurgeler",
+      "label_tr": "Kuru Tip Elektrikli Süpürgeler",
+      "parent": "brand_nilfisk",
+      "brand": "Nilfisk"
+    },
+    {
+      "key": "grp_nilfisk_profesyonel_supurgeler",
+      "label_tr": "Profesyonel Süpürgeler",
+      "parent": "brand_nilfisk",
+      "brand": "Nilfisk"
+    },
+    {
+      "key": "grp_nilfisk_supuruculer",
+      "label_tr": "Süpürücüler",
+      "parent": "brand_nilfisk",
+      "brand": "Nilfisk"
+    },
+    {
+      "key": "grp_nilfisk_zemin_otomatlari",
+      "label_tr": "Zemin Otomatları",
+      "parent": "brand_nilfisk",
+      "brand": "Nilfisk"
+    },
+    {
+      "key": "grp_nilfisk_zemin_yikayicilar",
+      "label_tr": "Zemin Yıkayıcılar",
+      "parent": "brand_nilfisk",
+      "brand": "Nilfisk"
+    },
+    {
+      "key": "grp_rottest_yikama",
+      "label_tr": "Yüksek Basınçlı Yıkama Makineleri",
+      "parent": "brand_rottest",
+      "brand": "Rottest"
+    },
+    {
+      "key": "grp_viper_binicili_zemin_temizleme_makineleri",
+      "label_tr": "Binicili zemin temizleme makineleri",
+      "parent": "brand_viper",
+      "brand": "Viper"
+    },
+    {
+      "key": "grp_viper_cila_parlatma_makinesi",
+      "label_tr": "Cila parlatma makinesi",
+      "parent": "brand_viper",
+      "brand": "Viper"
+    },
+    {
+      "key": "grp_viper_hali_temizleyiciler",
+      "label_tr": "Halı temizleyiciler",
+      "parent": "brand_viper",
+      "brand": "Viper"
+    },
+    {
+      "key": "grp_viper_i_ticili_zemin_temizleme_makineleri",
+      "label_tr": "İticili zemin temizleme makineleri",
+      "parent": "brand_viper",
+      "brand": "Viper"
+    },
+    {
+      "key": "grp_viper_islak_kuru_tip_elektrikli_supurgeler",
+      "label_tr": "Islak kuru tip elektrikli süpürgeler",
+      "parent": "brand_viper",
+      "brand": "Viper"
+    },
+    {
+      "key": "grp_viper_kuru_tip_elektrikli_supurgeler",
+      "label_tr": "Kuru tip elektrikli süpürgeler",
+      "parent": "brand_viper",
+      "brand": "Viper"
+    },
+    {
+      "key": "grp_viper_kurutucular",
+      "label_tr": "Kurutucular",
+      "parent": "brand_viper",
+      "brand": "Viper"
+    },
+    {
+      "key": "grp_viper_supuruculer",
+      "label_tr": "Süpürücüler",
+      "parent": "brand_viper",
+      "brand": "Viper"
+    },
+    {
+      "key": "grp_viper_tek_diskli_makineler",
+      "label_tr": "Tek diskli makineler",
+      "parent": "brand_viper",
+      "brand": "Viper"
+    }
+  ],
+  "attributes": [
+    {
+      "key": "acc_accessory_bag",
+      "label_tr": "Aks.: Aksesuar Çantası",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "grp_viper_hali_temizleyiciler",
+      "field_name": "x_acc_accessory_bag"
+    },
+    {
+      "key": "acc_angled_nozzle",
+      "label_tr": "Aks.: Eğimli Başlık",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_islak_ve_kuru_supurgeler",
+      "field_name": "x_acc_angled_nozzle"
+    },
+    {
+      "key": "acc_beacon",
+      "label_tr": "Aks.: Tepe Lambası",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "grp_viper_binicili_zemin_temizleme_makineleri",
+      "field_name": "x_acc_beacon"
+    },
+    {
+      "key": "acc_brush",
+      "label_tr": "Aks.: Fırça",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "brand_viper",
+      "field_name": "x_acc_brush"
+    },
+    {
+      "key": "acc_brush_20inch",
+      "label_tr": "Aks.: 20\" Fırça",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "grp_viper_binicili_zemin_temizleme_makineleri",
+      "field_name": "x_acc_brush_20inch"
+    },
+    {
+      "key": "acc_cable",
+      "label_tr": "Aks.: Kablo",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "grp_viper_hali_temizleyiciler",
+      "field_name": "x_acc_cable"
+    },
+    {
+      "key": "acc_carpet_brush",
+      "label_tr": "Aks.: Halı Fırçası",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "grp_viper_tek_diskli_makineler",
+      "field_name": "x_acc_carpet_brush"
+    },
+    {
+      "key": "acc_carpet_tool",
+      "label_tr": "Aks.: Halı Yıkama Aparatı",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "grp_viper_hali_temizleyiciler",
+      "field_name": "x_acc_carpet_tool"
+    },
+    {
+      "key": "acc_combi_nozzle",
+      "label_tr": "Aks.: Combi Nozzle",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_acc_combi_nozzle"
+    },
+    {
+      "key": "acc_combination_floor_brush",
+      "label_tr": "Aks.: Kombine Yer Fırçası",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_islak_ve_kuru_supurgeler",
+      "field_name": "x_acc_combination_floor_brush"
+    },
+    {
+      "key": "acc_corner_tool",
+      "label_tr": "Aks.: Köşe Aparatı",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "grp_viper_kuru_tip_elektrikli_supurgeler",
+      "field_name": "x_acc_corner_tool"
+    },
+    {
+      "key": "acc_crevice_tool",
+      "label_tr": "Aks.: Dar Ağızlı Uç",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "brand_viper",
+      "field_name": "x_acc_crevice_tool"
+    },
+    {
+      "key": "acc_debris_strainer",
+      "label_tr": "Aks.: Çöp Süzgeci",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "grp_viper_binicili_zemin_temizleme_makineleri",
+      "field_name": "x_acc_debris_strainer"
+    },
+    {
+      "key": "acc_disc_brush",
+      "label_tr": "Aks.: Disk Fırça",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "grp_viper_i_ticili_zemin_temizleme_makineleri",
+      "field_name": "x_acc_disc_brush"
+    },
+    {
+      "key": "acc_dry_nozzle",
+      "label_tr": "Aks.: Kuru Nozul",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "grp_viper_islak_kuru_tip_elektrikli_supurgeler",
+      "field_name": "x_acc_dry_nozzle"
+    },
+    {
+      "key": "acc_dust_filter",
+      "label_tr": "Aks.: Toz Filtresi",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "brand_viper",
+      "field_name": "x_acc_dust_filter"
+    },
+    {
+      "key": "acc_filter",
+      "label_tr": "Aks.: Filtre",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_acc_filter"
+    },
+    {
+      "key": "acc_filter_kit",
+      "label_tr": "Aks.: Filtre Kiti",
+      "type": "integer",
+      "group": "aksesuar",
+      "set": "grp_viper_supuruculer",
+      "field_name": "x_acc_filter_kit"
+    },
+    {
+      "key": "acc_floor_brush",
+      "label_tr": "Aks.: Yer Fırçası",
+      "type": "integer",
+      "group": "aksesuar",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_acc_floor_brush"
+    },
+    {
+      "key": "acc_floor_tool",
+      "label_tr": "Aks.: Döşeme Aparatı",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "brand_viper",
+      "field_name": "x_acc_floor_tool"
+    },
+    {
+      "key": "acc_front_squeegee",
+      "label_tr": "Aks.: Ön Silecek",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "brand_viper",
+      "field_name": "x_acc_front_squeegee"
+    },
+    {
+      "key": "acc_hand_tool_kit",
+      "label_tr": "Aks.: El Aleti Kiti",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "grp_viper_hali_temizleyiciler",
+      "field_name": "x_acc_hand_tool_kit"
+    },
+    {
+      "key": "acc_hepa_filter",
+      "label_tr": "Aks.: HEPA Filtre",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "grp_viper_kuru_tip_elektrikli_supurgeler",
+      "field_name": "x_acc_hepa_filter"
+    },
+    {
+      "key": "acc_hose_kit",
+      "label_tr": "Aks.: Hortum Kiti",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "brand_viper",
+      "field_name": "x_acc_hose_kit"
+    },
+    {
+      "key": "acc_large_turbo_brush",
+      "label_tr": "Aks.: Büyük Turbo Fırça",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_acc_large_turbo_brush"
+    },
+    {
+      "key": "acc_main_brush",
+      "label_tr": "Aks.: Ana Fırça",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "brand_viper",
+      "field_name": "x_acc_main_brush"
+    },
+    {
+      "key": "acc_mini_turbo_brush",
+      "label_tr": "Aks.: Mini Turbo Fırça",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_acc_mini_turbo_brush"
+    },
+    {
+      "key": "acc_mini_turbo_nozzle",
+      "label_tr": "Aks.: Mini Turbo Nozzle",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_acc_mini_turbo_nozzle"
+    },
+    {
+      "key": "acc_pad_holder",
+      "label_tr": "Aks.: Ped Tutucu",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "brand_viper",
+      "field_name": "x_acc_pad_holder"
+    },
+    {
+      "key": "acc_parquet_nozzle",
+      "label_tr": "Aks.: Parke/Sert Zemin Nozzle",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_acc_parquet_nozzle"
+    },
+    {
+      "key": "acc_rear_squeegee",
+      "label_tr": "Aks.: Arka Silecek",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "brand_viper",
+      "field_name": "x_acc_rear_squeegee"
+    },
+    {
+      "key": "acc_round_brush_nozzle",
+      "label_tr": "Aks.: Yuvarlak Fırçalı Nozul",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "grp_viper_islak_kuru_tip_elektrikli_supurgeler",
+      "field_name": "x_acc_round_brush_nozzle"
+    },
+    {
+      "key": "acc_side_brush",
+      "label_tr": "Aks.: Yan Fırça",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "grp_viper_supuruculer",
+      "field_name": "x_acc_side_brush"
+    },
+    {
+      "key": "acc_side_squeegees",
+      "label_tr": "Aks.: Yan Silecekler",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "grp_viper_binicili_zemin_temizleme_makineleri",
+      "field_name": "x_acc_side_squeegees"
+    },
+    {
+      "key": "acc_splash_guard",
+      "label_tr": "Aks.: Su Sıçratma Aparatı",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "grp_viper_i_ticili_zemin_temizleme_makineleri",
+      "field_name": "x_acc_splash_guard"
+    },
+    {
+      "key": "acc_squeegee_set",
+      "label_tr": "Aks.: Silecek Seti",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "grp_viper_supuruculer",
+      "field_name": "x_acc_squeegee_set"
+    },
+    {
+      "key": "acc_suction_hose",
+      "label_tr": "Aks.: Emiş Hortumu",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "grp_viper_kuru_tip_elektrikli_supurgeler",
+      "field_name": "x_acc_suction_hose"
+    },
+    {
+      "key": "acc_tank_kit",
+      "label_tr": "Aks.: Tank Kiti",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "grp_viper_tek_diskli_makineler",
+      "field_name": "x_acc_tank_kit"
+    },
+    {
+      "key": "acc_tube_kit",
+      "label_tr": "Aks.: Boru Kiti",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "brand_viper",
+      "field_name": "x_acc_tube_kit"
+    },
+    {
+      "key": "acc_upholstery_brush",
+      "label_tr": "Aks.: Kenar/Mobilya Fırçası",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_acc_upholstery_brush"
+    },
+    {
+      "key": "acc_vacuum_nozzle",
+      "label_tr": "Aks.: Vakum Ağzı",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "grp_viper_hali_temizleyiciler",
+      "field_name": "x_acc_vacuum_nozzle"
+    },
+    {
+      "key": "acc_warning_light_kit",
+      "label_tr": "Aks.: İkaz Lambası Kiti",
+      "type": "integer",
+      "group": "aksesuar",
+      "set": "grp_viper_supuruculer",
+      "field_name": "x_acc_warning_light_kit"
+    },
+    {
+      "key": "acc_water_spray_kit",
+      "label_tr": "Aks.: Su Püskürtme Kiti",
+      "type": "integer",
+      "group": "aksesuar",
+      "set": "grp_viper_supuruculer",
+      "field_name": "x_acc_water_spray_kit"
+    },
+    {
+      "key": "acc_wet_nozzle",
+      "label_tr": "Aks.: Islak Nozul",
+      "type": "char",
+      "group": "aksesuar",
+      "set": "grp_viper_islak_kuru_tip_elektrikli_supurgeler",
+      "field_name": "x_acc_wet_nozzle"
+    },
+    {
+      "key": "accessory_park_area",
+      "label_tr": "Aksesuar Park Alanı",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_nilfisk_islak_ve_kuru_supurgeler",
+      "field_name": "x_accessory_park_area"
+    },
+    {
+      "key": "adjustable_brush_pressure",
+      "label_tr": "Ayarlanabilir Fırça Basıncı",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "brand_viper",
+      "field_name": "x_adjustable_brush_pressure"
+    },
+    {
+      "key": "adjustable_handle",
+      "label_tr": "Ayarlanabilir Sap",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "brand_viper",
+      "field_name": "x_adjustable_handle"
+    },
+    {
+      "key": "air_flow_l_min",
+      "label_tr": "Hava Debisi (L/dk)",
+      "type": "char",
+      "group": "teknik",
+      "set": "common",
+      "field_name": "x_air_flow_l_min"
+    },
+    {
+      "key": "air_flow_l_s",
+      "label_tr": "Hava Debisi (L/sn)",
+      "type": "char",
+      "group": "teknik",
+      "set": "brand_nilfisk",
+      "field_name": "x_air_flow_l_s"
+    },
+    {
+      "key": "air_flow_max",
+      "label_tr": "Hava Debisi (maks)",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_viper_kurutucular",
+      "field_name": "x_air_flow_max"
+    },
+    {
+      "key": "auto_start_stop",
+      "label_tr": "Otomatik Başlatma/Durdurma",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_basincli_yikama_makineleri",
+      "field_name": "x_auto_start_stop"
+    },
+    {
+      "key": "automatic_brush_change",
+      "label_tr": "Otomatik Fırça Tak-Çıkar",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "brand_viper",
+      "field_name": "x_automatic_brush_change"
+    },
+    {
+      "key": "battery_charger",
+      "label_tr": "Akü Şarj Aleti",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_viper_binicili_zemin_temizleme_makineleri",
+      "field_name": "x_battery_charger"
+    },
+    {
+      "key": "battery_compartment_mm",
+      "label_tr": "Akü Bölmesi (mm)",
+      "type": "char",
+      "group": "teknik",
+      "set": "brand_viper",
+      "field_name": "x_battery_compartment_mm"
+    },
+    {
+      "key": "battery_type",
+      "label_tr": "Akü Tipi",
+      "type": "char",
+      "group": "teknik",
+      "set": "common",
+      "field_name": "x_battery_type"
+    },
+    {
+      "key": "battery_version",
+      "label_tr": "Akülü Versiyon",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "brand_viper",
+      "field_name": "x_battery_version"
+    },
+    {
+      "key": "bendable_drain_hose",
+      "label_tr": "Bükülebilir Tahliye Hortumu",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_viper_i_ticili_zemin_temizleme_makineleri",
+      "field_name": "x_bendable_drain_hose"
+    },
+    {
+      "key": "blowing_function",
+      "label_tr": "Üfleme Özelliği",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_islak_ve_kuru_supurgeler",
+      "field_name": "x_blowing_function"
+    },
+    {
+      "key": "body_material",
+      "label_tr": "Gövde Malzemesi",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_body_material"
+    },
+    {
+      "key": "brush_diameter_mm",
+      "label_tr": "Fırça Çapı (mm)",
+      "type": "char",
+      "group": "teknik",
+      "set": "common",
+      "field_name": "x_brush_diameter_mm"
+    },
+    {
+      "key": "brush_motor_power_w",
+      "label_tr": "Fırça Motoru (W)",
+      "type": "char",
+      "group": "teknik",
+      "set": "brand_viper",
+      "field_name": "x_brush_motor_power_w"
+    },
+    {
+      "key": "brush_pad_pressure_g_cm2",
+      "label_tr": "Fırça/Ped Basıncı (g/cm²)",
+      "type": "integer",
+      "group": "teknik",
+      "set": "grp_nilfisk_cila_ve_parlatma_makineleri",
+      "field_name": "x_brush_pad_pressure_g_cm2"
+    },
+    {
+      "key": "brush_pressure_kg",
+      "label_tr": "Fırça Basıncı (kg)",
+      "type": "char",
+      "group": "teknik",
+      "set": "common",
+      "field_name": "x_brush_pressure_kg"
+    },
+    {
+      "key": "brush_pressure_rpm_kg",
+      "label_tr": "Fırça Basıncı (rpm/kg)",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_nilfisk_zemin_otomatlari",
+      "field_name": "x_brush_pressure_rpm_kg"
+    },
+    {
+      "key": "brush_speed_rpm",
+      "label_tr": "Fırça Devri (rpm)",
+      "type": "char",
+      "group": "teknik",
+      "set": "common",
+      "field_name": "x_brush_speed_rpm"
+    },
+    {
+      "key": "brush_torque_nm",
+      "label_tr": "Fırça Torku (Nm)",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_nilfisk_cila_ve_parlatma_makineleri",
+      "field_name": "x_brush_torque_nm"
+    },
+    {
+      "key": "built_in_accessories",
+      "label_tr": "Dahili Aksesuarlar",
+      "type": "char",
+      "group": "genel",
+      "set": "grp_nilfisk_kablosuz_supurgeler",
+      "field_name": "x_built_in_accessories"
+    },
+    {
+      "key": "built_in_accessory_count",
+      "label_tr": "Dahili Aksesuar Sayısı",
+      "type": "integer",
+      "group": "teknik",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_built_in_accessory_count"
+    },
+    {
+      "key": "built_in_cable",
+      "label_tr": "Dahili Kablo",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_viper_hali_temizleyiciler",
+      "field_name": "x_built_in_cable"
+    },
+    {
+      "key": "cable_length_m",
+      "label_tr": "Kablo Uzunluğu (m)",
+      "type": "char",
+      "group": "teknik",
+      "set": "common",
+      "field_name": "x_cable_length_m"
+    },
+    {
+      "key": "cable_rewind",
+      "label_tr": "Kablo Sarıcı",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_cable_rewind"
+    },
+    {
+      "key": "cable_winder",
+      "label_tr": "Kablo Sarmalı",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_viper_kurutucular",
+      "field_name": "x_cable_winder"
+    },
+    {
+      "key": "car_wash_kit",
+      "label_tr": "Araç Yıkama Kiti",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_basincli_yikama_makineleri",
+      "field_name": "x_car_wash_kit"
+    },
+    {
+      "key": "carpet_performance",
+      "label_tr": "Halı Performansı",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_carpet_performance"
+    },
+    {
+      "key": "carry_handle",
+      "label_tr": "Taşıma Kolu",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_viper_kurutucular",
+      "field_name": "x_carry_handle"
+    },
+    {
+      "key": "ceramic_coated_piston",
+      "label_tr": "Seramik Kaplama Piston",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_basinc",
+      "field_name": "x_ceramic_coated_piston"
+    },
+    {
+      "key": "certificates",
+      "label_tr": "Sertifikalar",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_certificates"
+    },
+    {
+      "key": "charge_indicator",
+      "label_tr": "Şarj Göstergesi",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_kablosuz_supurgeler",
+      "field_name": "x_charge_indicator"
+    },
+    {
+      "key": "clean_dirty_tanks_l",
+      "label_tr": "Temiz/Kirli Su Tankları (L)",
+      "type": "char",
+      "group": "teknik",
+      "set": "common",
+      "field_name": "x_clean_dirty_tanks_l"
+    },
+    {
+      "key": "clean_water_filter",
+      "label_tr": "Temiz Su Filtresi",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_viper_hali_temizleyiciler",
+      "field_name": "x_clean_water_filter"
+    },
+    {
+      "key": "clean_water_pump_pressure_bar",
+      "label_tr": "Temiz Su Pompa Basıncı (bar)",
+      "type": "integer",
+      "group": "teknik",
+      "set": "grp_viper_hali_temizleyiciler",
+      "field_name": "x_clean_water_pump_pressure_bar"
+    },
+    {
+      "key": "clean_water_tank_l",
+      "label_tr": "Temiz Su Tankı (L)",
+      "type": "float",
+      "group": "teknik",
+      "set": "common",
+      "field_name": "x_clean_water_tank_l"
+    },
+    {
+      "key": "cleaning_area_per_charge_m2",
+      "label_tr": "Şarj Başına Alan (m²)",
+      "type": "integer",
+      "group": "teknik",
+      "set": "grp_nilfisk_zemin_yikayicilar",
+      "field_name": "x_cleaning_area_per_charge_m2"
+    },
+    {
+      "key": "cleaning_width_2_brushes_mm",
+      "label_tr": "Temizleme Genişliği, 2 Fırça (mm)",
+      "type": "integer",
+      "group": "teknik",
+      "set": "common",
+      "field_name": "x_cleaning_width_2_brushes_mm"
+    },
+    {
+      "key": "cleaning_width_mm",
+      "label_tr": "Temizleme Genişliği (mm)",
+      "type": "char",
+      "group": "teknik",
+      "set": "common",
+      "field_name": "x_cleaning_width_mm"
+    },
+    {
+      "key": "cleaning_width_side_brush_mm",
+      "label_tr": "Temizleme Genişliği, Yan Fırça (mm)",
+      "type": "integer",
+      "group": "teknik",
+      "set": "common",
+      "field_name": "x_cleaning_width_side_brush_mm"
+    },
+    {
+      "key": "color",
+      "label_tr": "Renk",
+      "type": "char",
+      "group": "genel",
+      "set": "common",
+      "field_name": "x_color"
+    },
+    {
+      "key": "compact_design",
+      "label_tr": "Kompakt Tasarım",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "brand_viper",
+      "field_name": "x_compact_design"
+    },
+    {
+      "key": "connection_type",
+      "label_tr": "Bağlantı Tipi",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_nilfisk_basincli_yikama_makineleri",
+      "field_name": "x_connection_type"
+    },
+    {
+      "key": "container_capacity_kg",
+      "label_tr": "Konteyner Kapasitesi (kg)",
+      "type": "float",
+      "group": "teknik",
+      "set": "grp_nilfisk_profesyonel_supurgeler",
+      "field_name": "x_container_capacity_kg"
+    },
+    {
+      "key": "corded_version",
+      "label_tr": "Kablolu Versiyon",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_viper_i_ticili_zemin_temizleme_makineleri",
+      "field_name": "x_corded_version"
+    },
+    {
+      "key": "cyclonic_filter",
+      "label_tr": "Siklonik Filtre",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_cyclonic_filter"
+    },
+    {
+      "key": "debris_strainer",
+      "label_tr": "Çöp Süzgeci",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_viper_binicili_zemin_temizleme_makineleri",
+      "field_name": "x_debris_strainer"
+    },
+    {
+      "key": "depth_cm",
+      "label_tr": "Derinlik (cm)",
+      "type": "integer",
+      "group": "teknik",
+      "set": "grp_rottest_yikama",
+      "field_name": "x_depth_cm"
+    },
+    {
+      "key": "description",
+      "label_tr": "Açıklama",
+      "type": "char",
+      "group": "genel",
+      "set": "common",
+      "field_name": "x_description"
+    },
+    {
+      "key": "design",
+      "label_tr": "Tasarım",
+      "type": "char",
+      "group": "teknik",
+      "set": "brand_nilfisk",
+      "field_name": "x_design"
+    },
+    {
+      "key": "detachable_tanks",
+      "label_tr": "Ayrılabilir Hazneler",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_viper_hali_temizleyiciler",
+      "field_name": "x_detachable_tanks"
+    },
+    {
+      "key": "dimensions_cm",
+      "label_tr": "Boyutlar (cm)",
+      "type": "char",
+      "group": "teknik",
+      "set": "common",
+      "field_name": "x_dimensions_cm"
+    },
+    {
+      "key": "dimensions_mm",
+      "label_tr": "Boyutlar (mm)",
+      "type": "char",
+      "group": "teknik",
+      "set": "common",
+      "field_name": "x_dimensions_mm"
+    },
+    {
+      "key": "dirty_water_drain_hoses",
+      "label_tr": "Kirli Su Tahliye Hortumları",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "brand_viper",
+      "field_name": "x_dirty_water_drain_hoses"
+    },
+    {
+      "key": "dirty_water_tank_l",
+      "label_tr": "Kirli Su Tankı (L)",
+      "type": "float",
+      "group": "teknik",
+      "set": "common",
+      "field_name": "x_dirty_water_tank_l"
+    },
+    {
+      "key": "disc_brush_model",
+      "label_tr": "Disk Fırçalı Model",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_viper_binicili_zemin_temizleme_makineleri",
+      "field_name": "x_disc_brush_model"
+    },
+    {
+      "key": "drain_hose",
+      "label_tr": "Tahliye Hortumu",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_viper_hali_temizleyiciler",
+      "field_name": "x_drain_hose"
+    },
+    {
+      "key": "dual_disc_brush_platform",
+      "label_tr": "Disk Fırça Platformu (2 Fırça)",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_viper_binicili_zemin_temizleme_makineleri",
+      "field_name": "x_dual_disc_brush_platform"
+    },
+    {
+      "key": "dust_bag_capacity_l",
+      "label_tr": "Toz Torbası Kapasitesi (L)",
+      "type": "char",
+      "group": "teknik",
+      "set": "brand_nilfisk",
+      "field_name": "x_dust_bag_capacity_l"
+    },
+    {
+      "key": "dust_bin_capacity_l",
+      "label_tr": "Toz Haznesi Kapasitesi (L)",
+      "type": "integer",
+      "group": "teknik",
+      "set": "grp_nilfisk_zemin_otomatlari",
+      "field_name": "x_dust_bin_capacity_l"
+    },
+    {
+      "key": "dust_class",
+      "label_tr": "Toz Sınıfı",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_nilfisk_profesyonel_supurgeler",
+      "field_name": "x_dust_class"
+    },
+    {
+      "key": "ean",
+      "label_tr": "EAN Numarası",
+      "type": "integer",
+      "group": "genel",
+      "set": "common",
+      "field_name": "x_ean"
+    },
+    {
+      "key": "easy_carry_handle",
+      "label_tr": "Kolay Taşıma Sapı",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "brand_viper",
+      "field_name": "x_easy_carry_handle"
+    },
+    {
+      "key": "easy_control_panel",
+      "label_tr": "Kolay Kontrol Paneli",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_viper_hali_temizleyiciler",
+      "field_name": "x_easy_control_panel"
+    },
+    {
+      "key": "easy_empty_dust_bin",
+      "label_tr": "Kolay Boşaltılan Toz Haznesi",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_easy_empty_dust_bin"
+    },
+    {
+      "key": "easy_maintenance",
+      "label_tr": "Kolay Bakım",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_zemin_yikayicilar",
+      "field_name": "x_easy_maintenance"
+    },
+    {
+      "key": "easy_motor_access",
+      "label_tr": "Motor Alanına Kolay Ulaşım",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_basinc",
+      "field_name": "x_easy_motor_access"
+    },
+    {
+      "key": "easy_transport_wheel",
+      "label_tr": "Kolay Taşıma Tekerleği",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_kablosuz_supurgeler",
+      "field_name": "x_easy_transport_wheel"
+    },
+    {
+      "key": "eco_mode",
+      "label_tr": "Eko Mod",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "brand_viper",
+      "field_name": "x_eco_mode"
+    },
+    {
+      "key": "electric_filter_shaker",
+      "label_tr": "Elektrikli Filtre Temizleyici",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_viper_supuruculer",
+      "field_name": "x_electric_filter_shaker"
+    },
+    {
+      "key": "electricity_consumption_kwh",
+      "label_tr": "Elektrik Sarfiyatı (kW/sa)",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_rottest_yikama",
+      "field_name": "x_electricity_consumption_kwh"
+    },
+    {
+      "key": "energy_class",
+      "label_tr": "Enerji Sınıfı",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_energy_class"
+    },
+    {
+      "key": "equipment_features",
+      "label_tr": "Donanım Özellikleri",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_nilfisk_zemin_yikayicilar",
+      "field_name": "x_equipment_features"
+    },
+    {
+      "key": "ergonomic_handle",
+      "label_tr": "Ergonomik Sap",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "common",
+      "field_name": "x_ergonomic_handle"
+    },
+    {
+      "key": "extra_features",
+      "label_tr": "Ekstra Özellikler",
+      "type": "char",
+      "group": "genel",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_extra_features"
+    },
+    {
+      "key": "filter_advantage",
+      "label_tr": "Filtre Avantajı",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_filter_advantage"
+    },
+    {
+      "key": "filter_area",
+      "label_tr": "Filtre Alanı",
+      "type": "char",
+      "group": "teknik",
+      "set": "brand_nilfisk",
+      "field_name": "x_filter_area"
+    },
+    {
+      "key": "filter_brush_maintenance",
+      "label_tr": "Filtre/Fırça Bakımı",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_nilfisk_zemin_yikayicilar",
+      "field_name": "x_filter_brush_maintenance"
+    },
+    {
+      "key": "filter_detail",
+      "label_tr": "Filtre Detayı",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_filter_detail"
+    },
+    {
+      "key": "filter_indicator",
+      "label_tr": "Filtre Göstergesi",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_islak_ve_kuru_supurgeler",
+      "field_name": "x_filter_indicator"
+    },
+    {
+      "key": "filter_technology",
+      "label_tr": "Filtre Teknolojisi",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_filter_technology"
+    },
+    {
+      "key": "floor_detection",
+      "label_tr": "Zemin Tanıma Özelliği",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_floor_detection"
+    },
+    {
+      "key": "flow_activated_fa",
+      "label_tr": "Su Akışı Aktivasyonlu FA",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_basinc",
+      "field_name": "x_flow_activated_fa"
+    },
+    {
+      "key": "flow_rate_l_h",
+      "label_tr": "Debi (L/saat)",
+      "type": "char",
+      "group": "teknik",
+      "set": "common",
+      "field_name": "x_flow_rate_l_h"
+    },
+    {
+      "key": "frequency_hz",
+      "label_tr": "Frekans (Hz)",
+      "type": "char",
+      "group": "teknik",
+      "set": "brand_viper",
+      "field_name": "x_frequency_hz"
+    },
+    {
+      "key": "front_side_rear_squeegees",
+      "label_tr": "Ön/Yan/Arka Silecek",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_viper_supuruculer",
+      "field_name": "x_front_side_rear_squeegees"
+    },
+    {
+      "key": "fuel_consumption_kg_h",
+      "label_tr": "Yakıt Sarfiyatı (kg/sa)",
+      "type": "float",
+      "group": "teknik",
+      "set": "grp_rottest_yikama",
+      "field_name": "x_fuel_consumption_kg_h"
+    },
+    {
+      "key": "fuel_tank_l",
+      "label_tr": "Yakıt Tankı (L)",
+      "type": "integer",
+      "group": "teknik",
+      "set": "common",
+      "field_name": "x_fuel_tank_l"
+    },
+    {
+      "key": "full_bag_filter_indicator",
+      "label_tr": "Torba/Filtre Dolu Göstergesi",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_full_bag_filter_indicator"
+    },
+    {
+      "key": "gross_weight_kg",
+      "label_tr": "Brüt Ağırlık (kg)",
+      "type": "float",
+      "group": "teknik",
+      "set": "grp_viper_i_ticili_zemin_temizleme_makineleri",
+      "field_name": "x_gross_weight_kg"
+    },
+    {
+      "key": "handle_control",
+      "label_tr": "Koldan Kumanda",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_handle_control"
+    },
+    {
+      "key": "handle_vibration_m_s2",
+      "label_tr": "Sap Titreşimi (m/s²)",
+      "type": "char",
+      "group": "teknik",
+      "set": "brand_viper",
+      "field_name": "x_handle_vibration_m_s2"
+    },
+    {
+      "key": "hard_floor_drying_time",
+      "label_tr": "Sert Zemin Kuruma Süresi",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_nilfisk_zemin_yikayicilar",
+      "field_name": "x_hard_floor_drying_time"
+    },
+    {
+      "key": "has_10m_steel_hose",
+      "label_tr": "10 m Basınç Hortumu (Çelik Telli)",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_basinc",
+      "field_name": "x_has_10m_steel_hose"
+    },
+    {
+      "key": "has_detergent_tank",
+      "label_tr": "Deterjan Bidonu",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_basinc",
+      "field_name": "x_has_detergent_tank"
+    },
+    {
+      "key": "heating_stages",
+      "label_tr": "Isıtma Kademesi",
+      "type": "integer",
+      "group": "teknik",
+      "set": "grp_rottest_yikama",
+      "field_name": "x_heating_stages"
+    },
+    {
+      "key": "height_cm",
+      "label_tr": "Yükseklik (cm)",
+      "type": "integer",
+      "group": "teknik",
+      "set": "grp_rottest_yikama",
+      "field_name": "x_height_cm"
+    },
+    {
+      "key": "hidden_accessory_area",
+      "label_tr": "Gizli Aksesuar Alanı",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_kablosuz_supurgeler",
+      "field_name": "x_hidden_accessory_area"
+    },
+    {
+      "key": "hidden_accessory_compartment",
+      "label_tr": "Gizli Aksesuar Bölmesi",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_hidden_accessory_compartment"
+    },
+    {
+      "key": "hose_length_m",
+      "label_tr": "Hortum Uzunluğu (m)",
+      "type": "integer",
+      "group": "teknik",
+      "set": "grp_nilfisk_basincli_yikama_makineleri",
+      "field_name": "x_hose_length_m"
+    },
+    {
+      "key": "hose_rewind",
+      "label_tr": "Hortum Sarma Aparatı",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_hose_rewind"
+    },
+    {
+      "key": "hour_meter",
+      "label_tr": "Saat Sayacı",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_viper_i_ticili_zemin_temizleme_makineleri",
+      "field_name": "x_hour_meter"
+    },
+    {
+      "key": "is_new",
+      "label_tr": "Yeni Ürün",
+      "type": "boolean",
+      "group": "genel",
+      "set": "common",
+      "field_name": "x_is_new"
+    },
+    {
+      "key": "lcd_display",
+      "label_tr": "LCD Ekran",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_viper_binicili_zemin_temizleme_makineleri",
+      "field_name": "x_lcd_display"
+    },
+    {
+      "key": "led_lighting",
+      "label_tr": "LED Aydınlatma",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_kablosuz_supurgeler",
+      "field_name": "x_led_lighting"
+    },
+    {
+      "key": "low_noise_operation",
+      "label_tr": "Düşük Çalışma Sesi",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_viper_kuru_tip_elektrikli_supurgeler",
+      "field_name": "x_low_noise_operation"
+    },
+    {
+      "key": "machine_weight_kg",
+      "label_tr": "Makine Ağırlığı (kg)",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_viper_i_ticili_zemin_temizleme_makineleri",
+      "field_name": "x_machine_weight_kg"
+    },
+    {
+      "key": "main_roller_brush",
+      "label_tr": "Ana Rulo Fırça",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_viper_supuruculer",
+      "field_name": "x_main_roller_brush"
+    },
+    {
+      "key": "max_climb_percent",
+      "label_tr": "Maks. Tırmanma Eğimi (%)",
+      "type": "char",
+      "group": "teknik",
+      "set": "brand_viper",
+      "field_name": "x_max_climb_percent"
+    },
+    {
+      "key": "max_dump_height_cm",
+      "label_tr": "Maks. Boşaltma Yüksekliği (cm)",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_nilfisk_supuruculer",
+      "field_name": "x_max_dump_height_cm"
+    },
+    {
+      "key": "max_load_kg",
+      "label_tr": "Maksimum Yük (kg)",
+      "type": "char",
+      "group": "teknik",
+      "set": "brand_viper",
+      "field_name": "x_max_load_kg"
+    },
+    {
+      "key": "measured_current_a",
+      "label_tr": "Ölçülen Akım (A)",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_viper_kurutucular",
+      "field_name": "x_measured_current_a"
+    },
+    {
+      "key": "metal_pump",
+      "label_tr": "Metal Pompa",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_basincli_yikama_makineleri",
+      "field_name": "x_metal_pump"
+    },
+    {
+      "key": "min_turning_diameter",
+      "label_tr": "Minimum Dönüş Çapı",
+      "type": "integer",
+      "group": "teknik",
+      "set": "brand_viper",
+      "field_name": "x_min_turning_diameter"
+    },
+    {
+      "key": "model",
+      "label_tr": "Model",
+      "type": "char",
+      "group": "genel",
+      "set": "common",
+      "field_name": "x_model"
+    },
+    {
+      "key": "motor_power_hp",
+      "label_tr": "Motor Gücü (HP)",
+      "type": "float",
+      "group": "teknik",
+      "set": "grp_rottest_yikama",
+      "field_name": "x_motor_power_hp"
+    },
+    {
+      "key": "motor_power_kw",
+      "label_tr": "Motor Gücü (kW)",
+      "type": "char",
+      "group": "teknik",
+      "set": "brand_nilfisk",
+      "field_name": "x_motor_power_kw"
+    },
+    {
+      "key": "motor_power_w",
+      "label_tr": "Motor Gücü (W)",
+      "type": "char",
+      "group": "teknik",
+      "set": "common",
+      "field_name": "x_motor_power_w"
+    },
+    {
+      "key": "motor_rpm",
+      "label_tr": "Motor (rpm)",
+      "type": "integer",
+      "group": "teknik",
+      "set": "grp_nilfisk_basinc",
+      "field_name": "x_motor_rpm"
+    },
+    {
+      "key": "net_weight_kg",
+      "label_tr": "Net Ağırlık (kg)",
+      "type": "char",
+      "group": "teknik",
+      "set": "brand_viper",
+      "field_name": "x_net_weight_kg"
+    },
+    {
+      "key": "net_weight_without_batteries_kg",
+      "label_tr": "Net Ağırlık, Aküler Hariç (kg)",
+      "type": "integer",
+      "group": "teknik",
+      "set": "grp_viper_supuruculer",
+      "field_name": "x_net_weight_without_batteries_kg"
+    },
+    {
+      "key": "noise_db",
+      "label_tr": "Ses Seviyesi (dB)",
+      "type": "char",
+      "group": "teknik",
+      "set": "common",
+      "field_name": "x_noise_db"
+    },
+    {
+      "key": "noise_db_1_5m",
+      "label_tr": "1,5 m'de Gürültü (dBA)",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_nilfisk_cila_ve_parlatma_makineleri",
+      "field_name": "x_noise_db_1_5m"
+    },
+    {
+      "key": "on_off_button",
+      "label_tr": "Açma/Kapatma Düğmesi",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_on_off_button"
+    },
+    {
+      "key": "one_touch_button",
+      "label_tr": "One-Touch Tuşu",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_viper_i_ticili_zemin_temizleme_makineleri",
+      "field_name": "x_one_touch_button"
+    },
+    {
+      "key": "operating_temperature_c",
+      "label_tr": "Çalışma Sıcaklığı (°C)",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_nilfisk_zemin_yikayicilar",
+      "field_name": "x_operating_temperature_c"
+    },
+    {
+      "key": "package_dimensions_mm",
+      "label_tr": "Paket Boyutları (mm)",
+      "type": "char",
+      "group": "teknik",
+      "set": "common",
+      "field_name": "x_package_dimensions_mm"
+    },
+    {
+      "key": "pad_holder_included",
+      "label_tr": "Ped Tutucusu Dahil",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "brand_viper",
+      "field_name": "x_pad_holder_included"
+    },
+    {
+      "key": "park_position",
+      "label_tr": "Park Pozisyonu",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_viper_hali_temizleyiciler",
+      "field_name": "x_park_position"
+    },
+    {
+      "key": "phase",
+      "label_tr": "Faz",
+      "type": "select",
+      "group": "teknik",
+      "set": "grp_nilfisk_basinc",
+      "field_name": "x_phase"
+    },
+    {
+      "key": "polyester_dust_bag",
+      "label_tr": "Polyester Toz Torbası",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_islak_ve_kuru_supurgeler",
+      "field_name": "x_polyester_dust_bag"
+    },
+    {
+      "key": "power_socket_input",
+      "label_tr": "Priz Girişi",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_islak_ve_kuru_supurgeler",
+      "field_name": "x_power_socket_input"
+    },
+    {
+      "key": "power_source",
+      "label_tr": "Güç Kaynağı",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_nilfisk_supuruculer",
+      "field_name": "x_power_source"
+    },
+    {
+      "key": "practical_carry_handle",
+      "label_tr": "Pratik Taşıma Sapı",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_practical_carry_handle"
+    },
+    {
+      "key": "premium_car_wash_kit",
+      "label_tr": "Premium Araç Yıkama Kiti",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_basincli_yikama_makineleri",
+      "field_name": "x_premium_car_wash_kit"
+    },
+    {
+      "key": "pressure_activated_pa",
+      "label_tr": "Basınç Aktivasyonlu PA",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_basinc",
+      "field_name": "x_pressure_activated_pa"
+    },
+    {
+      "key": "pressure_bar",
+      "label_tr": "Basınç (bar)",
+      "type": "char",
+      "group": "teknik",
+      "set": "common",
+      "field_name": "x_pressure_bar"
+    },
+    {
+      "key": "pressure_bar_psi",
+      "label_tr": "Basınç (bar/psi)",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_nilfisk_hali_temizleme_makineleri",
+      "field_name": "x_pressure_bar_psi"
+    },
+    {
+      "key": "product_code",
+      "label_tr": "Ürün Kodu",
+      "type": "integer",
+      "group": "genel",
+      "set": "common",
+      "field_name": "x_product_code"
+    },
+    {
+      "key": "productivity_m2_h",
+      "label_tr": "Verimlilik (m²/sa)",
+      "type": "char",
+      "group": "teknik",
+      "set": "common",
+      "field_name": "x_productivity_m2_h"
+    },
+    {
+      "key": "protection_class",
+      "label_tr": "Koruma Sınıfı",
+      "type": "char",
+      "group": "teknik",
+      "set": "common",
+      "field_name": "x_protection_class"
+    },
+    {
+      "key": "pump",
+      "label_tr": "Pompa",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_viper_hali_temizleyiciler",
+      "field_name": "x_pump"
+    },
+    {
+      "key": "rear_wheel_drive",
+      "label_tr": "Arkadan Çekişli",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_viper_binicili_zemin_temizleme_makineleri",
+      "field_name": "x_rear_wheel_drive"
+    },
+    {
+      "key": "recommended_area_m2",
+      "label_tr": "Önerilen Alan (m²)",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_recommended_area_m2"
+    },
+    {
+      "key": "runtime",
+      "label_tr": "Kullanım Süresi",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_nilfisk_kablosuz_supurgeler",
+      "field_name": "x_runtime"
+    },
+    {
+      "key": "second_park_position",
+      "label_tr": "İkinci Park Alanı",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_second_park_position"
+    },
+    {
+      "key": "shipping_weight_kg",
+      "label_tr": "Nakliye Ağırlığı (kg)",
+      "type": "char",
+      "group": "teknik",
+      "set": "brand_nilfisk",
+      "field_name": "x_shipping_weight_kg"
+    },
+    {
+      "key": "side_brush",
+      "label_tr": "Yan Fırça",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_viper_supuruculer",
+      "field_name": "x_side_brush"
+    },
+    {
+      "key": "silent_mode",
+      "label_tr": "Sessiz Mod",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "brand_viper",
+      "field_name": "x_silent_mode"
+    },
+    {
+      "key": "soft_handle",
+      "label_tr": "Yumuşak Sap",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "brand_viper",
+      "field_name": "x_soft_handle"
+    },
+    {
+      "key": "speed_setting",
+      "label_tr": "Hız Ayarı",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_nilfisk_kablosuz_supurgeler",
+      "field_name": "x_speed_setting"
+    },
+    {
+      "key": "squeegee_width_mm",
+      "label_tr": "Silecek Genişliği (mm)",
+      "type": "char",
+      "group": "teknik",
+      "set": "common",
+      "field_name": "x_squeegee_width_mm"
+    },
+    {
+      "key": "stands_without_support",
+      "label_tr": "Desteksiz Ayakta Durma",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_zemin_yikayicilar",
+      "field_name": "x_stands_without_support"
+    },
+    {
+      "key": "steam_function",
+      "label_tr": "Buhar Verme",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_basinc",
+      "field_name": "x_steam_function"
+    },
+    {
+      "key": "steel_chassis",
+      "label_tr": "Çelik Şase",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_basinc",
+      "field_name": "x_steel_chassis"
+    },
+    {
+      "key": "suction_power",
+      "label_tr": "Emiş Gücü",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_nilfisk_kablosuz_supurgeler",
+      "field_name": "x_suction_power"
+    },
+    {
+      "key": "suction_power_adjustment",
+      "label_tr": "Emiş Gücü Ayarı",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_suction_power_adjustment"
+    },
+    {
+      "key": "suction_power_control",
+      "label_tr": "Emiş Gücü Ayar Düğmesi",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_suction_power_control"
+    },
+    {
+      "key": "suction_power_indicator",
+      "label_tr": "Emiş Gücü Göstergesi",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_elektrikli_supurgeler",
+      "field_name": "x_suction_power_indicator"
+    },
+    {
+      "key": "suction_power_w",
+      "label_tr": "Emiş Gücü (W)",
+      "type": "char",
+      "group": "teknik",
+      "set": "brand_nilfisk",
+      "field_name": "x_suction_power_w"
+    },
+    {
+      "key": "sweep_and_wash_in_one_pass",
+      "label_tr": "Tek Geçişte Süpürme + Yıkama",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_zemin_yikayicilar",
+      "field_name": "x_sweep_and_wash_in_one_pass"
+    },
+    {
+      "key": "tank_capacity_l",
+      "label_tr": "Tank Kapasitesi (L)",
+      "type": "char",
+      "group": "teknik",
+      "set": "common",
+      "field_name": "x_tank_capacity_l"
+    },
+    {
+      "key": "transparent_hand_tool",
+      "label_tr": "Şeffaf El Aleti",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_viper_hali_temizleyiciler",
+      "field_name": "x_transparent_hand_tool"
+    },
+    {
+      "key": "transport_wheels",
+      "label_tr": "Taşıma Tekerlekleri",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_viper_hali_temizleyiciler",
+      "field_name": "x_transport_wheels"
+    },
+    {
+      "key": "tube_holder",
+      "label_tr": "Boru Tutucu",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_viper_kuru_tip_elektrikli_supurgeler",
+      "field_name": "x_tube_holder"
+    },
+    {
+      "key": "ultraflex_hose",
+      "label_tr": "Ultraflex Hortum",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_basincli_yikama_makineleri",
+      "field_name": "x_ultraflex_hose"
+    },
+    {
+      "key": "usage_type",
+      "label_tr": "Kullanım Tipi",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_nilfisk_kablosuz_supurgeler",
+      "field_name": "x_usage_type"
+    },
+    {
+      "key": "vacuum_kpa",
+      "label_tr": "Vakum (kPa)",
+      "type": "float",
+      "group": "teknik",
+      "set": "common",
+      "field_name": "x_vacuum_kpa"
+    },
+    {
+      "key": "vacuum_mmh2o",
+      "label_tr": "Vakum (mmH2O)",
+      "type": "integer",
+      "group": "teknik",
+      "set": "brand_viper",
+      "field_name": "x_vacuum_mmh2o"
+    },
+    {
+      "key": "vacuum_motor_power_w",
+      "label_tr": "Vakum Motoru (W)",
+      "type": "char",
+      "group": "teknik",
+      "set": "brand_viper",
+      "field_name": "x_vacuum_motor_power_w"
+    },
+    {
+      "key": "vacuum_motor_type",
+      "label_tr": "Vakum Motoru Tipi",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_viper_islak_kuru_tip_elektrikli_supurgeler",
+      "field_name": "x_vacuum_motor_type"
+    },
+    {
+      "key": "voltage_phase_50hz",
+      "label_tr": "Voltaj / Faz (50 Hz)",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_rottest_yikama",
+      "field_name": "x_voltage_phase_50hz"
+    },
+    {
+      "key": "voltage_v",
+      "label_tr": "Voltaj (V)",
+      "type": "char",
+      "group": "teknik",
+      "set": "common",
+      "field_name": "x_voltage_v"
+    },
+    {
+      "key": "wall_mountable",
+      "label_tr": "Duvara Asma Özelliği",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_basinc",
+      "field_name": "x_wall_mountable"
+    },
+    {
+      "key": "warning_light",
+      "label_tr": "İkaz Lambası",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_viper_supuruculer",
+      "field_name": "x_warning_light"
+    },
+    {
+      "key": "warranty",
+      "label_tr": "Garanti Süresi",
+      "type": "char",
+      "group": "genel",
+      "set": "common",
+      "field_name": "x_warranty"
+    },
+    {
+      "key": "washable_filter",
+      "label_tr": "Yıkanabilir Filtre",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_islak_ve_kuru_supurgeler",
+      "field_name": "x_washable_filter"
+    },
+    {
+      "key": "water_level_indicator",
+      "label_tr": "Su Seviye Göstergesi",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "brand_viper",
+      "field_name": "x_water_level_indicator"
+    },
+    {
+      "key": "water_spray_system",
+      "label_tr": "Su Püskürtme Sistemi",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_viper_supuruculer",
+      "field_name": "x_water_spray_system"
+    },
+    {
+      "key": "water_temperature_c",
+      "label_tr": "Su Sıcaklığı (°C)",
+      "type": "char",
+      "group": "teknik",
+      "set": "grp_rottest_yikama",
+      "field_name": "x_water_temperature_c"
+    },
+    {
+      "key": "weight_kg",
+      "label_tr": "Ağırlık (kg)",
+      "type": "char",
+      "group": "teknik",
+      "set": "common",
+      "field_name": "x_weight_kg"
+    },
+    {
+      "key": "width_cm",
+      "label_tr": "Genişlik (cm)",
+      "type": "integer",
+      "group": "teknik",
+      "set": "grp_rottest_yikama",
+      "field_name": "x_width_cm"
+    },
+    {
+      "key": "wireless_power_grip",
+      "label_tr": "Kablosuz Power Grip",
+      "type": "boolean",
+      "group": "donanim",
+      "set": "grp_nilfisk_basincli_yikama_makineleri",
+      "field_name": "x_wireless_power_grip"
+    },
+    {
+      "key": "working_radius_m",
+      "label_tr": "Çalışma Yarıçapı (m)",
+      "type": "float",
+      "group": "teknik",
+      "set": "grp_nilfisk_zemin_yikayicilar",
+      "field_name": "x_working_radius_m"
+    },
+    {
+      "key": "working_speed",
+      "label_tr": "Çalışma Hızı",
+      "type": "char",
+      "group": "teknik",
+      "set": "brand_viper",
+      "field_name": "x_working_speed"
+    },
+    {
+      "key": "working_weight_kg",
+      "label_tr": "Çalışma Ağırlığı (kg)",
+      "type": "char",
+      "group": "teknik",
+      "set": "common",
+      "field_name": "x_working_weight_kg"
+    }
+  ],
+  "select_options": {
+    "phase": [
+      "Monofaze (M)",
+      "Trifaze (T)"
+    ]
+  }
+}
