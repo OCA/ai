@@ -15,7 +15,7 @@
                     <field name="requirement_text" placeholder="Paste requirement text, e.g. '120 bar soğuk sulu, 2.3kW monofaze, deterjan tanklı'"/>
                 </group>
                 <group string="Extracted JSON (editable)">
-                    <field name="requirements_json" widget="ace" options="{'mode': 'json'}" placeholder='{"pressure_bar": 120, "phase": "Monofaze (M)"}'/>
+                    <field name="requirements_json" widget="ace" options="{'mode': 'javascript'}" placeholder='{"pressure_bar": 120, "phase": "Monofaze (M)"}'/>
                 </group>
                 <group string="Matches" invisible="not match_ids">
                     <field name="match_ids" readonly="1">
