@@ -54,9 +54,18 @@ class AiProductMatch(models.Model):
             "product_id": product.id,
             "product_uom_qty": 1,
         }
-        # Let Odoo compute price/taxes via onchange
+        # Let Odoo compute price/taxes via onchange (Odoo 19 uses _onchange_product_id)
         line = self.env["sale.order.line"].create(line_vals)
-        line.product_id_change()
+        if hasattr(line, "_onchange_product_id"):
+            try:
+                line._onchange_product_id()
+            except Exception:
+                pass
+        elif hasattr(line, "product_id_change"):
+            try:
+                line.product_id_change()
+            except Exception:
+                pass
         return {
             "type": "ir.actions.act_window",
             "res_model": "sale.order",

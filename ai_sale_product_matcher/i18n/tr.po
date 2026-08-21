@@ -1,0 +1,187 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ai_sale_product_matcher
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 19.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-08-21 19:00:00+0000\n"
+"PO-Revision-Date: 2026-08-21 19:00:00+0000\n"
+"Last-Translator: Volkan Taşcı <me@volkantasci.com>\n"
+"Language-Team: Turkish\n"
+"Language: tr_TR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: ai_sale_product_matcher
+#: model:ir.model,name:ai_sale_product_matcher.model_ai_product_match
+msgid "AI Product Match"
+msgstr "AI Ürün Eşleşmesi"
+
+#. module: ai_sale_product_matcher
+#: model:ir.model,name:ai_sale_product_matcher.model_ai_sale_requirement_wizard
+msgid "AI Requirement Wizard"
+msgstr "AI Gereksinim Sihirbazı"
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__matched_keys
+msgid "Matched Keys (JSON)"
+msgstr "Eşleşen Anahtarlar (JSON)"
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__mismatched_keys
+msgid "Mismatched Keys (JSON)"
+msgstr "Uyuşmayan Anahtarlar (JSON)"
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__missing_keys
+msgid "Missing Keys (JSON)"
+msgstr "Eksik Anahtarlar (JSON)"
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__match_count
+msgid "Matched"
+msgstr "Eşleşen"
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__total_required
+msgid "Required Keys"
+msgstr "Gereken Anahtarlar"
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__match_percent
+msgid "Match %"
+msgstr "Eşleşme %"
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__weighted_percent
+msgid "Weighted %"
+msgstr "Ağırlıklı %"
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__product_tmpl_id
+msgid "Product Template"
+msgstr "Ürün Şablonu"
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_sale_order__ai_requirement_state
+msgid "AI Requirement State"
+msgstr "AI Gereksinim Durumu"
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_sale_order__ai_requirement_json
+msgid "Extracted Requirements (JSON)"
+msgstr "Çıkarılan Gereksinimler (JSON)"
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_sale_order__ai_requirement_raw_text
+msgid "Requirement Text"
+msgstr "Gereksinim Metni"
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_sale_order__ai_connection_id
+msgid "AI Connection"
+msgstr "AI Bağlantısı"
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_sale_requirement_wizard__requirement_text
+msgid "Requirement Text"
+msgstr "Gereksinim Metni"
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_sale_requirement_wizard__requirements_json
+msgid "Extracted Requirements (JSON)"
+msgstr "Çıkarılan Gereksinimler (JSON)"
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_sale_requirement_wizard__ai_connection_id
+msgid "AI Connection"
+msgstr "AI Bağlantısı"
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_sale_requirement_wizard__brand_id
+msgid "Brand"
+msgstr "Marka"
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_sale_requirement_wizard__categ_id
+msgid "Category"
+msgstr "Kategori"
+
+#. module: ai_sale_product_matcher
+#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_sale_requirement_wizard_form
+msgid "Find Products with AI"
+msgstr "AI ile Ürün Bul"
+
+#. module: ai_sale_product_matcher
+#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_sale_requirement_wizard_form
+msgid "Filters (optional)"
+msgstr "Filtreler (opsiyonel)"
+
+#. module: ai_sale_product_matcher
+#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_sale_requirement_wizard_form
+msgid "Requirement Files (PDF/Image)"
+msgstr "Gereksinim Dosyaları (PDF/Görsel)"
+
+#. module: ai_sale_product_matcher
+#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_sale_requirement_wizard_form
+msgid "Extracted JSON (editable)"
+msgstr "Çıkarılan JSON (düzenlenebilir)"
+
+#. module: ai_sale_product_matcher
+#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_sale_requirement_wizard_form
+msgid "Extract with AI"
+msgstr "AI ile Çıkar"
+
+#. module: ai_sale_product_matcher
+#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_sale_requirement_wizard_form
+msgid "Find Matches"
+msgstr "Eşleşmeleri Bul"
+
+#. module: ai_sale_product_matcher
+#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_sale_requirement_wizard_form
+msgid "Matches"
+msgstr "Eşleşmeler"
+
+#. module: ai_sale_product_matcher
+#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_sale_order_form_ai_matcher
+msgid "AI Matches"
+msgstr "AI Eşleşmeleri"
+
+#. module: ai_sale_product_matcher
+#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_product_match_list
+msgid "Add to Order"
+msgstr "Siparişe Ekle"
+
+#. module: ai_sale_product_matcher
+#. odoo-python
+#: code:addons/ai_sale_product_matcher/models/sale_order.py:0
+msgid "No AI Connection configured. Set one in the wizard or Settings."
+msgstr "AI Bağlantısı yapılandırılmadı. Sihirbazda veya Ayarlar’da bir tane ayarlayın."
+
+#. module: ai_sale_product_matcher
+#. odoo-python
+#: code:addons/ai_sale_product_matcher/models/sale_order.py:0
+msgid "Provide a document or requirement text."
+msgstr "Bir doküman veya gereksinim metni girin."
+
+#. module: ai_sale_product_matcher
+#. odoo-python
+#: code:addons/ai_sale_product_matcher/wizards/requirement_wizard.py:0
+msgid "Attach a file or enter requirement text."
+msgstr "Bir dosya ekleyin veya gereksinim metni girin."
+
+#. module: ai_sale_product_matcher
+#. odoo-python
+#: code:addons/ai_sale_product_matcher/wizards/requirement_wizard.py:0
+msgid "Invalid JSON: %s"
+msgstr "Geçersiz JSON: %s"
+
+#. module: ai_sale_product_matcher
+#. odoo-python
+#: code:addons/ai_sale_product_matcher/wizards/requirement_wizard.py:0
+msgid "No matches found. Run Find Matches first."
+msgstr "Hiç eşleşme bulunamadı. Önce Eşleşmeleri Bul’u çalıştırın."
