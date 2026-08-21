@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_ai_matcher" model="ir.ui.view">
+        <field name="name">sale.order.form.ai.matcher</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_open_ai_requirement_wizard" type="object" string="Find Products with AI" class="oe_highlight" groups="sales_team.group_sale_salesman"/>
+            </xpath>
+            <xpath expr="//page[@name='order_lines']" position="after">
+                <page name="ai_matches" string="AI Matches">
+                    <field name="ai_requirement_state" readonly="1"/>
+                    <field name="ai_requirement_json" readonly="1" widget="ace" options="{'mode': 'json'}"/>
+                    <field name="ai_match_ids" readonly="1">
+                        <list string="Top Matches">
+                            <field name="product_tmpl_id"/>
+                            <field name="match_count"/>
+                            <field name="total_required"/>
+                            <field name="match_percent"/>
+                            <field name="weighted_percent"/>
+                            <field name="product_price"/>
+                            <button name="action_add_to_order" string="Add to Order" type="object" class="oe_highlight"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
