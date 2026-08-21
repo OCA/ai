@@ -266,13 +266,18 @@ def score_product(requirements, product, env=None):
 
 
 def find_best_matches(requirements, products, limit=10, env=None):
-    """Score all products and return top N sorted by weighted_percent then percent."""
+    """Score all products and return top N.
+
+    Sector-independent, always English prompt. Ranking prioritizes absolute
+    matched count first (ideal product must be top), then weighted percent.
+    This prevents a product with 5/5 (100%) outranking 8/9 (88%) with more evidence.
+    """
     scored = []
     for product in products:
         score = score_product(requirements, product, env=env)
         scored.append((product, score))
     scored.sort(
-        key=lambda x: (x[1]["weighted_percent"], x[1]["percent"], x[1]["match_count"]),
+        key=lambda x: (x[1]["match_count"], x[1]["weighted_percent"], x[1]["percent"]),
         reverse=True,
     )
     return scored[:limit]
