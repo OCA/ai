@@ -186,9 +186,19 @@ msgid "Matches"
 msgstr "Eşleşmeler"
 
 #. module: ai_sale_product_matcher
+#: model:ir.ui.menu,name:ai_sale_product_matcher.menu_ai_product_match
+msgid "AI Product Matches"
+msgstr "AI Ürün Eşleşmeleri"
+
+#. module: ai_sale_product_matcher
 #: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_sale_order_form_ai_matcher
 msgid "AI Matches"
 msgstr "AI Eşleşmeleri"
+
+#. module: ai_sale_product_matcher
+#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_sale_order_form_ai_matcher
+msgid "Find Products with AI"
+msgstr "AI ile Ürün Bul"
 
 #. module: ai_sale_product_matcher
 #: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_product_match_list
