@@ -48,6 +48,20 @@ class SaleOrder(models.Model):
         string="AI Product Matches",
         copy=False,
     )
+    ai_filter_brand_id = fields.Many2one(
+        "product.category",
+        string="AI Filter Brand",
+        help="Optional brand filter for AI matching (top-level category)",
+        copy=False,
+        domain="[('parent_id', '=', False)]",
+    )
+    ai_filter_categ_id = fields.Many2one(
+        "product.category",
+        string="AI Filter Category",
+        help="Optional category filter for AI matching",
+        copy=False,
+        domain="[('parent_id', '!=', False)]",
+    )
 
     def action_open_ai_requirement_wizard(self):
         self.ensure_one()
@@ -58,6 +72,8 @@ class SaleOrder(models.Model):
                 "requirements_json": self.ai_requirement_json or "",
                 "ai_connection_id": self.ai_connection_id.id
                 or self._ai_default_connection().id,
+                "brand_id": self.ai_filter_brand_id.id or False,
+                "categ_id": self.ai_filter_categ_id.id or False,
             }
         )
         return {
@@ -254,10 +270,16 @@ class SaleOrder(models.Model):
             return
         # Clear old matches
         self.ai_match_ids.unlink()
-        # Find products - consider only storable/saleable templates with PIM attrs?
-        # Use product.template search
         domain = [("sale_ok", "=", True)]
-        # Optional: filter by PIM? include all
+        # Optional brand/category filters (sector-independent)
+        if self.ai_filter_brand_id:
+            # Brand is top-level category (Nilfisk/Viper/Rottest) — include its children
+            brand_children = self.env["product.category"].search(
+                [("parent_id", "=", self.ai_filter_brand_id.id)]
+            ).ids + [self.ai_filter_brand_id.id]
+            domain.append(("categ_id", "in", brand_children))
+        if self.ai_filter_categ_id:
+            domain.append(("categ_id", "=", self.ai_filter_categ_id.id))
         products = self.env["product.template"].search(domain, limit=500)
         from ..services.product_matcher import find_best_matches
 
