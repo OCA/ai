@@ -27,6 +27,19 @@ class AiSaleRequirementWizard(models.TransientModel):
         readonly=True,
     )
     attachment_ids = fields.Many2many("ir.attachment", string="Requirement Files")
+    # Optional filters — sector-independent: filter matching within selected brand/category
+    brand_id = fields.Many2one(
+        "product.category",
+        string="Brand",
+        help="Optional: limit matching to this brand (top-level category like Nilfisk/Viper/Rottest)",
+        domain="[('parent_id', '=', False)]",
+    )
+    categ_id = fields.Many2one(
+        "product.category",
+        string="Category",
+        help="Optional: limit matching to this category",
+        domain="[('parent_id', '!=', False)]",
+    )
     match_ids = fields.One2many(
         related="order_id.ai_match_ids", string="Matches", readonly=True
     )
@@ -80,7 +93,7 @@ class AiSaleRequirementWizard(models.TransientModel):
                 for k, v in data.items():
                     if v is None:
                         continue
-                    if get_attribute_meta(k):
+                    if get_attribute_meta(k, env=self.env):
                         cleaned[k] = v
                 self.order_id.write(
                     {
@@ -91,6 +104,13 @@ class AiSaleRequirementWizard(models.TransientModel):
                 )
             except Exception as e:
                 raise UserError(self.env._("Invalid JSON: %s", str(e))) from e
+        # Pass optional brand/category filters to matching (sector-independent)
+        self.order_id.write(
+            {
+                "ai_filter_brand_id": self.brand_id.id or False,
+                "ai_filter_categ_id": self.categ_id.id or False,
+            }
+        )
         self.order_id._ai_run_matching()
         return {
             "type": "ir.actions.act_window",
