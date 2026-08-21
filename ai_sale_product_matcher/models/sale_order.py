@@ -85,10 +85,10 @@ class SaleOrder(models.Model):
         # Fallback to any openai_compatible connection
         return self.env["ai.connection"].search([("active", "=", True)], limit=1)
 
-    def _ai_prepare_image(self, attachment):
-        from ..services.image_preprocessor import prepare_image
+    def _ai_prepare_images(self, attachment):
+        from ..services.image_preprocessor import prepare_images
 
-        return prepare_image(attachment)
+        return prepare_images(attachment)
 
     def _ai_cleanup_tmp(self, path):
         from ..services.image_preprocessor import cleanup_tmp
@@ -134,39 +134,49 @@ class SaleOrder(models.Model):
         tmp_paths = []
         try:
             from ..services import requirement_extractor
+            from ..services.image_preprocessor import extract_text_from_pdf
 
             messages = []
-            # If we have images/pdfs, prepare them
+            all_image_paths = []
+            extracted_texts = []
             attachments = self.env["ir.attachment"].browse(attachment_ids)
             for att in attachments:
                 try:
-                    img_path = self._ai_prepare_image(att)
-                    tmp_paths.append(img_path)
-                    messages.append(
-                        requirement_extractor.build_vision_message(
-                            img_path, connection, requirement_text=requirement_text
-                        )
-                    )
+                    # Multi-page support: prepare all pages
+                    img_paths = self._ai_prepare_images(att)
+                    for p in img_paths:
+                        all_image_paths.append(p)
+                        tmp_paths.append(p)
+                    # Also extract text for PDFs as fallback/augmentation
+                    txt = extract_text_from_pdf(att)
+                    if txt:
+                        extracted_texts.append(txt[:4000])
                 except Exception as e:
                     _logger.warning("AI prepare image failed for %s: %s", att.name, e)
 
-            if not messages:
-                # Text-only
-                if not (requirement_text or "").strip():
-                    raise UserError(
-                        self.env._("Provide a document or requirement text.")
-                    )
-                messages = [requirement_extractor.build_text_message(requirement_text)]
+            # Combine extracted PDF text with user requirement_text
+            combined_text = ""
+            if extracted_texts:
+                combined_text += "\n\nPDF extracted text:\n" + "\n---\n".join(
+                    extracted_texts
+                )
+            if requirement_text and requirement_text.strip():
+                combined_text += (
+                    "\n\nUser requirement text:\n" + requirement_text.strip()
+                )
+            combined_text = combined_text.strip()
 
-            # For multiple images, send each as separate message loop (model will get all)
-            # We combine: system + each vision message, then final text message if needed
-            # Actually ai_connection._run expects messages list; we send system + user messages
-            # We'll run once per image and merge, simplest: run first image + text
-            if len(messages) > 1:
-                # Merge into one user message with multiple images - send sequentially
-                # For Ollama/OpenAI, we can send multiple user messages; combine into one call
-                # Use first message's image plus text; for others, append as additional user messages
-                pass
+            if all_image_paths:
+                # Single vision message with all pages + combined text
+                messages.append(
+                    requirement_extractor.build_vision_message_multi(
+                        all_image_paths, connection, requirement_text=combined_text
+                    )
+                )
+            elif combined_text:
+                messages = [requirement_extractor.build_text_message(combined_text)]
+            else:
+                raise UserError(self.env._("Provide a document or requirement text."))
 
             # Run LLM
             content = None

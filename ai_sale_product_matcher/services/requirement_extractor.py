@@ -126,14 +126,11 @@ def parse_and_validate(content):
     return _validate_requirements(data)
 
 
-def build_vision_message(image_path, connection, requirement_text=None):
-    """Build OpenAI-compatible vision message with image + requirement text."""
+def _encode_image(image_path, connection):
     is_ollama = "ollama" in (connection.url or "").lower()
-    # Reuse same encoding strategy as invoice extractor
     if is_ollama:
         with open(image_path, "rb") as f:
             encoded = base64.b64encode(f.read()).decode()
-        # Detect mime
         ext = os.path.splitext(image_path)[1].lower()
         mime = {
             ".png": "image/png",
@@ -148,6 +145,12 @@ def build_vision_message(image_path, connection, requirement_text=None):
             im.convert("RGB").save(buf, "JPEG", quality=90)
         encoded = base64.b64encode(buf.getvalue()).decode()
         mime = "image/jpeg"
+    return mime, encoded
+
+
+def build_vision_message(image_path, connection, requirement_text=None):
+    """Build OpenAI-compatible vision message with image + requirement text."""
+    mime, encoded = _encode_image(image_path, connection)
     return {
         "role": "user",
         "content": [
@@ -161,6 +164,26 @@ def build_vision_message(image_path, connection, requirement_text=None):
             },
         ],
     }
+
+
+def build_vision_message_multi(image_paths, connection, requirement_text=None):
+    """Build a single user message carrying multiple page images (for multi-page PDFs)."""
+    content = []
+    for path in image_paths:
+        mime, encoded = _encode_image(path, connection)
+        content.append(
+            {
+                "type": "image_url",
+                "image_url": {"url": f"data:{mime};base64,{encoded}"},
+            }
+        )
+    content.append(
+        {
+            "type": "text",
+            "text": _build_user_prompt(requirement_text=requirement_text),
+        }
+    )
+    return {"role": "user", "content": content}
 
 
 def build_text_message(requirement_text):
