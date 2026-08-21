@@ -135,9 +135,9 @@ def _numeric_match(req_val, prod_val, tolerance=0.10, key=None):
     return _char_match(req_val, prod_val)
 
 
-def is_match(key, req_val, prod_val):
-    """Type-aware comparison for a single key."""
-    meta = get_attribute_meta(key)
+def is_match(key, req_val, prod_val, env=None):
+    """Type-aware comparison for a single key. Sector-independent via env."""
+    meta = get_attribute_meta(key, env=env)
     typ = meta.get("type", "char") if meta else "char"
     if prod_val is None or prod_val == "" or prod_val is False:
         return False
@@ -203,11 +203,11 @@ def get_product_value(product, key):
     return None
 
 
-def score_product(requirements, product):
+def score_product(requirements, product, env=None):
     """Score a single product against requirements dict. Returns match dict.
 
-    Missing keys (prod_val None/0) are now neutral — they don't penalize percent.
-    Percent is calculated over matched + mismatched only.
+    Sector-independent: uses live PIM meta when env given.
+    Missing keys (prod_val None/0) are neutral — they don't penalize percent.
     """
     if not requirements:
         return {
@@ -227,11 +227,10 @@ def score_product(requirements, product):
     weighted_score = 0.0
     weighted_total = 0.0
     for key, req_val in requirements.items():
-        meta = get_attribute_meta(key)
+        meta = get_attribute_meta(key, env=env)
         group = meta.get("group", "genel") if meta else "genel"
         weight = GROUP_WEIGHTS.get(group, 1.0)
         prod_val = get_product_value(product, key)
-        # Consider 0 as missing for at-least/at-most numeric keys
         is_missing = prod_val is None or prod_val == "" or prod_val is False
         if not is_missing and isinstance(prod_val, (int, float)) and prod_val == 0:
             if key in AT_LEAST_KEYS or key in AT_MOST_KEYS:
@@ -239,9 +238,8 @@ def score_product(requirements, product):
         if is_missing:
             missing.append(key)
             continue
-        # Count only present keys in denominator
         weighted_total += weight
-        if is_match(key, req_val, prod_val):
+        if is_match(key, req_val, prod_val, env=env):
             matched.append(key)
             weighted_score += weight
         else:
@@ -267,11 +265,11 @@ def score_product(requirements, product):
     }
 
 
-def find_best_matches(requirements, products, limit=10):
+def find_best_matches(requirements, products, limit=10, env=None):
     """Score all products and return top N sorted by weighted_percent then percent."""
     scored = []
     for product in products:
-        score = score_product(requirements, product)
+        score = score_product(requirements, product, env=env)
         scored.append((product, score))
     scored.sort(
         key=lambda x: (x[1]["weighted_percent"], x[1]["percent"], x[1]["match_count"]),
