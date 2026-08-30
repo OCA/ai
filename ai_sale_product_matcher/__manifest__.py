@@ -31,7 +31,7 @@
     ],
     "assets": {
         "web.assets_backend": [
-            "ai_sale_product_matcher/static/src/sale_order_ai_matcher.js",
+            "ai_sale_product_matcher/static/src/sale_order_ai_matcher.esm.js",
         ],
     },
     "demo": [],
