@@ -1,2 +1,2 @@
-* Volkan Taşcı <me@volkantasci.com>
-* VSL
+- Volkan Taşcı <me@volkantasci.com>
+- VSL
