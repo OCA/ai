@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <record id="view_ai_sale_requirement_wizard_form" model="ir.ui.view">
         <field name="name">ai.sale.requirement.wizard.form</field>
@@ -6,30 +6,54 @@
         <field name="arch" type="xml">
             <form string="Find Products with AI">
                 <group>
-                    <field name="order_id" readonly="1"/>
-                    <field name="state" readonly="1"/>
-                    <field name="ai_connection_id" invisible="1"/>
+                    <field name="order_id" readonly="1" />
+                    <field name="state" readonly="1" />
+                    <field name="ai_connection_id" invisible="1" />
                 </group>
                 <group string="Filters (optional)">
-                    <field name="brand_id" placeholder="All brands" options="{'no_create': True}"/>
-                    <field name="categ_id" placeholder="All categories" options="{'no_create': True}"/>
+                    <field
+                        name="brand_id"
+                        placeholder="All brands"
+                        options="{'no_create': True}"
+                    />
+                    <field
+                        name="categ_id"
+                        placeholder="All categories"
+                        options="{'no_create': True}"
+                    />
                 </group>
                 <group string="Requirements">
-                    <field name="attachment_ids" widget="many2many_binary" string="Requirement Files (PDF/Image)"/>
-                    <field name="requirement_text" placeholder="Paste requirement text, e.g. '120 bar soğuk sulu, 2.3kW monofaze, deterjan tanklı'"/>
+                    <field
+                        name="attachment_ids"
+                        widget="many2many_binary"
+                        string="Requirement Files (PDF/Image)"
+                    />
+                    <field
+                        name="requirement_text"
+                        placeholder="Paste requirement text, e.g. '120 bar soğuk sulu, 2.3kW monofaze, deterjan tanklı'"
+                    />
                 </group>
                 <group string="Extracted JSON (editable)">
-                    <field name="requirements_json" widget="ace" options="{'mode': 'javascript'}" placeholder='{"pressure_bar": 120, "phase": "Monofaze (M)"}'/>
+                    <field
+                        name="requirements_json"
+                        widget="ace"
+                        options="{'mode': 'javascript'}"
+                        placeholder='{"pressure_bar": 120, "phase": "Monofaze (M)"}'
+                    />
                 </group>
                 <group string="Matches" invisible="not match_ids">
                     <field name="match_ids" readonly="1">
                         <list>
-                            <field name="product_tmpl_id"/>
-                            <field name="match_count"/>
-                            <field name="total_required"/>
-                            <field name="match_percent"/>
-                            <field name="weighted_percent"/>
-                            <button name="action_add_to_order" string="Add to Order" type="object"/>
+                            <field name="product_tmpl_id" />
+                            <field name="match_count" />
+                            <field name="total_required" />
+                            <field name="match_percent" />
+                            <field name="weighted_percent" />
+                            <button
+                                name="action_add_to_order"
+                                string="Add to Order"
+                                type="object"
+                            />
                         </list>
                     </field>
                 </group>
