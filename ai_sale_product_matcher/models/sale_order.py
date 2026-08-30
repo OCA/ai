@@ -183,7 +183,8 @@ class SaleOrder(models.Model):
             combined_text = combined_text.strip()
 
             if all_image_paths:
-                # Single vision message with all pages + combined text (sector-independent, always English prompt)
+                # Single vision message with all pages + combined text
+                # (sector-independent, always English prompt)
                 messages.append(
                     requirement_extractor.build_vision_message_multi(
                         all_image_paths,
@@ -223,7 +224,8 @@ class SaleOrder(models.Model):
                 raise last_error or ValueError("AI extraction failed")
 
             data = requirement_extractor.parse_and_validate(content, env=self.env)
-            # Store and clear previous matches (user must click Find Matches for correct ranking)
+            # Store and clear previous matches (user must click Find Matches
+            # for correct ranking)
             self.write(
                 {
                     "ai_requirement_json": json.dumps(
@@ -234,7 +236,8 @@ class SaleOrder(models.Model):
                 }
             )
             self.ai_match_ids.unlink()
-            # Notify bus - matching is now manual via Find Matches button (prevents wrong auto-matches)
+            # Notify bus - matching is now manual via Find Matches button
+            # (prevents wrong auto-matches)
             self.env["bus.bus"]._sendone(
                 self.env.user.partner_id,
                 "ai_sale_product_matcher.requirement_done",

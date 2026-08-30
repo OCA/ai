@@ -2,7 +2,10 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 import json
+import logging
 import os
+
+_logger = logging.getLogger(__name__)
 
 # Groups weighting for scoring - higher weight means more important for matching
 GROUP_WEIGHTS = {
@@ -32,11 +35,10 @@ def _load_catalog_schema():
 
 
 def get_attributes(env=None):
-    """Sector-independent, always English prompt: key set is live PIM when env given, otherwise bundled file.
+    """Return catalog attributes; merge live PIM attributes when env is given.
 
-    For this deployment the bundled file (232 keys) is the PIM snapshot for cleaning machines,
-    so live and file are identical (232). We keep file as primary for stable Turkish labels
-    (e.g. 'Temiz Su Tankı') which help LLM map Turkish specs, and merge live keys if any new.
+    The bundled JSON schema is the primary source so labels stay stable;
+    live PIM keys are merged in when they add new entries.
     """
     file_attrs = _load_catalog_schema().get("attributes", [])
     if env is None:
@@ -85,7 +87,7 @@ def get_groups(env=None):
             if groups:
                 return [{"name": g.name} for g in groups]
         except Exception:
-            pass
+            _logger.debug("Could not read live attribute groups", exc_info=True)
     return _load_catalog_schema().get("groups", [])
 
 
@@ -96,7 +98,7 @@ def get_sets(env=None):
             if sets:
                 return [{"name": s.name} for s in sets]
         except Exception:
-            pass
+            _logger.debug("Could not read live attribute sets", exc_info=True)
     return _load_catalog_schema().get("sets", [])
 
 

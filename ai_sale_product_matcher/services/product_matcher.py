@@ -1,9 +1,12 @@
 # Copyright 2026 VSL
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
+import logging
 import re
 
 from .catalog_schema import GROUP_WEIGHTS, get_attribute_meta
+
+_logger = logging.getLogger(__name__)
 
 try:
     from rapidfuzz import fuzz
@@ -173,7 +176,7 @@ def is_match(key, req_val, prod_val, env=None):
 
 
 def get_product_value(product, key):
-    """Read canonical key from product.template (sparse field x_<key> or x_custom_json_attrs)."""
+    """Read canonical key from product.template (sparse x_<key> or JSON attrs)."""
     field_name = f"x_{key}"
     if field_name in product._fields:
         val = product[field_name]
@@ -194,12 +197,16 @@ def get_product_value(product, key):
         if isinstance(blob, dict) and field_name in blob:
             return blob[field_name]
     except AttributeError:
-        pass
+        _logger.debug(
+            "No custom JSON attributes on product %s", product.id, exc_info=True
+        )
     try:
         if key in product:
             return product[key]
     except Exception:
-        pass
+        _logger.debug(
+            "Cannot read key %s on product %s", key, product.id, exc_info=True
+        )
     return None
 
 
