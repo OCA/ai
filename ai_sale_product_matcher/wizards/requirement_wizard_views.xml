@@ -34,10 +34,27 @@
                     </field>
                 </group>
                 <footer>
-                    <button name="action_extract" string="Extract with AI" type="object" class="oe_highlight" invisible="state == 'extracting'"/>
-                    <button name="action_refresh" string="Refresh" type="object" invisible="state != 'extracting'"/>
-                    <button name="action_match" string="Find Matches" type="object" class="oe_highlight" invisible="state == 'extracting'"/>
-                    <button special="cancel" string="Close"/>
+                    <button
+                        name="action_extract"
+                        string="Extract with AI"
+                        type="object"
+                        class="oe_highlight"
+                        invisible="state == 'extracting'"
+                    />
+                    <button
+                        name="action_refresh"
+                        string="Refresh"
+                        type="object"
+                        invisible="state != 'extracting'"
+                    />
+                    <button
+                        name="action_match"
+                        string="Find Matches"
+                        type="object"
+                        class="oe_highlight"
+                        invisible="state == 'extracting'"
+                    />
+                    <button special="cancel" string="Close" />
                 </footer>
             </form>
         </field>
