@@ -2062,9 +2062,6 @@
     }
   ],
   "select_options": {
-    "phase": [
-      "Monofaze (M)",
-      "Trifaze (T)"
-    ]
+    "phase": ["Monofaze (M)", "Trifaze (T)"]
   }
 }
