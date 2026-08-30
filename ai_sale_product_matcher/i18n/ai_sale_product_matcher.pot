@@ -4,64 +4,55 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.0\n"
+"Project-Id-Version: Odoo Server 19.0-20260817\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-08-21 19:00:00+0000\n"
-"PO-Revision-Date: 2026-08-21 19:00:00+0000\n"
+"POT-Creation-Date: 2026-08-30 23:24+0000\n"
+"PO-Revision-Date: 2026-08-30 23:24+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_sale_requirement_wizard__ai_connection_id
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_sale_order__ai_connection_id
+msgid "AI Connection"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_sale_order__ai_requirement_error
+msgid "AI Error"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_sale_order__ai_filter_brand_id
+msgid "AI Filter Brand"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_sale_order__ai_filter_categ_id
+msgid "AI Filter Category"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_order_form_ai_matcher
+msgid "AI Matches"
+msgstr ""
 
 #. module: ai_sale_product_matcher
 #: model:ir.model,name:ai_sale_product_matcher.model_ai_product_match
+#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_product_match_form
 msgid "AI Product Match"
 msgstr ""
 
 #. module: ai_sale_product_matcher
-#: model:ir.model,name:ai_sale_product_matcher.model_ai_sale_requirement_wizard
-msgid "AI Requirement Wizard"
-msgstr ""
-
-#. module: ai_sale_product_matcher
-#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__matched_keys
-msgid "Matched Keys (JSON)"
-msgstr ""
-
-#. module: ai_sale_product_matcher
-#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__mismatched_keys
-msgid "Mismatched Keys (JSON)"
-msgstr ""
-
-#. module: ai_sale_product_matcher
-#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__missing_keys
-msgid "Missing Keys (JSON)"
-msgstr ""
-
-#. module: ai_sale_product_matcher
-#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__match_count
-msgid "Matched"
-msgstr ""
-
-#. module: ai_sale_product_matcher
-#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__total_required
-msgid "Required Keys"
-msgstr ""
-
-#. module: ai_sale_product_matcher
-#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__match_percent
-msgid "Match %"
-msgstr ""
-
-#. module: ai_sale_product_matcher
-#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__weighted_percent
-msgid "Weighted %"
-msgstr ""
-
-#. module: ai_sale_product_matcher
-#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__product_tmpl_id
-msgid "Product Template"
+#: model:ir.actions.act_window,name:ai_sale_product_matcher.action_ai_product_match
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_sale_order__ai_match_ids
+#: model:ir.ui.menu,name:ai_sale_product_matcher.menu_ai_product_match
+#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_product_match_list
+msgid "AI Product Matches"
 msgstr ""
 
 #. module: ai_sale_product_matcher
@@ -70,33 +61,32 @@ msgid "AI Requirement State"
 msgstr ""
 
 #. module: ai_sale_product_matcher
-#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_sale_order__ai_requirement_json
-msgid "Extracted Requirements (JSON)"
+#: model:ir.model,name:ai_sale_product_matcher.model_ai_sale_requirement_wizard
+msgid "AI Requirement Wizard"
 msgstr ""
 
 #. module: ai_sale_product_matcher
-#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_sale_order__ai_requirement_raw_text
-msgid "Requirement Text"
+#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_product_match_form
+#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_product_match_list
+#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_sale_requirement_wizard_form
+#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_order_form_ai_matcher
+msgid "Add to Order"
 msgstr ""
 
 #. module: ai_sale_product_matcher
-#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_sale_order__ai_connection_id
-msgid "AI Connection"
+#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_sale_requirement_wizard_form
+msgid "All brands"
 msgstr ""
 
 #. module: ai_sale_product_matcher
-#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_sale_requirement_wizard__requirement_text
-msgid "Requirement Text"
+#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_sale_requirement_wizard_form
+msgid "All categories"
 msgstr ""
 
 #. module: ai_sale_product_matcher
-#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_sale_requirement_wizard__requirements_json
-msgid "Extracted Requirements (JSON)"
-msgstr ""
-
-#. module: ai_sale_product_matcher
-#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_sale_requirement_wizard__ai_connection_id
-msgid "AI Connection"
+#. odoo-python
+#: code:addons/ai_sale_product_matcher/wizards/requirement_wizard.py:0
+msgid "Attach a file or enter requirement text."
 msgstr ""
 
 #. module: ai_sale_product_matcher
@@ -111,22 +101,52 @@ msgstr ""
 
 #. module: ai_sale_product_matcher
 #: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_sale_requirement_wizard_form
-msgid "Find Products with AI"
+msgid "Close"
 msgstr ""
 
 #. module: ai_sale_product_matcher
-#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_sale_requirement_wizard_form
-msgid "Filters (optional)"
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__create_uid
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_sale_requirement_wizard__create_uid
+msgid "Created by"
 msgstr ""
 
 #. module: ai_sale_product_matcher
-#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_sale_requirement_wizard_form
-msgid "Requirement Files (PDF/Image)"
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__create_date
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_sale_requirement_wizard__create_date
+msgid "Created on"
 msgstr ""
 
 #. module: ai_sale_product_matcher
-#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_sale_requirement_wizard_form
-msgid "Extracted JSON (editable)"
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__currency_id
+msgid "Currency"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__display_name
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_sale_requirement_wizard__display_name
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_sale_order__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields.selection,name:ai_sale_product_matcher.selection__ai_sale_requirement_wizard__state__done
+#: model:ir.model.fields.selection,name:ai_sale_product_matcher.selection__sale_order__ai_requirement_state__done
+msgid "Done"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields.selection,name:ai_sale_product_matcher.selection__ai_sale_requirement_wizard__state__draft
+msgid "Draft"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,help:ai_sale_product_matcher.field_ai_sale_requirement_wizard__requirements_json
+msgid "Edit before matching"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields.selection,name:ai_sale_product_matcher.selection__sale_order__ai_requirement_state__error
+msgid "Error"
 msgstr ""
 
 #. module: ai_sale_product_matcher
@@ -136,22 +156,105 @@ msgstr ""
 
 #. module: ai_sale_product_matcher
 #: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_sale_requirement_wizard_form
+msgid "Extracted JSON (editable)"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_sale_requirement_wizard__requirements_json
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_sale_order__ai_requirement_json
+msgid "Extracted Requirements (JSON)"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields.selection,name:ai_sale_product_matcher.selection__ai_sale_requirement_wizard__state__extracting
+#: model:ir.model.fields.selection,name:ai_sale_product_matcher.selection__sale_order__ai_requirement_state__extracting
+msgid "Extracting"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_sale_requirement_wizard_form
+msgid "Filters (optional)"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_sale_requirement_wizard_form
 msgid "Find Matches"
 msgstr ""
 
 #. module: ai_sale_product_matcher
+#. odoo-python
+#: code:addons/ai_sale_product_matcher/models/sale_order.py:0
+#: model:ir.actions.act_window,name:ai_sale_product_matcher.action_ai_sale_requirement_wizard
+#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_sale_requirement_wizard_form
+#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_order_form_ai_matcher
+msgid "Find Products with AI"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__id
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_sale_requirement_wizard__id
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_sale_order__id
+msgid "ID"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#. odoo-python
+#: code:addons/ai_sale_product_matcher/wizards/requirement_wizard.py:0
+msgid "Invalid JSON: %s"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_product_match_form
+msgid "Key breakdown"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__write_uid
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_sale_requirement_wizard__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__write_date
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_sale_requirement_wizard__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__match_percent
+msgid "Match %"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__match_count
+msgid "Matched"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__matched_keys
+msgid "Matched Keys (JSON)"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_sale_requirement_wizard__match_ids
 #: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_sale_requirement_wizard_form
 msgid "Matches"
 msgstr ""
 
 #. module: ai_sale_product_matcher
-#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_sale_order_form_ai_matcher
-msgid "AI Matches"
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__mismatched_keys
+msgid "Mismatched Keys (JSON)"
 msgstr ""
 
 #. module: ai_sale_product_matcher
-#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_product_match_list
-msgid "Add to Order"
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__missing_keys
+msgid "Missing Keys (JSON)"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#. odoo-python
+#: code:addons/ai_sale_product_matcher/wizards/requirement_wizard.py:0
+msgid "No AI Connection configured. Set one in Settings."
 msgstr ""
 
 #. module: ai_sale_product_matcher
@@ -162,24 +265,133 @@ msgstr ""
 
 #. module: ai_sale_product_matcher
 #. odoo-python
+#: code:addons/ai_sale_product_matcher/wizards/requirement_wizard.py:0
+msgid "No matches found. Run Find Matches first."
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields.selection,name:ai_sale_product_matcher.selection__sale_order__ai_requirement_state__draft
+msgid "Not processed"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,help:ai_sale_product_matcher.field_sale_order__ai_filter_brand_id
+msgid "Optional brand filter for AI matching (top-level category)"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,help:ai_sale_product_matcher.field_sale_order__ai_filter_categ_id
+msgid "Optional category filter for AI matching"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,help:ai_sale_product_matcher.field_ai_sale_requirement_wizard__brand_id
+msgid ""
+"Optional: limit matching to this brand (top-level category like "
+"Nilfisk/Viper/Rottest)"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,help:ai_sale_product_matcher.field_ai_sale_requirement_wizard__categ_id
+msgid "Optional: limit matching to this category"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__order_id
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_sale_requirement_wizard__order_id
+msgid "Order"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,help:ai_sale_product_matcher.field_ai_sale_requirement_wizard__requirement_text
+msgid "Paste email, spec sheet text, etc."
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_sale_requirement_wizard_form
+msgid ""
+"Paste requirement text, e.g. '120 bar soğuk sulu, 2.3kW monofaze, deterjan "
+"tanklı'"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,help:ai_sale_product_matcher.field_ai_product_match__product_price
+msgid "Price at which the product is sold to customers."
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__product_tmpl_id
+msgid "Product Template"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__product_id
+msgid "Product Variant"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#. odoo-python
 #: code:addons/ai_sale_product_matcher/models/sale_order.py:0
 msgid "Provide a document or requirement text."
 msgstr ""
 
 #. module: ai_sale_product_matcher
-#. odoo-python
-#: code:addons/ai_sale_product_matcher/wizards/requirement_wizard.py:0
-msgid "Attach a file or enter requirement text."
+#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_sale_requirement_wizard_form
+msgid "Refresh"
 msgstr ""
 
 #. module: ai_sale_product_matcher
-#. odoo-python
-#: code:addons/ai_sale_product_matcher/wizards/requirement_wizard.py:0
-msgid "Invalid JSON: %s"
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__total_required
+msgid "Required Keys"
 msgstr ""
 
 #. module: ai_sale_product_matcher
-#. odoo-python
-#: code:addons/ai_sale_product_matcher/wizards/requirement_wizard.py:0
-msgid "No matches found. Run Find Matches first."
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_sale_requirement_wizard__attachment_ids
+msgid "Requirement Files"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_sale_requirement_wizard_form
+msgid "Requirement Files (PDF/Image)"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_sale_requirement_wizard__requirement_text
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_sale_order__ai_requirement_raw_text
+msgid "Requirement Text"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_sale_requirement_wizard_form
+msgid "Requirements"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model,name:ai_sale_product_matcher.model_sale_order
+msgid "Sales Order"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__product_price
+msgid "Sales Price"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_sale_requirement_wizard__state
+msgid "State"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_order_form_ai_matcher
+msgid "Top Matches"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model:ir.model.fields,field_description:ai_sale_product_matcher.field_ai_product_match__weighted_percent
+msgid "Weighted %"
+msgstr ""
+
+#. module: ai_sale_product_matcher
+#: model_terms:ir.ui.view,arch_db:ai_sale_product_matcher.view_ai_sale_requirement_wizard_form
+msgid "{\"pressure_bar\": 120, \"phase\": \"Monofaze (M)\"}"
 msgstr ""
