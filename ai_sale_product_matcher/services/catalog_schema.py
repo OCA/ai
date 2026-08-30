@@ -23,16 +23,10 @@ def _load_catalog_schema():
     bundle = os.path.join(
         os.path.dirname(os.path.dirname(__file__)), "data", "catalog_schema.json"
     )
-    fallback = "/home/volkan/dev/aktem-makine/katalog-sablonu.json"
-    for path in [bundle, fallback]:
-        if os.path.exists(path):
-            with open(path, encoding="utf-8") as f:
-                data = json.load(f)
-                if "attributes" in data:
-                    _CATALOG_SCHEMA = data
-                    return data
-                _CATALOG_SCHEMA = data
-                return data
+    if os.path.exists(bundle):
+        with open(bundle, encoding="utf-8") as f:
+            _CATALOG_SCHEMA = json.load(f)
+        return _CATALOG_SCHEMA
     _CATALOG_SCHEMA = {"attributes": [], "groups": [], "sets": []}
     return _CATALOG_SCHEMA
 
