@@ -19,10 +19,6 @@ exclude = ["setup/*"]
 [lint.per-file-ignores]
 "__init__.py" = ["F401", "I001"]  # ignore unused and unsorted imports in __init__.py
 "__manifest__.py" = ["B018"]  # useless expression
-"ai_sale_product_matcher/services/requirement_extractor.py" = ["C901", "E501"]
-"ai_sale_product_matcher/services/product_matcher.py" = ["E501"]
-"ai_sale_product_matcher/models/sale_order.py" = ["E501"]
-"ai_sale_product_matcher/tests/*.py" = ["E501"]
 
 [lint.isort]
 section-order = ["future", "standard-library", "third-party", "odoo", "odoo-addons", "first-party", "local-folder"]

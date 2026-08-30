@@ -16,14 +16,18 @@ class TestRequirementExtractor(TransactionCase):
         self.assertNotIn("weight_kg", result)
 
     def test_parse_ignores_noise(self):
-        content = 'Sure! Here is JSON: {"motor_power_kw": 2.3, "phase": "Monofaze (M)"} trailing'
+        content = (
+            'Sure! Here is JSON: {"motor_power_kw": 2.3, '
+            '"phase": "Monofaze (M)"} trailing'
+        )
         result = requirement_extractor.parse_and_validate(content)
         # motor_power_kw is char in catalog (mixed types) -> stored as string
         self.assertEqual(str(result["motor_power_kw"]), "2.3")
 
     def test_boolean_normalization(self):
         content = '{"has_detergent_tank": true, "auto_start_stop": "evet"}'
-        # has_detergent_tank is boolean char? Check meta - we test validation keeps booleans
+        # has_detergent_tank is boolean char? Check meta - we test that
+        # validation keeps booleans
         result = requirement_extractor.parse_and_validate(content)
         # Both should be present if keys exist in catalog; otherwise filtered
         # At least pressure_bar-like keys are validated

@@ -1,9 +1,12 @@
 # Copyright 2026 VSL
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
+import logging
 import os
 import re
 import tempfile
+
+_logger = logging.getLogger(__name__)
 
 _IMAGE_EXTENSIONS = ("pdf", "png", "jpg", "jpeg", "gif", "bmp")
 
@@ -34,7 +37,7 @@ def resize_image(path, max_dimension=1280):
     try:
         os.unlink(path)
     except OSError:
-        pass
+        _logger.debug("Could not remove tmp file %s", path, exc_info=True)
     return resized
 
 
@@ -74,7 +77,7 @@ def prepare_images(attachment, max_pages=4):
             try:
                 os.unlink(file_path)
             except OSError:
-                pass
+                _logger.debug("Could not remove tmp file %s", file_path, exc_info=True)
             for idx, image in enumerate(images):
                 png_path = f"{file_path}.page{idx}.png"
                 image.save(png_path, "PNG")
@@ -114,13 +117,10 @@ def extract_text_from_pdf(attachment):
         try:
             os.unlink(file_path)
         except OSError:
-            pass
+            _logger.debug("Could not remove tmp file %s", file_path, exc_info=True)
 
 
 def cleanup_tmp(path):
-    import logging
-
-    _logger = logging.getLogger(__name__)
     for candidate in (path, f"{path}.png", f"{path}.resized.png"):
         if os.path.exists(candidate):
             try:
@@ -134,13 +134,13 @@ def cleanup_tmp(path):
             try:
                 os.unlink(cand)
             except OSError:
-                pass
+                _logger.debug("Could not remove tmp %s", cand, exc_info=True)
         cand2 = f"{cand}.resized.png"
         if os.path.exists(cand2):
             try:
                 os.unlink(cand2)
             except OSError:
-                pass
+                _logger.debug("Could not remove tmp %s", cand2, exc_info=True)
 
 
 def mime_from_extension(path):

@@ -12,9 +12,7 @@ class AiSaleRequirementWizard(models.TransientModel):
     _description = "AI Requirement Wizard"
 
     order_id = fields.Many2one("sale.order", required=True, readonly=True)
-    requirement_text = fields.Text(
-        string="Requirement Text", help="Paste email, spec sheet text, etc."
-    )
+    requirement_text = fields.Text(help="Paste email, spec sheet text, etc.")
     requirements_json = fields.Text(
         string="Extracted Requirements (JSON)", help="Edit before matching"
     )
@@ -27,11 +25,11 @@ class AiSaleRequirementWizard(models.TransientModel):
         readonly=True,
     )
     attachment_ids = fields.Many2many("ir.attachment", string="Requirement Files")
-    # Optional filters — sector-independent: filter matching within selected brand/category
+    # Optional filters - sector-independent: match within selected brand/category
     brand_id = fields.Many2one(
         "product.category",
-        string="Brand",
-        help="Optional: limit matching to this brand (top-level category like Nilfisk/Viper/Rottest)",
+        help="Optional: limit matching to this brand "
+        "(top-level category like Nilfisk/Viper/Rottest)",
         domain="[('parent_id', '=', False)]",
     )
     categ_id = fields.Many2one(
@@ -48,10 +46,17 @@ class AiSaleRequirementWizard(models.TransientModel):
         self.ensure_one()
         if not self.attachment_ids and not (self.requirement_text or "").strip():
             raise UserError(self.env._("Attach a file or enter requirement text."))
-        # Use wizard connection if chosen, otherwise order's or default (field now optional/invisible)
-        connection = self.ai_connection_id or self.order_id.ai_connection_id or self.order_id._ai_default_connection()
+        # Use wizard connection if chosen, otherwise order's or default
+        # (field now optional/invisible)
+        connection = (
+            self.ai_connection_id
+            or self.order_id.ai_connection_id
+            or self.order_id._ai_default_connection()
+        )
         if not connection or not connection.exists():
-            raise UserError(self.env._("No AI Connection configured. Set one in Settings."))
+            raise UserError(
+                self.env._("No AI Connection configured. Set one in Settings.")
+            )
         self.order_id.write({"ai_connection_id": connection.id})
         self.order_id.action_extract_requirements(
             attachment_ids=self.attachment_ids.ids,

@@ -42,8 +42,9 @@ class TestProductMatcher(TransactionCase):
         self.assertTrue(product_matcher._char_match("true", "true"))
 
     def test_find_best_matches_orders(self):
-        # Create two products with different values for pressure_bar (if PIM not installed, uses JSON fallback)
-        # We test ordering by weighted percent - uses python-side scoring, no PIM needed
+        # Create two products with different values for pressure_bar
+        # (if PIM not installed, uses JSON fallback)
+        # We test ordering by weighted percent - python-side scoring, no PIM needed
         p1 = self.env["product.template"].create({"name": "P1", "sale_ok": True})
         p2 = self.env["product.template"].create({"name": "P2", "sale_ok": True})
         # Monkey: set custom attrs via x_custom_json_attrs if field exists

@@ -2,8 +2,11 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 import json
+import logging
 
 from odoo import api, fields, models
+
+_logger = logging.getLogger(__name__)
 
 
 class AiProductMatch(models.Model):
@@ -60,12 +63,22 @@ class AiProductMatch(models.Model):
             try:
                 line._onchange_product_id()
             except Exception:
-                pass
+                _logger.debug(
+                    "onchange failed while adding product %s to order %s",
+                    self.product_id.id or self.product_tmpl_id.id,
+                    order.id,
+                    exc_info=True,
+                )
         elif hasattr(line, "product_id_change"):
             try:
                 line.product_id_change()
             except Exception:
-                pass
+                _logger.debug(
+                    "product_id_change failed while adding product %s to order %s",
+                    self.product_id.id or self.product_tmpl_id.id,
+                    order.id,
+                    exc_info=True,
+                )
         return {
             "type": "ir.actions.act_window",
             "res_model": "sale.order",
