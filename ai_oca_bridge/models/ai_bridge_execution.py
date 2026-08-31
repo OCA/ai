@@ -122,14 +122,16 @@ class AiBridgeExecution(models.Model):
             **kwargs,
         )
         payload = self._add_extra_payload_fields(payload)
+        request_kwargs = self._execute_kwargs(**kwargs)
+        timeout = request_kwargs.pop("timeout", 30)
         try:
             response = requests.post(
                 self.ai_bridge_id.url,
                 json=payload,
                 auth=self._get_auth(),
                 headers=self._get_headers(),
-                timeout=30,  # Default timeout, can be overridden by _execute_kwargs
-                **self._execute_kwargs(**kwargs),
+                timeout=timeout,
+                **request_kwargs,
             )
             self.result = response.content
             response.raise_for_status()
