@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="ai_tool_server_action_form_view" model="ir.ui.view">
+        <field name="name">ai.tool.server.action.form</field>
+        <field name="model">ai.tool</field>
+        <field name="inherit_id" ref="ai_tool.ai_tool_form_view" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='kind']" position="after">
+                <field
+                    name="server_action_id"
+                    invisible="kind != 'server_action'"
+                    required="kind == 'server_action'"
+                />
+            </xpath>
+            <xpath expr="//sheet" position="inside">
+                <notebook invisible="kind != 'server_action'">
+                    <page string="Schemas" name="schemas">
+                        <group>
+                            <field
+                                name="input_schema_json"
+                                widget="code"
+                                options="{'mode': 'python'}"
+                            />
+                            <field
+                                name="output_schema_json"
+                                widget="code"
+                                options="{'mode': 'python'}"
+                            />
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+</odoo>
