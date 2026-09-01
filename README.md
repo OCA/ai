@@ -18,7 +18,11 @@ ai
 
 [//]: # (addons)
 
-This part will be replaced when running the oca-gen-addons-table script from OCA/maintainer-tools.
+Available addons
+----------------
+addon | version | maintainers | summary
+--- | --- | --- | ---
+[ai_tool](ai_tool/) | 19.0.1.0.0 |  | We want to generate some specific AI Tools that might be used in other places, like MCP or native.
 
 [//]: # (end addons)
 
