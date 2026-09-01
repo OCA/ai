@@ -2,21 +2,21 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from freezegun import freeze_time
-from odoo_test_helper import FakeModelLoader
 
 from odoo.exceptions import UserError
+from odoo.orm.model_classes import add_to_registry
 from odoo.tests.common import TransactionCase
+
+from .fake_models import AiConnection
 
 
 class TestConnection(TransactionCase):
-    def setUp(self):
-        super().setUp()
-        self.loader = FakeModelLoader(self.env, self.__module__)
-        self.loader.backup_registry()
-        from .fake_models import AiConnection
-
-        self.loader.update_registry((AiConnection,))
-        self.addCleanup(self.loader.restore_registry)
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        add_to_registry(cls.registry, AiConnection)
+        cls.registry._setup_models__(cls.env.cr, [AiConnection._name])
+        cls.registry.init_models(cls.env.cr, [AiConnection._name], {})
 
     def test_demo_connection(self):
         connection = self.env["ai.connection"].create(
