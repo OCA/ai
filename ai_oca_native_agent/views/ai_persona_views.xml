@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Pierre Verkest
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).  -->
+<odoo>
+    <record id="view_ai_persona_form" model="ir.ui.view">
+        <field name="name">ai.persona.form</field>
+        <field name="model">ai.persona</field>
+        <field name="arch" type="xml">
+            <form string="AI Persona">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Persona Name" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code" />
+                            <field name="system_prompt_id" />
+                            <field name="user_wrapper_prompt_id" />
+                        </group>
+                        <group>
+                            <field name="is_default" widget="boolean_toggle" />
+                        </group>
+                    </group>
+                    <group>
+                        <field
+                            name="description"
+                            placeholder="Description of this agent persona..."
+                        />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ai_persona_list" model="ir.ui.view">
+        <field name="name">ai.persona.list</field>
+        <field name="model">ai.persona</field>
+        <field name="arch" type="xml">
+            <list string="AI Personas">
+                <field name="name" />
+                <field name="code" />
+                <field name="system_prompt_id" />
+                <field name="user_wrapper_prompt_id" />
+                <field name="is_default" widget="boolean_toggle" />
+            </list>
+        </field>
+    </record>
+
+    <record id="action_ai_persona" model="ir.actions.act_window">
+        <field name="name">AI Personas</field>
+        <field name="res_model">ai.persona</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem
+        id="menu_ai_persona"
+        name="Personas"
+        parent="ai_oca_native_base.menu_ai_oca_native_root"
+        action="action_ai_persona"
+        groups="ai_oca_native_base.group_ai_admin"
+        sequence="10"
+    />
+</odoo>
