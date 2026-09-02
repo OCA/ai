@@ -1,0 +1,8 @@
+from odoo import fields, models
+
+
+class BridgeTest(models.Model):
+    _name = "bridge.test"
+    _description = "Test Model for AI Bridge"
+
+    name = fields.Char()
