@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Pierre Verkest
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).  -->
+<odoo>
+    <record id="prompt_system_default" model="ai.prompt.template">
+        <field name="name">Default System Prompt</field>
+        <field name="code">system_default</field>
+        <field name="prompt_type">system</field>
+        <field name="include_record_data" eval="False" />
+        <field name="include_record_chatter" eval="False" />
+        <field
+            name="template_text"
+        ><![CDATA[<t>You are an autonomous Odoo AI Agent.
+Your goal is to understand the user's intent, plan necessary actions, coordinate specialized sub-agents when required, and provide clear and helpful responses.
+Preferred language: <t t-out="user.partner_id.lang or 'en_US'"/>.</t>]]></field>
+    </record>
+
+    <record id="prompt_user_wrapper_default" model="ai.prompt.template">
+        <field name="name">Default User Request Wrapper</field>
+        <field name="code">user_wrapper_default</field>
+        <field name="prompt_type">user_wrapper</field>
+        <field name="include_record_data" eval="True" />
+        <field name="include_record_chatter" eval="True" />
+        <field
+            name="template_text"
+        ><![CDATA[<t><t t-if="record">Context Record: <t t-out="res_model"/><t t-if="record.display_name"> (<t t-out="record.display_name"/>)</t>
+</t><t t-if="record_context">Record Data:
+<t t-out="record_context"/>
+</t><t t-if="chatter_messages">Chatter History:
+<t t-out="chatter_messages"/>
+</t>User Request:
+<t t-out="content"/></t>]]></field>
+    </record>
+
+    <record id="prompt_thread_title_default" model="ai.prompt.template">
+        <field name="name">Default Thread Title Prompt</field>
+        <field name="code">thread_title_default</field>
+        <field name="prompt_type">thread_title</field>
+        <field name="include_record_data" eval="False" />
+        <field name="include_record_chatter" eval="False" />
+        <field
+            name="template_text"
+        ><![CDATA[<t>Generate a concise, smart title (3 to 5 words max) in the user language for a chat thread starting with:
+'<t t-out="content"/>'
+Output ONLY the title, no quotes or punctuation.</t>]]></field>
+    </record>
+
+    <record id="persona_default" model="ai.persona">
+        <field name="name">Default Odoo AI Agent</field>
+        <field name="code">default_agent</field>
+        <field name="system_prompt_id" ref="prompt_system_default" />
+        <field name="user_wrapper_prompt_id" ref="prompt_user_wrapper_default" />
+        <field name="description">Standard autonomous Odoo AI Agent persona.</field>
+        <field name="is_default" eval="True" />
+    </record>
+
+    <record
+        id="user_ai_orchestrator_agent"
+        model="res.users"
+        context="{'no_reset_password': True}"
+    >
+        <field name="name">Orchestrator AI Agent Account</field>
+        <field name="login">ai_orchestrator_agent</field>
+        <field name="email">ai_orchestrator_agent@example.com</field>
+        <field name="is_ai_agent" eval="True" />
+        <field name="group_ids" eval="[(6, 0, [ref('base.group_user')])]" />
+    </record>
+
+    <record id="default_main_orchestrator_agent" model="ai.agent">
+        <field name="name">Main Orchestrator Agent</field>
+        <field name="persona_id" ref="persona_default" />
+        <field name="user_id" ref="user_ai_orchestrator_agent" />
+        <field name="execution_mode">user_context</field>
+        <field
+            name="description"
+        >Primary Orchestrator Agent coordinating thread conversations and sub-agent task dispatching.</field>
+    </record>
+</odoo>

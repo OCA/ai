@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ai_prompt_template_user,ai.prompt.template.user,model_ai_prompt_template,ai_oca_native_base.group_ai_user,1,0,0,0
+access_ai_prompt_template_admin,ai.prompt.template.admin,model_ai_prompt_template,ai_oca_native_base.group_ai_admin,1,1,1,1
+access_ai_persona_user,ai.persona.user,model_ai_persona,ai_oca_native_base.group_ai_user,1,0,0,0
+access_ai_persona_admin,ai.persona.admin,model_ai_persona,ai_oca_native_base.group_ai_admin,1,1,1,1
+access_ai_agent_user,ai.agent.user,model_ai_agent,ai_oca_native_base.group_ai_user,1,0,0,0
+access_ai_agent_admin,ai.agent.admin,model_ai_agent,ai_oca_native_base.group_ai_admin,1,1,1,1

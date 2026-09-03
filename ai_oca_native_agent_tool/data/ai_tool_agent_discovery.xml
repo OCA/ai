@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record id="ai_tool_agent_list_available_tools" model="ai.tool">
+        <field name="name">agent_list_available_tools</field>
+        <field
+            name="description"
+        >Returns list of active direct tools registered in Odoo.</field>
+        <field name="model_id" ref="ai_oca_native_agent.model_ai_agent" />
+        <field name="function_name">agent_list_available_tools</field>
+        <field name="kind">generic</field>
+    </record>
+
+    <record id="ai_tool_agent_list_available_agents" model="ai.tool">
+        <field name="name">agent_list_available_agents</field>
+        <field
+            name="description"
+        >Returns list of active specialized sub-agents registered in Odoo.</field>
+        <field name="model_id" ref="ai_oca_native_agent.model_ai_agent" />
+        <field name="function_name">agent_list_available_agents</field>
+        <field name="kind">generic</field>
+    </record>
+
+    <record id="ai_tool_agent_propose_action_plan" model="ai.tool">
+        <field name="name">agent_propose_action_plan</field>
+        <field
+            name="description"
+        >Proposes a structured multi-step action plan to execute or delegate.</field>
+        <field name="model_id" ref="ai_oca_native_agent.model_ai_agent" />
+        <field name="function_name">agent_propose_action_plan</field>
+        <field name="kind">generic</field>
+    </record>
+</odoo>
