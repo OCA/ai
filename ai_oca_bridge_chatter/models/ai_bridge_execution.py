@@ -1,6 +1,8 @@
 # Copyright 2025 Dixmit
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
+from markupsafe import Markup
+
 from odoo import _, fields, models
 
 
@@ -36,7 +38,18 @@ class AiBridgeExecution(models.Model):
                 )
             )
             recipient._notify_typing(is_typing=False)
-            response["author_id"] = self.chatter_user_id.partner_id.id
-            response["message_type"] = "comment"
+            body = response.get("body") or ""
+            body_is_html = bool(response.pop("body_is_html", False))
+            if not isinstance(body, Markup):
+                body = Markup(body) if body_is_html else Markup("<p>%s</p>") % body
+            response.update(
+                {
+                    "author_id": self.chatter_user_id.partner_id.id,
+                    "body": body,
+                    "message_type": "comment",
+                    # Discuss draws chat bubbles only for comments, not notes.
+                    "subtype_xmlid": "mail.mt_comment",
+                }
+            )
 
         return super()._process_response_message(response)

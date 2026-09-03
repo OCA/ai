@@ -82,12 +82,40 @@ class TestChatter(common.TransactionCase):
                 body="Test message",
             )
             mock_post.assert_called_once()
-        self.assertEqual(
-            2,
-            self.env["mail.message"].search_count(
-                [("res_id", "=", self.chat.id), ("model", "=", "discuss.channel")]
-            ),
+        messages = self.env["mail.message"].search(
+            [("res_id", "=", self.chat.id), ("model", "=", "discuss.channel")],
+            order="id",
         )
+        self.assertEqual(2, len(messages))
+        ai_message = messages[-1]
+        self.assertEqual(ai_message.author_id, self.ai_user.partner_id)
+        self.assertEqual(ai_message.message_type, "comment")
+        self.assertEqual(ai_message.subtype_id, self.env.ref("mail.mt_comment"))
+        self.assertIn("My message", ai_message.body)
+
+    def test_chat_html_body_is_comment(self):
+        """HTML bridge replies must still be Discuss comments, not notes."""
+        with mock.patch("requests.post") as mock_post:
+            mock_post.return_value = mock.Mock(
+                status_code=200,
+                json=lambda: {
+                    "body": "<p>Hello! How can I help?</p>",
+                    "body_is_html": True,
+                },
+            )
+            self.chat.with_user(self.user.id).message_post(body="ola")
+        ai_message = self.env["mail.message"].search(
+            [
+                ("res_id", "=", self.chat.id),
+                ("model", "=", "discuss.channel"),
+                ("author_id", "=", self.ai_user.partner_id.id),
+            ],
+            limit=1,
+        )
+        self.assertTrue(ai_message)
+        self.assertEqual(ai_message.subtype_id, self.env.ref("mail.mt_comment"))
+        self.assertEqual(ai_message.message_type, "comment")
+        self.assertIn("Hello! How can I help?", ai_message.body)
 
     def test_channel_not_called(self):
         """No AI bridge should be called when the user is not callend in the channel"""
