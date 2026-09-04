@@ -277,7 +277,7 @@ class TestVector(TransactionCase):
             }
         )
         field_config.update_column()
-        with self.assertRaises(UserError):
+        with self.assertRaisesRegex(UserError, "Field name is not a Many2one field"):
             self.vector_model.search_vector_grouped(
                 "description_vector", "MY OWN QUERY", "name"
             )
@@ -299,7 +299,9 @@ class TestVector(TransactionCase):
             }
         )
         field_config.update_column()
-        with self.assertRaises(UserError):
+        with self.assertRaisesRegex(
+            UserError, "Field name is not a computed_vector field"
+        ):
             self.vector_model.search_vector_grouped(
                 "name", "MY OWN QUERY", "partner_id"
             )
@@ -321,7 +323,9 @@ class TestVector(TransactionCase):
             }
         )
         field_config.update_column()
-        with self.assertRaises(UserError):
+        with self.assertRaisesRegex(
+            UserError, "Field name is not a computed_vector field"
+        ):
             self.vector_model.search_vector(
                 "name",
                 "MY OWN QUERY",
