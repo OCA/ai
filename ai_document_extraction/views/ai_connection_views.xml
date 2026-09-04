@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="ai_connection_form_view_extraction" model="ir.ui.view">
+        <field name="name">ai.connection.view.form.extraction</field>
+        <field name="model">ai.connection</field>
+        <field name="inherit_id" ref="ai_connection.ai_connection_form_view" />
+        <field name="arch" type="xml">
+            <group position="inside">
+                <field name="url" />
+                <field name="model" />
+                <field name="temperature" />
+                <field name="api_key" password="True" />
+                <field name="num_ctx" />
+                <field name="keep_alive" />
+            </group>
+        </field>
+    </record>
+</odoo>

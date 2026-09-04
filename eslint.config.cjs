@@ -155,7 +155,7 @@ const config = [{
         strict: ["error", "function"],
         "use-isnan": "error",
 
-        "jsdoc/check-tag-names": "warn",
+        "jsdoc/check-tag-names": ["warn", {"definedTags": ["odoo-module"]}],
         "jsdoc/check-types": "warn",
         "jsdoc/require-param-description": "off",
         "jsdoc/require-return": "off",
@@ -195,6 +195,13 @@ const config = [{
 
 }, {
     files: ["**/*.esm.js", "**/*test.js"],
+
+    languageOptions: {
+        ecmaVersion: 2024,
+        sourceType: "module",
+    },
+}, {
+    files: ["**/static/**/*.js"],
 
     languageOptions: {
         ecmaVersion: 2024,

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="account_move_form_ai_extraction" model="ir.ui.view">
+        <field name="name">account.move.form.ai.extraction</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button
+                    name="action_extract_with_ai"
+                    type="object"
+                    string="Extract with AI"
+                    icon="fa-magic"
+                    invisible="ai_extraction_state in ('processing', 'done') or state != 'draft'"
+                />
+            </xpath>
+            <xpath expr="//header" position="inside">
+                <button
+                    name="action_review_extraction"
+                    type="object"
+                    string="Review Extraction"
+                    icon="fa-pencil"
+                    invisible="ai_extraction_state != 'done' or state != 'draft'"
+                />
+            </xpath>
+            <xpath expr="//group[@id='header_right_group']" position="inside">
+                <field
+                    name="ai_extraction_state"
+                    widget="badge"
+                    nolabel="1"
+                    invisible="ai_extraction_state == 'draft'"
+                />
+            </xpath>
+            <xpath expr="//notebook" position="inside">
+                <page
+                    id="ai_extraction_page"
+                    name="ai_extraction_page"
+                    string="AI Extraction"
+                    invisible="ai_extraction_state == 'draft'"
+                >
+                    <group>
+                        <group>
+                            <field name="ai_extraction_state" widget="badge" />
+                            <field name="ai_extracted_tax" />
+                            <field name="ai_extracted_total" />
+                        </group>
+                        <group>
+                            <field name="ai_raw_extraction" />
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+    <record id="account_move_tree_ai_extraction" model="ir.ui.view">
+        <field name="name">account.move.tree.ai.extraction</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="inside">
+                <field name="ai_extraction_state" />
+            </xpath>
+        </field>
+    </record>
+</odoo>
