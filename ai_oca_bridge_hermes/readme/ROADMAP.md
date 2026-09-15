@@ -1,0 +1,6 @@
+- WebSocket support for real-time communication (currently uses polling)
+- Native Hermes gateway adapter (currently uses standalone script)
+- Multi-tenant routing for shared Hermes instances
+- Support for file attachments and images
+- Voice message integration
+- Interactive approval buttons in Discuss messages (e.g., "Approve/Reject" actions for sensitive operations) — nice to have for escalation workflows

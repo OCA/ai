@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026-TODAY Akretion - Raphael Valyi <raphael.valyi@akretion.com>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="ir_cron_hermes_cleanup_queue" model="ir.cron">
+        <field name="name">Hermes: Cleanup old message queue</field>
+        <field name="model_id" ref="model_hermes_message_queue" />
+        <field name="state">code</field>
+        <field name="code">model._cleanup_old_messages()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="active" eval="True" />
+    </record>
+</odoo>

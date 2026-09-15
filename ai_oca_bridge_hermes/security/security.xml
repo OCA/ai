@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026-TODAY Akretion - Raphael Valyi <raphael.valyi@akretion.com>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="hermes_gateway_rule_multi_company" model="ir.rule">
+        <field name="name">Hermes Gateway multi-company</field>
+        <field name="model_id" ref="model_hermes_gateway" />
+        <field
+            name="domain_force"
+        >['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+</odoo>
