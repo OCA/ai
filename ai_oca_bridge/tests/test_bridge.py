@@ -328,3 +328,24 @@ class TestBridge(TransactionCase):
         self.assertEqual(
             execution.payload["_id"], json.loads(execution.payload_txt)["_id"]
         )
+
+    def test_execute_timeout_from_kwargs(self):
+        """timeout via _execute_kwargs must not raise TypeError."""
+        execution = self.env["ai.bridge.execution"].create(
+            {
+                "ai_bridge_id": self.bridge.id,
+                "model_id": self.env["ir.model"]._get_id("res.partner"),
+                "res_id": self.partner.id,
+            }
+        )
+        response = mock.Mock()
+        response.status_code = 200
+        response.content = b'{"ok": true}'
+        response.json.return_value = {"ok": True}
+        response.raise_for_status = mock.Mock()
+        with mock.patch("requests.post", return_value=response) as mock_post:
+            execution._execute()
+            self.assertEqual(mock_post.call_args.kwargs["timeout"], 30)
+            execution._execute(timeout=90)
+            self.assertEqual(mock_post.call_args.kwargs["timeout"], 90)
+            self.assertEqual(execution.state, "done")
