@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="ir_actions_server_view_form_ai_tool" model="ir.ui.view">
+        <field name="name">ir.actions.server.view.form.ai.tool</field>
+        <field name="model">ir.actions.server</field>
+        <field name="inherit_id" ref="base.view_server_action_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="AI Tool Configuration">
+                    <div class="oe_text_center mt-4" invisible="ai_tool_id != False">
+                        <p class="text-muted">
+                            This Server Action is not currently configured as an AI Tool.
+                        </p>
+                        <button
+                            name="action_open_ai_tool_wizard"
+                            type="object"
+                            string="Create AI Tool"
+                            class="btn-primary"
+                            icon="fa-plus"
+                        />
+                    </div>
+
+                    <group invisible="ai_tool_id == False">
+                        <field name="ai_tool_id" invisible="1" />
+                        <group string="Description" colspan="2">
+                            <field name="ai_tool_description" nolabel="1" colspan="2" />
+                        </group>
+                        <group string="Schemas" colspan="2">
+                            <field
+                                name="input_schema_json"
+                                widget="code"
+                                options="{'mode': 'python'}"
+                            />
+                            <field
+                                name="output_schema_json"
+                                widget="code"
+                                options="{'mode': 'python'}"
+                            />
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
