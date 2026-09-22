@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Dixmit
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="ir_model_field_vector_form_view">
+        <field name="model">ir.model.field.vector</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button
+                        name="update_column"
+                        type="object"
+                        string="Update Column"
+                        class="oe_highlight"
+                    />
+                    <button
+                        name="compute_values"
+                        type="object"
+                        string="Compute Values"
+                        class="oe_highlight"
+                        invisible="not compute"
+                    />
+                </header>
+                <sheet>
+                    <group>
+                        <field name="field_id" options="{'no_create': True}" />
+                        <field name="dimensions" />
+                        <field name="vector_method" />
+                        <field name="compute" invisible="1" />
+                    </group>
+                    <notebook>
+                        <page
+                            string="OpenAI"
+                            invisible="vector_method != 'openai' and vector_method != 'openai_search'"
+                        >
+                            <group>
+                                <field name="openai_url" />
+                                <field name="openai_model" />
+                                <field name="openai_api_key" />
+                            </group>
+                        </page>
+                        <page
+                            string="FastEmbed"
+                            invisible="vector_method != 'fastembed'"
+                        >
+                            <group>
+                                <field name="fastembed_model" />
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="ir_model_field_vector_search_view">
+        <field name="model">ir.model.field.vector</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="field_id" />
+                <field name="dimensions" />
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="ir_model_field_vector_tree_view">
+        <field name="model">ir.model.field.vector</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="field_id" />
+                <field name="dimensions" />
+            </list>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="ir_model_field_vector_act_window">
+        <field name="name">Ir Model Field Vector</field>
+        <!-- TODO -->
+        <field name="res_model">ir.model.field.vector</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record model="ir.ui.menu" id="ir_model_field_vector_menu">
+        <field name="name">Field Vector Config</field>
+        <field name="parent_id" ref="base.next_id_9" />
+        <field name="action" ref="ir_model_field_vector_act_window" />
+        <field name="sequence" eval="16" />
+    </record>
+</odoo>
