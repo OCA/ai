@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 SDi - Ángel Moya <amoya@sdi.es>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="ai_skill_view_form" model="ir.ui.view">
+        <field name="name">ai.skill.form</field>
+        <field name="model">ai.skill</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name" />
+                        <h1>
+                            <field name="name" placeholder="Skill Name..." />
+                        </h1>
+                    </div>
+                    <group>
+                        <field
+                            name="description"
+                            placeholder="Short description for LLM tool selection..."
+                        />
+                        <field name="tool_id" readonly="1" />
+                    </group>
+                    <notebook>
+                        <page string="Content" name="content">
+                            <field
+                                name="content"
+                                placeholder="Skill instructions in Markdown format..."
+                            />
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ai_skill_view_list" model="ir.ui.view">
+        <field name="name">ai.skill.list</field>
+        <field name="model">ai.skill</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="description" />
+                <field name="tool_id" />
+            </list>
+        </field>
+    </record>
+
+    <record id="ai_skill_view_search" model="ir.ui.view">
+        <field name="name">ai.skill.search</field>
+        <field name="model">ai.skill</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="description" />
+            </search>
+        </field>
+    </record>
+
+    <record id="ai_skill_action" model="ir.actions.act_window">
+        <field name="name">AI Skills</field>
+        <field name="res_model">ai.skill</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="ai_skill_view_search" />
+    </record>
+</odoo>
