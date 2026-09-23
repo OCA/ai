@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 SDi - Ángel Moya <amoya@sdi.es>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo noupdate="1">
+    <!-- Triggered on every message for an agent; the interval is only a
+         safety net for missed triggers and stale sessions. -->
+    <record id="ir_cron_ai_agent_session_worker" model="ir.cron">
+        <field name="name">AI Agent: Session Worker</field>
+        <field name="model_id" ref="model_ai_agent_session" />
+        <field name="state">code</field>
+        <field name="code">model._cron_process_queue()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">minutes</field>
+        <field name="user_id" ref="base.user_root" />
+        <field name="active" eval="True" />
+    </record>
+</odoo>
