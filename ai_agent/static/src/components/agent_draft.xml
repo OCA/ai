@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="ai_agent.AgentDraft">
+        <div class="o-ai_agent-AgentDraft d-flex flex-column flex-grow-1 h-100 bg-view">
+            <AgentContextBar
+                t-if="props.draft.resModel"
+                resModel="props.draft.resModel"
+                resId="props.draft.resId"
+                resName="props.draft.resName"
+                viewContext="props.draft.viewContext"
+            />
+            <div
+                class="flex-grow-1 d-flex flex-column align-items-center justify-content-center text-muted p-3 text-center"
+            >
+                <img
+                    t-if="agent"
+                    class="o-ai_agent-AgentDraft-bigAvatar rounded-circle mb-2"
+                    t-attf-src="/web/image/res.partner/{{ agent.partner_id }}/avatar_128"
+                    alt="Agent"
+                />
+                <span>What do you want to talk about with <b
+                    t-esc="agent?.name"
+                />?</span>
+            </div>
+            <div
+                class="o-ai_agent-AgentDraft-composer d-flex align-items-end gap-2 p-2 border-top border-secondary"
+            >
+                <textarea
+                    t-ref="textarea"
+                    class="form-control o-ai_agent-AgentDraft-input"
+                    rows="2"
+                    t-att-placeholder="placeholder"
+                    t-model="state.body"
+                    t-on-keydown="onKeydown"
+                    t-att-disabled="state.sending"
+                />
+                <button
+                    class="btn btn-primary o-ai_agent-AgentDraft-send"
+                    t-att-disabled="!state.body.trim() or state.sending"
+                    t-on-click="send"
+                    title="Send"
+                >
+                    <i
+                        t-att-class="state.sending ? 'fa fa-circle-o-notch fa-spin' : 'fa fa-paper-plane'"
+                    />
+                </button>
+            </div>
+        </div>
+    </t>
+</templates>

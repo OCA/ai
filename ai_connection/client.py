@@ -13,7 +13,10 @@ class AiConnectionClient:
                     "name": "",
                     "arguments": {},
                 }
-            ]
+            ],
+            # Optional
+            "usage": {"prompt_tokens": 0, "completion_tokens": 0},
+            "reasoning": "",  # reasoning of thinking models, if any
         }
         """
         raise NotImplementedError("Subclasses must implement this method")

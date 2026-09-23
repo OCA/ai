@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 SDi - Ángel Moya <amoya@sdi.es>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="ai_agent_form_view">
+        <field name="model">ai.agent</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name" />
+                        <field name="active" invisible="1" />
+                        <field name="user_id" />
+                        <field name="connection_id" />
+                        <field name="tool_ids" widget="many2many_tags" />
+                        <field name="skill_ids" widget="many2many_tags" />
+                    </group>
+                    <group>
+                        <field name="system_prompt" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="ai_agent_search_view">
+        <field name="model">ai.agent</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="user_id" />
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="ai_agent_list_view">
+        <field name="model">ai.agent</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="user_id" />
+                <field name="connection_id" />
+            </list>
+        </field>
+    </record>
+</odoo>
