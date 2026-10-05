@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="list_models_tool" model="ai.tool">
+        <field name="name">list_models</field>
+        <field name="description">
+            List the models the current user is allowed to read, as {model, name}
+            entries. Use the technical "model" value (e.g. res.partner) with the
+            get_fields and search_read tools.
+        </field>
+        <field name="model_id" ref="base.model_ir_model" />
+        <field name="function_name">_ai_list_models</field>
+        <field name="kind">generic</field>
+    </record>
+    <record id="get_fields_tool" model="ai.tool">
+        <field name="name">get_fields</field>
+        <field name="description">
+            Describe a model's readable fields (label, type, help, selection
+            options and relation target) so their values can be interpreted.
+            Returns "fields" (readable) and "hidden" (fields forbidden to AI).
+        </field>
+        <field name="model_id" ref="base.model_ir_model" />
+        <field name="function_name">_ai_get_fields</field>
+        <field name="kind">generic</field>
+    </record>
+    <record id="search_read_tool" model="ai.tool">
+        <field name="name">search_read</field>
+        <field name="description">
+            Search and read records of a model. Accepts an optional Odoo domain,
+            an explicit field list, a limit (200 at most, and by default), an
+            offset and an order. Without a
+            field list, the stored fields are returned; ask for computed ones
+            explicitly. "has_more" tells whether more records match: read the
+            next page with the offset increased by the limit, keeping the same
+            domain and order. Relational fields are returned as record IDs; read
+            the related model to get the details of those records. Dates and
+            times are in UTC. A requested field missing from the records is not
+            available (forbidden to AI, binary, or not readable for the current
+            user), so do not retry it; get_fields lists the readable fields, and
+            the forbidden ones under "hidden". A field whose value cannot be
+            computed for the current user is left out and listed in
+            "inaccessible_fields"; do not retry it either.
+        </field>
+        <field name="model_id" ref="base.model_ir_model" />
+        <field name="function_name">_ai_search_read</field>
+        <field name="kind">generic</field>
+    </record>
+</odoo>
