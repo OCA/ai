@@ -1,0 +1,5 @@
+# generated from manifests external_dependencies
+Pillow
+pdf2image
+rapidfuzz
+requests

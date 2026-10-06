@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ai_product_match_salesman,ai.product.match salesman,model_ai_product_match,sales_team.group_sale_salesman,1,0,0,0
+access_ai_product_match_manager,ai.product.match manager,model_ai_product_match,sales_team.group_sale_manager,1,1,1,1
+access_ai_sale_requirement_wizard_salesman,ai.sale.requirement.wizard salesman,model_ai_sale_requirement_wizard,sales_team.group_sale_salesman,1,1,1,1
+access_ai_sale_requirement_wizard_manager,ai.sale.requirement.wizard manager,model_ai_sale_requirement_wizard,sales_team.group_sale_manager,1,1,1,1
