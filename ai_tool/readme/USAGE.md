@@ -1,6 +1,11 @@
-This module is technical, however, it adds some specific functions that might be used in glue modules.
+Tools are managed under `Settings > Technical > AI > AI Tool` (developer mode).
+End users normally interact with tools through integration modules such as
+`ai_oca_mcp`; this addon only provides the registry and the definition API.
 
-For example, if we want to add on sales a functionality to find the sales on a period, we should do:
+## Defining a tool in a glue module
+
+Example: a `total_sale_order` tool that returns the total sales amount within a
+date range, optionally for a specific customer.
 
 ```xml
 <odoo>
@@ -10,13 +15,16 @@ For example, if we want to add on sales a functionality to find the sales on a p
             name="description"
         >Calculate the total amount of sale orders within a date range and optionally for a specific customer.</field>
         <field name="model_id" ref="model_sale_order" />
-        <field name="function_name">_mcp_total_sale_order</field>
+        <field name="function_name">_ai_total_sale_order</field>
+        <field name="kind">generic</field>
     </record>
 </odoo>
 ```
 
 ```python
+from odoo import models
 from odoo.addons.ai_tool.tools import aitool
+
 
 class SaleOrder(models.Model):
     _inherit = "sale.order"
@@ -32,21 +40,25 @@ class SaleOrder(models.Model):
             "amount_total": {"type": "number"},
         },
     )
-    def _mcp_total_sale_order(self, start_date, end_date, customer_id=None):
+    def _ai_total_sale_order(self, start_date, end_date, customer_id=None):
         domain = [("date_order", ">=", start_date), ("date_order", "<=", end_date)]
         if customer_id:
             domain.append(("partner_id", "=", customer_id))
         orders = self.read_group(domain, ["amount_total"], [])
-        return {
-            "amount_total": (orders[0]["amount_total"] or 0) if orders else 0,
-        }
-
+        return {"amount_total": (orders[0]["amount_total"] or 0) if orders else 0}
 ```
 
-Be aware that this kind of elements must allways return a dict. All the elements will be defined in output_schema.
+## Tool kinds
 
-Also, for the signature of the functions, all fields must be in the inputs with the exception of record.
-This argument is protected and is used to define integrations with automation.
-This argument is required in `generic_model` and `record` tools.
+| Kind | Invocation |
+| --- | --- |
+| `generic` | `model.function(**args)` — no record context |
+| `generic_model` | `model.function(record=record, **args)` |
+| `record` | `record.function(**args)` — the record must match `model_id` |
 
-On `generic_model`s we are expecting this value because we want to do a specific action with the model.
+Rules:
+
+- A tool must always return a `dict`; its keys are declared in `output_schema`.
+- All method parameters must be declared in `input_schema`, except `record`.
+- `record` is a protected argument, required for `generic_model` and `record`
+  tools — it is how integrations pass the record the action applies to.
