@@ -25,8 +25,9 @@
     <record id="search_read_tool" model="ai.tool">
         <field name="name">search_read</field>
         <field name="description">
-            Search and read records of a model. Accepts an optional Odoo domain,
-            an explicit field list, a limit (200 at most, and by default), an
+            Search and read records of a model. Accepts an optional Odoo domain
+            such as [["is_company", "=", true]], an explicit field list, a
+            limit (200 at most, and by default), an
             offset and an order. Without a
             field list, the stored fields are returned; ask for computed ones
             explicitly. "has_more" tells whether more records match: read the
