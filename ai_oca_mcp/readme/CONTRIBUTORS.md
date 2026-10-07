@@ -1,2 +1,5 @@
 - [Dixmit](https://www.dixmit.com)
   - Enric Tobella
+- Pierre Verkest <pierre@verkest.fr>
+- Angel Moya <amoyapardo@gmail.com>
+- Daniel Reis <dreis.pt@gmail.com>
