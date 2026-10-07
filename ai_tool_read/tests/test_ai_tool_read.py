@@ -29,7 +29,7 @@ class TestAiToolRead(TransactionCase):
         )
 
     def _tool(self, name):
-        return self.env.ref("ai_tool_read.%s_tool" % name).with_user(self.user)
+        return self.env.ref(f"ai_tool_read.{name}_tool").with_user(self.user)
 
     def _search_read(self, model="res.partner", user=None, **kwargs):
         return (
@@ -105,7 +105,7 @@ class TestAiToolRead(TransactionCase):
 
     def test_paging(self):
         partners = self.env["res.partner"].create(
-            [{"name": "Page %s" % i} for i in range(3)]
+            [{"name": f"Page {i}"} for i in range(3)]
         )
         kwargs = {
             "domain": [("id", "in", partners.ids)],
@@ -123,7 +123,7 @@ class TestAiToolRead(TransactionCase):
         # A missing or out-of-range limit falls back to the cap, which Odoo would
         # otherwise lift for a limit of 0 or less.
         partners = self.env["res.partner"].create(
-            [{"name": "Cap %s" % i} for i in range(MAX_LIMIT + 1)]
+            [{"name": f"Cap {i}"} for i in range(MAX_LIMIT + 1)]
         )
         for limit in (None, -1, 0, MAX_LIMIT + 1):
             with self.subTest(limit=limit):
@@ -165,11 +165,13 @@ class TestAiToolRead(TransactionCase):
         self.assertIn("email_normalized", self._get_fields("res.partner")["hidden"])
 
     def test_display_name_hidden(self):
-        # A display name computed on the fly comes from name_get, which may show
-        # another record's name with nothing in the field dependencies to tell:
-        # a follower shows its partner's name. A stored one declares them.
+        # A display name computed on the fly may show another record's name
+        # with nothing in the field dependencies to tell: a follower shows its
+        # partner's name. display_name is never stored, so it is left out
+        # everywhere; a stored one would declare its dependencies like any
+        # computed field.
         self.assertNotIn("display_name", self._get_fields("mail.followers")["fields"])
-        self.assertIn("display_name", self._get_fields("res.partner")["fields"])
+        self.assertNotIn("display_name", self._get_fields("res.partner")["fields"])
 
     def test_unreadable_fields_not_exposed(self):
         # A group-restricted field is not even reported as hidden.
@@ -197,7 +199,7 @@ class TestAiToolRead(TransactionCase):
         # as which real fields do so depends on the installed modules, and a
         # value already in the cache would not be computed at all.
         def compute_refused(partners):
-            partners.env["ir.model.access"].check_access_rights("read")
+            partners.env["ir.model.access"].check_access("read")
 
         self.patch(
             type(self.env["res.partner"]), "_compute_contact_address", compute_refused

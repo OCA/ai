@@ -3,7 +3,7 @@
 
 from datetime import date
 
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 
 from odoo.addons.ai_tool.tools import aitool
@@ -63,13 +63,12 @@ class IrModel(models.Model):
             and field.type != "binary"
             and (field.store or name != "display_name")
             and (
-                not field.groups or self.env.su or target.user_has_groups(field.groups)
+                not field.groups
+                or self.env.su
+                or self.env.user.has_groups(field.groups)
             )
             and (
-                not field.relational
-                or self.env[field.comodel_name].check_access_rights(
-                    "read", raise_exception=False
-                )
+                not field.relational or self.env[field.comodel_name].has_access("read")
             )
         }
 
@@ -86,10 +85,12 @@ class IrModel(models.Model):
         and that the caller has read access (data is never read as sudo)."""
         if not self._ai_is_queryable_model(model):
             raise UserError(
-                _("Model '%(model)s' does not exist or cannot be read.", model=model)
+                self.env._(
+                    "Model '%(model)s' does not exist or cannot be read.", model=model
+                )
             )
         target = self.env[model]
-        target.check_access_rights("read")
+        target.check_access("read")
         return target
 
     def _ai_can_read(self, records, field_names):
@@ -151,11 +152,12 @@ class IrModel(models.Model):
         """List the concrete models the caller is allowed to read, leaving out
         those gone from the registry."""
         result = []
-        for record in self.sudo().search([], order="model"):
+        # Listing every readable model is the point of the tool.
+        for record in self.sudo().search([], order="model"):  # pylint: disable=no-search-all
             model = record.model
-            if self._ai_is_queryable_model(model) and self.env[
-                model
-            ].check_access_rights("read", raise_exception=False):
+            if self._ai_is_queryable_model(model) and self.env[model].has_access(
+                "read"
+            ):
                 result.append({"model": model, "name": record.name})
         return {"models": result}
 

@@ -4,7 +4,7 @@
 {
     "name": "AI Tool - Read",
     "summary": "Generic ai_tool to read any model/field, with a per-field opt-out flag",
-    "version": "16.0.1.0.0",
+    "version": "19.0.1.0.0",
     "website": "https://github.com/OCA/ai",
     "license": "AGPL-3",
     "author": "Quartile,Odoo Community Association (OCA)",
