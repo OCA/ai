@@ -27,6 +27,8 @@ class IrModel(models.Model):
         registry = self.env.registry
         forbidden = set()
         flags = self.env["ir.model.fields"].sudo().search([("ai_no_read", "=", True)])
+        if not flags:
+            return forbidden
         # Skip a flag left on a model or field that is gone from the code.
         for flag in flags.filtered(
             lambda rec: rec.model in registry
@@ -121,7 +123,10 @@ class IrModel(models.Model):
         return records.read(kept or ["id"], load=None), refused
 
     def _ai_jsonify(self, row):
-        """Make a ``search_read`` row JSON-serializable (dates to ISO strings)."""
+        """Make a ``search_read`` row JSON-serializable (dates to ISO strings).
+
+        ``isinstance(value, date)`` also covers ``datetime``, a subclass."""
+
         return {
             key: value.isoformat() if isinstance(value, date) else value
             for key, value in row.items()
@@ -175,6 +180,9 @@ class IrModel(models.Model):
         return {
             "fields": {name: info for name, info in meta.items() if name in readable},
             # fields_get() also lists virtual fields (res.users' sel_groups_*).
+            # Reporting forbidden fields under ``hidden`` is deliberate: it
+            # tells the agent they exist but are off-limits, unlike
+            # group-restricted fields which are not disclosed at all.
             "hidden": sorted(
                 name for name in meta if target._fields.get(name) in forbidden
             ),
@@ -215,10 +223,11 @@ class IrModel(models.Model):
         """
         target = self._ai_target(model)
         readable = self._ai_readable_field_names(model)
-        if fields:
-            output_fields = [name for name in fields if name in readable]
-        else:
+        if fields is None:
             output_fields = [name for name in readable if target._fields[name].store]
+        else:
+            # An explicit empty list asks for ids only, not the defaults.
+            output_fields = [name for name in fields if name in readable]
         # The schema bounds are not enforced by the caller (ai_oca_mcp passes the
         # arguments through). Odoo reads every record for a limit of 0 or less,
         # past the cap, and agents send -1 to mean "all": cap those too.
