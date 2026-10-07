@@ -36,7 +36,7 @@ class AiTool(models.Model):
     )
 
     def _get_tool_definition(self):
-        func = getattr(self.env[self.model_id.model], self.function_name)
+        func = getattr(self.env[self.model_id.sudo().model], self.function_name)
         return {
             "name": self.name,
             "description": self.description,
@@ -77,18 +77,18 @@ class AiTool(models.Model):
 
     def _execute_tool(self, *args, record=None, **kwargs):
         if self.kind == "generic":
-            return getattr(self.env[self.model_id.model], self.function_name)(
+            return getattr(self.env[self.model_id.sudo().model], self.function_name)(
                 *args, **kwargs
             )
         if not record:
             raise ValueError("Record must be provided for non-generic tools")
         if self.kind == "generic_model":
-            return getattr(self.env[self.model_id.model], self.function_name)(
+            return getattr(self.env[self.model_id.sudo().model], self.function_name)(
                 *args, record=record, **kwargs
             )
-        elif record._name != self.model_id.model:
+        elif record._name != self.model_id.sudo().model:
             raise ValueError(
                 f"Record model {record._name} does not match tool "
-                f"model {self.model_id.model}"
+                f"model {self.model_id.sudo().model}"
             )
         return getattr(record, self.function_name)(*args, **kwargs) or {}
