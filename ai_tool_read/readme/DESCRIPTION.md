@@ -1,6 +1,6 @@
-This module adds generic `ai_tool` tools that let an AI agent read any model
-and field it is allowed to access, while keeping personal or otherwise
-sensitive fields out of the results.
+Adds `ai_tool` tools to let an AI agent read any model and field it
+is allowed to access, while keeping personal or otherwise sensitive fields out
+of the results.
 
 A flag **AI Read Forbidden** (`ai_no_read`) is added to fields. The tools never
 return nor describe a forbidden field, nor any field exposing its value:
