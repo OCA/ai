@@ -7,7 +7,12 @@ from odoo.http import request
 
 class McpController(http.Controller):
     @http.route(
-        "/mcp/<string:key>", type="http", auth="none", methods=["POST"], csrf=False
+        "/mcp/<string:key>",
+        type="http",
+        auth="none",
+        methods=["POST"],
+        csrf=False,
+        readonly=False,
     )
     def mcp_endpoint(self, key, **kwargs):
         match = re.match(

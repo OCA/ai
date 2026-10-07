@@ -183,14 +183,14 @@ class TestMcp(HttpCase):
             {
                 "name": "MCP User A",
                 "login": "mcp_user_a",
-                "groups_id": [(6, 0, [group_user.id])],
+                "group_ids": [(6, 0, [group_user.id])],
             }
         )
         user_b = self.env["res.users"].create(
             {
                 "name": "MCP User B",
                 "login": "mcp_user_b",
-                "groups_id": [(6, 0, [group_user.id])],
+                "group_ids": [(6, 0, [group_user.id])],
             }
         )
         self.assertFalse(user_a.has_group("base.group_system"))
@@ -229,7 +229,7 @@ class TestMcp(HttpCase):
             {
                 "name": "MCP Plain User",
                 "login": "mcp_plain_user",
-                "groups_id": [(6, 0, [self.env.ref("base.group_user").id])],
+                "group_ids": [(6, 0, [self.env.ref("base.group_user").id])],
             }
         )
         self.assertFalse(user.has_group("base.group_system"))
@@ -239,9 +239,7 @@ class TestMcp(HttpCase):
         security_key = "plain-user-security-key"
         key.hashed_key = key._hash_key(security_key)
         # Refresh the cached key lookup so the new key is resolvable.
-        self.env["mcp.server.key"]._get_mcp_server_by_key.clear_cache(
-            self.env["mcp.server.key"]
-        )
+        self.env.registry.clear_cache()
         return security_key
 
     def test_list_tools_non_admin_user(self):
