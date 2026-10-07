@@ -436,6 +436,12 @@ extension (for example, validating externally-issued tokens via
 want to expose.</li>
 <li>The <tt class="docutils literal">URL</tt> field shows the client endpoint — it already includes the
 server’s unique path key.</li>
+<li>Optionally fill <tt class="docutils literal">Instructions</tt>: the <tt class="docutils literal">initialize</tt> handshake always
+returns an auto-generated capability summary (the server’s purpose
+and its tool list); this field appends extra guidance to it — domain
+context, conventions, which tools to prefer. Per-tool <tt class="docutils literal">description</tt>
+and input schemas remain the primary channel agents rely on, so write
+them as if they were documentation for the model.</li>
 </ol>
 </div>
 <div class="section" id="create-a-client-key">
@@ -471,13 +477,12 @@ context (<tt class="docutils literal">generic_model</tt>, <tt class="docutils li
 <p><tt class="docutils literal">ai_tool</tt> itself ships only demo tools (<tt class="docutils literal">get_date</tt>,
 <tt class="docutils literal">post_message</tt>), of which just <tt class="docutils literal">get_date</tt> is callable via MCP.
 Generic read access to Odoo data — listing models, describing fields and
-<tt class="docutils literal">search_read</tt> — is provided by the <tt class="docutils literal">ai_tool_read</tt> addon (proposed in
-OCA/ai#122), which also adds a per-field AI opt-out for sensitive data.
-Other capabilities — creating documents, triggering actions — come from
-extension modules that define their own <tt class="docutils literal">&#64;aitool</tt>-decorated methods
-and <tt class="docutils literal">ai.tool</tt> records (see the <tt class="docutils literal">ai_tool</tt> documentation). Whatever a
-tool can do is limited by the permissions of the user bound to the API
-key.</p>
+<tt class="docutils literal">search_read</tt> — is provided by the <tt class="docutils literal">ai_tool_read</tt> addon, which also
+adds a per-field AI opt-out for sensitive data. Other capabilities —
+creating documents, triggering actions — come from extension modules
+that define their own <tt class="docutils literal">&#64;aitool</tt>-decorated methods and <tt class="docutils literal">ai.tool</tt>
+records (see the <tt class="docutils literal">ai_tool</tt> documentation). Whatever a tool can do is
+limited by the permissions of the user bound to the API key.</p>
 <p>Tools are not limited to reading data: a tool method runs real ORM code
 and can also create or update records and call actions, always within
 the key owner’s permissions. Results must be JSON-serializable — return

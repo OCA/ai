@@ -101,6 +101,32 @@ class TestMcp(HttpCase):
         self.assertIn("result", response)
         self.assertIn("capabilities", response["result"])
         self.assertIn("tools", response["result"]["capabilities"])
+        # instructions always carry the auto-generated capability summary
+        instructions = response["result"]["instructions"]
+        self.assertIn("Available tools:", instructions)
+        self.assertIn("get_date", instructions)
+
+    def test_initialize_with_instructions(self):
+        self.server.instructions = "Use the search tools to query data."
+        request = self.url_open(
+            f"/mcp/{self.server.key}",
+            data=json.dumps(
+                {
+                    "jsonrpc": "2.0",
+                    "id": "1",
+                    "method": "initialize",
+                }
+            ),
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {self.security_key}",
+            },
+        )
+        self.assertEqual(request.status_code, 200)
+        response = json.loads(request.content.decode("utf-8"))
+        instructions = response["result"]["instructions"]
+        self.assertIn("get_date", instructions)
+        self.assertTrue(instructions.endswith("Use the search tools to query data."))
 
     def test_list_tools(self):
         request = self.url_open(

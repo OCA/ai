@@ -40,6 +40,7 @@
                     <group>
                         <field name="active" invisible="1" />
                         <field name="description" />
+                        <field name="instructions" />
                         <field name="key" />
                         <field name="url" widget="CopyClipboardChar" />
                         <field name="tool_ids" widget="many2many_tags" />

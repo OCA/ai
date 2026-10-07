@@ -49,15 +49,17 @@ class McpController(http.Controller):
         mcp_server_key = mcp_server_key.with_user(mcp_server_key.user_id.id)
         method = payload.get("method")
         if method == "initialize":
+            result = {
+                "protocolVersion": "2025-03-26",
+                "capabilities": {"tools": {}},
+                "serverInfo": {"name": "odoo-mcp", "version": "0.1.0"},
+                "instructions": mcp_server_key.server_id._get_instructions(),
+            }
             return request.make_json_response(
                 {
                     "jsonrpc": "2.0",
                     "id": payload.get("id"),
-                    "result": {
-                        "protocolVersion": "2025-03-26",
-                        "capabilities": {"tools": {}},
-                        "serverInfo": {"name": "odoo-mcp", "version": "0.1.0"},
-                    },
+                    "result": result,
                 }
             )
 

@@ -5,6 +5,12 @@
    expose.
 3. The `URL` field shows the client endpoint — it already includes the server's
    unique path key.
+4. Optionally fill `Instructions`: the `initialize` handshake always returns an
+   auto-generated capability summary (the server's purpose and its tool list);
+   this field appends extra guidance to it — domain context, conventions, which
+   tools to prefer. Per-tool `description` and input schemas remain the primary
+   channel agents rely on, so write them as if they were documentation for the
+   model.
 
 ## Create a client key
 
@@ -35,8 +41,7 @@ Only tools of kind `generic` are exposed. Tools requiring a record context
 `ai_tool` itself ships only demo tools (`get_date`, `post_message`), of which
 just `get_date` is callable via MCP. Generic read access to Odoo data —
 listing models, describing fields and `search_read` — is provided by the
-`ai_tool_read` addon (proposed in OCA/ai#122), which also adds a per-field AI
-opt-out for sensitive data. Other capabilities — creating documents,
+`ai_tool_read` addon, which also adds a per-field AI opt-out for sensitive data. Other capabilities — creating documents,
 triggering actions — come from extension modules that define their own
 `@aitool`-decorated methods and `ai.tool` records (see the `ai_tool`
 documentation). Whatever a tool can do is limited by the permissions of the
