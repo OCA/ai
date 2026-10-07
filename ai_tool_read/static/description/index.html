@@ -375,9 +375,9 @@ ul.auto-toc {
 !! source digest: sha256:fe66b1297c9c53a47b95b8407598bb5fab4d963c5e90afea0c614688365f21fc
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
 <p><a class="reference external image-reference" href="https://odoo-community.org/page/development-status"><img alt="Beta" src="https://img.shields.io/badge/maturity-Beta-yellow.png" /></a> <a class="reference external image-reference" href="http://www.gnu.org/licenses/agpl-3.0-standalone.html"><img alt="License: AGPL-3" src="https://img.shields.io/badge/license-AGPL--3-blue.png" /></a> <a class="reference external image-reference" href="https://github.com/OCA/ai/tree/19.0/ai_tool_read"><img alt="OCA/ai" src="https://img.shields.io/badge/github-OCA%2Fai-lightgray.png?logo=github" /></a> <a class="reference external image-reference" href="https://translation.odoo-community.org/projects/ai-19-0/ai-19-0-ai_tool_read"><img alt="Translate me on Weblate" src="https://img.shields.io/badge/weblate-Translate%20me-F47D42.png" /></a> <a class="reference external image-reference" href="https://runboat.odoo-community.org/builds?repo=OCA/ai&amp;target_branch=19.0"><img alt="Try me on Runboat" src="https://img.shields.io/badge/runboat-Try%20me-875A7B.png" /></a></p>
-<p>This module adds generic <tt class="docutils literal">ai_tool</tt> tools that let an AI agent read any
-model and field it is allowed to access, while keeping personal or
-otherwise sensitive fields out of the results.</p>
+<p>Adds <tt class="docutils literal">ai_tool</tt> tools to let an AI agent read any model and field it is
+allowed to access, while keeping personal or otherwise sensitive fields
+out of the results.</p>
 <p>A flag <strong>AI Read Forbidden</strong> (<tt class="docutils literal">ai_no_read</tt>) is added to fields. The
 tools never return nor describe a forbidden field, nor any field
 exposing its value: related fields, including those delegated through
@@ -414,12 +414,13 @@ forbidden there.</p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><a class="reference internal" href="#configuration" id="toc-entry-1">Configuration</a></li>
-<li><a class="reference internal" href="#known-issues-roadmap" id="toc-entry-2">Known issues / Roadmap</a></li>
-<li><a class="reference internal" href="#bug-tracker" id="toc-entry-3">Bug Tracker</a></li>
-<li><a class="reference internal" href="#credits" id="toc-entry-4">Credits</a><ul>
-<li><a class="reference internal" href="#authors" id="toc-entry-5">Authors</a></li>
-<li><a class="reference internal" href="#contributors" id="toc-entry-6">Contributors</a></li>
-<li><a class="reference internal" href="#maintainers" id="toc-entry-7">Maintainers</a></li>
+<li><a class="reference internal" href="#usage" id="toc-entry-2">Usage</a></li>
+<li><a class="reference internal" href="#known-issues-roadmap" id="toc-entry-3">Known issues / Roadmap</a></li>
+<li><a class="reference internal" href="#bug-tracker" id="toc-entry-4">Bug Tracker</a></li>
+<li><a class="reference internal" href="#credits" id="toc-entry-5">Credits</a><ul>
+<li><a class="reference internal" href="#authors" id="toc-entry-6">Authors</a></li>
+<li><a class="reference internal" href="#contributors" id="toc-entry-7">Contributors</a></li>
+<li><a class="reference internal" href="#maintainers" id="toc-entry-8">Maintainers</a></li>
 </ul>
 </li>
 </ul>
@@ -458,8 +459,59 @@ any flag, and are not reported in the <tt class="docutils literal">hidden</tt> l
 Forbidden</strong> is only needed for fields that the user is otherwise allowed
 to read.</p>
 </div>
+<div class="section" id="usage">
+<h2><a class="toc-backref" href="#toc-entry-2">Usage</a></h2>
+<p>The tools are registered as <tt class="docutils literal">ai.tool</tt> records and are callable through
+any <tt class="docutils literal">ai_tool</tt> integration: <tt class="docutils literal">ai_oca_mcp</tt>, for instance, exposes them
+to MCP clients such as Claude Desktop. This module provides the tools
+themselves; how they are reached depends on the transport module
+installed.</p>
+<p>A typical agent workflow:</p>
+<ol class="arabic">
+<li><p class="first">Call <tt class="docutils literal">list_models</tt> to discover the models the bound user may read.
+Each entry gives the technical <tt class="docutils literal">model</tt> name (e.g. <tt class="docutils literal">res.partner</tt>)
+to pass to the other tools.</p>
+</li>
+<li><p class="first">Call <tt class="docutils literal">get_fields</tt> with <tt class="docutils literal">model</tt> to learn what each readable field
+means (label, type, help, selection options, relation target), and
+which fields are listed under <tt class="docutils literal">hidden</tt>.</p>
+</li>
+<li><p class="first">Call <tt class="docutils literal">search_read</tt> to fetch records:</p>
+<ul class="simple">
+<li><tt class="docutils literal">model</tt> (required): the technical model name.</li>
+<li><tt class="docutils literal">domain</tt> (optional): an Odoo domain as a list, e.g.
+<tt class="docutils literal"><span class="pre">[[&quot;is_company&quot;,</span> <span class="pre">&quot;=&quot;,</span> true]]</tt>.</li>
+<li><tt class="docutils literal">fields</tt> (optional): an explicit field list; the stored readable
+fields are returned otherwise. An empty list returns ids only.</li>
+<li><tt class="docutils literal">limit</tt> (optional): page size, 200 by default and at most; a
+value of 0 or less, or past the cap, is treated as the maximum.</li>
+<li><tt class="docutils literal">offset</tt> (optional): skip that many matching records.</li>
+<li><tt class="docutils literal">order</tt> (optional): e.g. <tt class="docutils literal">&quot;name asc&quot;</tt>.</li>
+</ul>
+<p>Relational fields come back as record ids, dates and datetimes as
+ISO-8601 strings in UTC. <tt class="docutils literal">has_more</tt> tells whether another page
+exists under the same domain and order; fields the call could not
+read are listed in <tt class="docutils literal">inaccessible_fields</tt>, while forbidden or
+restricted fields are simply absent from the records.</p>
+</li>
+</ol>
+<p>Example <tt class="docutils literal">search_read</tt> arguments:</p>
+<pre class="code json literal-block">
+<span class="p">{</span><span class="w">
+  </span><span class="nt">&quot;model&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;res.partner&quot;</span><span class="p">,</span><span class="w">
+  </span><span class="nt">&quot;domain&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[[</span><span class="s2">&quot;is_company&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;=&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">true</span><span class="p">]],</span><span class="w">
+  </span><span class="nt">&quot;fields&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;email&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;country_id&quot;</span><span class="p">],</span><span class="w">
+  </span><span class="nt">&quot;limit&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w">
+  </span><span class="nt">&quot;order&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;name asc&quot;</span><span class="w">
+</span><span class="p">}</span>
+</pre>
+<p>Every call executes with the access rights of the calling user — the
+API-key owner when reached through <tt class="docutils literal">ai_oca_mcp</tt> — so Odoo ACLs, record
+rules and field <tt class="docutils literal">groups</tt> apply as usual. Connect the agent as a
+dedicated user holding only the rights it needs.</p>
+</div>
 <div class="section" id="known-issues-roadmap">
-<h2><a class="toc-backref" href="#toc-entry-2">Known issues / Roadmap</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-3">Known issues / Roadmap</a></h2>
 <p>The tools keep forbidden values out of their results, not out of the
 searches an agent runs: they are not meant to stop an agent that probes
 for hidden values on purpose. Each case below still lets a forbidden
@@ -489,7 +541,7 @@ forbidden, binary or restricted is simply missing from the records, with
 no reason given; <tt class="docutils literal">get_fields</tt> tells them apart.</p>
 </div>
 <div class="section" id="bug-tracker">
-<h2><a class="toc-backref" href="#toc-entry-3">Bug Tracker</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-4">Bug Tracker</a></h2>
 <p>Bugs are tracked on <a class="reference external" href="https://github.com/OCA/ai/issues">GitHub Issues</a>.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
@@ -497,15 +549,15 @@ If you spotted it first, help us to smash it by providing a detailed and welcome
 <p>Do not contact contributors directly about support or help with technical issues.</p>
 </div>
 <div class="section" id="credits">
-<h2><a class="toc-backref" href="#toc-entry-4">Credits</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-5">Credits</a></h2>
 <div class="section" id="authors">
-<h3><a class="toc-backref" href="#toc-entry-5">Authors</a></h3>
+<h3><a class="toc-backref" href="#toc-entry-6">Authors</a></h3>
 <ul class="simple">
 <li>Quartile</li>
 </ul>
 </div>
 <div class="section" id="contributors">
-<h3><a class="toc-backref" href="#toc-entry-6">Contributors</a></h3>
+<h3><a class="toc-backref" href="#toc-entry-7">Contributors</a></h3>
 <ul class="simple">
 <li><a class="reference external" href="https://www.quartile.co">Quartile</a>:<ul>
 <li>Toshikimi Shigenobu</li>
@@ -515,7 +567,7 @@ If you spotted it first, help us to smash it by providing a detailed and welcome
 </ul>
 </div>
 <div class="section" id="maintainers">
-<h3><a class="toc-backref" href="#toc-entry-7">Maintainers</a></h3>
+<h3><a class="toc-backref" href="#toc-entry-8">Maintainers</a></h3>
 <p>This module is maintained by the OCA.</p>
 <a class="reference external image-reference" href="https://odoo-community.org">
 <img alt="Odoo Community Association" src="https://odoo-community.org/logo.png" />
