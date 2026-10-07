@@ -30,9 +30,7 @@ class McpServerKey(models.Model):
         )
         self.env.registry.clear_cache()
 
-    _sql_constraints = [
-        ("key_uniq", "unique(hashed_key)", "The key must be unique"),
-    ]
+    _key_uniq = models.Constraint("unique (hashed_key)", "The key must be unique")
 
     @api.model
     def _hash_key(self, key):
