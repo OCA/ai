@@ -7,7 +7,17 @@ from odoo.http import request
 
 class McpController(http.Controller):
     @http.route(
-        "/mcp/<string:key>", type="http", auth="none", methods=["POST"], csrf=False
+        "/mcp/<string:key>",
+        type="http",
+        auth="none",
+        methods=["POST"],
+        csrf=False,
+        # Routes declared with auth="none" are served with a read-only cursor
+        # unless stated otherwise. This one writes: it logs every call and may
+        # expire a key, so it has to be read/write from the start -- otherwise
+        # every request runs once, fails on the first write and is replayed by
+        # the framework with a read/write cursor.
+        readonly=False,
     )
     def mcp_endpoint(self, key, **kwargs):
         match = re.match(
