@@ -12,6 +12,10 @@ class McpServer(models.Model):
 
     name = fields.Char()
     description = fields.Text()
+    instructions = fields.Text(
+        help="Extra guidance appended to the capability summary returned to"
+        " MCP clients in the initialize handshake."
+    )
     active = fields.Boolean(default=True)
     key = fields.Char(
         required=True,
@@ -35,3 +39,19 @@ class McpServer(models.Model):
         base_url = self.env["ir.config_parameter"].sudo().get_param("web.base.url")
         for record in self:
             record.url = f"{base_url}/mcp/{record.key}"
+
+    def _get_instructions(self):
+        self.ensure_one()
+        lines = [
+            "This MCP server exposes Odoo AI tools. Calls execute with the"
+            " permissions of the user bound to the API key.",
+        ]
+        if self.tool_ids:
+            lines.append("")
+            lines.append("Available tools:")
+            for tool in self.tool_ids:
+                suffix = f": {tool.description}" if tool.description else ""
+                lines.append(f"- {tool.name}{suffix}")
+        if self.instructions:
+            lines += ["", self.instructions]
+        return "\n".join(lines)
