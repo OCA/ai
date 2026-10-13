@@ -83,10 +83,10 @@ Configuration
 To forbid a field, tick **AI Read Forbidden** on it. As the
 administrator, either:
 
-- go to *Settings > Technical > Database Structure > Fields*, find the
+- Go to *Settings > Technical > Database Structure > Fields*, find the
   field and tick the flag (the **AI Read Forbidden** filter and list
   column help you review what is already flagged), or
-- open the model in *Settings > Technical > Database Structure > Models*
+- Open the model in *Settings > Technical > Database Structure > Models*
   and tick the flag on the line of the field, in the *Fields* tab.
 
 The flag applies to base fields as well as custom ones, and takes effect

@@ -132,6 +132,13 @@ class TestAiToolRead(TransactionCase):
                 )
                 self.assertEqual(len(res["records"]), MAX_LIMIT)
                 self.assertTrue(res["has_more"])
+        # A missing or negative offset starts from the first record.
+        domain = [("id", "in", partners.ids)]
+        first_page = self._search_read(domain=domain, fields=["id"])["records"]
+        for offset in (None, -1):
+            with self.subTest(offset=offset):
+                res = self._search_read(domain=domain, fields=["id"], offset=offset)
+                self.assertEqual(res["records"], first_page)
 
     def test_forbidden_value_followed(self):
         # A field exposing the value of a forbidden one is forbidden too: one

@@ -11,9 +11,11 @@ class IrModelFields(models.Model):
         string="AI Read Forbidden",
         default=False,
         index=True,
-        help="If enabled, the generic AI read tools will exclude this field from "
-        "records, schema introspection and domain/order filtering. Use it to keep "
-        "personal or otherwise sensitive fields away from AI agents.",
+        help="If enabled, the generic AI read tools leave this field out of the "
+        "records they return and of the fields described by get_fields. It does not "
+        "stop an agent from filtering or sorting on the field (see the module's Known "
+        "issues). Use it to keep personal or otherwise sensitive values out of the "
+        "results given to AI agents.",
     )
 
     def write(self, vals):
