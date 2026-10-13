@@ -233,6 +233,9 @@ class IrModel(models.Model):
         # past the cap, and agents send -1 to mean "all": cap those too.
         if not limit or limit < 1 or limit > MAX_LIMIT:
             limit = MAX_LIMIT
+        # PostgreSQL rejects a negative offset, failing the whole call.
+        if not offset or offset < 0:
+            offset = 0
         # One record past the page tells whether there is a next one.
         records = target.search(
             domain or [], offset=offset, limit=limit + 1, order=order
