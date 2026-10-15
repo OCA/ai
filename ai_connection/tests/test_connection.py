@@ -2,21 +2,38 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from freezegun import freeze_time
-from odoo_test_helper import FakeModelLoader
 
 from odoo.exceptions import UserError
+from odoo.orm.model_classes import add_to_registry
 from odoo.tests.common import TransactionCase
+
+from odoo.addons.ai_connection.client import AiConnectionClient
+
+from .fake_models import AiConnection
 
 
 class TestConnection(TransactionCase):
-    def setUp(self):
-        super().setUp()
-        self.loader = FakeModelLoader(self.env, self.__module__)
-        self.loader.backup_registry()
-        from .fake_models import AiConnection
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        orig_bases = cls.registry[AiConnection._name]._base_classes__
+        add_to_registry(cls.registry, AiConnection)
+        cls.registry._setup_models__(cls.env.cr, [AiConnection._name])
+        cls.registry.init_models(
+            cls.env.cr, [AiConnection._name], {"models_to_check": True}
+        )
 
-        self.loader.update_registry((AiConnection,))
-        self.addCleanup(self.loader.restore_registry)
+        def cleanup_registry():
+            model_cls = cls.registry[AiConnection._name]
+            model_cls._base_classes__ = orig_bases
+            model_cls._setup_done__ = False
+            cls.registry._setup_models__(cls.env.cr, [AiConnection._name])
+
+        cls.addClassCleanup(cleanup_registry)
+
+    def test_base_client_not_implemented(self):
+        with self.assertRaises(NotImplementedError):
+            AiConnectionClient().handle_message()
 
     def test_demo_connection(self):
         connection = self.env["ai.connection"].create(
@@ -76,3 +93,32 @@ class TestConnection(TransactionCase):
         )
         with self.assertRaises(UserError):
             connection._run("get_date", tools=tool, max_iterations=1)
+
+    def test_demo_connection_system_prompt(self):
+        connection = self.env["ai.connection"].create(
+            {
+                "name": "Demo Connection",
+                "kind": "demo",
+            }
+        )
+        response = connection._run(
+            "Hello, AI!", system_prompt="You are a demo assistant"
+        )
+        self.assertEqual(
+            response[0], "This is a demo response to the prompt: Hello, AI!"
+        )
+        self.assertEqual(response[3], 1)
+
+    def test_demo_connection_with_failing_tool(self):
+        tool = self.env.ref("ai_tool.post_message")
+        connection = self.env["ai.connection"].create(
+            {
+                "name": "Demo Connection",
+                "kind": "demo",
+            }
+        )
+        # post_message is a generic_model tool: without a record it raises,
+        # exercising the tool-call error handling in _run_ai.
+        response = connection._run("post_message", tools=tool)
+        self.assertIn("post_message", response[0])
+        self.assertEqual(response[3], 2)
