@@ -1,3 +1,6 @@
+# Copyright 2026 Dixmit
+# License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+
 import base64
 
 from odoo import fields, models
@@ -33,7 +36,7 @@ class AiClientDemo(AiConnectionClient):
         return {
             "message": {
                 "role": "assistant",
-                "content": "This is a demo response to the prompt: " f"{content}",
+                "content": f"This is a demo response to the prompt: {content}",
             },
         }
 
