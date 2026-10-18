@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_users_form_simple_modif" model="ir.ui.view">
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form_simple_modif" />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//field[@name='api_key_ids']/ancestor::group[1]"
+                position="after"
+            >
+                <group
+                    string="AI Clients"
+                    attrs="{'invisible': [('mcp_oauth_key_ids', '=', [])]}"
+                >
+                    <div class="text-muted" colspan="2">
+                        The AI clients you connected to Odoo. Disconnect one you no longer use or trust.
+                    </div>
+                    <field
+                        name="mcp_oauth_key_ids"
+                        nolabel="1"
+                        colspan="2"
+                        readonly="0"
+                    >
+                        <tree editable="bottom" create="false" delete="false">
+                            <field name="name" readonly="1" />
+                            <field name="server_id" readonly="1" />
+                            <field name="expiration_date" readonly="1" />
+                            <button
+                                type="object"
+                                name="action_disconnect"
+                                string="Disconnect"
+                                icon="fa-trash"
+                            />
+                        </tree>
+                    </field>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>
