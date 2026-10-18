@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="authorize" name="MCP OAuth Authorization">
+        <t t-call="web.login_layout">
+            <t t-set="disable_database_manager" t-value="1" />
+            <div t-if="error" class="alert alert-danger" role="alert">
+                <t t-out="error" />
+            </div>
+            <form
+                t-else=""
+                role="form"
+                method="post"
+                t-att-action="request.httprequest.path"
+            >
+                <input
+                    type="hidden"
+                    name="csrf_token"
+                    t-att-value="request.csrf_token()"
+                />
+                <t t-foreach="params.items()" t-as="param">
+                    <input type="hidden" t-att-name="param[0]" t-att-value="param[1]" />
+                </t>
+                <h5 class="text-center mb-3">Connect an AI client</h5>
+                <dl>
+                    <dt>MCP Server</dt>
+                    <dd t-out="server.name" />
+                    <dt>Returns to</dt>
+                    <dd>
+                        <strong t-out="redirect_host" />
+                    </dd>
+                    <dt>Acts as</dt>
+                    <dd t-out="request.env.user.name" />
+                    <dt>Tools</dt>
+                    <dd>
+                        <ul class="ps-3 mb-0">
+                            <li t-foreach="server.tool_ids" t-as="tool">
+                                <t t-out="tool.name" />
+                            </li>
+                        </ul>
+                    </dd>
+                </dl>
+                <div t-if="is_loopback" class="alert alert-warning" role="alert">
+                    <p>The client runs on this computer (for example Claude Code).</p>
+                    <p
+                        class="mb-0"
+                    >Allow it only if you started this connection yourself.</p>
+                </div>
+                <p class="small text-muted">
+                    The client will be able to use these tools with your access rights.
+                </p>
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-secondary">Deny</button>
+                    <button
+                        type="submit"
+                        name="approve"
+                        value="1"
+                        class="btn btn-primary"
+                    >Allow</button>
+                </div>
+            </form>
+        </t>
+    </template>
+</odoo>

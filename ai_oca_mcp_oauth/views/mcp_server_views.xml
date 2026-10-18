@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="mcp_server_form_view" model="ir.ui.view">
+        <field name="model">mcp.server</field>
+        <field name="inherit_id" ref="ai_oca_mcp.mcp_server_form_view" />
+        <field name="arch" type="xml">
+            <field name="url" position="after">
+                <field name="oauth_enabled" />
+            </field>
+        </field>
+    </record>
+</odoo>
