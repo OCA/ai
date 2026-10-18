@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="group_mcp_oauth" model="res.groups">
+        <field name="name">Connect AI Clients with OAuth</field>
+    </record>
+</odoo>
