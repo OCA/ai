@@ -21,13 +21,13 @@ Ai Oca Mcp
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-OCA%2Fai-lightgray.png?logo=github
-    :target: https://github.com/OCA/ai/tree/16.0/ai_oca_mcp
+    :target: https://github.com/OCA/ai/tree/18.0/ai_oca_mcp
     :alt: OCA/ai
 .. |badge4| image:: https://img.shields.io/badge/weblate-Translate%20me-F47D42.png
-    :target: https://translation.odoo-community.org/projects/ai-16-0/ai-16-0-ai_oca_mcp
+    :target: https://translation.odoo-community.org/projects/ai-18-0/ai-18-0-ai_oca_mcp
     :alt: Translate me on Weblate
 .. |badge5| image:: https://img.shields.io/badge/runboat-Try%20me-875A7B.png
-    :target: https://runboat.odoo-community.org/builds?repo=OCA/ai&target_branch=16.0
+    :target: https://runboat.odoo-community.org/builds?repo=OCA/ai&target_branch=18.0
     :alt: Try me on Runboat
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
@@ -48,22 +48,23 @@ by this module. An extension could be required.
 Usage
 =====
 
-- Access in Developer mode
-- Go to ``AI > MCP Server``
-- Create a new MCP Server and add the ``generic`` tools you want to
-  expose
-- Click **Add Key** to generate a new API key for a client — the key is
-  only shown once
-- Use the provided URL and the generated key to configure your AI client
+-  Access in Developer mode
+-  Go to ``AI > MCP Server``
+-  Create a new MCP Server and add the ``generic`` tools you want to
+   expose
+-  Click **Add Key** to generate a new API key for a client — the key is
+   only shown once
+-  Use the provided URL and the generated key to configure your AI
+   client
 
 Connecting from n8n
 -------------------
 
 Use the MCP node with:
 
-- **URL**: the value shown in the ``URL`` field
-- **Authentication**: Bearer Token
-- **Token**: the generated API key
+-  **URL**: the value shown in the ``URL`` field
+-  **Authentication**: Bearer Token
+-  **Token**: the generated API key
 
 Tool limitations
 ----------------
@@ -84,7 +85,7 @@ Bug Tracker
 Bugs are tracked on `GitHub Issues <https://github.com/OCA/ai/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
-`feedback <https://github.com/OCA/ai/issues/new?body=module:%20ai_oca_mcp%0Aversion:%2016.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/OCA/ai/issues/new?body=module:%20ai_oca_mcp%0Aversion:%2018.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -99,9 +100,9 @@ Authors
 Contributors
 ------------
 
-- `Dixmit <https://www.dixmit.com>`__
+-  `Dixmit <https://www.dixmit.com>`__
 
-  - Enric Tobella
+   -  Enric Tobella
 
 Maintainers
 -----------
@@ -116,6 +117,6 @@ OCA, or the Odoo Community Association, is a nonprofit organization whose
 mission is to support the collaborative development of Odoo features and
 promote its widespread use.
 
-This module is part of the `OCA/ai <https://github.com/OCA/ai/tree/16.0/ai_oca_mcp>`_ project on GitHub.
+This module is part of the `OCA/ai <https://github.com/OCA/ai/tree/18.0/ai_oca_mcp>`_ project on GitHub.
 
 You are welcome to contribute. To learn how please visit https://odoo-community.org/page/Contribute.
