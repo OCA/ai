@@ -3,7 +3,7 @@
 
 from datetime import date
 
-from odoo import _, models
+from odoo import models
 from odoo.exceptions import UserError
 
 from odoo.addons.ai_tool.tools import aitool
@@ -50,9 +50,10 @@ class IrModel(models.Model):
         A field is left out when it is forbidden to AI, binary, restricted by
         ``groups=`` for the caller (as ``fields_get`` does), or relational to a
         model the caller cannot read, which would fail the whole read. So is a
-        ``display_name`` computed on the fly: ``name_get`` may show another
-        record's name (``mail.followers``) with nothing in its dependencies to
-        tell. A stored one declares its dependencies, like any computed field.
+        ``display_name`` computed on the fly: it may show another record's name
+        (``mail.followers``) with nothing in its dependencies to tell. A stored
+        one would declare its dependencies, like any computed field, but
+        ``display_name`` is never stored, so it is always left out.
         """
         target = self.env[model]
         forbidden = self._ai_forbidden_fields()
@@ -63,13 +64,12 @@ class IrModel(models.Model):
             and field.type != "binary"
             and (field.store or name != "display_name")
             and (
-                not field.groups or self.env.su or target.user_has_groups(field.groups)
+                not field.groups
+                or self.env.su
+                or self.env.user.has_groups(field.groups)
             )
             and (
-                not field.relational
-                or self.env[field.comodel_name].check_access_rights(
-                    "read", raise_exception=False
-                )
+                not field.relational or self.env[field.comodel_name].has_access("read")
             )
         }
 
@@ -86,10 +86,12 @@ class IrModel(models.Model):
         and that the caller has read access (data is never read as sudo)."""
         if not self._ai_is_queryable_model(model):
             raise UserError(
-                _("Model '%(model)s' does not exist or cannot be read.", model=model)
+                self.env._(
+                    "Model '%(model)s' does not exist or cannot be read.", model=model
+                )
             )
         target = self.env[model]
-        target.check_access_rights("read")
+        target.check_access("read")
         return target
 
     def _ai_can_read(self, records, field_names):
@@ -153,9 +155,9 @@ class IrModel(models.Model):
         result = []
         for record in self.sudo().search([], order="model"):
             model = record.model
-            if self._ai_is_queryable_model(model) and self.env[
-                model
-            ].check_access_rights("read", raise_exception=False):
+            if self._ai_is_queryable_model(model) and self.env[model].has_access(
+                "read"
+            ):
                 result.append({"model": model, "name": record.name})
         return {"models": result}
 

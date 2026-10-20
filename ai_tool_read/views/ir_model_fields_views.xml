@@ -21,7 +21,7 @@
                 <field name="ai_no_read" />
             </xpath>
             <xpath
-                expr="//field[@name='field_id']/tree//field[@name='readonly']"
+                expr="//field[@name='field_id']/list//field[@name='readonly']"
                 position="after"
             >
                 <field name="ai_no_read" optional="show" />
