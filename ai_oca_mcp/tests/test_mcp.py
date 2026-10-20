@@ -239,9 +239,7 @@ class TestMcp(HttpCase):
         security_key = "plain-user-security-key"
         key.hashed_key = key._hash_key(security_key)
         # Refresh the cached key lookup so the new key is resolvable.
-        self.env["mcp.server.key"]._get_mcp_server_by_key.clear_cache(
-            self.env["mcp.server.key"]
-        )
+        self.env.registry.clear_cache()
         return security_key
 
     def test_list_tools_non_admin_user(self):
