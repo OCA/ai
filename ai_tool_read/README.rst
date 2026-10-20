@@ -21,13 +21,13 @@ AI Tool - Read
     :target: http://www.gnu.org/licenses/agpl-3.0-standalone.html
     :alt: License: AGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-OCA%2Fai-lightgray.png?logo=github
-    :target: https://github.com/OCA/ai/tree/16.0/ai_tool_read
+    :target: https://github.com/OCA/ai/tree/18.0/ai_tool_read
     :alt: OCA/ai
 .. |badge4| image:: https://img.shields.io/badge/weblate-Translate%20me-F47D42.png
-    :target: https://translation.odoo-community.org/projects/ai-16-0/ai-16-0-ai_tool_read
+    :target: https://translation.odoo-community.org/projects/ai-18-0/ai-18-0-ai_tool_read
     :alt: Translate me on Weblate
 .. |badge5| image:: https://img.shields.io/badge/runboat-Try%20me-875A7B.png
-    :target: https://runboat.odoo-community.org/builds?repo=OCA/ai&target_branch=16.0
+    :target: https://runboat.odoo-community.org/builds?repo=OCA/ai&target_branch=18.0
     :alt: Try me on Runboat
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
@@ -45,18 +45,19 @@ exposing its value: related fields, including those delegated through
 
 Three tools are provided:
 
-- **list_models**: lists the models the current user is allowed to read.
-- **get_fields**: describes a model's readable fields (label, type,
-  help, selection options and relation target), and lists the forbidden
-  ones under ``hidden``.
-- **search_read**: searches and reads records of a model. It returns the
-  stored fields unless a field list is given, relational fields as
-  record IDs, and dates in UTC. Results are paged with ``limit`` and
-  ``offset``, and ``has_more`` tells whether more records match. A field
-  whose computation is refused for the user is left out and listed in
-  ``inaccessible_fields``, and a record the search finds but the user
-  cannot read (as ``ir.attachment`` allows) is left out without notice,
-  as record rules would.
+-  **list_models**: lists the models the current user is allowed to
+   read.
+-  **get_fields**: describes a model's readable fields (label, type,
+   help, selection options and relation target), and lists the forbidden
+   ones under ``hidden``.
+-  **search_read**: searches and reads records of a model. It returns
+   the stored fields unless a field list is given, relational fields as
+   record IDs, and dates in UTC. Results are paged with ``limit`` and
+   ``offset``, and ``has_more`` tells whether more records match. A
+   field whose computation is refused for the user is left out and
+   listed in ``inaccessible_fields``, and a record the search finds but
+   the user cannot read (as ``ir.attachment`` allows) is left out
+   without notice, as record rules would.
 
 The tools run with the calling user's own access rights (no ``sudo``),
 so Odoo ACLs, record rules and field ``groups`` still apply. Connect the
@@ -83,11 +84,12 @@ Configuration
 To forbid a field, tick **AI Read Forbidden** on it. As the
 administrator, either:
 
-- Go to *Settings > Technical > Database Structure > Fields*, find the
-  field and tick the flag (the **AI Read Forbidden** filter and list
-  column help you review what is already flagged), or
-- Open the model in *Settings > Technical > Database Structure > Models*
-  and tick the flag on the line of the field, in the *Fields* tab.
+-  Go to *Settings > Technical > Database Structure > Fields*, find the
+   field and tick the flag (the **AI Read Forbidden** filter and list
+   column help you review what is already flagged), or
+-  Open the model in *Settings > Technical > Database Structure >
+   Models* and tick the flag on the line of the field, in the *Fields*
+   tab.
 
 The flag applies to base fields as well as custom ones, and takes effect
 immediately. A flag set on a mixin's field, such as ``email_normalized``
@@ -136,15 +138,15 @@ A typical agent workflow:
 
 3. Call ``search_read`` to fetch records:
 
-   - ``model`` (required): the technical model name.
-   - ``domain`` (optional): an Odoo domain as a list, e.g.
-     ``[["is_company", "=", true]]``.
-   - ``fields`` (optional): an explicit field list; the stored readable
-     fields are returned otherwise. An empty list returns ids only.
-   - ``limit`` (optional): page size, 200 by default and at most; a
-     value of 0 or less, or past the cap, is treated as the maximum.
-   - ``offset`` (optional): skip that many matching records.
-   - ``order`` (optional): e.g. ``"name asc"``.
+   -  ``model`` (required): the technical model name.
+   -  ``domain`` (optional): an Odoo domain as a list, e.g.
+      ``[["is_company", "=", true]]``.
+   -  ``fields`` (optional): an explicit field list; the stored readable
+      fields are returned otherwise. An empty list returns ids only.
+   -  ``limit`` (optional): page size, 200 by default and at most; a
+      value of 0 or less, or past the cap, is treated as the maximum.
+   -  ``offset`` (optional): skip that many matching records.
+   -  ``order`` (optional): e.g. ``"name asc"``.
 
    Relational fields come back as record ids, dates and datetimes as
    ISO-8601 strings in UTC. ``has_more`` tells whether another page
@@ -177,24 +179,24 @@ searches an agent runs: they are not meant to stop an agent that probes
 for hidden values on purpose. Each case below still lets a forbidden
 value through:
 
-- **Filtering on a forbidden field.**
-  ``[("email", "ilike", "@example.com")]`` lists the contacts whose
-  address matches, and repeating it on longer fragments rebuilds a whole
-  address. The same works on fields restricted by ``groups=``, which
-  Odoo does not check when searching, and on search-only fields:
-  ``phone_mobile_search`` rebuilds a phone number even when ``phone`` is
-  forbidden.
-- **Searching a relation by text.**
-  ``[("partner_id", "ilike", "@example.com")]`` searches contacts by
-  name, email included, and finds the orders of the contacts whose
-  address matches.
-- **Sorting.** Ordering on a forbidden field, or on a many2one (sorted
-  by the related record's display name), reveals the order of the hidden
-  values.
-- **Copied values.** A value copied into another record is not linked to
-  its source: the author's address in a chatter message
-  (``mail.message.email_from``) is returned unless that field is flagged
-  too.
+-  **Filtering on a forbidden field.**
+   ``[("email", "ilike", "@example.com")]`` lists the contacts whose
+   address matches, and repeating it on longer fragments rebuilds a
+   whole address. The same works on fields restricted by ``groups=``,
+   which Odoo does not check when searching, and on search-only fields:
+   ``phone_mobile_search`` rebuilds a phone number even when ``phone``
+   is forbidden.
+-  **Searching a relation by text.**
+   ``[("partner_id", "ilike", "@example.com")]`` searches contacts by
+   name, email included, and finds the orders of the contacts whose
+   address matches.
+-  **Sorting.** Ordering on a forbidden field, or on a many2one (sorted
+   by the related record's display name), reveals the order of the
+   hidden values.
+-  **Copied values.** A value copied into another record is not linked
+   to its source: the author's address in a chatter message
+   (``mail.message.email_from``) is returned unless that field is
+   flagged too.
 
 One more limit, which leaks nothing: a requested field that is
 forbidden, binary or restricted is simply missing from the records, with
@@ -206,7 +208,7 @@ Bug Tracker
 Bugs are tracked on `GitHub Issues <https://github.com/OCA/ai/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
-`feedback <https://github.com/OCA/ai/issues/new?body=module:%20ai_tool_read%0Aversion:%2016.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/OCA/ai/issues/new?body=module:%20ai_tool_read%0Aversion:%2018.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -221,9 +223,9 @@ Authors
 Contributors
 ------------
 
-- `Quartile <https://www.quartile.co>`__:
+-  `Quartile <https://www.quartile.co>`__:
 
-  - Toshikimi Shigenobu
+   -  Toshikimi Shigenobu
 
 Maintainers
 -----------
@@ -246,6 +248,6 @@ Current `maintainer <https://odoo-community.org/page/maintainer-role>`__:
 
 |maintainer-nobuQuartile| 
 
-This module is part of the `OCA/ai <https://github.com/OCA/ai/tree/16.0/ai_tool_read>`_ project on GitHub.
+This module is part of the `OCA/ai <https://github.com/OCA/ai/tree/18.0/ai_tool_read>`_ project on GitHub.
 
 You are welcome to contribute. To learn how please visit https://odoo-community.org/page/Contribute.
