@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Docutils: https://docutils.sourceforge.io/" />
-<title>README.rst</title>
+<title>AI Tool - Read</title>
 <style type="text/css">
 
 /*
@@ -374,7 +374,7 @@ ul.auto-toc {
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 !! source digest: sha256:fe66b1297c9c53a47b95b8407598bb5fab4d963c5e90afea0c614688365f21fc
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
-<p><a class="reference external image-reference" href="https://odoo-community.org/page/development-status"><img alt="Beta" src="https://img.shields.io/badge/maturity-Beta-yellow.png" /></a> <a class="reference external image-reference" href="http://www.gnu.org/licenses/agpl-3.0-standalone.html"><img alt="License: AGPL-3" src="https://img.shields.io/badge/license-AGPL--3-blue.png" /></a> <a class="reference external image-reference" href="https://github.com/OCA/ai/tree/16.0/ai_tool_read"><img alt="OCA/ai" src="https://img.shields.io/badge/github-OCA%2Fai-lightgray.png?logo=github" /></a> <a class="reference external image-reference" href="https://translation.odoo-community.org/projects/ai-16-0/ai-16-0-ai_tool_read"><img alt="Translate me on Weblate" src="https://img.shields.io/badge/weblate-Translate%20me-F47D42.png" /></a> <a class="reference external image-reference" href="https://runboat.odoo-community.org/builds?repo=OCA/ai&amp;target_branch=16.0"><img alt="Try me on Runboat" src="https://img.shields.io/badge/runboat-Try%20me-875A7B.png" /></a></p>
+<p><a class="reference external image-reference" href="https://odoo-community.org/page/development-status"><img alt="Beta" src="https://img.shields.io/badge/maturity-Beta-yellow.png" /></a> <a class="reference external image-reference" href="http://www.gnu.org/licenses/agpl-3.0-standalone.html"><img alt="License: AGPL-3" src="https://img.shields.io/badge/license-AGPL--3-blue.png" /></a> <a class="reference external image-reference" href="https://github.com/OCA/ai/tree/18.0/ai_tool_read"><img alt="OCA/ai" src="https://img.shields.io/badge/github-OCA%2Fai-lightgray.png?logo=github" /></a> <a class="reference external image-reference" href="https://translation.odoo-community.org/projects/ai-18-0/ai-18-0-ai_tool_read"><img alt="Translate me on Weblate" src="https://img.shields.io/badge/weblate-Translate%20me-F47D42.png" /></a> <a class="reference external image-reference" href="https://runboat.odoo-community.org/builds?repo=OCA/ai&amp;target_branch=18.0"><img alt="Try me on Runboat" src="https://img.shields.io/badge/runboat-Try%20me-875A7B.png" /></a></p>
 <p>Adds <tt class="docutils literal">ai_tool</tt> tools to let an AI agent read any model and field it is
 allowed to access, while keeping personal or otherwise sensitive fields
 out of the results.</p>
@@ -386,18 +386,19 @@ exposing its value: related fields, including those delegated through
 <tt class="docutils literal">email_normalized</tt> and <tt class="docutils literal">res.users.email</tt>.</p>
 <p>Three tools are provided:</p>
 <ul class="simple">
-<li><strong>list_models</strong>: lists the models the current user is allowed to read.</li>
+<li><strong>list_models</strong>: lists the models the current user is allowed to
+read.</li>
 <li><strong>get_fields</strong>: describes a model’s readable fields (label, type,
 help, selection options and relation target), and lists the forbidden
 ones under <tt class="docutils literal">hidden</tt>.</li>
-<li><strong>search_read</strong>: searches and reads records of a model. It returns the
-stored fields unless a field list is given, relational fields as
+<li><strong>search_read</strong>: searches and reads records of a model. It returns
+the stored fields unless a field list is given, relational fields as
 record IDs, and dates in UTC. Results are paged with <tt class="docutils literal">limit</tt> and
-<tt class="docutils literal">offset</tt>, and <tt class="docutils literal">has_more</tt> tells whether more records match. A field
-whose computation is refused for the user is left out and listed in
-<tt class="docutils literal">inaccessible_fields</tt>, and a record the search finds but the user
-cannot read (as <tt class="docutils literal">ir.attachment</tt> allows) is left out without notice,
-as record rules would.</li>
+<tt class="docutils literal">offset</tt>, and <tt class="docutils literal">has_more</tt> tells whether more records match. A
+field whose computation is refused for the user is left out and
+listed in <tt class="docutils literal">inaccessible_fields</tt>, and a record the search finds but
+the user cannot read (as <tt class="docutils literal">ir.attachment</tt> allows) is left out
+without notice, as record rules would.</li>
 </ul>
 <p>The tools run with the calling user’s own access rights (no <tt class="docutils literal">sudo</tt>),
 so Odoo ACLs, record rules and field <tt class="docutils literal">groups</tt> still apply. Connect the
@@ -433,8 +434,9 @@ administrator, either:</p>
 <li>Go to <em>Settings &gt; Technical &gt; Database Structure &gt; Fields</em>, find the
 field and tick the flag (the <strong>AI Read Forbidden</strong> filter and list
 column help you review what is already flagged), or</li>
-<li>Open the model in <em>Settings &gt; Technical &gt; Database Structure &gt; Models</em>
-and tick the flag on the line of the field, in the <em>Fields</em> tab.</li>
+<li>Open the model in <em>Settings &gt; Technical &gt; Database Structure &gt;
+Models</em> and tick the flag on the line of the field, in the <em>Fields</em>
+tab.</li>
 </ul>
 <p>The flag applies to base fields as well as custom ones, and takes effect
 immediately. A flag set on a mixin’s field, such as <tt class="docutils literal">email_normalized</tt>
@@ -519,22 +521,22 @@ value through:</p>
 <ul class="simple">
 <li><strong>Filtering on a forbidden field.</strong>
 <tt class="docutils literal"><span class="pre">[(&quot;email&quot;,</span> &quot;ilike&quot;, <span class="pre">&quot;&#64;example.com&quot;)]</span></tt> lists the contacts whose
-address matches, and repeating it on longer fragments rebuilds a whole
-address. The same works on fields restricted by <tt class="docutils literal">groups=</tt>, which
-Odoo does not check when searching, and on search-only fields:
-<tt class="docutils literal">phone_mobile_search</tt> rebuilds a phone number even when <tt class="docutils literal">phone</tt> is
-forbidden.</li>
+address matches, and repeating it on longer fragments rebuilds a
+whole address. The same works on fields restricted by <tt class="docutils literal">groups=</tt>,
+which Odoo does not check when searching, and on search-only fields:
+<tt class="docutils literal">phone_mobile_search</tt> rebuilds a phone number even when <tt class="docutils literal">phone</tt>
+is forbidden.</li>
 <li><strong>Searching a relation by text.</strong>
 <tt class="docutils literal"><span class="pre">[(&quot;partner_id&quot;,</span> &quot;ilike&quot;, <span class="pre">&quot;&#64;example.com&quot;)]</span></tt> searches contacts by
 name, email included, and finds the orders of the contacts whose
 address matches.</li>
 <li><strong>Sorting.</strong> Ordering on a forbidden field, or on a many2one (sorted
-by the related record’s display name), reveals the order of the hidden
-values.</li>
-<li><strong>Copied values.</strong> A value copied into another record is not linked to
-its source: the author’s address in a chatter message
-(<tt class="docutils literal">mail.message.email_from</tt>) is returned unless that field is flagged
-too.</li>
+by the related record’s display name), reveals the order of the
+hidden values.</li>
+<li><strong>Copied values.</strong> A value copied into another record is not linked
+to its source: the author’s address in a chatter message
+(<tt class="docutils literal">mail.message.email_from</tt>) is returned unless that field is
+flagged too.</li>
 </ul>
 <p>One more limit, which leaks nothing: a requested field that is
 forbidden, binary or restricted is simply missing from the records, with
@@ -545,7 +547,7 @@ no reason given; <tt class="docutils literal">get_fields</tt> tells them apart.<
 <p>Bugs are tracked on <a class="reference external" href="https://github.com/OCA/ai/issues">GitHub Issues</a>.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
-<a class="reference external" href="https://github.com/OCA/ai/issues/new?body=module:%20ai_tool_read%0Aversion:%2016.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">feedback</a>.</p>
+<a class="reference external" href="https://github.com/OCA/ai/issues/new?body=module:%20ai_tool_read%0Aversion:%2018.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**">feedback</a>.</p>
 <p>Do not contact contributors directly about support or help with technical issues.</p>
 </div>
 <div class="section" id="credits">
@@ -576,7 +578,7 @@ mission is to support the collaborative development of Odoo features and
 promote its widespread use.</p>
 <p>Current <a class="reference external" href="https://odoo-community.org/page/maintainer-role">maintainer</a>:</p>
 <p><a class="reference external image-reference" href="https://github.com/nobuQuartile"><img alt="nobuQuartile" src="https://github.com/nobuQuartile.png?size=40px" /></a></p>
-<p>This module is part of the <a class="reference external" href="https://github.com/OCA/ai/tree/16.0/ai_tool_read">OCA/ai</a> project on GitHub.</p>
+<p>This module is part of the <a class="reference external" href="https://github.com/OCA/ai/tree/18.0/ai_tool_read">OCA/ai</a> project on GitHub.</p>
 <p>You are welcome to contribute. To learn how please visit <a class="reference external" href="https://odoo-community.org/page/Contribute">https://odoo-community.org/page/Contribute</a>.</p>
 </div>
 </div>
