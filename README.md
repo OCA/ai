@@ -33,6 +33,7 @@ addon | version | maintainers | summary
 [ai_oca_bridge_mrp](ai_oca_bridge_mrp/) | 16.0.2.0.0 | <a href='https://github.com/marcelsavegnago'><img src='https://github.com/marcelsavegnago.png' width='32' height='32' style='border-radius:50%;' alt='marcelsavegnago'/></a> | Adds MRP triggers for AI Bridges
 [ai_oca_mcp](ai_oca_mcp/) | 16.0.1.1.0 |  | MCP Interface for Odoo
 [ai_tool](ai_tool/) | 16.0.1.0.2 |  | We want to generate some specific AI Tools that might be used in other places, like MCP or native.
+[ai_tool_read](ai_tool_read/) | 16.0.1.0.0 | <a href='https://github.com/nobuQuartile'><img src='https://github.com/nobuQuartile.png' width='32' height='32' style='border-radius:50%;' alt='nobuQuartile'/></a> | Generic ai_tool to read any model/field, with a per-field opt-out flag
 
 [//]: # (end addons)
 

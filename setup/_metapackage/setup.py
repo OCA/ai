@@ -19,6 +19,7 @@ setuptools.setup(
         'odoo-addon-ai_oca_bridge_mrp>=16.0dev,<16.1dev',
         'odoo-addon-ai_oca_mcp>=16.0dev,<16.1dev',
         'odoo-addon-ai_tool>=16.0dev,<16.1dev',
+        'odoo-addon-ai_tool_read>=16.0dev,<16.1dev',
     ],
     classifiers=[
         'Programming Language :: Python',
