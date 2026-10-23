@@ -49,10 +49,14 @@ class AiBridge(models.Model):
 
     def _prepare_payload_openwebui(self, record=None, **kwargs):
         self.ensure_one()
-        if record is None or not record:
+        if not record:
+            domain = [("message_type", "=", "comment")]
+            # model_id is the generic model selected on ai.bridge, defined by
+            # ai_oca_bridge and used by ai_oca_bridge_chatter.
+            if self.model_id:
+                domain.append(("model", "=", self.model_id.model))
             record = self.env["mail.message"].sudo().search(
-                [("model", "=", "discuss.channel"), ("message_type", "=", "comment")],
-                order="id desc", limit=1,
+                domain, order="id desc", limit=1
             )
         if record and record._name != "mail.message":
             raise ValueError(_("The record must be a mail.message instance."))
@@ -62,7 +66,11 @@ class AiBridge(models.Model):
             messages.append({"role": "system", "content": system})
         if record:
             messages.extend(self._openwebui_history(record))
-        payload = {"model": self.openwebui_model or "", "messages": messages, "stream": False}
+        payload = {
+            "model": self.openwebui_model or "",
+            "messages": messages,
+            "stream": False,
+        }
         tool_ids = self._openwebui_tool_ids()
         if tool_ids:
             payload["tool_ids"] = tool_ids
@@ -72,23 +80,37 @@ class AiBridge(models.Model):
     def _openwebui_system_content(self, record):
         self.ensure_one()
         parts = [self.openwebui_system_prompt.strip()] if self.openwebui_system_prompt else []
-        if record and record.model == "discuss.channel":
-            channel = self.env["discuss.channel"].sudo().browse(record.res_id).exists()
-            if channel:
-                parts.append("Odoo channel: %s" % channel.display_name)
+        if record and record.model and record.res_id:
+            try:
+                target = self.env[record.model].sudo().browse(record.res_id).exists()
+            except KeyError:
+                target = self.env["mail.thread"].browse()
+            if target:
+                parts.append(
+                    "Odoo record: %s (%s, ID %s)"
+                    % (target.display_name, record.model, target.id)
+                )
         return "\n\n".join(parts)
 
     def _openwebui_history(self, record):
         self.ensure_one()
         history = self.env["mail.message"].sudo().search(
-            [("model", "=", record.model), ("res_id", "=", record.res_id),
-             ("message_type", "=", "comment"), ("id", "<=", record.id)],
-            order="id desc", limit=max(self.openwebui_history_limit or 1, 1),
+            [
+                ("model", "=", record.model),
+                ("res_id", "=", record.res_id),
+                ("message_type", "=", "comment"),
+                ("id", "<=", record.id),
+            ],
+            order="id desc",
+            limit=max(self.openwebui_history_limit or 1, 1),
         )
         result = []
         for message in reversed(history):
             text = tools.html2plaintext(message.body or "").strip()
             if text:
-                is_ai = bool(message.author_id.user_ids.ai_bridge_id)
-                result.append({"role": "assistant" if is_ai else "user", "content": text})
+                is_ai = bool(message.author_id.user_ids.filtered("ai_bridge_id"))
+                result.append({
+                    "role": "assistant" if is_ai else "user",
+                    "content": text,
+                })
         return result

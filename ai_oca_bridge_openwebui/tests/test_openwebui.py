@@ -73,6 +73,30 @@ class TestOpenWebUI(common.TransactionCase):
         answer = self._messages().sorted("id")[-1]
         self.assertEqual(answer.author_id, self.ai_user.partner_id)
 
+    def test_project_task_payload_uses_configured_model(self):
+        self.bridge.model_id = self.env["ir.model"]._get("project.task")
+        task = self.env["project.task"].create({"name": "OpenWebUI Test Task"})
+        message = task.message_post(body="Question dans la tâche", message_type="comment")
+        payload = self.bridge._prepare_payload(record=message)
+        self.assertEqual(payload["messages"][-1]["role"], "user")
+        self.assertIn("Question dans la tâche", payload["messages"][-1]["content"])
+        self.assertIn("project.task", payload["messages"][0]["content"])
+
+    def test_project_task_answer_is_posted(self):
+        self.bridge.model_id = self.env["ir.model"]._get("project.task")
+        task = self.env["project.task"].create({"name": "OpenWebUI Test Task"})
+        with mock.patch("requests.post") as mock_post:
+            mock_post.return_value = _completion("Réponse tâche")
+            task.with_user(self.user.id).message_post(
+                body="Question dans la tâche",
+                message_type="comment",
+                partner_ids=[self.ai_user.partner_id.id],
+            )
+        self.assertEqual(mock_post.call_count, 1)
+        answer = task.message_ids.sorted("id")[-1]
+        self.assertEqual(answer.author_id, self.ai_user.partner_id)
+        self.assertIn("Réponse tâche", answer.body)
+
     def test_history_roles(self):
         with mock.patch("requests.post") as mock_post:
             mock_post.return_value = _completion("Answer 1")
