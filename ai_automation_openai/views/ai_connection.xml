@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Dixmit
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <record model="ir.ui.view" id="ai_connection_form_view">
+        <field name="model">ai.connection</field>
+        <field name="inherit_id" ref="ai_automation.ai_connection_form_view" />
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page
+                    string="OpenAI"
+                    name="openai_page"
+                    attrs="{'invisible': [('kind', '!=', 'openai')]}"
+                >
+                    <group>
+                        <field name="model" />
+                        <field name="url" />
+                        <field name="openai_api_key" />
+                        <field name="temperature" />
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+
+
+</odoo>
