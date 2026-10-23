@@ -64,20 +64,26 @@ class Base(models.AbstractModel):
             return self.env["ai.bridge.execution"]
 
         model_id = self.env["ir.model"]._get_id(records._name)
-        bridges = self.env["ai.bridge"].search(
-            [("model_id", "=", model_id), ("usage", "=", "ai_thread_unlink")]
+        bridges = (
+            self.env["ai.bridge"]
+            .sudo()
+            .search([("model_id", "=", model_id), ("usage", "=", "ai_thread_unlink")])
         )
 
         executions = self.env["ai.bridge.execution"]
         for bridge in bridges:
             for record in records:
                 if bridge._enabled_for(record):
-                    executions |= self.env["ai.bridge.execution"].create(
-                        {
-                            "ai_bridge_id": bridge.id,
-                            "model_id": model_id,
-                            "res_id": record.id,
-                        }
+                    executions |= (
+                        self.env["ai.bridge.execution"]
+                        .sudo()
+                        .create(
+                            {
+                                "ai_bridge_id": bridge.id,
+                                "model_id": model_id,
+                                "res_id": record.id,
+                            }
+                        )
                     )
 
         return executions
