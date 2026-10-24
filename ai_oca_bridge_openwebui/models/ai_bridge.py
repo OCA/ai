@@ -31,16 +31,14 @@ class AiBridge(models.Model):
 
     @api.constrains("payload_type", "usage", "result_kind", "result_type")
     def _check_openwebui_configuration(self):
-        for record in self.filtered(
-            lambda bridge: bridge.payload_type == "openwebui"
-        ):
+        for record in self.filtered(lambda bridge: bridge.payload_type == "openwebui"):
             if record.usage != "chatter":
                 raise ValidationError(
-                    _("An OpenWebUI bridge must use the 'Chatter' usage.")
+                    _("An OpenWebUI bridge must use the " "'Chatter' usage.")
                 )
             if record.result_kind != "immediate":
                 raise ValidationError(
-                    _("An OpenWebUI bridge must use the 'Immediate' result kind.")
+                    _("An OpenWebUI bridge must use the " "'Immediate' result kind.")
                 )
             if record.result_type != "message":
                 raise ValidationError(
@@ -86,11 +84,10 @@ class AiBridge(models.Model):
         self._openwebui_check_model()
         if not record:
             domain = [("message_type", "=", "comment")]
-            # model_id is the generic OCA ir.model target.
             if self.model_id:
                 domain.append(("model", "=", self.model_id.model))
-            record = self.env["mail.message"].sudo().search(
-                domain, order="id desc", limit=1
+            record = (
+                self.env["mail.message"].sudo().search(domain, order="id desc", limit=1)
             )
         if record and record._name != "mail.message":
             raise ValueError(_("The record must be a mail.message instance."))
@@ -107,9 +104,6 @@ class AiBridge(models.Model):
         }
         tool_ids = self._openwebui_tool_ids()
         if tool_ids:
-            # OpenWebUI legacy function calling executes the configured
-            # workspace/MCP tools server-side and returns the final answer.
-            # Do not send tool_choice or function_calling=native here.
             payload["tool_ids"] = tool_ids
             payload["params"] = {"function_calling": "legacy"}
         return payload
@@ -128,22 +122,26 @@ class AiBridge(models.Model):
                 target = self.env["mail.thread"].browse()
             if target:
                 parts.append(
-                    "Odoo record: %s (%s, ID %s)"
-                    % (target.display_name, record.model, target.id)
+                    f"Odoo record: {target.display_name} "
+                    f"({record.model}, ID {target.id})"
                 )
         return "\n\n".join(parts)
 
     def _openwebui_history(self, record):
         self.ensure_one()
-        history = self.env["mail.message"].sudo().search(
-            [
-                ("model", "=", record.model),
-                ("res_id", "=", record.res_id),
-                ("message_type", "=", "comment"),
-                ("id", "<=", record.id),
-            ],
-            order="id desc",
-            limit=max(self.openwebui_history_limit or 1, 1),
+        history = (
+            self.env["mail.message"]
+            .sudo()
+            .search(
+                [
+                    ("model", "=", record.model),
+                    ("res_id", "=", record.res_id),
+                    ("message_type", "=", "comment"),
+                    ("id", "<=", record.id),
+                ],
+                order="id desc",
+                limit=max(self.openwebui_history_limit or 1, 1),
+            )
         )
         result = []
         for message in reversed(history):

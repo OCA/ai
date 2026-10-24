@@ -18,7 +18,11 @@ class OpenWebuiModel(models.Model):
     bridge_ids = fields.One2many("ai.bridge", "openwebui_model_id")
 
     _sql_constraints = [
-        ("external_id_unique", "unique(external_id)", "The OpenWebUI model ID must be unique."),
+        (
+            "external_id_unique",
+            "unique(external_id)",
+            "The OpenWebUI model ID must be unique.",
+        ),
     ]
 
 
@@ -34,19 +38,27 @@ class OpenWebuiTool(models.Model):
     bridge_ids = fields.Many2many("ai.bridge", string="Bridges")
 
     _sql_constraints = [
-        ("external_id_unique", "unique(external_id)", "The OpenWebUI tool ID must be unique."),
+        (
+            "external_id_unique",
+            "unique(external_id)",
+            "The OpenWebUI tool ID must be unique.",
+        ),
     ]
 
 
+# pylint: disable=consider-merging-classes-inherited
 class AiBridge(models.Model):
     _inherit = "ai.bridge"
 
     openwebui_model_id = fields.Many2one(
-        "ai.openwebui.model", string="OpenWebUI Model", ondelete="set null",
+        "ai.openwebui.model",
+        string="OpenWebUI Model",
+        ondelete="set null",
         help="Model selected from the models synchronized from OpenWebUI.",
     )
     openwebui_tool_record_ids = fields.Many2many(
-        "ai.openwebui.tool", string="OpenWebUI Tools",
+        "ai.openwebui.tool",
+        string="OpenWebUI Tools",
         help="Tools explicitly sent to OpenWebUI for this bridge.",
     )
 
@@ -69,13 +81,22 @@ class AiBridge(models.Model):
             timeout=self.openwebui_timeout or 120,
         )
         response.raise_for_status()
-        values = response.json().get("data", []) if kind == "models" else response.json()
-        model = self.env["ai.openwebui.model"] if kind == "models" else self.env["ai.openwebui.tool"]
+        values = (
+            response.json().get("data", []) if kind == "models" else response.json()
+        )
+        model = (
+            self.env["ai.openwebui.model"]
+            if kind == "models"
+            else self.env["ai.openwebui.tool"]
+        )
         for value in values:
             external_id = value.get("id")
             if not external_id:
                 continue
-            vals = {"name": value.get("name") or external_id, "external_id": external_id}
+            vals = {
+                "name": value.get("name") or external_id,
+                "external_id": external_id,
+            }
             if kind == "tools":
                 vals["description"] = value.get("meta", {}).get("description", "")
             record = model.search([("external_id", "=", external_id)], limit=1)

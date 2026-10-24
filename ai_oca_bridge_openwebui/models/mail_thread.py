@@ -32,13 +32,17 @@ class MailThread(models.AbstractModel):
             bridge = user.ai_bridge_id
             if not bridge._enabled_for(self):
                 continue
-            execution = self.env["ai.bridge.execution"].sudo().create(
-                {
-                    "ai_bridge_id": bridge.id,
-                    "model_id": self.env.ref("mail.model_mail_message").id,
-                    "res_id": message.id,
-                    "chatter_user_id": user.id,
-                }
+            execution = (
+                self.env["ai.bridge.execution"]
+                .sudo()
+                .create(
+                    {
+                        "ai_bridge_id": bridge.id,
+                        "model_id": self.env.ref("mail.model_mail_message").id,
+                        "res_id": message.id,
+                        "chatter_user_id": user.id,
+                    }
+                )
             )
             execution._execute()
 

@@ -11,7 +11,9 @@ def _completion(content="Hello, I am the assistant."):
     return mock.Mock(
         status_code=200,
         text="ok",
-        json=lambda: {"choices": [{"message": {"role": "assistant", "content": content}}]},
+        json=lambda: {
+            "choices": [{"message": {"role": "assistant", "content": content}}]
+        },
     )
 
 
@@ -41,15 +43,19 @@ class TestOpenWebUI(common.TransactionCase):
         cls.user = new_test_user(
             cls.env, login="test-openwebui-user", groups="base.group_user"
         )
-        cls.chat = cls.env["discuss.channel"].with_user(cls.user.id).create(
-            {
-                "name": "Sales",
-                "channel_type": "chat",
-                "channel_member_ids": [
-                    (0, 0, {"partner_id": cls.ai_user.partner_id.id}),
-                    (0, 0, {"partner_id": cls.user.partner_id.id}),
-                ],
-            }
+        cls.chat = (
+            cls.env["discuss.channel"]
+            .with_user(cls.user.id)
+            .create(
+                {
+                    "name": "Sales",
+                    "channel_type": "chat",
+                    "channel_member_ids": [
+                        (0, 0, {"partner_id": cls.ai_user.partner_id.id}),
+                        (0, 0, {"partner_id": cls.user.partner_id.id}),
+                    ],
+                }
+            )
         )
 
     def _messages(self):
@@ -60,7 +66,9 @@ class TestOpenWebUI(common.TransactionCase):
     def test_answer_is_posted(self):
         with mock.patch("requests.post") as mock_post:
             mock_post.return_value = _completion()
-            self.chat.with_user(self.user.id).message_post(body="What is the delivery time?")
+            self.chat.with_user(self.user.id).message_post(
+                body="What is the delivery time?"
+            )
             mock_post.assert_called_once()
             payload = mock_post.call_args.kwargs["json"]
             headers = mock_post.call_args.kwargs["headers"]
@@ -76,7 +84,9 @@ class TestOpenWebUI(common.TransactionCase):
     def test_project_task_payload_uses_configured_model(self):
         self.bridge.model_id = self.env["ir.model"]._get("project.task")
         task = self.env["project.task"].create({"name": "OpenWebUI Test Task"})
-        message = task.message_post(body="Question dans la tâche", message_type="comment")
+        message = task.message_post(
+            body="Question dans la tâche", message_type="comment"
+        )
         payload = self.bridge._prepare_payload(record=message)
         self.assertEqual(payload["messages"][-1]["role"], "user")
         self.assertIn("Question dans la tâche", payload["messages"][-1]["content"])

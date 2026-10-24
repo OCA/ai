@@ -34,8 +34,8 @@ class AiBridgeExecution(models.Model):
         target = target_model.sudo().browse(message.res_id).exists()
         if not target:
             raise ValueError(
-                _("The chatter target could not be found: %s, %s")
-                % (message.model, message.res_id)
+                _("The chatter target could not be found: " "%(model)s, %(res_id)s")
+                % {"model": message.model, "res_id": message.res_id}
             )
         return target
 
@@ -81,7 +81,11 @@ class AiBridgeExecution(models.Model):
             return {}
 
     def _openwebui_must_answer(self, record, payload):
-        if not record or record._name != "mail.message" or record.message_type != "comment":
+        if (
+            not record
+            or record._name != "mail.message"
+            or record.message_type != "comment"
+        ):
             return False
         messages = payload.get("messages") or []
         return bool(messages) and messages[-1].get("role") == "user"
@@ -93,12 +97,16 @@ class AiBridgeExecution(models.Model):
             message = self._openwebui_message_record()
             if not message or message.model != "discuss.channel":
                 return
-            member = self.env["discuss.channel.member"].sudo().search(
-                [
-                    ("partner_id", "=", self.chatter_user_id.partner_id.id),
-                    ("channel_id", "=", message.res_id),
-                ],
-                limit=1,
+            member = (
+                self.env["discuss.channel.member"]
+                .sudo()
+                .search(
+                    [
+                        ("partner_id", "=", self.chatter_user_id.partner_id.id),
+                        ("channel_id", "=", message.res_id),
+                    ],
+                    limit=1,
+                )
             )
             if member:
                 member._notify_typing(is_typing=False)
@@ -121,9 +129,13 @@ class AiBridgeExecution(models.Model):
                 for partner_id in target.channel_member_ids.sudo().partner_id.ids
                 if partner_id != author.partner_id.id
             ]
-        message = target.with_context(
-            skip_openwebui_bridge=True,
-        ).sudo().message_post(**values)
+        message = (
+            target.with_context(
+                skip_openwebui_bridge=True,
+            )
+            .sudo()
+            .message_post(**values)
+        )
         return {"id": message.id}
 
     def _openwebui_to_message(self, response):

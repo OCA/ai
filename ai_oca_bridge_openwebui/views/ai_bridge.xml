@@ -8,17 +8,33 @@
         <field name="inherit_id" ref="ai_oca_bridge.ai_bridge_form_view" />
         <field name="arch" type="xml">
             <notebook position="inside">
-                <page string="OpenWebUI" name="openwebui" invisible="payload_type != 'openwebui'">
+                <page
+                    string="OpenWebUI"
+                    name="openwebui"
+                    invisible="payload_type != 'openwebui'"
+                >
                     <group>
-                        <field name="openwebui_model_id" options="{'no_create': True}" />
+                        <field
+                            name="openwebui_model_id"
+                            options="{'no_create': True}"
+                        />
                         <field name="openwebui_model" invisible="True" />
-                        <field name="openwebui_tool_record_ids" widget="many2many_tags" options="{'no_create': True}" />
+                        <field
+                            name="openwebui_tool_record_ids"
+                            widget="many2many_tags"
+                            options="{'no_create': True}"
+                        />
                         <field name="openwebui_tool_ids" invisible="True" />
                         <field name="openwebui_history_limit" />
                         <field name="openwebui_timeout" />
                     </group>
                     <group>
-                        <button name="action_openwebui_sync_catalog" type="object" string="Synchronize models and tools" class="oe_highlight" />
+                        <button
+                            name="action_openwebui_sync_catalog"
+                            type="object"
+                            string="Synchronize models and tools"
+                            class="oe_highlight"
+                        />
                     </group>
                     <group string="System Prompt">
                         <field name="openwebui_system_prompt" nolabel="1" colspan="2" />
