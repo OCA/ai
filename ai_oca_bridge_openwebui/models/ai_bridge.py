@@ -12,7 +12,7 @@ class AiBridge(models.Model):
         selection_add=[("openwebui", "OpenWebUI Chat")],
         ondelete={"openwebui": "set default"},
     )
-    openwebui_model = fields.Char(string="OpenWebUI Model")
+    openwebui_model = fields.Char(string="OpenWebUI Model (legacy)")
     openwebui_tool_ids = fields.Char(
         string="OpenWebUI Tool IDs",
         help="Comma-separated OpenWebUI tool identifiers.",

@@ -6,6 +6,7 @@ from unittest import mock
 
 from odoo.exceptions import ValidationError
 from odoo.tests import common, new_test_user
+from odoo.tools import mute_logger
 
 try:
     import markdown
@@ -183,6 +184,7 @@ class TestOpenWebUI(common.TransactionCase):
             ["system", "user", "assistant", "user"],
         )
 
+    @mute_logger("odoo.addons.ai_oca_bridge_openwebui.models.ai_bridge_execution")
     def test_error_does_not_post(self):
         with mock.patch("requests.post") as mock_post:
             mock_post.side_effect = Exception("boom")
@@ -190,6 +192,7 @@ class TestOpenWebUI(common.TransactionCase):
         self.assertEqual(1, len(self._messages()))
         self.assertEqual(execution.state, "error")
 
+    @mute_logger("odoo.addons.ai_oca_bridge_openwebui.models.ai_bridge_execution")
     def test_empty_answer_is_an_error(self):
         with mock.patch("requests.post") as mock_post:
             mock_post.return_value = _completion("   ")
