@@ -259,6 +259,7 @@ class TestOpenWebUI(common.TransactionCase):
         request.assert_not_called()
         self.assertEqual(execution.state, "done")
 
+    @mute_logger("odoo.addons.ai_oca_bridge_openwebui.models.ai_bridge_execution")
     def test_execute_handles_http_error(self):
         response = _completion()
         response.raise_for_status.side_effect = requests.HTTPError("bad response")
