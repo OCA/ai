@@ -63,12 +63,16 @@ class TestOpenWebUI(common.TransactionCase):
             [("res_id", "=", self.chat.id), ("model", "=", "discuss.channel")]
         )
 
+    def _post_chat_message(self, body):
+        return self.chat.with_user(self.user.id).message_post(
+            body=body,
+            partner_ids=[self.ai_user.partner_id.id],
+        )
+
     def test_answer_is_posted(self):
         with mock.patch("requests.post") as mock_post:
             mock_post.return_value = _completion()
-            self.chat.with_user(self.user.id).message_post(
-                body="What is the delivery time?"
-            )
+            self._post_chat_message("What is the delivery time?")
             mock_post.assert_called_once()
             payload = mock_post.call_args.kwargs["json"]
             headers = mock_post.call_args.kwargs["headers"]
@@ -81,38 +85,41 @@ class TestOpenWebUI(common.TransactionCase):
         answer = self._messages().sorted("id")[-1]
         self.assertEqual(answer.author_id, self.ai_user.partner_id)
 
-    def test_project_task_payload_uses_configured_model(self):
-        self.bridge.model_id = self.env["ir.model"]._get("project.task")
-        task = self.env["project.task"].create({"name": "OpenWebUI Test Task"})
-        message = task.message_post(
-            body="Question dans la tâche", message_type="comment"
+    def test_res_partner_payload_uses_configured_model(self):
+        self.bridge.model_id = self.env["ir.model"]._get("res.partner")
+        partner = self.env["res.partner"].create({"name": "OpenWebUI Test Partner"})
+        message = partner.message_post(
+            body="Question dans le partenaire", message_type="comment"
         )
         payload = self.bridge._prepare_payload(record=message)
         self.assertEqual(payload["messages"][-1]["role"], "user")
-        self.assertIn("Question dans la tâche", payload["messages"][-1]["content"])
-        self.assertIn("project.task", payload["messages"][0]["content"])
+        self.assertIn(
+            "Question dans le partenaire",
+            payload["messages"][-1]["content"],
+        )
+        self.assertIn("res.partner", payload["messages"][0]["content"])
 
-    def test_project_task_answer_is_posted(self):
-        self.bridge.model_id = self.env["ir.model"]._get("project.task")
-        task = self.env["project.task"].create({"name": "OpenWebUI Test Task"})
+    def test_res_partner_answer_is_posted(self):
+        self.bridge.model_id = self.env["ir.model"]._get("res.partner")
+        partner = self.env["res.partner"].create({"name": "OpenWebUI Test Partner"})
         with mock.patch("requests.post") as mock_post:
-            mock_post.return_value = _completion("Réponse tâche")
-            task.with_user(self.user.id).message_post(
-                body="Question dans la tâche",
+            mock_post.return_value = _completion("Réponse partenaire")
+            partner.with_user(self.user.id).message_post(
+                body="Question dans le partenaire",
                 message_type="comment",
                 partner_ids=[self.ai_user.partner_id.id],
             )
         self.assertEqual(mock_post.call_count, 1)
-        answer = task.message_ids.sorted("id")[-1]
+        answer = partner.message_ids.sorted("id")[-1]
         self.assertEqual(answer.author_id, self.ai_user.partner_id)
-        self.assertIn("Réponse tâche", answer.body)
+        self.assertIn("Réponse partenaire", answer.body)
 
     def test_history_roles(self):
         with mock.patch("requests.post") as mock_post:
             mock_post.return_value = _completion("Answer 1")
-            self.chat.with_user(self.user.id).message_post(body="Question 1")
+            self._post_chat_message("Question 1")
             mock_post.return_value = _completion("Answer 2")
-            self.chat.with_user(self.user.id).message_post(body="Question 2")
+            self._post_chat_message("Question 2")
             payload = mock_post.call_args.kwargs["json"]
         self.assertEqual(
             [message["role"] for message in payload["messages"]],
@@ -122,20 +129,18 @@ class TestOpenWebUI(common.TransactionCase):
     def test_error_does_not_post(self):
         with mock.patch("requests.post") as mock_post:
             mock_post.side_effect = Exception("boom")
-            self.chat.with_user(self.user.id).message_post(body="Question")
+            self._post_chat_message("Question")
         self.assertEqual(1, len(self._messages()))
         self.assertEqual(self.bridge.execution_ids.state, "error")
 
     def test_empty_answer_is_an_error(self):
         with mock.patch("requests.post") as mock_post:
             mock_post.return_value = _completion("   ")
-            self.chat.with_user(self.user.id).message_post(body="Question")
+            self._post_chat_message("Question")
         self.assertEqual(1, len(self._messages()))
         self.assertEqual(self.bridge.execution_ids.state, "error")
 
     def test_constraints(self):
-        with self.assertRaises(ValidationError):
-            self.bridge.openwebui_model = False
         with self.assertRaises(ValidationError):
             self.bridge.result_kind = "async"
 

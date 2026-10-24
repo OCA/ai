@@ -6,7 +6,13 @@ import traceback
 
 import requests
 
-from odoo import _, models, tools
+from odoo import _, models
+from odoo.tools.mail import html_sanitize, plaintext2html
+
+try:
+    import markdown
+except ImportError:
+    markdown = None
 
 _logger = logging.getLogger(__name__)
 
@@ -148,7 +154,13 @@ class AiBridgeExecution(models.Model):
         content = (content or "").strip()
         if not content:
             raise ValueError(_("OpenWebUI returned an empty answer."))
+        if markdown:
+            body = html_sanitize(
+                markdown.markdown(content, extensions=["extra", "nl2br"])
+            )
+        else:
+            body = plaintext2html(content)
         return {
-            "body": tools.plaintext2html(content),
+            "body": body,
             "message_type": "comment",
         }
