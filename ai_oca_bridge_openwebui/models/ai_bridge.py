@@ -15,7 +15,7 @@ class AiBridge(models.Model):
     openwebui_model = fields.Char(string="OpenWebUI Model")
     openwebui_tool_ids = fields.Char(
         string="OpenWebUI Tool IDs",
-        help="Comma-separated IDs, for example server:0.",
+        help="Comma-separated OpenWebUI tool identifiers.",
     )
     openwebui_system_prompt = fields.Text(string="System Prompt")
     openwebui_history_limit = fields.Integer(string="History Size", default=10)
@@ -29,30 +29,64 @@ class AiBridge(models.Model):
                 record.result_kind = "immediate"
                 record.result_type = "message"
 
-    @api.constrains(
-        "payload_type", "usage", "result_kind", "result_type", "openwebui_model"
-    )
+    @api.constrains("payload_type", "usage", "result_kind", "result_type")
     def _check_openwebui_configuration(self):
-        for record in self.filtered(lambda b: b.payload_type == "openwebui"):
+        for record in self.filtered(
+            lambda bridge: bridge.payload_type == "openwebui"
+        ):
             if record.usage != "chatter":
-                raise ValidationError(_("An OpenWebUI bridge must use the 'Chatter' usage."))
+                raise ValidationError(
+                    _("An OpenWebUI bridge must use the 'Chatter' usage.")
+                )
             if record.result_kind != "immediate":
-                raise ValidationError(_("An OpenWebUI bridge must use the 'Immediate' result kind."))
+                raise ValidationError(
+                    _("An OpenWebUI bridge must use the 'Immediate' result kind.")
+                )
             if record.result_type != "message":
-                raise ValidationError(_("An OpenWebUI bridge must use the 'Post a Message' result."))
-            if not record.openwebui_model:
-                raise ValidationError(_("The OpenWebUI model is required."))
+                raise ValidationError(
+                    _("An OpenWebUI bridge must use the 'Post a Message' result.")
+                )
+
+    def _openwebui_model_name(self):
+        self.ensure_one()
+        return (
+            self.openwebui_model_id.external_id
+            if self.openwebui_model_id
+            else (self.openwebui_model or "").strip()
+        )
+
+    def _openwebui_check_model(self):
+        self.ensure_one()
+        if not self._openwebui_model_name():
+            raise ValidationError(
+                _("Select an OpenWebUI model before executing the bridge.")
+            )
 
     def _openwebui_tool_ids(self):
         self.ensure_one()
-        return [x.strip() for x in (self.openwebui_tool_ids or "").split(",") if x.strip()]
+        selected = self.openwebui_tool_record_ids.filtered("active").mapped(
+            "external_id"
+        )
+        return selected or [
+            value.strip()
+            for value in (self.openwebui_tool_ids or "").split(",")
+            if value.strip()
+        ]
+
+    def _openwebui_target_matches(self, message):
+        self.ensure_one()
+        return bool(
+            message
+            and message._name == "mail.message"
+            and (not self.model_id or self.model_id.model == message.model)
+        )
 
     def _prepare_payload_openwebui(self, record=None, **kwargs):
         self.ensure_one()
+        self._openwebui_check_model()
         if not record:
             domain = [("message_type", "=", "comment")]
-            # model_id is the generic model selected on ai.bridge, defined by
-            # ai_oca_bridge and used by ai_oca_bridge_chatter.
+            # model_id is the generic OCA ir.model target.
             if self.model_id:
                 domain.append(("model", "=", self.model_id.model))
             record = self.env["mail.message"].sudo().search(
@@ -67,19 +101,26 @@ class AiBridge(models.Model):
         if record:
             messages.extend(self._openwebui_history(record))
         payload = {
-            "model": self.openwebui_model or "",
+            "model": self._openwebui_model_name(),
             "messages": messages,
             "stream": False,
         }
         tool_ids = self._openwebui_tool_ids()
         if tool_ids:
+            # OpenWebUI legacy function calling executes the configured
+            # workspace/MCP tools server-side and returns the final answer.
+            # Do not send tool_choice or function_calling=native here.
             payload["tool_ids"] = tool_ids
             payload["params"] = {"function_calling": "legacy"}
         return payload
 
     def _openwebui_system_content(self, record):
         self.ensure_one()
-        parts = [self.openwebui_system_prompt.strip()] if self.openwebui_system_prompt else []
+        parts = (
+            [self.openwebui_system_prompt.strip()]
+            if self.openwebui_system_prompt
+            else []
+        )
         if record and record.model and record.res_id:
             try:
                 target = self.env[record.model].sudo().browse(record.res_id).exists()
@@ -108,9 +149,14 @@ class AiBridge(models.Model):
         for message in reversed(history):
             text = tools.html2plaintext(message.body or "").strip()
             if text:
-                is_ai = bool(message.author_id.user_ids.filtered("ai_bridge_id"))
-                result.append({
-                    "role": "assistant" if is_ai else "user",
-                    "content": text,
-                })
+                result.append(
+                    {
+                        "role": (
+                            "assistant"
+                            if message.author_id.user_ids.filtered("ai_bridge_id")
+                            else "user"
+                        ),
+                        "content": text,
+                    }
+                )
         return result
