@@ -39,7 +39,7 @@ class TestOpenWebUI(common.TransactionCase):
         cls.ai_user = new_test_user(
             cls.env, login="test-openwebui-ai", groups="base.group_user"
         )
-        cls.ai_user.ai_bridge_id = cls.bridge
+        cls.ai_user.write({"ai_bridge_id": cls.bridge.id})
         cls.user = new_test_user(
             cls.env, login="test-openwebui-user", groups="base.group_user"
         )
