@@ -49,15 +49,19 @@ class TestOpenWebUI(common.TransactionCase):
         cls.user = new_test_user(
             cls.env, login="test-openwebui-user", groups="base.group_user"
         )
-        cls.chat = cls.env["discuss.channel"].create(
-            {
-                "name": "Sales",
-                "channel_type": "chat",
-                "channel_member_ids": [
-                    (0, 0, {"partner_id": cls.ai_user.partner_id.id}),
-                    (0, 0, {"partner_id": cls.user.partner_id.id}),
-                ],
-            }
+        cls.chat = (
+            cls.env["discuss.channel"]
+            .with_user(cls.user.id)
+            .create(
+                {
+                    "name": "Sales",
+                    "channel_type": "chat",
+                    "channel_member_ids": [
+                        (0, 0, {"partner_id": cls.ai_user.partner_id.id}),
+                        (0, 0, {"partner_id": cls.user.partner_id.id}),
+                    ],
+                }
+            )
         )
 
     def _messages(self):
