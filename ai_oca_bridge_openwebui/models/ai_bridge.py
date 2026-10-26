@@ -148,7 +148,7 @@ class AiBridge(models.Model):
                     ("id", "<", record.id),
                 ],
                 order="id desc",
-                limit=max(exchange_limit * 2 + 1, 1),
+                limit=max(exchange_limit * 2 + 2, 1),
             )
         )
         result = []
@@ -171,4 +171,6 @@ class AiBridge(models.Model):
         ]
         if len(user_indexes) > exchange_limit:
             result = result[user_indexes[-exchange_limit] :]
+            if result and result[0]["role"] == "assistant":
+                result = result[1:]
         return result
