@@ -18,7 +18,7 @@ class AiBridge(models.Model):
         help="Comma-separated OpenWebUI tool identifiers.",
     )
     openwebui_system_prompt = fields.Text(string="System Prompt")
-    openwebui_history_limit = fields.Integer(string="History Size", default=10)
+    openwebui_history_limit = fields.Integer(string="History Size", default=5)
     openwebui_timeout = fields.Integer(string="Timeout (s)", default=120)
 
     @api.onchange("payload_type")
@@ -97,6 +97,12 @@ class AiBridge(models.Model):
             messages.append({"role": "system", "content": system})
         if record:
             messages.extend(self._openwebui_history(record))
+            messages.append(
+                {
+                    "role": "user",
+                    "content": self._openwebui_message_content(record),
+                }
+            )
         payload = {
             "model": self._openwebui_model_name(),
             "messages": messages,
@@ -128,7 +134,9 @@ class AiBridge(models.Model):
         return "\n\n".join(parts)
 
     def _openwebui_history(self, record):
+        """Return the last configured number of complete conversation exchanges."""
         self.ensure_one()
+        exchange_limit = max(self.openwebui_history_limit or 1, 1)
         history = (
             self.env["mail.message"]
             .sudo()
@@ -137,24 +145,30 @@ class AiBridge(models.Model):
                     ("model", "=", record.model),
                     ("res_id", "=", record.res_id),
                     ("message_type", "=", "comment"),
-                    ("id", "<=", record.id),
+                    ("id", "<", record.id),
                 ],
                 order="id desc",
-                limit=max(self.openwebui_history_limit or 1, 1),
+                limit=max(exchange_limit * 2 + 1, 1),
             )
         )
         result = []
         for message in reversed(history):
             text = tools.html2plaintext(message.body or "").strip()
-            if text:
-                result.append(
-                    {
-                        "role": (
-                            "assistant"
-                            if message.author_id.user_ids.filtered("ai_bridge_id")
-                            else "user"
-                        ),
-                        "content": text,
-                    }
-                )
+            if not text:
+                continue
+            result.append(
+                {
+                    "role": (
+                        "assistant"
+                        if message.author_id.user_ids.filtered("ai_bridge_id")
+                        else "user"
+                    ),
+                    "content": text,
+                }
+            )
+        user_indexes = [
+            index for index, message in enumerate(result) if message["role"] == "user"
+        ]
+        if len(user_indexes) > exchange_limit:
+            result = result[user_indexes[-exchange_limit] :]
         return result
