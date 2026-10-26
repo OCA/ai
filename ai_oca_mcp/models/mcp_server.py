@@ -32,6 +32,18 @@ class McpServer(models.Model):
         ("key_uniq", "unique(key)", "The key must be unique"),
     ]
 
+    def write(self, vals):
+        res = super().write(vals)
+        if {"active", "key"} & set(vals):
+            # cached key lookups depend on the server being active and on its key
+            self.env.registry.clear_cache()
+        return res
+
+    def unlink(self):
+        res = super().unlink()
+        self.env.registry.clear_cache()
+        return res
+
     @api.depends("key")
     def _compute_url(self):
         base_url = self.env["ir.config_parameter"].sudo().get_param("web.base.url")
