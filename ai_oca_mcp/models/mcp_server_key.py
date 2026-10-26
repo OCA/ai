@@ -28,9 +28,26 @@ class McpServerKey(models.Model):
                 "expired_on": fields.Datetime.now(),
             }
         )
-        self.env.registry.clear_cache()
 
     _key_uniq = models.Constraint("unique (hashed_key)", "The key must be unique")
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super().create(vals_list)
+        # a lookup may have cached a miss for this key
+        self.env.registry.clear_cache()
+        return records
+
+    def write(self, vals):
+        res = super().write(vals)
+        # revoke cached lookups: state, expiration, owner or hash may have changed
+        self.env.registry.clear_cache()
+        return res
+
+    def unlink(self):
+        res = super().unlink()
+        self.env.registry.clear_cache()
+        return res
 
     @api.model
     def _hash_key(self, key):
