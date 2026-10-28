@@ -3,9 +3,8 @@
 
 {
     "name": "Ai Tool",
-    "summary": """We want to generate some specific AI Tools
-    that might be used in other places, like MCP or native.""",
-    "version": "19.0.1.0.0",
+    "summary": "Define AI tools to be used by MCP or native AI integrations",
+    "version": "20.0.1.0.0",
     "license": "AGPL-3",
     "author": "Dixmit,Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/ai",
@@ -13,7 +12,7 @@
         "mail",
     ],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/menu.xml",
         "views/ai_tool.xml",
         "data/ai_tools.xml",

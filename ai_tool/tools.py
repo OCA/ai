@@ -1,7 +1,9 @@
 from odoo.orm.decorators import attrsetter
 
 
-def aitool(input_schema: dict, output_schema: dict, required_inputs: list = None):
+def aitool(
+    input_schema: dict, output_schema: dict, required_inputs: list | None = None
+):
     return attrsetter(
         "_ai_tool",
         {

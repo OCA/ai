@@ -1,8 +1,6 @@
 # Copyright 2026 Dixmit
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
-from datetime import date
-
 from odoo import fields, models
 from odoo.tools.mail import html_sanitize, plaintext2html
 
@@ -51,7 +49,7 @@ class AiTool(models.Model):
         },
     )
     def _ai_get_date(self):
-        return {"date": date.today().isoformat()}
+        return {"date": fields.Date.today().isoformat()}
 
     @aitool(
         input_schema={
