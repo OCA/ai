@@ -25,6 +25,8 @@
                             options="{'no_create': True}"
                         />
                         <field name="openwebui_tool_ids" invisible="True" />
+                        <field name="openwebui_web_search" />
+                        <field name="openwebui_keep_chat" />
                         <field name="openwebui_history_limit" />
                         <field name="openwebui_timeout" />
                     </group>

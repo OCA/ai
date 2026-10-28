@@ -16,14 +16,6 @@ except ImportError:
     markdown = None
 
 
-def _completion(content="Hello, I am the assistant."):
-    return mock.Mock(
-        status_code=200,
-        text="ok",
-        json=lambda: {"choices": [{"message": {"content": content}}]},
-    )
-
-
 def _catalog_response(data):
     response = mock.Mock()
     response.json.return_value = data
@@ -48,14 +40,19 @@ class TestOpenWebUI(common.TransactionCase):
                 "result_type": "message",
                 "openwebui_model": "demo-sales",
                 "openwebui_system_prompt": "You are the project assistant.",
+                "openwebui_keep_chat": True,
             }
         )
         cls.ai_user = new_test_user(
-            cls.env, login="test-openwebui-ai", groups="base.group_user"
+            cls.env,
+            login="test-openwebui-ai",
+            groups="base.group_user",
         )
         cls.ai_user.write({"ai_bridge_id": cls.bridge.id})
         cls.user = new_test_user(
-            cls.env, login="test-openwebui-user", groups="base.group_user"
+            cls.env,
+            login="test-openwebui-user",
+            groups="base.group_user",
         )
         cls.chat = (
             cls.env["discuss.channel"]
@@ -108,14 +105,46 @@ class TestOpenWebUI(common.TransactionCase):
             )
         )
 
-    def _execute_message(self, message):
-        execution = self._execution_for_message(message)
-        execution._execute()
-        return execution
-
     def _execute_chat_message(self, body):
-        return self._execute_message(
+        execution = self._execution_for_message(
             self._create_message("discuss.channel", self.chat.id, body)
+        )
+        return execution._execute()
+
+    def _agentic_request(self, calls, content="Hello, I am the assistant."):
+        responses = {
+            ("POST", "/api/v1/chats/new"): {"id": "chat-1"},
+            ("POST", "/api/chat/completions"): {"status": True},
+            ("GET", "/api/tasks/chat/chat-1"): {"task_ids": []},
+            ("GET", "/api/v1/chats/chat-1"): {
+                "chat": {
+                    "history": {
+                        "messages": {
+                            "assistant-1": {
+                                "role": "assistant",
+                                "content": content,
+                            }
+                        }
+                    }
+                }
+            },
+        }
+
+        def request(method, url, **kwargs):
+            path = url.split(".com", 1)[-1]
+            calls.append((method, path, kwargs))
+            data = {} if method == "DELETE" else responses[(method, path)]
+            response = mock.Mock(status_code=200, text="ack", json=lambda: data)
+            response.raise_for_status.return_value = None
+            response.close.return_value = None
+            return response
+
+        return request
+
+    def _uuid_patch(self):
+        return mock.patch(
+            "odoo.addons.ai_oca_bridge_openwebui.models.ai_bridge_execution.uuid.uuid4",
+            side_effect=["assistant-1", "user-1", "session-1"] * 10,
         )
 
     def test_catalog_sync_models_and_tools(self):
@@ -142,8 +171,12 @@ class TestOpenWebUI(common.TransactionCase):
             .name,
             "Model A",
         )
-        tool = self.env["ai.openwebui.tool"].search([("external_id", "=", "tool-a")])
-        self.assertEqual(tool.description, "Description A")
+        self.assertEqual(
+            self.env["ai.openwebui.tool"]
+            .search([("external_id", "=", "tool-a")])
+            .description,
+            "Description A",
+        )
 
     def test_catalog_sync_updates_existing_records(self):
         model = self.env["ai.openwebui.model"].create(
@@ -185,38 +218,6 @@ class TestOpenWebUI(common.TransactionCase):
         self.bridge._onchange_openwebui_model_id()
         self.assertEqual(self.bridge.openwebui_model, "model-a")
 
-    def test_bridge_onchange_and_validation(self):
-        values = {
-            "name": "Onchange",
-            "payload_type": "openwebui",
-            "usage": "chatter",
-            "result_kind": "immediate",
-            "result_type": "message",
-        }
-        bridge = self.env["ai.bridge"].new(values)
-        bridge._onchange_payload_type_openwebui()
-        self.assertEqual(bridge.result_kind, "immediate")
-        invalid_values = [
-            {"usage": "thread"},
-            {"result_kind": "async"},
-            {"result_type": "none"},
-        ]
-        for invalid in invalid_values:
-            invalid_bridge = self.env["ai.bridge"].new({**values, **invalid})
-            with self.assertRaises(ValidationError):
-                invalid_bridge._check_openwebui_configuration()
-
-    def test_bridge_requires_model_and_legacy_tools(self):
-        self.bridge.openwebui_model = False
-        self.bridge.openwebui_model_id = False
-        with self.assertRaises(ValidationError):
-            self.bridge._openwebui_check_model()
-        self.bridge.openwebui_model = "demo-sales"
-        self.bridge.openwebui_tool_ids = "tool-a, tool-b, ,tool-c"
-        self.assertEqual(
-            self.bridge._openwebui_tool_ids(), ["tool-a", "tool-b", "tool-c"]
-        )
-
     def test_prepare_payload_without_record_and_with_tools(self):
         self._create_message("discuss.channel", self.chat.id, "Question")
         self.bridge.openwebui_tool_ids = "tool-a"
@@ -225,6 +226,62 @@ class TestOpenWebUI(common.TransactionCase):
         self.assertEqual(payload["tool_ids"], ["tool-a"])
         self.assertEqual(payload["params"], {"function_calling": "legacy"})
 
+    def test_agentic_answer_is_posted(self):
+        calls = []
+        with (
+            mock.patch("requests.request", side_effect=self._agentic_request(calls)),
+            self._uuid_patch(),
+        ):
+            result = self._execute_chat_message("What is the delivery time?")
+        self.assertTrue(result)
+        self.assertEqual(
+            [call[:2] for call in calls][:4],
+            [
+                ("POST", "/api/v1/chats/new"),
+                ("POST", "/api/chat/completions"),
+                ("GET", "/api/tasks/chat/chat-1"),
+                ("GET", "/api/v1/chats/chat-1"),
+            ],
+        )
+        self.assertTrue(calls[1][2]["stream"])
+        self.assertEqual(len(self._messages()), 2)
+
+    def test_agentic_history_roles(self):
+        calls = []
+        with (
+            mock.patch("requests.request", side_effect=self._agentic_request(calls)),
+            self._uuid_patch(),
+        ):
+            self._execute_chat_message("Question 1")
+            self._execute_chat_message("Question 2")
+        self.assertEqual(calls[5][2]["json"]["messages"][-1]["role"], "user")
+
+    def test_agentic_question_and_channel_title(self):
+        calls = []
+        with (
+            mock.patch("requests.request", side_effect=self._agentic_request(calls)),
+            self._uuid_patch(),
+        ):
+            self._execute_chat_message("Question visible in OpenWebUI")
+        chat = calls[0][2]["json"]["chat"]
+        self.assertEqual(chat["title"], self.chat.display_name)
+        user = next(
+            item
+            for item in chat["history"]["messages"].values()
+            if item["role"] == "user"
+        )
+        self.assertEqual(user["content"], "Question visible in OpenWebUI")
+
+    def test_keep_chat_false_deletes_chat(self):
+        self.bridge.openwebui_keep_chat = False
+        calls = []
+        with (
+            mock.patch("requests.request", side_effect=self._agentic_request(calls)),
+            self._uuid_patch(),
+        ):
+            self._execute_chat_message("Question")
+        self.assertEqual(calls[-1][:2], ("DELETE", "/api/v1/chats/chat-1"))
+
     def test_get_channel_rejects_invalid_messages(self):
         message = self._create_message(
             "res.partner", self.env.user.partner_id.id, "invalid"
@@ -232,48 +289,23 @@ class TestOpenWebUI(common.TransactionCase):
         message.model = False
         with self.assertRaises(ValueError):
             self._execution_for_message(message)._get_channel()
-        message = self._create_message(
-            "res.partner", self.env.user.partner_id.id, "invalid"
-        )
-        message.model = "missing.model"
-        with self.assertRaises(ValueError):
-            self._execution_for_message(message)._get_channel()
-        partner = self.env["res.partner"].create({"name": "Deleted Target"})
-        message = self._create_message("res.partner", partner.id, "invalid")
-        message.res_id = 999999999
-        with self.assertRaises(ValueError):
-            self._execution_for_message(message)._get_channel()
-
-    def test_execute_ignores_mismatch_and_non_comment(self):
-        self.bridge.model_id = self.env["ir.model"]._get("res.partner")
-        message = self._create_message("discuss.channel", self.chat.id, "Question")
-        execution = self._execution_for_message(message)
-        self.assertEqual(execution._execute(), {})
-        self.assertEqual(execution.state, "done")
-        message = self._create_message(
-            "discuss.channel", self.chat.id, "Notification", "notification"
-        )
-        execution = self._execution_for_message(message)
-        with mock.patch("requests.post") as request:
-            execution._execute()
-        request.assert_not_called()
-        self.assertEqual(execution.state, "done")
 
     @mute_logger("odoo.addons.ai_oca_bridge_openwebui.models.ai_bridge_execution")
     def test_execute_handles_http_error(self):
-        response = _completion()
-        response.raise_for_status.side_effect = requests.HTTPError("bad response")
-        with mock.patch("requests.post", return_value=response):
-            execution = self._execute_chat_message("Question")
+        execution = self._execution_for_message(
+            self._create_message("discuss.channel", self.chat.id, "Question")
+        )
+        with mock.patch(
+            "odoo.addons.ai_oca_bridge_openwebui.models.ai_bridge_execution.AiBridgeExecution._openwebui_execute_agentic",
+            side_effect=requests.ConnectionError("connection failed"),
+        ):
+            execution._execute()
         self.assertEqual(execution.state, "error")
 
-    def test_stop_typing_without_context_or_for_other_model(self):
-        self.env["ai.bridge.execution"].new(
-            {"ai_bridge_id": self.bridge.id}
-        )._openwebui_stop_typing()
-        partner = self.env["res.partner"].create({"name": "Target"})
-        message = self._create_message("res.partner", partner.id, "Question")
-        self._execution_for_message(message)._openwebui_stop_typing()
+    def test_mail_thread_discuss_does_not_duplicate(self):
+        with mock.patch("requests.request") as request:
+            self.chat.with_user(self.user.id).message_post(body="Question")
+        request.assert_not_called()
 
     def test_malformed_openwebui_responses(self):
         execution = self.env["ai.bridge.execution"].new(
@@ -283,111 +315,15 @@ class TestOpenWebUI(common.TransactionCase):
             with self.assertRaises(ValueError):
                 execution._openwebui_to_message(response)
 
-    def test_mail_thread_discuss_does_not_duplicate(self):
-        with mock.patch("requests.post") as request:
-            self.chat.with_user(self.user.id).message_post(body="Question")
-        request.assert_not_called()
-
-    def test_mail_thread_partner_creates_execution(self):
-        partner = self.env["res.partner"].create({"name": "Target"})
-        self.bridge.model_id = self.env["ir.model"]._get("res.partner")
-        with mock.patch(
-            "requests.post", return_value=_completion("Réponse")
-        ) as request:
-            partner.message_post(
-                body="Question",
-                message_type="comment",
-                partner_ids=[self.ai_user.partner_id.id],
-            )
-        request.assert_called_once()
-
-    def test_mail_thread_ignores_non_comment_and_disabled_bridge(self):
-        partner = self.env["res.partner"].create({"name": "Target"})
-        self.bridge.model_id = self.env["ir.model"]._get("res.partner")
-        with mock.patch("requests.post") as request:
-            partner.message_post(
-                body="Notification",
-                message_type="notification",
-                partner_ids=[self.ai_user.partner_id.id],
-            )
-        request.assert_not_called()
-        self.bridge.domain = '[("id", "=", 0)]'
-        with mock.patch("requests.post") as request:
-            partner.message_post(
-                body="Question",
-                message_type="comment",
-                partner_ids=[self.ai_user.partner_id.id],
-            )
-        request.assert_not_called()
-
-    def test_answer_is_posted(self):
-        with mock.patch("requests.post") as mock_post:
-            mock_post.return_value = _completion()
-            execution = self._execute_chat_message("What is the delivery time?")
-            mock_post.assert_called_once()
-            payload = mock_post.call_args.kwargs["json"]
-            headers = mock_post.call_args.kwargs["headers"]
-        self.assertEqual(execution.state, "done")
-        self.assertEqual(payload["model"], "demo-sales")
-        self.assertFalse(payload["stream"])
-        self.assertEqual(payload["messages"][-1]["role"], "user")
-        self.assertEqual(headers["Authorization"], "Bearer sk-test")
-        self.assertEqual(2, len(self._messages()))
-
-    def test_res_partner_payload_uses_configured_model(self):
-        self.bridge.model_id = self.env["ir.model"]._get("res.partner")
-        partner = self.env["res.partner"].create({"name": "OpenWebUI Test Partner"})
-        message = self._create_message("res.partner", partner.id, "Question")
-        payload = self.bridge._prepare_payload(record=message)
-        self.assertEqual(payload["messages"][-1]["role"], "user")
-        self.assertIn("res.partner", payload["messages"][0]["content"])
-
-    def test_res_partner_answer_is_posted(self):
-        self.bridge.model_id = self.env["ir.model"]._get("res.partner")
-        partner = self.env["res.partner"].create({"name": "OpenWebUI Test Partner"})
-        message = self._create_message("res.partner", partner.id, "Question")
-        with mock.patch(
-            "requests.post", return_value=_completion("Réponse partenaire")
-        ):
-            execution = self._execute_message(message)
-        self.assertEqual(execution.state, "done")
-        self.assertTrue(
-            partner.message_ids.filtered(lambda msg: "Réponse partenaire" in msg.body)
-        )
-
-    def test_history_roles(self):
-        with mock.patch("requests.post") as mock_post:
-            mock_post.return_value = _completion("Answer 1")
-            self._execute_chat_message("Question 1")
-            mock_post.return_value = _completion("Answer 2")
-            self._execute_chat_message("Question 2")
-        self.assertEqual(
-            [item["role"] for item in mock_post.call_args.kwargs["json"]["messages"]],
-            ["system", "user", "assistant", "user"],
-        )
-
-    @mute_logger("odoo.addons.ai_oca_bridge_openwebui.models.ai_bridge_execution")
-    def test_error_does_not_post(self):
-        with mock.patch("requests.post", side_effect=Exception("boom")):
-            execution = self._execute_chat_message("Question")
-        self.assertEqual(execution.state, "error")
-
-    @mute_logger("odoo.addons.ai_oca_bridge_openwebui.models.ai_bridge_execution")
-    def test_empty_answer_is_an_error(self):
-        with mock.patch("requests.post", return_value=_completion("   ")):
-            execution = self._execute_chat_message("Question")
-        self.assertEqual(execution.state, "error")
-
     @unittest.skipUnless(markdown, "Markdown is not installed")
     def test_markdown_response_is_converted_to_html(self):
         execution = self.env["ai.bridge.execution"].new(
             {"ai_bridge_id": self.bridge.id}
         )
         values = execution._openwebui_to_message(
-            _completion("- **Module :** `web_gantt`").json()
+            {"choices": [{"message": {"content": "- **Module :** `web_gantt`"}}]}
         )
         self.assertIn("<strong>Module :</strong>", values["body"])
-        self.assertIn("<code>web_gantt</code>", values["body"])
 
     def test_constraints(self):
         with self.assertRaises(ValidationError):

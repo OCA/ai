@@ -32,28 +32,33 @@ AI OCA Bridge OpenWebUI
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
 
-This module connects Odoo Discuss with
-`OpenWebUI <https://openwebui.com>`__ through its OpenAI-compatible chat
-completions API.
+This module connects an Odoo Discuss AI user to an OpenWebUI user
+through OpenWebUI's server-side agentic chat flow.
 
 It extends the OCA modules ``ai_oca_bridge`` and
 ``ai_oca_bridge_chatter`` with an **OpenWebUI Chat** bridge payload.
 
 The integration deliberately separates responsibilities:
 
-- Odoo remains responsible for users, access rights, Discuss channels,
-  Odoo records and conversation history.
-- OpenWebUI remains responsible for AI orchestration, models, system
-  prompts, knowledge bases, RAG, agents and external tools.
+- Odoo manages users, access rights, Discuss channels, mentions, Odoo
+  records and the final answer posted back to Discuss.
+- OpenWebUI manages model execution, prompts, web search, tools,
+  knowledge bases, sources and provider-specific reasoning output.
 
-The module sends the selected Discuss history to OpenWebUI and posts the
-assistant response back as the configured Odoo AI user. The optional
-bridge system prompt adds local Odoo context; it does not replace
-OpenWebUI's own configuration.
+The bridge creates an OpenWebUI conversation using the Odoo Discuss
+channel name, keeps the original user question visible, submits an
+agentic streaming request, waits for server-side tools such as web
+search to finish, and posts the final assistant answer back to Discuss.
 
-The synchronized models and tools are only a local Odoo catalog used for
-selection. OpenWebUI remains the source of truth for their behavior and
-configuration.
+The OpenWebUI conversation can be retained for review by the OpenWebUI
+user. When retained, it can expose the original question, the assistant
+answer, web search activity, sources and model/provider reasoning
+information when those features are supported and enabled by OpenWebUI.
+Hidden chain-of-thought is not guaranteed to be exposed.
+
+The Odoo bridge does not execute OpenWebUI tool calls itself. OpenWebUI
+remains the authoritative runtime for web search, tools, knowledge bases
+and sources.
 
 .. IMPORTANT::
    This is an alpha version, the data model and design can change at any time without warning.
@@ -72,36 +77,67 @@ OpenWebUI
 ---------
 
 1. Create an API key in *Settings → Account → API keys*.
-2. Make sure the key can access the models and tools that the bridge
-   should use.
-3. Configure the model, system prompt, knowledge bases and external
-   tools in OpenWebUI. Those remain managed there.
+2. The API key must belong to the OpenWebUI user who will see the Odoo
+   conversations and must have access to the selected model and
+   web-search features.
+3. Enable and configure Web Search in OpenWebUI, including a search
+   engine and its credentials where required.
+4. Use a model with Native Function Calling / Agentic Mode enabled.
+   Built-in web tools are subject to OpenWebUI permissions, model
+   capabilities and global administrator settings.
+5. Configure the model, system prompt, knowledge bases and external
+   tools in OpenWebUI. OpenWebUI remains the source of truth for these
+   features.
 
 Odoo
 ----
 
-1. Go to *AI Bridge → AI Bridge* and create a bridge.
-2. Select **OpenWebUI Chat** as the payload type. The module enforces:
+1.  Go to *AI Bridge → AI Bridge* and create or open a bridge.
+2.  Select **OpenWebUI Chat** as the payload type. The module enforces:
 
-   - Chatter usage;
-   - Immediate result kind;
-   - Post a Message result type.
+    - Chatter usage;
+    - Immediate result kind;
+    - Post a Message result type.
 
-3. Set the OpenWebUI chat completion URL, for example:
-   ``https://<openwebui>/api/chat/completions``.
-4. Select **Token Authentication** and enter the OpenWebUI API key.
-5. In the **OpenWebUI** tab, set the model identifier, optional bridge
-   system prompt, history size and timeout.
-6. Optionally click **Synchronize models and tools**, then select a
-   model and the tools to expose to the request.
-7. Create an internal Odoo user, for example *Assistant IA*, and assign
-   the bridge to its **AI Bridge** field.
-8. Add this user to a Discuss channel. In a direct chat, the assistant
-   answers every message. In a channel with more than two members,
-   mention the assistant with ``@Assistant IA``.
+3.  Set the OpenWebUI URL, for example:
+    ``https://<openwebui>/api/chat/completions``.
+4.  Select **Token Authentication** and enter the OpenWebUI API key.
+5.  In the **OpenWebUI** tab, select the synchronized model.
+6.  Enable **Enable Web Search** when Gérard must be able to search
+    current information.
+7.  Select **Keep OpenWebUI Conversation** when the OpenWebUI user must
+    be able to review the original question, the answer, tool activity
+    and sources after the request has completed. Disable it only when
+    temporary conversations must be deleted after processing.
+8.  Configure the history size, timeout and optional system prompt.
+9.  Optionally click **Synchronize models and tools**, then select tools
+    to expose to the request. Built-in web search is enabled separately
+    with **Enable Web Search**.
+10. Create or use an internal Odoo user, for example *Gérard*, and
+    assign the bridge to its **AI Bridge** field.
+11. Add the Odoo AI user to a Discuss channel. In a direct chat, the
+    assistant answers every message. In a channel with more than two
+    members, mention the assistant with ``@Gérard``.
 
-The expected response is an OpenAI-compatible chat completion containing
-``choices[0].message.content``.
+User association
+----------------
+
+The Odoo AI user is the identity that receives Discuss messages and
+posts the answer back to Odoo. The OpenWebUI API key identifies the
+OpenWebUI user who owns or can access the retained OpenWebUI
+conversation. Use an API key from that OpenWebUI user when the user must
+inspect the conversation and its web sources.
+
+Web-search prerequisites
+------------------------
+
+Web search requires all of the following:
+
+- OpenWebUI Web Search enabled globally;
+- a configured search engine and credentials, if required;
+- permission for the API-key user to use web search;
+- a model allowing Native Function Calling / Agentic Mode;
+- **Enable Web Search** checked on the Odoo bridge.
 
 Usage
 =====
@@ -109,38 +145,94 @@ Usage
 Responsibilities
 ----------------
 
-This module is a transport and integration layer. It does not implement
-a knowledge base, RAG engine, agent framework or external-tool runtime
-in Odoo. Those capabilities are configured and executed by OpenWebUI.
+This module connects an Odoo Discuss AI user to an OpenWebUI user
+through the OpenWebUI server-side agentic chat flow.
 
-Odoo provides the conversation context from Discuss. The bridge can add
-an optional local system prompt and the Odoo channel name, then sends
-the recent conversation as ``user`` and ``assistant`` messages.
+Odoo remains responsible for:
 
-Requests use:
+- Odoo users and access rights;
+- Discuss channels and mentions;
+- Odoo records and internal conversation history;
+- posting the final assistant answer back to Discuss.
 
-- ``POST /api/chat/completions``;
-- ``stream: false``;
-- the configured model identifier;
-- optional OpenWebUI tool identifiers.
+OpenWebUI remains responsible for:
 
-The current implementation expects a response of the form:
+- model execution and system prompts;
+- Native Function Calling / Agentic Mode;
+- web search and web loaders;
+- knowledge bases and RAG;
+- tools, sources and provider-specific reasoning output.
+
+Agentic OpenWebUI flow
+----------------------
+
+For an OpenWebUI bridge, Odoo:
+
+1. prepares the Discuss history and the current user question;
+2. creates an OpenWebUI conversation whose title is the Odoo Discuss
+   channel name;
+3. creates the user and assistant message tree, keeping the original
+   question visible in OpenWebUI;
+4. submits a streaming request with ``chat_id``, assistant ``id``,
+   ``session_id`` and the configured built-in features;
+5. waits for OpenWebUI's server-side tool loop to finish;
+6. reads the final assistant message from the OpenWebUI conversation;
+7. posts the final answer to the Odoo Discuss channel;
+8. keeps or deletes the OpenWebUI conversation according to **Keep
+   OpenWebUI Conversation**.
+
+The server-side OpenWebUI flow is required for built-in tools such as
+web search. Odoo does not execute OpenWebUI tool calls itself.
+
+Web search
+----------
+
+When **Enable Web Search** is checked, the bridge sends the OpenWebUI
+feature flag:
 
 .. code:: json
 
    {
-     "choices": [
-       {
-         "message": {
-           "role": "assistant",
-           "content": "Answer"
-         }
-       }
-     ]
+     "features": {
+       "web_search": true
+     }
    }
 
-A failed request or an empty answer is recorded as an error in the
-bridge execution and is not posted to Discuss.
+OpenWebUI then performs the search with the API-key user's permissions
+and returns the final answer and, where supported, sources and tool
+activity.
+
+A successful web-search request requires a configured OpenWebUI search
+engine, valid credentials, user permission and a model supporting Native
+Function Calling / Agentic Mode.
+
+OpenWebUI conversation visibility
+---------------------------------
+
+When **Keep OpenWebUI Conversation** is enabled, the conversation
+remains in OpenWebUI. The OpenWebUI user can review:
+
+- the original Odoo user question;
+- the assistant response;
+- web-search activity and sources when provided by OpenWebUI;
+- tool calls and other structured output exposed by the selected model;
+- provider/model reasoning information when the model and OpenWebUI
+  expose it.
+
+Reasoning visibility is provider- and model-dependent. The module does
+not promise that hidden chain-of-thought will be exposed; it only
+preserves the OpenWebUI conversation and structured information returned
+by OpenWebUI.
+
+When the option is disabled, the temporary conversation is deleted after
+the final response or after an error, when possible.
+
+Internal Odoo references
+------------------------
+
+Odoo record references such as ``/odoo/res.partner/<id>`` are internal
+context. They are not sources and must not be presented as sources by
+the assistant.
 
 Catalog synchronization
 -----------------------
@@ -150,9 +242,17 @@ The optional synchronization uses:
 - ``GET /api/models``;
 - ``GET /api/v1/tools/``.
 
-Odoo stores only the identifiers, names and tool descriptions needed for
-configuration. OpenWebUI remains the authoritative system for model
-behavior, knowledge bases and tools.
+Odoo stores only the identifiers, names and descriptions needed for
+bridge configuration. OpenWebUI remains authoritative for model
+behavior, tool execution, web search and sources.
+
+Errors and timeouts
+-------------------
+
+A failed request, timeout or empty final answer is recorded as an error
+on the bridge execution and is not posted to Discuss. The timeout
+applies to the OpenWebUI HTTP requests and to the server-side agentic
+task polling.
 
 Bug Tracker
 ===========

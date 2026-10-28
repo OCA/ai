@@ -14,10 +14,21 @@ class AiBridge(models.Model):
     )
     openwebui_model = fields.Char(string="OpenWebUI Model (legacy)")
     openwebui_tool_ids = fields.Char(
-        string="OpenWebUI Tool IDs",
-        help="Comma-separated OpenWebUI tool identifiers.",
+        string="OpenWebUI Tool IDs", help="Comma-separated OpenWebUI tool identifiers."
     )
     openwebui_system_prompt = fields.Text(string="System Prompt")
+    openwebui_web_search = fields.Boolean(
+        string="Enable Web Search",
+        help="Enable OpenWebUI's web search feature for this bridge.",
+    )
+    openwebui_keep_chat = fields.Boolean(
+        string="Keep OpenWebUI Conversation",
+        default=True,
+        help=(
+            "Keep the OpenWebUI conversation so the user question and "
+            "sources remain visible."
+        ),
+    )
     openwebui_history_limit = fields.Integer(string="History Size", default=5)
     openwebui_timeout = fields.Integer(string="Timeout (s)", default=120)
 
@@ -34,11 +45,11 @@ class AiBridge(models.Model):
         for record in self.filtered(lambda bridge: bridge.payload_type == "openwebui"):
             if record.usage != "chatter":
                 raise ValidationError(
-                    _("An OpenWebUI bridge must use the " "'Chatter' usage.")
+                    _("An OpenWebUI bridge must use the 'Chatter' usage.")
                 )
             if record.result_kind != "immediate":
                 raise ValidationError(
-                    _("An OpenWebUI bridge must use the " "'Immediate' result kind.")
+                    _("An OpenWebUI bridge must use the 'Immediate' result kind.")
                 )
             if record.result_type != "message":
                 raise ValidationError(
@@ -98,16 +109,15 @@ class AiBridge(models.Model):
         if record:
             messages.extend(self._openwebui_history(record))
             messages.append(
-                {
-                    "role": "user",
-                    "content": self._openwebui_message_content(record),
-                }
+                {"role": "user", "content": self._openwebui_message_content(record)}
             )
         payload = {
             "model": self._openwebui_model_name(),
             "messages": messages,
             "stream": False,
         }
+        if self.openwebui_web_search:
+            payload["features"] = {"web_search": True}
         tool_ids = self._openwebui_tool_ids()
         if tool_ids:
             payload["tool_ids"] = tool_ids
@@ -120,6 +130,15 @@ class AiBridge(models.Model):
             [self.openwebui_system_prompt.strip()]
             if self.openwebui_system_prompt
             else []
+        )
+        parts.append(
+            _(
+                "Internal Odoo record references are context only, not "
+                "sources. Never cite references such as "
+                "/odoo/res.partner/<id> as an answer or source. For current "
+                "or recent events, use web search when enabled; otherwise "
+                "state that live web access is unavailable."
+            )
         )
         if record and record.model and record.res_id:
             try:
@@ -134,7 +153,6 @@ class AiBridge(models.Model):
         return "\n\n".join(parts)
 
     def _openwebui_history(self, record):
-        """Return the last configured number of complete conversation exchanges."""
         self.ensure_one()
         exchange_limit = max(self.openwebui_history_limit or 1, 1)
         history = (
@@ -154,18 +172,15 @@ class AiBridge(models.Model):
         result = []
         for message in reversed(history):
             text = tools.html2plaintext(message.body or "").strip()
-            if not text:
-                continue
-            result.append(
-                {
-                    "role": (
-                        "assistant"
+            if text:
+                result.append(
+                    {
+                        "role": "assistant"
                         if message.author_id.user_ids.filtered("ai_bridge_id")
-                        else "user"
-                    ),
-                    "content": text,
-                }
-            )
+                        else "user",
+                        "content": text,
+                    }
+                )
         user_indexes = [
             index for index, message in enumerate(result) if message["role"] == "user"
         ]
