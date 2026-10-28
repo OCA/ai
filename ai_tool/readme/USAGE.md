@@ -18,6 +18,7 @@ For example, if we want to add on sales a functionality to find the sales on a p
 ```python
 from odoo.addons.ai_tool.tools import aitool
 
+
 class SaleOrder(models.Model):
     _inherit = "sale.order"
 
@@ -40,7 +41,6 @@ class SaleOrder(models.Model):
         return {
             "amount_total": (orders[0]["amount_total"] or 0) if orders else 0,
         }
-
 ```
 
 Be aware that this kind of elements must allways return a dict. All the elements will be defined in output_schema.

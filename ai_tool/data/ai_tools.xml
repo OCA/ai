@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!-- Copyright 2026 Dixmit
      License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
 <odoo>
-    <record model="ai.tool" id="current_date">
+    <record id="current_date" model="ai.tool">
         <field name="name">get_date</field>
         <field name="description">Get the current date.</field>
         <field name="model_id" ref="model_ai_tool" />
@@ -10,7 +10,7 @@
         <field name="kind">generic</field>
     </record>
 
-    <record model="ai.tool" id="post_message">
+    <record id="post_message" model="ai.tool">
         <field name="name">post_message</field>
         <field name="description">Post a message to a record.</field>
         <field name="model_id" ref="model_ai_tool" />
