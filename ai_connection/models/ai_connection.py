@@ -40,7 +40,7 @@ class AiConnection(models.Model):
                 message["files"] = [
                     {
                         "name": attachment.name,
-                        "content": attachment.datas.decode("utf-8"),
+                        "content": attachment.raw.to_base64(),
                         "mimetype": attachment.mimetype,
                     }
                     for attachment in attachments
@@ -84,7 +84,7 @@ class AiConnection(models.Model):
                             messages.append(
                                 self._process_tool_call(tool, tool_call, record)
                             )
-                    except Exception as e:
+                    except Exception as e:  # noqa: BLE001
                         getattr(
                             self,
                             f"_process_tool_call_result_{self.kind}",
