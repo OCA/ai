@@ -1,6 +1,7 @@
 # Copyright 2026 Dixmit
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
+import base64
 from unittest.mock import patch
 
 from openai.types.chat import ChatCompletion
@@ -56,7 +57,7 @@ class TestOpenai(TransactionCase):
         attachment = self.env["ir.attachment"].create(
             {
                 "name": "test.txt",
-                "datas": "VGhpcyBpcyBhIHRlc3QgZmlsZS4=",
+                "raw": base64.b64decode("VGhpcyBpcyBhIHRlc3QgZmlsZS4="),
                 "mimetype": "text/plain",
             }
         )
@@ -74,9 +75,11 @@ class TestOpenai(TransactionCase):
         attachment = self.env["ir.attachment"].create(
             {
                 "name": "test.png",
-                "datas": "iVBORw0KGgoAAAANSUhEUgAAAAUA\n"
-                "AAAAFCAIAAAACDbGyAAAAEklEQVR42mP8z/C/HwAE"
-                "/wH+o1kAAAAASUVORK5CYII=",
+                "raw": base64.b64decode(
+                    "iVBORw0KGgoAAAANSUhEUgAAAAUA\n"
+                    "AAAAFCAIAAAACDbGyAAAAEklEQVR42mP8z/C/HwAE"
+                    "/wH+o1kAAAAASUVORK5CYII="
+                ),
                 "mimetype": "image/png",
             }
         )
@@ -94,9 +97,11 @@ class TestOpenai(TransactionCase):
         attachment = self.env["ir.attachment"].create(
             {
                 "name": "test.pdf",
-                "datas": "iVBORw0KGgoAAAANSUhEUgAAAAUA\n"
-                "AAAAFCAIAAAACDbGyAAAAEklEQVR42mP8z/C/HwAE"
-                "/wH+o1kAAAAASUVORK5CYII=",
+                "raw": base64.b64decode(
+                    "iVBORw0KGgoAAAANSUhEUgAAAAUA\n"
+                    "AAAAFCAIAAAACDbGyAAAAEklEQVR42mP8z/C/HwAE"
+                    "/wH+o1kAAAAASUVORK5CYII="
+                ),
                 "mimetype": "application/pdf",
             }
         )
