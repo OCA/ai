@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Pierre Verkest
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).  -->
+<odoo>
+    <menuitem
+        id="menu_ai_oca_native_root"
+        name="AI"
+        web_icon="ai_oca_native_base,static/description/icon.png"
+        groups="ai_oca_native_base.group_ai_user"
+        sequence="25"
+    />
+</odoo>

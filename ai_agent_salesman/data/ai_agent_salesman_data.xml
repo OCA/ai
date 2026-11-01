@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Pierre Verkest
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).  -->
+<odoo>
+    <!-- Dedicated User Account for Sales AI Agent -->
+    <record
+        id="user_ai_sales_agent"
+        model="res.users"
+        context="{'no_reset_password': True}"
+    >
+        <field name="name">Sales AI Agent Account</field>
+        <field name="login">ai_sales_agent</field>
+        <field name="email">ai_sales_agent@example.com</field>
+        <field name="is_ai_agent" eval="True" />
+        <field
+            name="group_ids"
+            eval="[(6, 0, [ref('base.group_user'), ref('sales_team.group_sale_salesman_all_leads')])]"
+        />
+    </record>
+
+    <!-- Custom Sales Prompt Template -->
+    <record id="prompt_system_sales" model="ai.prompt.template">
+        <field name="name">Sales AI System Prompt</field>
+        <field name="code">system_sales_agent</field>
+        <field name="prompt_type">system</field>
+        <field
+            name="template_text"
+        ><![CDATA[<t>You are a dedicated Odoo Sales AI Agent.
+Your primary objective is to assist sales representatives, manage leads, update opportunity stages, and ensure fast customer qualification.
+Always maintain a professional, customer-focused tone.</t>]]></field>
+    </record>
+
+    <!-- Custom Sales Persona -->
+    <record id="persona_salesman" model="ai.persona">
+        <field name="name">Sales Specialist Persona</field>
+        <field name="code">sales_specialist</field>
+        <field name="system_prompt_id" ref="prompt_system_sales" />
+        <field
+            name="description"
+        >Specialized sales persona focused on CRM lead management and pipeline optimization.</field>
+    </record>
+
+    <!-- Dedicated Sales AI Agent -->
+    <record id="agent_salesman" model="ai.agent">
+        <field name="name">Sales Assistant AI Agent</field>
+        <field name="persona_id" ref="persona_salesman" />
+        <field name="user_id" ref="user_ai_sales_agent" />
+        <field name="execution_mode">dedicated_agent</field>
+        <field
+            name="tool_ids"
+            eval="[(6, 0, [ref('ai_tool_sale_crm.tool_update_lead_stage'), ref('ai_tool.current_date')])]"
+        />
+        <field
+            name="description"
+        >AI Agent managing CRM pipeline and sales opportunities under dedicated sales security context.</field>
+    </record>
+</odoo>
