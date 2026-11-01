@@ -1,0 +1,90 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ai_connection
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2026-07-20 09:46+0000\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
+"Language-Team: none\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.15.2\n"
+
+#. module: ai_connection
+#: model:ir.actions.act_window,name:ai_connection.ai_connection_act_window
+#: model:ir.model,name:ai_connection.model_ai_connection
+#: model:ir.ui.menu,name:ai_connection.ai_connection_menu
+msgid "AI Connection"
+msgstr "Connessione IA"
+
+#. module: ai_connection
+#: model:ir.model.fields,field_description:ai_connection.field_ai_connection__active
+msgid "Active"
+msgstr "Attiva"
+
+#. module: ai_connection
+#: model:ir.model.fields,field_description:ai_connection.field_ai_connection__create_uid
+msgid "Created by"
+msgstr "Creato da"
+
+#. module: ai_connection
+#: model:ir.model.fields,field_description:ai_connection.field_ai_connection__create_date
+msgid "Created on"
+msgstr "Creato il"
+
+#. module: ai_connection
+#: model:ir.model.fields,field_description:ai_connection.field_ai_connection__display_name
+msgid "Display Name"
+msgstr "Nome visualizzato"
+
+#. module: ai_connection
+#: model:ir.model.fields,field_description:ai_connection.field_ai_connection__id
+msgid "ID"
+msgstr "ID"
+
+#. module: ai_connection
+#. odoo-python
+#: code:addons/ai_connection/models/ai_connection.py:0
+msgid "Iterations reached the maximum allowed (%s)"
+msgstr "Le iterazioni hanno raggiunto il massimo consentito (%s)"
+
+#. module: ai_connection
+#: model:ir.model.fields,field_description:ai_connection.field_ai_connection__kind
+msgid "Kind"
+msgstr "Genere"
+
+#. module: ai_connection
+#: model:ir.model.fields,field_description:ai_connection.field_ai_connection__write_uid
+msgid "Last Updated by"
+msgstr "Ultimo aggiornamento di"
+
+#. module: ai_connection
+#: model:ir.model.fields,field_description:ai_connection.field_ai_connection__write_date
+msgid "Last Updated on"
+msgstr "Ultimo aggiornamento il"
+
+#. module: ai_connection
+#: model:ir.model.fields,field_description:ai_connection.field_ai_connection__model
+msgid "Model"
+msgstr "Modello"
+
+#. module: ai_connection
+#: model:ir.model.fields,field_description:ai_connection.field_ai_connection__name
+msgid "Name"
+msgstr "Nome"
+
+#. module: ai_connection
+#: model:ir.model.fields,field_description:ai_connection.field_ai_connection__temperature
+msgid "Temperature"
+msgstr "Temperatura"
+
+#. module: ai_connection
+#: model:ir.model.fields,field_description:ai_connection.field_ai_connection__url
+msgid "Url"
+msgstr "URL"
