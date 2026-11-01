@@ -120,5 +120,17 @@ class TestConnection(TransactionCase):
         # post_message is a generic_model tool: without a record it raises,
         # exercising the tool-call error handling in _run_ai.
         response = connection._run("post_message", tools=tool)
-        self.assertIn("post_message", response[0])
+        # The error goes back to the LLM as the tool's answer
+        self.assertIn("ValueError", response[0])
+        self.assertEqual(response[3], 2)
+
+    def test_demo_connection_with_unknown_tool(self):
+        connection = self.env["ai.connection"].create(
+            {
+                "name": "Demo Connection",
+                "kind": "demo",
+            }
+        )
+        response = connection._run("fake_toolcall", tools=self.env["ai.tool"])
+        self.assertIn("UnknownTool", response[0])
         self.assertEqual(response[3], 2)

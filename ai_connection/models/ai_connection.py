@@ -74,22 +74,35 @@ class AiConnection(models.Model):
                     completion_tokens,
                     iteration,
                 )
+            process_result = getattr(
+                self,
+                f"_process_tool_call_result_{self.kind}",
+                self._process_tool_call_result,
+            )
             for tool_call in response["tool_calls"]:
                 tool = tools.filtered(
                     lambda t, tool_call=tool_call: t.name == tool_call["name"]
                 )
-                if tool:
-                    try:
-                        with self.env.cr.savepoint():
-                            messages.append(
-                                self._process_tool_call(tool, tool_call, record)
-                            )
-                    except Exception as e:  # noqa: BLE001
-                        getattr(
-                            self,
-                            f"_process_tool_call_result_{self.kind}",
-                            self._process_tool_call_result,
-                        )(
+                if not tool:
+                    messages.append(
+                        process_result(
+                            tool,
+                            {
+                                "error": f"Unknown tool {tool_call['name']}",
+                                "type": "UnknownTool",
+                            },
+                            tool_call,
+                        )
+                    )
+                    continue
+                try:
+                    with self.env.cr.savepoint():
+                        messages.append(
+                            self._process_tool_call(tool, tool_call, record)
+                        )
+                except Exception as e:  # noqa: BLE001
+                    messages.append(
+                        process_result(
                             tool,
                             {
                                 "error": str(e),
@@ -97,6 +110,7 @@ class AiConnection(models.Model):
                             },
                             tool_call,
                         )
+                    )
         raise UserError(
             self.env._("Iterations reached the maximum allowed (%s)", max_iterations)
         )
@@ -112,7 +126,7 @@ class AiConnection(models.Model):
     def _process_tool_call_result(self, tool, tool_response, tool_call):
         return {
             "role": "tool",
-            "name": tool.name,
+            "name": tool.name or tool_call["name"],
             "tool_call_id": tool_call.get("id"),
             "content": json.dumps(tool_response),
         }

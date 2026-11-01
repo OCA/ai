@@ -20,7 +20,9 @@ class AiClientDemo(AiConnectionClient):
             content = base64.b64decode(last_message["files"][0]["content"]).decode(
                 "utf-8"
             )
-        if any(tool.name == content for tool in self.tools):
+        if any(tool.name == content for tool in self.tools) or (
+            "fake_toolcall" in content and "error" not in content
+        ):
             return {
                 "message": {
                     "role": "assistant",
