@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo noupdate="1">
+    <record id="mcp_server_key_rule_user" model="ir.rule">
+        <field name="name">Mcp Server Key: own keys</field>
+        <field name="model_id" ref="model_mcp_server_key" />
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[Command.link(ref('base.group_user'))]" />
+    </record>
+    <record id="mcp_server_key_rule_admin" model="ir.rule">
+        <field name="name">Mcp Server Key: all (admin)</field>
+        <field name="model_id" ref="model_mcp_server_key" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[Command.link(ref('base.group_system'))]" />
+    </record>
+    <record id="mcp_server_rule_user" model="ir.rule">
+        <field name="name">Mcp Server: servers of own keys</field>
+        <field name="model_id" ref="model_mcp_server" />
+        <field name="domain_force">[('key_ids.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[Command.link(ref('base.group_user'))]" />
+    </record>
+    <record id="mcp_server_rule_admin" model="ir.rule">
+        <field name="name">Mcp Server: all (admin)</field>
+        <field name="model_id" ref="model_mcp_server" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[Command.link(ref('base.group_system'))]" />
+    </record>
+</odoo>
