@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 SDi - Ángel Moya <amoya@sdi.es>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <menuitem
+        id="ai_skill_menu"
+        name="AI Skills"
+        parent="ai_tool.ai_menu_root"
+        action="ai_skill_action"
+        sequence="20"
+    />
+</odoo>
