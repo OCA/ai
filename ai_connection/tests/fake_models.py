@@ -1,8 +1,10 @@
 import base64
+import json
 
 from odoo import fields, models
 
 from odoo.addons.ai_connection.client import AiConnectionClient
+from odoo.addons.ai_tool.tools import aitool
 
 
 class AiClientDemo(AiConnectionClient):
@@ -17,6 +19,19 @@ class AiClientDemo(AiConnectionClient):
             content = base64.b64decode(last_message["files"][0]["content"]).decode(
                 "utf-8"
             )
+        if content.startswith("call:"):
+            # Calls any tool name, even one that is not available
+            name, _sep, arguments = content[len("call:") :].partition(" ")
+            return {
+                "message": {"role": "assistant", "content": ""},
+                "tool_calls": [
+                    {
+                        "name": name,
+                        "arguments": json.loads(arguments or "{}"),
+                        "id": "call_1",
+                    }
+                ],
+            }
         if any(tool.name == content for tool in self.tools):
             return {
                 "message": {
@@ -48,3 +63,16 @@ class AiConnection(models.Model):
 
     def _get_client_demo(self, tools):
         return AiClientDemo(tools)
+
+
+class AiConnectionTestTool(models.Model):
+    _name = "ai.connection.test.tool"
+    _description = "AI Connection Test Tool"
+
+    @aitool(
+        input_schema={"activity": {"type": "string"}},
+        required_inputs=["activity"],
+        output_schema={"activity": {"type": "string"}},
+    )
+    def _ai_echo_activity(self, activity=None):
+        return {"activity": activity}

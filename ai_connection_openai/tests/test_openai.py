@@ -109,3 +109,41 @@ class TestOpenai(TransactionCase):
             )
             self.assertEqual(result[0], "The answer is 3.")
             mock_client.assert_called_once()
+
+    def test_temperature_is_sent(self):
+        with patch("openai.OpenAI") as mock_client:
+            create = mock_client.return_value.chat.completions.create
+            create.return_value = ChatCompletion.model_validate(self.result)
+            self.connection._run(prompt="How much is 2+1")
+            self.assertEqual(create.call_args.kwargs["temperature"], 0.7)
+
+    def test_reasoning_is_reported(self):
+        result = dict(self.result)
+        result["choices"] = [
+            dict(
+                self.result["choices"][0],
+                message={
+                    "role": "assistant",
+                    "content": "The answer is 3.",
+                    "reasoning_content": "2 plus 1 is 3",
+                },
+            )
+        ]
+        steps = []
+        with patch("openai.OpenAI") as mock_client:
+            mock_client.return_value.chat.completions.create.return_value = (
+                ChatCompletion.model_validate(result)
+            )
+            self.connection._run(prompt="How much is 2+1", on_step=steps.append)
+        iteration = next(step for step in steps if step["type"] == "iteration")
+        self.assertEqual(iteration["reasoning"], "2 plus 1 is 3")
+
+    def test_no_reasoning(self):
+        steps = []
+        with patch("openai.OpenAI") as mock_client:
+            mock_client.return_value.chat.completions.create.return_value = (
+                ChatCompletion.model_validate(self.result)
+            )
+            self.connection._run(prompt="How much is 2+1", on_step=steps.append)
+        iteration = next(step for step in steps if step["type"] == "iteration")
+        self.assertIsNone(iteration["reasoning"])

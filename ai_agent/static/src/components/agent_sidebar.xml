@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="ai_agent.AgentSidebar">
+        <div
+            class="o-ai_agent-AgentSidebar d-flex flex-column"
+            t-att-class="props.compact ? 'mx-1' : 'mx-2'"
+        >
+            <t t-foreach="agents.agents" t-as="agent" t-key="agent.id">
+                <div
+                    class="o-ai_agent-AgentSidebar-agent d-flex align-items-center rounded-2 o-mail-DiscussSidebar-item"
+                    t-att-class="{ 'o-active': isDraftOf(agent) }"
+                    t-att-data-agent-id="agent.id"
+                >
+                    <button
+                        class="o-ai_agent-AgentSidebar-new btn border-0 d-flex align-items-center flex-grow-1 text-start text-truncate o-py-0_5 ps-2 pe-1"
+                        t-att-title="store.discuss.isSidebarCompact and !props.compact ? agent.name : undefined"
+                        t-on-click="() => this.newConversation(agent)"
+                    >
+                        <img
+                            class="o-ai_agent-AgentSidebar-avatar rounded o_object_fit_cover flex-shrink-0"
+                            t-attf-src="/web/image/res.partner/{{ agent.partner_id }}/avatar_128"
+                            alt="Agent"
+                        />
+                        <span
+                            t-if="props.compact or !store.discuss.isSidebarCompact"
+                            class="mx-2 text-truncate text-muted"
+                            t-esc="agent.name"
+                        />
+                        <i
+                            t-if="props.compact or !store.discuss.isSidebarCompact"
+                            class="o-ai_agent-AgentSidebar-newIcon fa fa-pencil-square-o ms-auto o-opacity-35"
+                            title="New conversation"
+                        />
+                    </button>
+                    <button
+                        t-if="props.compact or !store.discuss.isSidebarCompact"
+                        class="o-ai_agent-AgentSidebar-toggle btn border-0 px-2 py-0"
+                        t-on-click="() => this.toggle(agent)"
+                        title="Last conversations"
+                    >
+                        <i
+                            class="o-xxsmaller"
+                            t-att-class="isExpanded(agent) ? 'oi oi-chevron-down' : 'oi oi-chevron-right opacity-50'"
+                        />
+                    </button>
+                </div>
+                <ul
+                    t-if="isExpanded(agent) and (props.compact or !store.discuss.isSidebarCompact)"
+                    class="o-ai_agent-AgentSidebar-sessions list-unstyled mb-1 ms-4 ps-1"
+                >
+                    <li t-foreach="agent.sessions" t-as="session" t-key="session.id">
+                        <button
+                            class="o-ai_agent-AgentSidebar-session btn border-0 w-100 d-flex align-items-center text-start smaller py-1 px-2 rounded-2 o-mail-DiscussSidebar-item"
+                            t-att-class="{ 'o-active': isActive(session) }"
+                            t-att-title="session.res_name ? session.name + ' · ' + session.res_name : session.name"
+                            t-on-click="() => this.openSession(session)"
+                        >
+                            <i
+                                t-if="session.res_model"
+                                class="fa fa-file-text-o me-1 text-muted flex-shrink-0"
+                                t-att-title="session.res_name"
+                            />
+                            <span class="text-truncate" t-esc="session.name" />
+                        </button>
+                    </li>
+                    <li
+                        t-if="!agent.sessions.length"
+                        class="smaller text-muted px-2 py-1 fst-italic"
+                    >No conversations yet</li>
+                    <li>
+                        <button
+                            class="o-ai_agent-AgentSidebar-more btn btn-link border-0 w-100 text-start smaller py-1 px-2"
+                            t-on-click="() => this.openHistory(agent)"
+                        >
+                            <i class="fa fa-search me-1" />Search more…
+                        </button>
+                    </li>
+                </ul>
+            </t>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 SDi - Ángel Moya <amoya@sdi.es>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.ui.view" id="ai_agent_session_form_view">
+        <field name="model">ai.agent.session</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar" />
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" />
+                            <field name="active" invisible="1" />
+                            <field name="agent_id" />
+                            <field name="user_id" />
+                            <field name="channel_id" />
+                            <field name="res_model" />
+                            <field name="res_id" />
+                            <field name="res_name" />
+                        </group>
+                        <group>
+                            <field name="last_activity" />
+                            <field name="claimed_at" />
+                            <field name="pending_message_id" />
+                            <field name="processed_message_id" />
+                        </group>
+                    </group>
+                    <field name="first_message" />
+                    <field
+                        name="error_message"
+                        invisible="state != 'error'"
+                        class="text-danger"
+                    />
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="ai_agent_session_search_view">
+        <field name="model">ai.agent.session</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="first_message" />
+                <field name="res_name" />
+                <field name="agent_id" />
+                <field name="user_id" />
+                <filter
+                    name="filter_queued"
+                    string="Queued"
+                    domain="[('state', '=', 'queued')]"
+                />
+                <filter
+                    name="filter_running"
+                    string="Running"
+                    domain="[('state', '=', 'running')]"
+                />
+                <filter
+                    name="filter_error"
+                    string="Error"
+                    domain="[('state', '=', 'error')]"
+                />
+                <group>
+                    <filter
+                        name="group_state"
+                        string="State"
+                        context="{'group_by': 'state'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="ai_agent_session_list_view">
+        <field name="model">ai.agent.session</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="agent_id" />
+                <field name="user_id" />
+                <field name="res_name" optional="show" />
+                <field name="last_activity" optional="show" />
+                <field name="claimed_at" optional="hide" />
+                <field
+                    name="state"
+                    widget="badge"
+                    decoration-info="state == 'queued'"
+                    decoration-warning="state == 'running'"
+                    decoration-danger="state == 'error'"
+                />
+            </list>
+        </field>
+    </record>
+</odoo>

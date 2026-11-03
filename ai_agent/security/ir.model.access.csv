@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ai_agent,access_ai_agent,model_ai_agent,base.group_user,1,0,0,0
+manage_ai_agent,manage_ai_agent,model_ai_agent,base.group_system,1,1,1,1
+access_ai_agent_session,access_ai_agent_session,model_ai_agent_session,base.group_user,1,1,1,0
+manage_ai_agent_session,manage_ai_agent_session,model_ai_agent_session,base.group_system,1,1,1,1
+manage_ai_agent_turn,manage_ai_agent_turn,model_ai_agent_turn,base.group_system,1,1,1,1
