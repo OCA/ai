@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Binhex
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="ai_message_import_document_rule" model="ir.rule">
+        <field name="name">AI Message Import document: companies</field>
+        <field name="model_id" ref="model_ai_message_import_document" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field
+            name="groups"
+            eval="[(4, ref('mail_message_import.group_mail_message_import_manager'))]"
+        />
+    </record>
+    <record id="ai_message_import_document_line_rule" model="ir.rule">
+        <field name="name">AI Message Import document line: companies</field>
+        <field name="model_id" ref="model_ai_message_import_document_line" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field
+            name="groups"
+            eval="[(4, ref('mail_message_import.group_mail_message_import_manager'))]"
+        />
+    </record>
+    <record id="ai_message_import_product_mapping_rule" model="ir.rule">
+        <field name="name">AI Message Import product mapping: companies</field>
+        <field name="model_id" ref="model_ai_message_import_product_mapping" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field
+            name="groups"
+            eval="[(4, ref('mail_message_import.group_mail_message_import_manager'))]"
+        />
+    </record>
+    <record id="ai_message_import_partner_mapping_rule" model="ir.rule">
+        <field name="name">AI Message Import partner mapping: companies</field>
+        <field name="model_id" ref="model_ai_message_import_partner_mapping" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field
+            name="groups"
+            eval="[(4, ref('mail_message_import.group_mail_message_import_manager'))]"
+        />
+    </record>
+    <record id="ai_message_import_uom_mapping_rule" model="ir.rule">
+        <field name="name">AI Message Import uom mapping: companies</field>
+        <field name="model_id" ref="model_ai_message_import_uom_mapping" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field
+            name="groups"
+            eval="[(4, ref('mail_message_import.group_mail_message_import_manager'))]"
+        />
+    </record>
+    <record id="ai_message_import_change_rule" model="ir.rule">
+        <field name="name">AI Message Import change: companies</field>
+        <field name="model_id" ref="model_ai_message_import_change" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field
+            name="groups"
+            eval="[(4, ref('mail_message_import.group_mail_message_import_manager'))]"
+        />
+    </record>
+</odoo>
