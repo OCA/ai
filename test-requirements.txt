@@ -1,1 +1,4 @@
 odoo_test_helper
+odoo-addon-mail_message_import @ git+https://github.com/OCA/social.git@refs/pull/1959/head#subdirectory=mail_message_import
+odoo-addon-ai_tool @ git+https://github.com/OCA/ai.git@refs/pull/84/head#subdirectory=ai_tool
+odoo-addon-ai_connection @ git+https://github.com/OCA/ai.git@refs/pull/151/head#subdirectory=ai_connection
