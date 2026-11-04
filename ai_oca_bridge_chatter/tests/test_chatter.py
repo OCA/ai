@@ -182,3 +182,58 @@ class TestChatter(common.TransactionCase):
                 [("res_id", "=", self.channel.id), ("model", "=", "discuss.channel")]
             ),
         )
+
+    def test_prepare_payload_without_parent(self):
+        """A standalone message exposes parent as False."""
+        message = self.channel.with_user(self.user.id).message_post(
+            body="Standalone message",
+        )
+        payload = self.bridge._prepare_payload_chatter(record=message)
+        self.assertFalse(payload["message"]["parent_id"])
+        self.assertFalse(payload["message"]["parent"])
+
+    def test_prepare_payload_with_parent(self):
+        """A reply includes the quoted parent body and author."""
+        parent = self.channel.message_post(
+            body="<p>Architect proposal</p>",
+            author_id=self.ai_user.partner_id.id,
+        )
+        reply = self.channel.with_user(self.user.id).message_post(
+            body="Please evaluate",
+            parent_id=parent.id,
+        )
+        payload = self.bridge._prepare_payload_chatter(record=reply)
+        self.assertEqual(payload["message"]["parent_id"], parent.id)
+        self.assertEqual(payload["message"]["parent"]["id"], parent.id)
+        self.assertIn("Architect proposal", payload["message"]["parent"]["body"])
+        self.assertEqual(
+            payload["message"]["parent"]["author_name"],
+            self.ai_user.partner_id.name,
+        )
+        self.assertEqual(
+            payload["message"]["parent"]["author_id"],
+            self.ai_user.partner_id.id,
+        )
+        self.assertTrue(payload["message"]["parent"]["date"])
+
+    def test_channel_reply_sends_parent(self):
+        """Mentioning a bot in a reply posts the quoted message to the bridge."""
+        parent = self.channel.message_post(
+            body="<p>Architect proposal</p>",
+            author_id=self.ai_user.partner_id.id,
+        )
+        with mock.patch("requests.post") as mock_post:
+            mock_post.return_value = mock.Mock(
+                status_code=200, json=lambda: {"body": "My review"}
+            )
+            self.channel.with_user(self.user.id).message_post(
+                body="Please evaluate",
+                parent_id=parent.id,
+                partner_ids=[self.ai_user.partner_id.id],
+            )
+            mock_post.assert_called_once()
+        sent = mock_post.call_args.kwargs.get("json") or mock_post.call_args[1].get(
+            "json"
+        )
+        self.assertIn("Architect proposal", sent["message"]["parent"]["body"])
+        self.assertEqual(sent["message"]["parent"]["id"], parent.id)

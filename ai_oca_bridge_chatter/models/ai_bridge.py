@@ -19,6 +19,7 @@ class AiBridge(models.Model):
             record = self.env["mail.message"].search([], limit=1)
         if record._name != "mail.message":
             raise ValueError(_("The record must be a mail.message instance."))
+        parent = record.parent_id
         return {
             "message": {
                 "res_id": record.res_id,
@@ -29,6 +30,19 @@ class AiBridge(models.Model):
                 "date": record.date.isoformat(),
                 "author_name": record.author_id.name,
                 "attachment_ids": record.attachment_ids.ids,
-                "parent_id": record.parent_id.id if record.parent_id else False,
+                "parent_id": parent.id if parent else False,
+                "parent": self._prepare_payload_chatter_parent(parent),
             }
+        }
+
+    def _prepare_payload_chatter_parent(self, parent):
+        """Serialize the replied-to message, if any, for the external agent."""
+        if not parent:
+            return False
+        return {
+            "id": parent.id,
+            "body": parent.body,
+            "author_id": parent.author_id.id,
+            "author_name": parent.author_id.name,
+            "date": parent.date.isoformat() if parent.date else False,
         }
