@@ -109,3 +109,61 @@ class TestOpenai(TransactionCase):
             )
             self.assertEqual(result[0], "The answer is 3.")
             mock_client.assert_called_once()
+
+    def test_api_key(self):
+        self.connection.openai_api_key = "test-key"
+        with patch("openai.OpenAI") as mock_client:
+            mock_client.return_value.chat.completions.create.return_value = (
+                ChatCompletion.model_validate(self.result)
+            )
+            self.connection._run(prompt="How much is 2+1")
+            self.assertEqual(mock_client.call_args.kwargs["api_key"], "test-key")
+            self.assertEqual(
+                mock_client.call_args.kwargs["base_url"],
+                "https://myfake.openai.url/v1",
+            )
+
+    def test_tool_call(self):
+        tool = self.env.ref("ai_tool.current_date")
+        tool_result = {
+            "id": "chatcmpl-122",
+            "object": "chat.completion",
+            "created": 1234567890,
+            "model": "gpt-4o",
+            "usage": {
+                "prompt_tokens": 8,
+                "completion_tokens": 2,
+                "total_tokens": 10,
+            },
+            "choices": [
+                {
+                    "index": 0,
+                    "message": {
+                        "role": "assistant",
+                        "content": None,
+                        "tool_calls": [
+                            {
+                                "id": "call_1",
+                                "type": "function",
+                                "function": {"name": "get_date", "arguments": "{}"},
+                            }
+                        ],
+                    },
+                    "finish_reason": "tool_calls",
+                }
+            ],
+        }
+        with patch("openai.OpenAI") as mock_client:
+            create = mock_client.return_value.chat.completions.create
+            create.side_effect = [
+                ChatCompletion.model_validate(tool_result),
+                ChatCompletion.model_validate(self.result),
+            ]
+            result = self.connection._run(prompt="Which day is it?", tools=tool)
+            self.assertEqual(result, ("The answer is 3.", 18, 7, 2))
+            tools = create.call_args_list[0].kwargs["tools"]
+            self.assertEqual(tools[0]["function"]["name"], "get_date")
+            self.assertFalse(tools[0]["function"]["parameters"]["additionalProperties"])
+            messages = create.call_args_list[1].kwargs["messages"]
+            self.assertEqual(messages[-1]["role"], "tool")
+            self.assertEqual(messages[-1]["tool_call_id"], "call_1")
