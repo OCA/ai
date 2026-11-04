@@ -4,7 +4,7 @@
 
 import json
 
-from odoo import fields, models
+from odoo import _, fields, models
 from odoo.exceptions import UserError
 
 
@@ -98,7 +98,7 @@ class AiConnection(models.Model):
                             tool_call,
                         )
         raise UserError(
-            self.env._("Iterations reached the maximum allowed (%s)", max_iterations)
+            _("Iterations reached the maximum allowed (%s)", max_iterations)
         )
 
     def _process_tool_call(self, tool, tool_call, record):
