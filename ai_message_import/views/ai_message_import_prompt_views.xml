@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Binhex
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="ai_message_import_prompt_view_list" model="ir.ui.view">
+        <field name="name">ai.message.import.prompt.list</field>
+        <field name="model">ai.message.import.prompt</field>
+        <field name="arch" type="xml">
+            <tree decoration-danger="not content">
+                <field name="code" />
+                <field name="name" />
+                <field name="content" column_invisible="1" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="ai_message_import_prompt_view_form" model="ir.ui.view">
+        <field name="name">ai.message.import.prompt.form</field>
+        <field name="model">ai.message.import.prompt</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field
+                                name="name"
+                                placeholder="e.g. Reading the conversations"
+                            />
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="code" placeholder="e.g. extraction" />
+                    </group>
+                    <div class="alert alert-info" role="alert">
+                        Placeholders replaced by the module:
+                        <code>{types}</code> and <code>{version}</code> in
+                        <code>extraction</code>, <code>{role}</code> and
+                        <code>{lang}</code> in <code>product_choice</code>. When a
+                        module writes the text (as the custom one of Binhex), it
+                        writes it again when it is updated.
+                    </div>
+                    <field name="content" placeholder="Write the text of the prompt" />
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ai_message_import_prompt_view_search" model="ir.ui.view">
+        <field name="name">ai.message.import.prompt.search</field>
+        <field name="model">ai.message.import.prompt</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="code" />
+                <field name="name" />
+                <field name="content" />
+                <filter
+                    name="to_write"
+                    string="To write"
+                    domain="[('content', '=', False)]"
+                />
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ai_message_import_prompt" model="ir.actions.act_window">
+        <field name="name">AI prompts</field>
+        <field name="res_model">ai.message.import.prompt</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Write the prompts of the AI</p>
+            <p>
+                Each module creates the prompts it needs, without text: the prompts
+                in red are still to write. <code>extraction</code> reads the
+                conversations, <code>product_choice</code> chooses the products of
+                the lines and <code>document_type.&lt;type&gt;</code> describes each
+                document type installed (e.g. <code>document_type.purchase</code>).
+            </p>
+        </field>
+    </record>
+</odoo>

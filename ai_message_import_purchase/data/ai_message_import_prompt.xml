@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Binhex
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<!-- The description of the document type for the AI, without text: it is
+     written in Configuration > AI prompts, or by a module (as the custom one of
+     Binhex). An update writes its name again, never its text. -->
+<odoo>
+    <record id="prompt_document_type_purchase" model="ai.message.import.prompt">
+        <field name="name">Document type: vendor quote (purchase)</field>
+        <field name="code">document_type.purchase</field>
+    </record>
+</odoo>

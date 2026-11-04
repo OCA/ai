@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Binhex
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <!-- Documents -->
+    <record id="ai_message_import_document_view_list" model="ir.ui.view">
+        <field name="name">ai.message.import.document.list.purchase</field>
+        <field name="model">ai.message.import.document</field>
+        <field
+            name="inherit_id"
+            ref="ai_message_import.ai_message_import_document_view_list"
+        />
+        <field name="arch" type="xml">
+            <field name="relation" position="after">
+                <field name="purchase_order_id" optional="show" />
+            </field>
+        </field>
+    </record>
+
+    <record id="ai_message_import_document_view_form" model="ir.ui.view">
+        <field name="name">ai.message.import.document.form.purchase</field>
+        <field name="model">ai.message.import.document</field>
+        <field
+            name="inherit_id"
+            ref="ai_message_import.ai_message_import_document_view_form"
+        />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//div[@name='button_box']/button[@name='action_view_incidents']"
+                position="before"
+            >
+                <button
+                    name="action_view_order"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-shopping-cart"
+                    invisible="not purchase_order_id"
+                    groups="purchase.group_purchase_user"
+                >
+                    <div class="o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="purchase_order_id" readonly="1" />
+                        </span>
+                        <span class="o_stat_text">
+                            <field name="purchase_state" />
+                        </span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath
+                expr="//field[@name='line_ids']/tree/field[@name='product_match']"
+                position="after"
+            >
+                <field name="purchase_line_id" optional="hide" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="ai_message_import_document_view_kanban" model="ir.ui.view">
+        <field name="name">ai.message.import.document.kanban.purchase</field>
+        <field name="model">ai.message.import.document</field>
+        <field
+            name="inherit_id"
+            ref="ai_message_import.ai_message_import_document_view_kanban"
+        />
+        <field name="arch" type="xml">
+            <div name="references" position="after">
+                <div class="small" t-if="record.purchase_order_id.raw_value">
+                    <field name="purchase_order_id" class="me-1" />
+                    <field name="purchase_state" class="text-muted" />
+                </div>
+            </div>
+        </field>
+    </record>
+
+    <record id="ai_message_import_document_view_search" model="ir.ui.view">
+        <field name="name">ai.message.import.document.search.purchase</field>
+        <field name="model">ai.message.import.document</field>
+        <field
+            name="inherit_id"
+            ref="ai_message_import.ai_message_import_document_view_search"
+        />
+        <field name="arch" type="xml">
+            <field name="quote_number" position="after">
+                <field name="purchase_order_id" />
+            </field>
+        </field>
+    </record>
+
+    <!-- Senders and receiving channels -->
+    <record id="mail_message_import_sender_view_form" model="ir.ui.view">
+        <field name="name">mail.message.import.sender.form.purchase</field>
+        <field name="model">mail.message.import.sender</field>
+        <field
+            name="inherit_id"
+            ref="ai_message_import.mail_message_import_sender_view_form"
+        />
+        <field name="arch" type="xml">
+            <button name="action_view_documents" position="after">
+                <button
+                    name="action_view_purchases"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-shopping-cart"
+                    groups="purchase.group_purchase_user"
+                    invisible="not purchase_count"
+                >
+                    <field name="purchase_count" widget="statinfo" string="Purchases" />
+                </button>
+            </button>
+        </field>
+    </record>
+
+    <record id="mail_message_import_channel_view_form" model="ir.ui.view">
+        <field name="name">mail.message.import.channel.form.purchase</field>
+        <field name="model">mail.message.import.channel</field>
+        <field
+            name="inherit_id"
+            ref="ai_message_import.mail_message_import_channel_view_form"
+        />
+        <field name="arch" type="xml">
+            <button name="action_view_documents" position="after">
+                <button
+                    name="action_view_purchases"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-shopping-cart"
+                    groups="purchase.group_purchase_user"
+                    invisible="not purchase_count"
+                >
+                    <field
+                        name="purchase_count"
+                        widget="statinfo"
+                        string="Purchase orders"
+                    />
+                </button>
+            </button>
+        </field>
+    </record>
+
+    <record id="mail_message_import_channel_view_kanban" model="ir.ui.view">
+        <field name="name">mail.message.import.channel.kanban.purchase</field>
+        <field name="model">mail.message.import.channel</field>
+        <field
+            name="inherit_id"
+            ref="ai_message_import.mail_message_import_channel_view_kanban"
+        />
+        <field name="arch" type="xml">
+            <div name="dashboard_links" position="inside">
+                <a
+                    t-if="record.purchase_to_confirm_count.raw_value"
+                    class="d-flex justify-content-between"
+                    name="action_view_purchases_to_confirm"
+                    type="object"
+                    groups="purchase.group_purchase_user"
+                >
+                    <span>Purchase orders to confirm</span>
+                    <field name="purchase_to_confirm_count" />
+                </a>
+            </div>
+        </field>
+    </record>
+
+    <!-- Settings -->
+    <record id="mail_message_import_config_view_form" model="ir.ui.view">
+        <field name="name">mail.message.import.config.form.purchase</field>
+        <field name="model">mail.message.import.config</field>
+        <field
+            name="inherit_id"
+            ref="ai_message_import.mail_message_import_config_view_form"
+        />
+        <field name="arch" type="xml">
+            <group name="products" position="before">
+                <group string="Purchases: vendors" name="purchase_vendors">
+                    <field name="auto_create_vendor" />
+                    <field
+                        name="vendor_min_confidence"
+                        invisible="not auto_create_vendor"
+                    />
+                </group>
+            </group>
+            <field name="freight_product_id" position="before">
+                <field
+                    name="auto_create_product"
+                    string="Create products (purchases)"
+                />
+                <field
+                    name="product_min_confidence"
+                    invisible="not auto_create_product"
+                />
+            </field>
+        </field>
+    </record>
+
+    <!-- Incidents and changes -->
+    <record id="mail_message_import_incident_view_list" model="ir.ui.view">
+        <field name="name">mail.message.import.incident.list.purchase</field>
+        <field name="model">mail.message.import.incident</field>
+        <field
+            name="inherit_id"
+            ref="ai_message_import.mail_message_import_incident_view_list"
+        />
+        <field name="arch" type="xml">
+            <field name="document_id" position="after">
+                <field name="purchase_order_id" optional="show" />
+            </field>
+        </field>
+    </record>
+
+    <record id="mail_message_import_incident_view_form" model="ir.ui.view">
+        <field name="name">mail.message.import.incident.form.purchase</field>
+        <field name="model">mail.message.import.incident</field>
+        <field
+            name="inherit_id"
+            ref="ai_message_import.mail_message_import_incident_view_form"
+        />
+        <field name="arch" type="xml">
+            <button name="action_open_document" position="after">
+                <button
+                    name="action_open_order"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-shopping-cart"
+                    string="Purchase order"
+                    invisible="not purchase_order_id"
+                    groups="purchase.group_purchase_user"
+                />
+            </button>
+            <field name="document_line_id" position="after">
+                <field name="purchase_order_id" invisible="not purchase_order_id" />
+                <field name="purchase_line_id" invisible="not purchase_line_id" />
+            </field>
+        </field>
+    </record>
+
+    <record id="mail_message_import_incident_view_search" model="ir.ui.view">
+        <field name="name">mail.message.import.incident.search.purchase</field>
+        <field name="model">mail.message.import.incident</field>
+        <field
+            name="inherit_id"
+            ref="ai_message_import.mail_message_import_incident_view_search"
+        />
+        <field name="arch" type="xml">
+            <field name="document_id" position="after">
+                <field name="purchase_order_id" />
+            </field>
+        </field>
+    </record>
+
+    <record id="ai_message_import_change_view_list" model="ir.ui.view">
+        <field name="name">ai.message.import.change.list.purchase</field>
+        <field name="model">ai.message.import.change</field>
+        <field
+            name="inherit_id"
+            ref="ai_message_import.ai_message_import_change_view_list"
+        />
+        <field name="arch" type="xml">
+            <field name="create_date" position="after">
+                <field name="purchase_order_id" optional="show" />
+            </field>
+        </field>
+    </record>
+
+    <record id="ai_message_import_change_view_search" model="ir.ui.view">
+        <field name="name">ai.message.import.change.search.purchase</field>
+        <field name="model">ai.message.import.change</field>
+        <field
+            name="inherit_id"
+            ref="ai_message_import.ai_message_import_change_view_search"
+        />
+        <field name="arch" type="xml">
+            <field name="document_id" position="before">
+                <field name="purchase_order_id" />
+            </field>
+            <group name="group_by" position="inside">
+                <filter
+                    name="group_purchase_order"
+                    string="Purchase order"
+                    context="{'group_by': 'purchase_order_id'}"
+                />
+            </group>
+        </field>
+    </record>
+
+    <!-- Orders -->
+    <record id="action_ai_message_purchase_order" model="ir.actions.act_window">
+        <field name="name">Purchase orders</field>
+        <field name="res_model">purchase.order</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('ai_message_import_sender_id', '!=', False)]</field>
+        <field name="context">{'create': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">No purchase order yet</p>
+            <p>The purchase orders created from the received documents appear here.</p>
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_ai_message_purchase_order"
+        name="Purchase orders"
+        parent="mail_message_import.menu_mail_message_import_received"
+        action="action_ai_message_purchase_order"
+        groups="purchase.group_purchase_user"
+        sequence="20"
+    />
+</odoo>

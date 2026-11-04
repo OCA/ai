@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Binhex
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<!-- The prompts the module needs, without text: it is written in
+     Configuration > AI prompts, or by a module (as the custom one of Binhex).
+     An update writes their name again, never their text. -->
+<odoo>
+    <record id="prompt_extraction" model="ai.message.import.prompt">
+        <field name="name">Reading the conversations</field>
+        <field name="code">extraction</field>
+    </record>
+    <record id="prompt_product_choice" model="ai.message.import.prompt">
+        <field name="name">Choosing the products of the lines</field>
+        <field name="code">product_choice</field>
+    </record>
+</odoo>
