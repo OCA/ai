@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Binhex
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="ai_message_import_document_view_list" model="ir.ui.view">
+        <field name="name">ai.message.import.document.list</field>
+        <field name="model">ai.message.import.document</field>
+        <field name="arch" type="xml">
+            <list
+                create="false"
+                decoration-bf="is_new"
+                decoration-warning="state in ('pending', 'duplicate')"
+                decoration-muted="state == 'cancelled'"
+            >
+                <header>
+                    <button
+                        name="action_mark_seen"
+                        type="object"
+                        string="Mark as seen"
+                    />
+                </header>
+                <field name="is_new" column_invisible="1" />
+                <field name="name" />
+                <field name="create_date" string="Received" />
+                <field name="channel_id" optional="show" />
+                <field name="authorized_address_id" optional="show" />
+                <field name="sender_id" optional="hide" />
+                <field name="partner_id" />
+                <field name="partner_name" optional="hide" />
+                <field name="document_type" optional="show" />
+                <field name="quote_number" />
+                <field name="quote_date" optional="show" />
+                <field name="amount_total_doc" optional="show" />
+                <field name="currency_code" optional="show" />
+                <field name="relation" optional="hide" />
+                <field
+                    name="open_incident_count"
+                    string="Incidents"
+                    decoration-danger="open_incident_count"
+                    decoration-muted="not open_incident_count"
+                />
+                <field
+                    name="company_id"
+                    groups="base.group_multi_company"
+                    optional="hide"
+                />
+                <field
+                    name="state"
+                    widget="badge"
+                    decoration-success="state == 'done'"
+                    decoration-warning="state in ('pending', 'duplicate')"
+                    decoration-muted="state == 'cancelled'"
+                />
+            </list>
+        </field>
+    </record>
+
+    <record id="ai_message_import_document_view_kanban" model="ir.ui.view">
+        <field name="name">ai.message.import.document.kanban</field>
+        <field name="model">ai.message.import.document</field>
+        <field name="arch" type="xml">
+            <kanban create="false" sample="1">
+                <field name="state" />
+                <field name="partner_id" />
+                <field name="open_incident_count" />
+                <field name="is_new" />
+                <templates>
+                    <t t-name="card">
+                        <div
+                            class="d-flex justify-content-between align-items-start gap-2"
+                        >
+                            <div class="fw-bold fs-5 text-truncate">
+                                <t t-if="record.partner_id.raw_value">
+                                    <field name="partner_id" />
+                                </t>
+                                <t t-else="">
+                                    <field name="partner_name" />
+                                </t>
+                            </div>
+                            <field
+                                name="state"
+                                widget="badge"
+                                decoration-success="state == 'done'"
+                                decoration-warning="state in ('pending', 'duplicate')"
+                                decoration-muted="state == 'cancelled'"
+                            />
+                        </div>
+                        <field name="document_type" class="text-muted" />
+                        <field name="origin_display" class="small text-muted" />
+                        <div class="small" name="references">
+                            <field name="name" class="me-1" />
+                            <field name="quote_number" class="me-1" />
+                            <field name="quote_date" />
+                        </div>
+                        <footer class="pt-2" name="footer">
+                            <div
+                                class="d-flex align-items-center gap-1"
+                                t-if="record.amount_total_doc.raw_value"
+                            >
+                                <field name="amount_total_doc" class="fw-bold" />
+                                <field name="currency_code" />
+                            </div>
+                            <div class="ms-auto d-flex gap-1" name="badges">
+                                <span
+                                    class="badge text-bg-info"
+                                    t-if="record.is_new.raw_value"
+                                >
+                                    New
+                                </span>
+                                <span
+                                    class="badge text-bg-danger"
+                                    t-if="record.open_incident_count.raw_value"
+                                >
+                                    <field name="open_incident_count" /> incident(s)
+                                </span>
+                            </div>
+                        </footer>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="ai_message_import_document_view_form" model="ir.ui.view">
+        <field name="name">ai.message.import.document.form</field>
+        <field name="model">ai.message.import.document</field>
+        <field name="arch" type="xml">
+            <form create="false">
+                <header>
+                    <button
+                        name="action_apply"
+                        type="object"
+                        string="Apply again"
+                        class="oe_highlight"
+                        invisible="state not in ('draft', 'pending', 'done')"
+                        confirm="The document will be applied to its order with the current values. Continue?"
+                        help="Create or update the order after correcting the document."
+                    />
+                    <button
+                        name="action_not_duplicate"
+                        type="object"
+                        string="Not a duplicate"
+                        class="oe_highlight"
+                        invisible="state != 'duplicate'"
+                    />
+                    <button
+                        name="action_apply_as_correction"
+                        type="object"
+                        string="Apply as correction"
+                        invisible="state != 'duplicate'"
+                    />
+                    <button
+                        name="action_discard"
+                        type="object"
+                        string="Discard"
+                        invisible="state in ('done', 'cancelled')"
+                        confirm="Discard this document?"
+                    />
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="draft,pending,done"
+                    />
+                </header>
+                <sheet>
+                    <!-- The order of each document type goes first. -->
+                    <div class="oe_button_box" name="button_box">
+                        <button
+                            name="action_view_incidents"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-exclamation-triangle"
+                        >
+                            <field
+                                name="open_incident_count"
+                                widget="statinfo"
+                                string="Incidents"
+                            />
+                        </button>
+                        <button
+                            name="action_view_attachments"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-paperclip"
+                            invisible="not attachment_count"
+                        >
+                            <field
+                                name="attachment_count"
+                                widget="statinfo"
+                                string="Files"
+                            />
+                        </button>
+                        <button
+                            name="action_view_messages"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-comments"
+                            invisible="not message_count"
+                        >
+                            <field
+                                name="message_count"
+                                widget="statinfo"
+                                string="Messages"
+                            />
+                        </button>
+                        <button
+                            name="action_view_batch"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-commenting-o"
+                            string="Conversation"
+                        />
+                        <button
+                            name="action_view_changes"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-history"
+                            invisible="not change_count"
+                        >
+                            <field
+                                name="change_count"
+                                widget="statinfo"
+                                string="Changes"
+                            />
+                        </button>
+                        <button
+                            name="action_view_duplicates"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-clone"
+                            invisible="not duplicate_count"
+                        >
+                            <field
+                                name="duplicate_count"
+                                widget="statinfo"
+                                string="Received again"
+                            />
+                        </button>
+                    </div>
+                    <field name="is_new" invisible="1" />
+                    <widget name="ai_message_mark_seen" />
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+                    <div
+                        class="alert alert-warning d-flex align-items-start gap-3"
+                        role="alert"
+                        invisible="not open_incident_count"
+                    >
+                        <div class="flex-grow-1">
+                            <strong>
+                                <field name="open_incident_count" class="oe_inline" />
+                                incident(s) to solve before confirming the order:
+                            </strong>
+                            <field name="open_incident_summary" />
+                            <div class="small mt-1">
+                                Solve each one from its form, or correct the document
+                                below and press <strong>Apply again</strong>.
+                            </div>
+                        </div>
+                        <button
+                            name="action_view_incidents"
+                            type="object"
+                            class="btn btn-warning text-nowrap"
+                            string="Solve the incidents"
+                        />
+                    </div>
+                    <div
+                        class="alert alert-success"
+                        role="status"
+                        invisible="state != 'done' or open_incident_count"
+                    >
+                        The order is created in draft. Open it with the button above
+                        to review it and confirm it.
+                    </div>
+                    <div
+                        class="alert alert-info"
+                        role="alert"
+                        invisible="state != 'duplicate'"
+                    >
+                        <strong>Possible duplicate of <field
+                            name="duplicate_of_id"
+                        />.</strong>
+                        <field name="duplicate_evidence" />
+                    </div>
+                    <div
+                        class="alert alert-info"
+                        role="status"
+                        invisible="not ai_warnings"
+                    >
+                        <strong>Notes of the AI:</strong>
+                        <field name="ai_warnings" />
+                    </div>
+                    <group>
+                        <group string="Vendor / Customer" name="partner">
+                            <field
+                                name="partner_id"
+                                readonly="state in ('done', 'cancelled')"
+                            />
+                            <field name="partner_name" string="Name in the document" />
+                            <field name="partner_vat" />
+                        </group>
+                        <group string="Document" name="document">
+                            <field
+                                name="document_type"
+                                readonly="state == 'cancelled'"
+                                required="1"
+                            />
+                            <field
+                                name="quote_number"
+                                readonly="state in ('done', 'cancelled')"
+                            />
+                            <field
+                                name="quote_date"
+                                readonly="state in ('done', 'cancelled')"
+                            />
+                            <label
+                                for="amount_total_doc"
+                                invisible="not amount_total_doc"
+                            />
+                            <div
+                                class="d-flex align-items-baseline gap-1"
+                                invisible="not amount_total_doc"
+                            >
+                                <field name="amount_total_doc" class="oe_inline" />
+                                <field name="currency_code" class="oe_inline" />
+                            </div>
+                            <field name="origin_display" string="Received by" />
+                            <field name="sender_id" />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                            />
+                            <field name="company_id" invisible="1" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Lines" name="lines">
+                            <field name="line_ids" readonly="state == 'cancelled'">
+                                <list
+                                    editable="bottom"
+                                    create="false"
+                                    delete="false"
+                                    decoration-warning="state == 'pending'"
+                                    decoration-muted="state == 'removed'"
+                                >
+                                    <field name="sequence" widget="handle" />
+                                    <field name="product_code" />
+                                    <field name="own_code" optional="hide" />
+                                    <field name="barcode" optional="hide" />
+                                    <field name="description" />
+                                    <field name="quantity" />
+                                    <field name="uom_text" />
+                                    <field name="uom_id" optional="hide" />
+                                    <field name="price_unit" />
+                                    <field name="discount_percent" optional="show" />
+                                    <field name="is_service" optional="hide" />
+                                    <field name="tax_percent" optional="hide" />
+                                    <field name="delivery_date" optional="hide" />
+                                    <field
+                                        name="confidence"
+                                        widget="percentage"
+                                        optional="hide"
+                                    />
+                                    <field name="product_id" />
+                                    <field name="product_match" optional="show" />
+                                    <field
+                                        name="state"
+                                        widget="badge"
+                                        decoration-success="state == 'applied'"
+                                        decoration-warning="state == 'pending'"
+                                        decoration-muted="state == 'removed'"
+                                    />
+                                    <field name="validation_errors" optional="hide" />
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Delivery and payment" name="delivery">
+                            <group>
+                                <group string="Conditions">
+                                    <field
+                                        name="delivery_date"
+                                        readonly="state == 'cancelled'"
+                                    />
+                                    <field
+                                        name="delivery_address"
+                                        readonly="state == 'cancelled'"
+                                    />
+                                    <field name="payment_terms_text" />
+                                    <field
+                                        name="payment_term_id"
+                                        readonly="state == 'cancelled'"
+                                    />
+                                </group>
+                                <group string="Quoted amounts">
+                                    <field name="amount_untaxed_doc" />
+                                    <field name="amount_tax_doc" />
+                                    <field name="amount_total_doc" />
+                                    <field name="shipping_amount_doc" />
+                                    <field name="global_discount_doc" />
+                                    <field name="prices_include_tax" />
+                                </group>
+                            </group>
+                        </page>
+                        <page string="What the AI did" name="notes">
+                            <field name="processing_notes" />
+                            <group name="interpretation">
+                                <group>
+                                    <field name="relation" />
+                                    <field
+                                        name="target_quote_id"
+                                        invisible="not target_quote_id"
+                                    />
+                                    <field name="relation_reason" />
+                                    <field name="confidence" widget="percentage" />
+                                </group>
+                                <group>
+                                    <field
+                                        name="partner_match_method"
+                                        invisible="not partner_id"
+                                    />
+                                    <field
+                                        name="partner_confidence"
+                                        widget="percentage"
+                                    />
+                                    <field name="clarifications" />
+                                </group>
+                            </group>
+                        </page>
+                        <page
+                            string="Technical"
+                            name="technical"
+                            groups="base.group_no_one"
+                        >
+                            <group>
+                                <field name="conversation_id" />
+                                <field name="processing_ref" />
+                            </group>
+                            <field name="extraction_display" />
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter />
+            </form>
+        </field>
+    </record>
+
+    <record id="ai_message_import_document_view_search" model="ir.ui.view">
+        <field name="name">ai.message.import.document.search</field>
+        <field name="model">ai.message.import.document</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="sender_id" />
+                <field name="partner_id" />
+                <field name="partner_name" />
+                <field name="sender_address" string="Phone or email" />
+                <field name="quote_number" />
+                <filter name="new" string="New" domain="[('is_new', '=', True)]" />
+                <filter
+                    name="to_review"
+                    string="To review"
+                    domain="[('state', '!=', 'cancelled'), '|', ('state', 'in', ('pending', 'duplicate')), ('incident_ids.state', '=', 'open')]"
+                />
+                <filter
+                    name="done"
+                    string="Order created"
+                    domain="[('state', '=', 'done')]"
+                />
+                <filter
+                    name="with_incidents"
+                    string="With open incidents"
+                    domain="[('incident_ids.state', '=', 'open')]"
+                />
+                <filter name="received" string="Received" date="create_date" />
+                <group expand="0" string="Group By">
+                    <filter
+                        name="group_connection"
+                        string="Receiving channel"
+                        context="{'group_by': 'channel_id'}"
+                    />
+                    <filter
+                        name="group_address"
+                        string="Phone or email"
+                        context="{'group_by': 'authorized_address_id'}"
+                    />
+                    <filter
+                        name="group_sender"
+                        string="Sender"
+                        context="{'group_by': 'sender_id'}"
+                    />
+                    <filter
+                        name="group_partner"
+                        string="Vendor / Customer"
+                        context="{'group_by': 'partner_id'}"
+                    />
+                    <filter
+                        name="group_document_type"
+                        string="Document type"
+                        context="{'group_by': 'document_type'}"
+                    />
+                    <filter
+                        name="group_state"
+                        string="Status"
+                        context="{'group_by': 'state'}"
+                    />
+                </group>
+                <searchpanel>
+                    <field
+                        name="channel_id"
+                        string="Receiving channel"
+                        enable_counters="1"
+                    />
+                    <field
+                        name="authorized_address_id"
+                        string="Sent from"
+                        enable_counters="1"
+                    />
+                </searchpanel>
+            </search>
+        </field>
+    </record>
+
+    <record id="ai_message_import_document_view_graph" model="ir.ui.view">
+        <field name="name">ai.message.import.document.graph</field>
+        <field name="model">ai.message.import.document</field>
+        <field name="arch" type="xml">
+            <graph string="Documents" type="bar" stacked="1">
+                <field name="create_date" interval="week" />
+                <field name="state" />
+            </graph>
+        </field>
+    </record>
+
+    <record id="ai_message_import_document_view_pivot" model="ir.ui.view">
+        <field name="name">ai.message.import.document.pivot</field>
+        <field name="model">ai.message.import.document</field>
+        <field name="arch" type="xml">
+            <pivot string="Documents">
+                <field name="sender_id" type="row" />
+                <field name="state" type="col" />
+            </pivot>
+        </field>
+    </record>
+
+    <record id="action_ai_message_import_document" model="ir.actions.act_window">
+        <field name="name">Interpreted documents</field>
+        <field name="res_model">ai.message.import.document</field>
+        <field name="view_mode">kanban,list,form,graph,pivot</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">No document interpreted yet</p>
+            <p>
+                The documents found by the AI in the conversations of the senders
+                appear here, with the order created from each one.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_ai_message_import_document_review" model="ir.actions.act_window">
+        <field name="name">Documents to review</field>
+        <field name="res_model">ai.message.import.document</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="context">{'search_default_to_review': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No document to review</p>
+            <p>
+                The documents with open incidents, pending or possible duplicates
+                appear here.
+            </p>
+        </field>
+    </record>
+
+    <record id="action_ai_message_import_document_new" model="ir.actions.act_window">
+        <field name="name">New documents</field>
+        <field name="res_model">ai.message.import.document</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="context">{'search_default_new': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">You have seen every document</p>
+            <p>
+                The documents interpreted by the AI that you have not opened yet
+                appear here, as the unread emails of an inbox.
+            </p>
+        </field>
+    </record>
+</odoo>
