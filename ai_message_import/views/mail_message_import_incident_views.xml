@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Binhex
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="mail_message_import_incident_view_list" model="ir.ui.view">
+        <field name="name">mail.message.import.incident.list.ai</field>
+        <field name="model">mail.message.import.incident</field>
+        <field
+            name="inherit_id"
+            ref="mail_message_import.mail_message_import_incident_view_list"
+        />
+        <field name="arch" type="xml">
+            <field name="conversation_id" position="after">
+                <field name="document_id" optional="show" />
+            </field>
+        </field>
+    </record>
+
+    <record id="mail_message_import_incident_view_search" model="ir.ui.view">
+        <field name="name">mail.message.import.incident.search.ai</field>
+        <field name="model">mail.message.import.incident</field>
+        <field
+            name="inherit_id"
+            ref="mail_message_import.mail_message_import_incident_view_search"
+        />
+        <field name="arch" type="xml">
+            <field name="conversation_id" position="after">
+                <field name="document_id" />
+            </field>
+        </field>
+    </record>
+
+    <record id="mail_message_import_incident_view_form" model="ir.ui.view">
+        <field name="name">mail.message.import.incident.form.ai</field>
+        <field name="model">mail.message.import.incident</field>
+        <field
+            name="inherit_id"
+            ref="mail_message_import.mail_message_import_incident_view_form"
+        />
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button
+                    name="action_open_document"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-file-text-o"
+                    string="Document"
+                    invisible="not document_id"
+                />
+            </div>
+            <xpath expr="//div[hasclass('oe_title')]" position="after">
+                <field name="can_fix" invisible="1" />
+                <field name="company_id" invisible="1" />
+                <field name="line_uom_category_id" invisible="1" />
+                <div class="card mb-3" name="solution" invisible="state != 'open'">
+                    <div class="card-body">
+                        <h5 class="card-title">How to solve it</h5>
+                        <p invisible="not can_fix or incident_type != 'partner'">
+                            Choose the right vendor or customer and press
+                            <strong>Apply and learn</strong>: the document is applied
+                            again, and the next documents that write it the same way
+                            will use it on their own.
+                        </p>
+                        <p invisible="not can_fix or incident_type != 'product'">
+                            Choose the right product and press
+                            <strong>Apply and learn</strong>: the document is applied
+                            again, and the next documents that write it the same way
+                            will use it on their own.
+                        </p>
+                        <p invisible="not can_fix or incident_type != 'uom'">
+                            Choose the unit of the quantity and press
+                            <strong>Apply and learn</strong>: the document is applied
+                            again, and the next documents that write it the same way
+                            will use it on their own.
+                        </p>
+                        <group name="fix" invisible="not can_fix">
+                            <group>
+                                <field
+                                    name="fix_partner_id"
+                                    invisible="incident_type != 'partner'"
+                                    options="{'no_create': True}"
+                                    placeholder="Search the vendor or customer..."
+                                />
+                                <field
+                                    name="fix_product_id"
+                                    invisible="incident_type != 'product'"
+                                    options="{'no_create': True}"
+                                    placeholder="Search the product..."
+                                />
+                                <field
+                                    name="line_product_id"
+                                    invisible="incident_type != 'uom'"
+                                />
+                                <field
+                                    name="fix_uom_id"
+                                    invisible="incident_type != 'uom'"
+                                    options="{'no_create': True}"
+                                    placeholder="Search the unit..."
+                                />
+                            </group>
+                        </group>
+                        <button
+                            name="action_apply_fix"
+                            type="object"
+                            string="Apply and learn"
+                            class="btn-primary"
+                            invisible="not can_fix"
+                            help="Use the chosen record, learn it for the next documents and solve with it the open incidents written the same way."
+                        />
+                        <p class="mb-0" invisible="can_fix or category != 'technical'">
+                            It is a technical error and the messages are kept. Once
+                            the cause is corrected (for instance, the AI connection in
+                            the settings), press <strong>Retry</strong>.
+                        </p>
+                        <p class="mb-0" invisible="can_fix or category == 'technical'">
+                            Correct the document (button <strong>Document</strong>
+                            above) or its order. Then press <strong
+                            >Retry</strong> to apply the document again, or <strong
+                            >Mark as resolved</strong> if you fixed the order by hand.
+                            If it does not matter, press <strong>Dismiss</strong>.
+                        </p>
+                    </div>
+                </div>
+            </xpath>
+            <field name="message_id" position="after">
+                <field name="document_id" invisible="not document_id" />
+                <field name="document_line_id" invisible="not document_line_id" />
+            </field>
+            <page name="description" position="after">
+                <page
+                    string="Values of the document"
+                    name="values"
+                    invisible="not original_values"
+                >
+                    <field name="original_values" readonly="1" />
+                </page>
+            </page>
+        </field>
+    </record>
+</odoo>

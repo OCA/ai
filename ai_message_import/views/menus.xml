@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Binhex
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <menuitem
+        id="menu_ai_message_import_document_review"
+        name="Documents to review"
+        parent="mail_message_import.menu_mail_message_import_to_review"
+        action="action_ai_message_import_document_review"
+        sequence="20"
+    />
+    <menuitem
+        id="menu_ai_message_import_document_new"
+        name="New documents"
+        parent="mail_message_import.menu_mail_message_import_to_review"
+        action="action_ai_message_import_document_new"
+        sequence="25"
+    />
+    <menuitem
+        id="menu_ai_message_import_document"
+        name="Interpreted documents"
+        parent="mail_message_import.menu_mail_message_import_received"
+        action="action_ai_message_import_document"
+        sequence="5"
+    />
+    <menuitem
+        id="menu_ai_message_import_change"
+        name="Change history"
+        parent="mail_message_import.menu_mail_message_import_received"
+        action="action_ai_message_import_change"
+        groups="base.group_no_one"
+        sequence="60"
+    />
+    <menuitem
+        id="menu_ai_message_import_prompt"
+        name="AI prompts"
+        parent="mail_message_import.menu_mail_message_import_config"
+        action="action_ai_message_import_prompt"
+        groups="base.group_system"
+        sequence="40"
+    />
+    <menuitem
+        id="menu_ai_message_import_learned"
+        name="What the AI learned"
+        parent="mail_message_import.menu_mail_message_import_config"
+        sequence="60"
+    />
+    <menuitem
+        id="menu_ai_message_import_product_mapping"
+        name="Learned products"
+        parent="menu_ai_message_import_learned"
+        action="action_ai_message_import_product_mapping"
+        sequence="10"
+    />
+    <menuitem
+        id="menu_ai_message_import_partner_mapping"
+        name="Learned contacts"
+        parent="menu_ai_message_import_learned"
+        action="action_ai_message_import_partner_mapping"
+        sequence="20"
+    />
+    <menuitem
+        id="menu_ai_message_import_uom_mapping"
+        name="Learned units"
+        parent="menu_ai_message_import_learned"
+        action="action_ai_message_import_uom_mapping"
+        sequence="30"
+    />
+</odoo>

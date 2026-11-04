@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Binhex
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="ai_message_import_partner_mapping_view_list" model="ir.ui.view">
+        <field name="name">ai.message.import.partner.mapping.list</field>
+        <field name="model">ai.message.import.partner.mapping</field>
+        <field name="arch" type="xml">
+            <tree editable="bottom">
+                <field name="sender_id" options="{'no_create': True}" />
+                <field name="company_id" column_invisible="1" />
+                <field name="partner_text" placeholder="e.g. fruveicod" />
+                <field name="partner_id" options="{'no_create': True}" />
+                <field name="usage_count" optional="show" />
+                <field name="last_used" optional="hide" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="ai_message_import_partner_mapping_view_search" model="ir.ui.view">
+        <field name="name">ai.message.import.partner.mapping.search</field>
+        <field name="model">ai.message.import.partner.mapping</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="partner_text" />
+                <field name="partner_id" />
+                <field name="sender_id" />
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ai_message_import_partner_mapping" model="ir.actions.act_window">
+        <field name="name">Learned contacts</field>
+        <field name="res_model">ai.message.import.partner.mapping</field>
+        <field name="view_mode">tree</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Teach a contact to the AI</p>
+            <p>
+                When the vendor or the customer of a document is selected by hand, the
+                name it was written with is kept for the next documents of the sender.
+                You can also add one: the name the documents use (an alias, a short
+                name...) and its contact.
+            </p>
+        </field>
+    </record>
+</odoo>

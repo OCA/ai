@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Binhex
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="mail_message_import_config_view_form" model="ir.ui.view">
+        <field name="name">mail.message.import.config.form.ai</field>
+        <field name="model">mail.message.import.config</field>
+        <field
+            name="inherit_id"
+            ref="mail_message_import.mail_message_import_config_view_form"
+        />
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_title')]" position="before">
+                <div class="alert alert-warning" role="alert" invisible="ai_configured">
+                    No AI connection is set: the conversations cannot be processed.
+                    Choose one below; an administrator creates them in
+                    Settings > Technical > AI > AI Connection.
+                </div>
+                <div
+                    class="alert alert-warning"
+                    role="alert"
+                    invisible="not missing_prompts"
+                >
+                    These AI prompts are not written yet:
+                    <field name="missing_prompts" class="oe_inline fw-bold" />.
+                    Without them the conversations cannot be processed.
+                    <button
+                        name="action_open_prompts"
+                        type="object"
+                        string="Write the prompts"
+                        class="btn-link p-0"
+                        groups="base.group_system"
+                    />
+                    <span groups="!base.group_system">
+                        An administrator must write them.
+                    </span>
+                </div>
+            </xpath>
+            <group name="main" position="inside">
+                <group string="Artificial intelligence" name="ai">
+                    <field name="ai_connection_id" options="{'no_create': True}" />
+                    <field name="ai_configured" invisible="1" />
+                    <field name="history_days" />
+                    <field name="max_attachment_size_mb" />
+                    <field name="max_batch_size_mb" />
+                </group>
+                <group string="Products" name="products">
+                    <field name="company_id" invisible="1" />
+                    <field name="freight_product_id" />
+                    <field name="ai_product_choice" />
+                    <field
+                        name="ai_product_min_confidence"
+                        invisible="not ai_product_choice"
+                    />
+                    <field name="total_tolerance" />
+                </group>
+            </group>
+        </field>
+    </record>
+</odoo>
