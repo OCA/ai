@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026-TODAY Akretion - Raphael Valyi <raphael.valyi@akretion.com>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <!-- Tree view -->
+    <record id="hermes_gateway_tree_view" model="ir.ui.view">
+        <field name="model">hermes.gateway</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="ai_user_id" />
+                <field name="state" />
+                <field name="last_poll" />
+                <field name="active" widget="boolean_toggle" />
+            </list>
+        </field>
+    </record>
+
+    <!-- Form view -->
+    <record id="hermes_gateway_form_view" model="ir.ui.view">
+        <field name="model">hermes.gateway</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button
+                        name="action_regenerate_token"
+                        type="object"
+                        string="Regenerate Token"
+                        confirm="This will invalidate the current token. Are you sure?"
+                        class="btn-secondary"
+                    />
+                    <button
+                        name="action_test_connection"
+                        type="object"
+                        string="Test Connection"
+                        class="btn-primary"
+                    />
+                    <field name="state" widget="statusbar" />
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="e.g. Main Hermes Gateway" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Configuration">
+                            <field name="active" widget="boolean_toggle" />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                            />
+                            <field name="ai_user_id" options="{'no_create': True}" />
+                            <field name="odoo_url" />
+                            <field name="hermes_url" />
+                        </group>
+                        <group string="Security">
+                            <field name="webhook_token" password="True" />
+                        </group>
+                    </group>
+                    <group string="Channels">
+                        <field
+                            name="channel_ids"
+                            widget="many2many_tags"
+                            options="{'no_create': True}"
+                        />
+                        <p
+                            class="text-muted"
+                        >Leave empty to monitor all channels where the AI user is a member.</p>
+                    </group>
+                    <group string="Statistics">
+                        <field name="last_poll" />
+                        <field name="message_count" />
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids" widget="mail_thread" />
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search view -->
+    <record id="hermes_gateway_search_view" model="ir.ui.view">
+        <field name="model">hermes.gateway</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="ai_user_id" />
+                <filter
+                    name="active"
+                    string="Active"
+                    domain="[('active', '=', True)]"
+                />
+                <filter
+                    name="inactive"
+                    string="Inactive"
+                    domain="[('active', '=', False)]"
+                />
+            </search>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="hermes_gateway_action" model="ir.actions.act_window">
+        <field name="name">Hermes Gateways</field>
+        <field name="res_model">hermes.gateway</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>
