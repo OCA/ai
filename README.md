@@ -22,6 +22,7 @@ Available addons
 ----------------
 addon | version | maintainers | summary
 --- | --- | --- | ---
+[ai_oca_bridge](ai_oca_bridge/) | 19.0.1.0.0 |  | Makes a basic configuration to be used as bridge with external AI systems
 [ai_tool](ai_tool/) | 19.0.1.0.0 |  | We want to generate some specific AI Tools that might be used in other places, like MCP or native.
 
 [//]: # (end addons)
