@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -81,11 +81,6 @@ msgid "AI Bridge Inactive"
 msgstr ""
 
 #. module: ai_oca_bridge
-#: model:ir.model,name:ai_oca_bridge.model_ai_bridge_thread
-msgid "AI Bridge Mixin"
-msgstr ""
-
-#. module: ai_oca_bridge
 #: model:ir.actions.act_window,name:ai_oca_bridge.ai_bridge_execution_act_window
 msgid "AI Execution"
 msgstr ""
@@ -139,14 +134,14 @@ msgstr ""
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_discuss_channel__ai_bridge_info
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_document_page__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_ir_actions_server__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_ir_cron__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_blacklist__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread_blacklist__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread_cc__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread_main_attachment__ai_bridge_info
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread_phone__ai_bridge_info
-#: model:ir.model.fields,field_description:ai_oca_bridge.field_phone_blacklist__ai_bridge_info
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_tracking_duration_mixin__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_res_partner__ai_bridge_info
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_res_users__ai_bridge_info
 msgid "Ai Bridge Info"
@@ -246,6 +241,7 @@ msgstr ""
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__display_name
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__display_name
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -351,6 +347,7 @@ msgstr ""
 #. module: ai_oca_bridge
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge__id
 #: model:ir.model.fields,field_description:ai_oca_bridge.field_ai_bridge_execution__id
+#: model:ir.model.fields,field_description:ai_oca_bridge.field_mail_thread__id
 msgid "ID"
 msgstr ""
 
