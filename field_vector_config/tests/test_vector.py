@@ -1,6 +1,7 @@
 # Copyright 2026 Dixmit
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
+import math
 from unittest import mock
 
 from odoo_test_helper import FakeModelLoader
@@ -9,6 +10,11 @@ from odoo.exceptions import UserError
 from odoo.tests import TransactionCase
 
 from odoo.addons.field_vector.fields import VectorValue
+
+
+def vector(degrees, dimensions=20):
+    rad = math.radians(degrees)
+    return [math.cos(rad), math.sin(rad)] + [0.0] * (dimensions - 2)
 
 
 class TestVector(TransactionCase):
@@ -145,27 +151,27 @@ class TestVector(TransactionCase):
         record_01 = self.vector_model.create(
             {
                 "name": "Test",
-                "description_vector": VectorValue([0.2] * 20),
+                "description_vector": VectorValue(vector(0, 20)),
                 "partner_id": self.partner_01.id,
             }
         )
         record_02 = self.vector_model.create(
             {
                 "name": "Test",
-                "description_vector": VectorValue([0.5] * 20),
+                "description_vector": VectorValue(vector(40, 20)),
                 "partner_id": self.partner_02.id,
             }
         )
         record_03 = self.vector_model.create(
             {
                 "name": "Test",
-                "description_vector": VectorValue([0.6] * 20),
+                "description_vector": VectorValue(vector(70, 20)),
                 "partner_id": self.partner_01.id,
             }
         )
         with mock.patch("openai.OpenAI") as mock_openai:
             mock_embedding = mock.MagicMock()
-            mock_embedding.embedding = [0.45] * 20
+            mock_embedding.embedding = vector(45, 20)
 
             mock_response = mock.MagicMock()
             mock_response.data = [mock_embedding]
@@ -180,7 +186,7 @@ class TestVector(TransactionCase):
         self.assertEqual(results[2].id, record_01.id)
         with mock.patch("openai.OpenAI") as mock_openai:
             mock_embedding = mock.MagicMock()
-            mock_embedding.embedding = [0.45] * 20
+            mock_embedding.embedding = vector(45, 20)
 
             mock_response = mock.MagicMock()
             mock_response.data = [mock_embedding]
@@ -216,24 +222,24 @@ class TestVector(TransactionCase):
             [
                 {
                     "name": "Test",
-                    "description_vector": VectorValue([0.2] * 20),
+                    "description_vector": vector(0, 20),
                     "partner_id": self.partner_01.id,
                 },
                 {
                     "name": "Test",
-                    "description_vector": VectorValue([0.5] * 20),
+                    "description_vector": vector(30, 20),
                     "partner_id": self.partner_02.id,
                 },
                 {
                     "name": "Test",
-                    "description_vector": VectorValue([0.6] * 20),
+                    "description_vector": vector(60, 20),
                     "partner_id": self.partner_01.id,
                 },
             ]
         )
         with mock.patch("openai.OpenAI") as mock_openai:
             mock_embedding = mock.MagicMock()
-            mock_embedding.embedding = [0.56] * 20
+            mock_embedding.embedding = vector(50, 20)
 
             mock_response = mock.MagicMock()
             mock_response.data = [mock_embedding]
@@ -247,7 +253,7 @@ class TestVector(TransactionCase):
         self.assertEqual(results[1].id, self.partner_02.id)
         with mock.patch("openai.OpenAI") as mock_openai:
             mock_embedding = mock.MagicMock()
-            mock_embedding.embedding = [0.53] * 20
+            mock_embedding.embedding = vector(25, 20)
 
             mock_response = mock.MagicMock()
             mock_response.data = [mock_embedding]
