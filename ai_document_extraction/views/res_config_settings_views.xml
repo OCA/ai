@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 VSL
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="res_config_settings_view_form_ai_extraction" model="ir.ui.view">
+        <field name="name">res.config.settings.form.ai.extraction</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='account']" position="inside">
+                <block
+                    title="AI Document Extraction"
+                    name="ai_document_extraction_setting_container"
+                >
+                    <setting
+                        id="ai_document_extraction_connection"
+                        string="AI Connection"
+                        company_dependent="1"
+                        help="Default AI connection used to extract invoice data when no connection is set on the journal."
+                    >
+                        <field name="ai_connection_id" />
+                    </setting>
+                    <setting
+                        id="ai_document_extraction_threshold"
+                        string="Partner Match Threshold"
+                        company_dependent="1"
+                        help="Minimum fuzzy match score (0-100) to match an extracted partner name."
+                    >
+                        <field name="ai_fuzzy_match_threshold" />
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>
