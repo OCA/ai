@@ -26,8 +26,8 @@ class TestAiAgentSalesman(TransactionCase):
         self.assertIn("dedicated Odoo Sales AI Agent", rendered_prompt)
 
     def test_salesman_agent_tools_definition_export(self):
-        definitions = self.sales_agent.get_tools_definitions()
-        names = [d["name"] for d in definitions]
+        definitions = self.sales_agent.get_openai_tools_definitions()
+        names = [d["function"]["name"] for d in definitions]
         self.assertIn("update_lead_stage", names)
         self.assertIn("get_date", names)
 
