@@ -17,6 +17,16 @@ class TestAiThread(TransactionCase):
             }
         )
 
+    def setUp(self):
+        super().setUp()
+        decide_patcher = patch.object(
+            type(self.env["ai.llm.client"]),
+            "decide_choice",
+            return_value={"choice": "done", "confidence": 1.0},
+        )
+        decide_patcher.start()
+        self.addCleanup(decide_patcher.stop)
+
     def test_default_name(self):
         self.assertEqual(
             self.thread.name,
