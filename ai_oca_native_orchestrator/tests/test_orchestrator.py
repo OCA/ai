@@ -1,7 +1,9 @@
 # Copyright 2026 Pierre Verkest
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+import json
 from unittest.mock import patch
 
+from odoo import Command
 from odoo.tests.common import TransactionCase
 
 
@@ -524,4 +526,328 @@ class TestAiOrchestrator(TransactionCase):
         persona = msg._get_orchestrator_persona()
         self.assertEqual(
             persona, self.env.ref("ai_oca_native_orchestrator.persona_default")
+        )
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.AiLlmClient.chat")
+    def test_orchestrator_fast_path_direct_response(self, mock_chat):
+        mock_chat.return_value = {
+            "content": "Bonjour ! En quoi puis-je vous aider ?",
+            "tool_calls": [],
+        }
+
+        self.thread._add_message("Bonjour", role="user")
+        assistant_msg = self.thread._add_message(
+            "", role="assistant", status="processing"
+        )
+        assistant_msg._action_extract_intent()
+
+        self.assertEqual(assistant_msg.status, "done")
+        self.assertEqual(
+            assistant_msg.content, "Bonjour ! En quoi puis-je vous aider ?"
+        )
+        self.assertFalse(assistant_msg.payload)
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.AiLlmClient.chat")
+    def test_orchestrator_direct_tool_calling(self, mock_chat):
+        mock_chat.side_effect = [
+            {
+                "content": None,
+                "tool_calls": [
+                    {
+                        "id": "call_agent_list",
+                        "type": "function",
+                        "function": {
+                            "name": "agent_list_available_agents",
+                            "arguments": "{}",
+                        },
+                    }
+                ],
+            },
+            {
+                "content": "Il y a des agents actifs configurés dans Odoo.",
+                "tool_calls": [],
+            },
+        ]
+
+        self.thread._add_message("Quels agents sont disponibles ?", role="user")
+        assistant_msg = self.thread._add_message(
+            "", role="assistant", status="processing"
+        )
+        assistant_msg._action_extract_intent()
+
+        self.assertEqual(assistant_msg.status, "done")
+        self.assertEqual(
+            assistant_msg.content, "Il y a des agents actifs configurés dans Odoo."
+        )
+        self.assertEqual(mock_chat.call_count, 2)
+
+        task_threads = assistant_msg.task_thread_ids
+        self.assertTrue(task_threads)
+        messages = task_threads[0].task_message_ids
+        tool_messages = messages.filtered(lambda m: m.role == "tool")
+        self.assertTrue(tool_messages)
+        self.assertIn("agents", tool_messages[0].payload)
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.AiLlmClient.chat")
+    def test_orchestrator_action_plan_proposal(self, mock_chat):
+        plan_args = {
+            "summary": "Plan de requalification CRM",
+            "steps": [
+                {
+                    "step_id": 1,
+                    "objective": "Lister les leads froids",
+                    "target_type": "tool",
+                    "target_name": "agent_list_available_tools",
+                    "params": {},
+                    "depends_on": [],
+                },
+                {
+                    "step_id": 2,
+                    "objective": "Assigner les opportunités",
+                    "target_type": "agent",
+                    "target_name": "Sales Agent",
+                    "params": {},
+                    "depends_on": [1],
+                },
+            ],
+        }
+        mock_chat.return_value = {
+            "content": "J'ai préparé un plan de requalification.",
+            "tool_calls": [
+                {
+                    "id": "call_plan_1",
+                    "type": "function",
+                    "function": {
+                        "name": "agent_propose_action_plan",
+                        "arguments": json.dumps(plan_args),
+                    },
+                }
+            ],
+        }
+
+        self.thread._add_message(
+            "Requalifie les leads froids avec l'équipe de vente.", role="user"
+        )
+        assistant_msg = self.thread._add_message(
+            "", role="assistant", status="processing"
+        )
+        assistant_msg._action_extract_intent()
+
+        self.assertEqual(assistant_msg.status, "awaiting_approval")
+        self.assertTrue(assistant_msg.payload)
+        self.assertEqual(
+            assistant_msg.payload.get("summary"), "Plan de requalification CRM"
+        )
+        self.assertEqual(len(assistant_msg.payload.get("steps")), 2)
+        self.assertEqual(
+            assistant_msg.content, "J'ai préparé un plan de requalification."
+        )
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.AiLlmClient.chat")
+    def test_orchestrator_action_plan_proposal_without_content_fallback(
+        self, mock_chat
+    ):
+        plan_args = {
+            "summary": "Plan d'archivage",
+            "steps": [
+                {
+                    "step_id": 1,
+                    "objective": "Archiver les vieux leads",
+                    "target_type": "tool",
+                    "target_name": "agent_list_available_tools",
+                }
+            ],
+        }
+        mock_chat.return_value = {
+            "content": None,
+            "tool_calls": [
+                {
+                    "id": "call_plan_2",
+                    "type": "function",
+                    "function": {
+                        "name": "agent_propose_action_plan",
+                        "arguments": json.dumps(plan_args),
+                    },
+                }
+            ],
+        }
+
+        self.thread._add_message("Archive les vieux leads", role="user")
+        assistant_msg = self.thread._add_message(
+            "", role="assistant", status="processing"
+        )
+        assistant_msg._action_extract_intent()
+
+        self.assertEqual(assistant_msg.status, "awaiting_approval")
+        self.assertIn("### Action Plan: Plan d'archivage", assistant_msg.content)
+        self.assertIn("Step 1: Archiver les vieux leads", assistant_msg.content)
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.AiLlmClient.chat")
+    def test_orchestrator_action_plan_proposal_invalid_args_fallback(self, mock_chat):
+        mock_chat.side_effect = [
+            {
+                "content": None,
+                "tool_calls": [
+                    {
+                        "id": "call_plan_err",
+                        "type": "function",
+                        "function": {
+                            "name": "agent_propose_action_plan",
+                            "arguments": '{"invalid": "schema"}',
+                        },
+                    }
+                ],
+            },
+            {
+                "content": "Impossible de valider le plan proposé.",
+                "tool_calls": [],
+            },
+        ]
+
+        self.thread._add_message("Action invalide", role="user")
+        assistant_msg = self.thread._add_message(
+            "", role="assistant", status="processing"
+        )
+        assistant_msg._action_extract_intent()
+
+        self.assertEqual(assistant_msg.status, "done")
+        self.assertEqual(
+            assistant_msg.content, "Impossible de valider le plan proposé."
+        )
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.AiLlmClient.chat")
+    def test_orchestrator_tool_execution_error_handling(self, mock_chat):
+        mock_chat.side_effect = [
+            {
+                "content": None,
+                "tool_calls": [
+                    {
+                        "id": "call_bad_tool",
+                        "type": "function",
+                        "function": {
+                            "name": "non_existent_tool",
+                            "arguments": "{bad-json",
+                        },
+                    }
+                ],
+            },
+            {
+                "content": "Désolé, cet outil n'est pas disponible.",
+                "tool_calls": [],
+            },
+        ]
+
+        self.thread._add_message("Lance un outil inconnu", role="user")
+        assistant_msg = self.thread._add_message(
+            "", role="assistant", status="processing"
+        )
+        assistant_msg._action_extract_intent()
+
+        self.assertEqual(assistant_msg.status, "done")
+        self.assertEqual(
+            assistant_msg.content, "Désolé, cet outil n'est pas disponible."
+        )
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.AiLlmClient.chat")
+    def test_orchestrator_tool_execution_with_dict_args(self, mock_chat):
+        mock_chat.side_effect = [
+            {
+                "content": None,
+                "tool_calls": [
+                    {
+                        "id": "call_dict_args",
+                        "type": "function",
+                        "function": {
+                            "name": "agent_list_available_tools",
+                            "arguments": {"res_model": "res.partner"},
+                        },
+                    }
+                ],
+            },
+            {
+                "content": "Voici les outils pour res.partner.",
+                "tool_calls": [],
+            },
+        ]
+
+        self.thread._add_message("Liste les outils partner", role="user")
+        assistant_msg = self.thread._add_message(
+            "", role="assistant", status="processing"
+        )
+        assistant_msg._action_extract_intent()
+
+        self.assertEqual(assistant_msg.status, "done")
+        self.assertEqual(assistant_msg.content, "Voici les outils pour res.partner.")
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.AiLlmClient.chat")
+    def test_orchestrator_react_loop_max_iterations(self, mock_chat):
+        mock_chat.return_value = {
+            "content": None,
+            "tool_calls": [
+                {
+                    "id": "call_loop",
+                    "type": "function",
+                    "function": {
+                        "name": "agent_list_available_agents",
+                        "arguments": "{}",
+                    },
+                }
+            ],
+        }
+
+        task_thread = self.thread._add_message(
+            "Boucle", role="user"
+        )._create_orchestrator_task_thread()
+        assistant_msg = self.thread._add_message(
+            "", role="assistant", status="processing"
+        )
+        result = assistant_msg._orchestrate_assistant_response(
+            task_thread, max_iterations=2
+        )
+        self.assertEqual(result, "Maximum reasoning iterations reached.")
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.AiLlmClient.chat")
+    def test_orchestrator_response_without_tools(self, mock_chat):
+        mock_chat.return_value = "Direct answer without tools"
+
+        agent_no_tools = self.env["ai.agent"].create(
+            {
+                "name": "Agent No Tools",
+                "user_id": self.env.ref(
+                    "ai_oca_native_orchestrator.user_ai_orchestrator_agent"
+                ).id,
+                "execution_mode": "user_context",
+                "tool_ids": [Command.clear()],
+            }
+        )
+
+        thread_no_tools = self.env["ai.thread"].create(
+            {
+                "name": "No Tools Thread",
+                "res_model": "res.partner",
+                "res_id": self.partner.id,
+                "agent_id": agent_no_tools.id,
+            }
+        )
+        assistant_msg = thread_no_tools._add_message(
+            "", role="assistant", status="processing"
+        )
+        task_thread = assistant_msg._create_orchestrator_task_thread()
+        result = assistant_msg._orchestrate_assistant_response(task_thread)
+        self.assertEqual(result, "Direct answer without tools")
+
+    def test_get_orchestrator_agent_fallback_to_default(self):
+        thread = self.env["ai.thread"].create(
+            {
+                "name": "No Agent Assigned",
+                "res_model": "res.partner",
+                "res_id": self.partner.id,
+                "agent_id": False,
+            }
+        )
+        msg = thread._add_message("Test", role="user")
+        agent = msg._get_orchestrator_agent()
+        self.assertEqual(
+            agent,
+            self.env.ref("ai_oca_native_orchestrator.default_main_orchestrator_agent"),
         )

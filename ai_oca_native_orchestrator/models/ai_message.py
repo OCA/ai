@@ -1,14 +1,21 @@
 # Copyright 2026 Pierre Verkest
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+import json
 import logging
 
-from odoo import models
+from odoo import fields, models
 
 _logger = logging.getLogger(__name__)
 
 
 class AiMessage(models.Model):
     _inherit = "ai.message"
+
+    status = fields.Selection(
+        selection_add=[("awaiting_approval", "Awaiting Approval")],
+        ondelete={"awaiting_approval": "cascade"},
+    )
+    payload = fields.Json(string="Structured Payload")
 
     def _process_assistant_message(self):
         self.ensure_one()
@@ -24,7 +31,10 @@ class AiMessage(models.Model):
             self._notify_thread_bus_update(status="error")
             return
 
-        self.write({"content": ai_content, "status": "done"})
+        vals = {"content": ai_content}
+        if self.status != "awaiting_approval":
+            vals["status"] = "done"
+        self.write(vals)
         task_thread._add_message(ai_content, role="assistant")
         self._notify_thread_bus_update(status="success")
 
@@ -108,13 +118,135 @@ class AiMessage(models.Model):
         )
         return system_messages + history_payload
 
-    def _orchestrate_assistant_response(self, task_thread):
+    def _get_orchestrator_agent(self):
         self.ensure_one()
-        llm_messages = self._get_orchestrator_llm_messages()
-        return self.chat(
-            llm_messages,
-            model_type="fast",
+        if self.thread_id and self.thread_id.agent_id:
+            return self.thread_id.agent_id
+        return self.env.ref(
+            "ai_oca_native_orchestrator.default_main_orchestrator_agent",
+            raise_if_not_found=False,
         )
+
+    def _parse_tool_call_args(self, tool_call):
+        raw_args = tool_call.get("function", {}).get("arguments") or "{}"
+        if isinstance(raw_args, dict):
+            return raw_args
+        try:
+            return json.loads(raw_args)
+        except (json.JSONDecodeError, TypeError):
+            return {}
+
+    def _execute_agent_tool(self, agent, tool_name, args):
+        self.ensure_one()
+        record = self.thread_id.record
+        try:
+            return agent.execute_tool(tool_name, params=args, record=record), None
+        except Exception as err:
+            return None, {"error": str(err)}
+
+    def _handle_action_plan_proposal(
+        self, task_thread, plan_payload, args, content=None
+    ):
+        self.ensure_one()
+        self.write(
+            {
+                "payload": plan_payload,
+                "status": "awaiting_approval",
+            }
+        )
+        task_thread._add_message(
+            content=f"Proposed action plan: {args.get('summary', '')}",
+            role="assistant",
+            payload=plan_payload,
+        )
+        steps_summary = "\n".join(
+            f"- Step {s.get('step_id')}: {s.get('objective')}"
+            for s in (plan_payload.get("steps") or [])
+        )
+        return (
+            content
+            if content
+            else f"### Action Plan: {args.get('summary', '')}\n\n{steps_summary}\n\n*Awaiting approval to execute.*"
+        )
+
+    def _process_tool_call(self, agent, tool_call, task_thread, content=None):
+        tool_name = tool_call["function"]["name"]
+        call_id = tool_call["id"]
+        args = self._parse_tool_call_args(tool_call)
+
+        result, error = self._execute_agent_tool(agent, tool_name, args)
+
+        if tool_name == "agent_propose_action_plan" and not error:
+            early_text = self._handle_action_plan_proposal(
+                task_thread=task_thread,
+                plan_payload=result.get("payload"),
+                args=args,
+                content=content,
+            )
+            return None, early_text
+
+        tool_result = error or result
+        task_thread._add_message(
+            content=f"Executed tool '{tool_name}' with args {json.dumps(args)}",
+            role="assistant",
+        )
+        task_thread._add_message(
+            content=json.dumps(tool_result),
+            role="tool",
+            payload=tool_result,
+        )
+        return {
+            "role": "tool",
+            "tool_call_id": call_id,
+            "content": json.dumps(tool_result),
+        }, None
+
+    def _orchestrate_assistant_response(self, task_thread, max_iterations=5):
+        self.ensure_one()
+        agent = self._get_orchestrator_agent()
+        tools = agent.get_openai_tools_definitions() if agent else []
+        llm_messages = self._get_orchestrator_llm_messages()
+
+        if not tools:
+            return self.chat(llm_messages, model_type="fast")
+
+        current_messages = list(llm_messages)
+        content = None
+        for _iteration in range(max_iterations):
+            response = self.chat(
+                current_messages,
+                tools=tools,
+                tool_choice="required"
+            )
+            if not response:
+                return None
+
+            if isinstance(response, str):
+                return response
+
+            content = response.get("content")
+            tool_calls = response.get("tool_calls") or []
+
+            if not tool_calls:
+                return content
+
+            current_messages.append(
+                {
+                    "role": "assistant",
+                    "content": content or "",
+                    "tool_calls": tool_calls,
+                }
+            )
+
+            for tool_call in tool_calls:
+                tool_msg, early_text = self._process_tool_call(
+                    agent, tool_call, task_thread, content=content
+                )
+                if early_text:
+                    return early_text
+                current_messages.append(tool_msg)
+
+        return content or "Maximum reasoning iterations reached."
 
     def _notify_thread_bus_update(self, status="success"):
         self.ensure_one()

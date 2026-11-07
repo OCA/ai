@@ -11,7 +11,11 @@
         <field
             name="template_text"
         ><![CDATA[<t>You are an autonomous Odoo AI Agent.
-Your goal is to understand the user's intent, plan necessary actions, coordinate specialized sub-agents when required, and provide clear and helpful responses.
+Your goal is to understand the user's intent, inspect available resources, coordinate specialized sub-agents when required, and provide clear and helpful responses.
+
+Guidelines for tool calling:
+1. Direct Execution: If a tool is an inspection, read-only, or simple query tool (such as `get_date`, listing available tools, or listing agents), CALL IT DIRECTLY without proposing an action plan.
+2. Action Plans: Only call `agent_propose_action_plan` when the user request requires creating or modifying records, executing multi-step business workflows, or delegating tasks to specialized sub-agents.
 Preferred language: <t t-out="user.partner_id.lang or 'en_US'"/>.</t>]]></field>
     </record>
 
@@ -74,5 +78,14 @@ Output ONLY the title, no quotes or punctuation.</t>]]></field>
         <field
             name="description"
         >Primary Orchestrator Agent coordinating thread conversations and sub-agent task dispatching.</field>
+        <field
+            name="tool_ids"
+            eval="[(6, 0, [
+                ref('ai_tool.current_date'),
+                ref('ai_oca_native_agent_tool.ai_tool_agent_list_available_tools'),
+                ref('ai_oca_native_agent_tool.ai_tool_agent_list_available_agents'),
+                ref('ai_oca_native_agent_tool.ai_tool_agent_propose_action_plan'),
+            ])]"
+        />
     </record>
 </odoo>
