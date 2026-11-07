@@ -18,11 +18,15 @@ class AiAgent(models.Model):
         string="Allowed Tools",
     )
 
-    def get_openai_tools_definitions(self):
+    def get_openai_tools_definitions(self, tool_names=None):
         """Return formatted tool declarations for OpenAI tool calling schema."""
         self.ensure_one()
+        tools = self.tool_ids
+        if tool_names is not None:
+            allowed_names = set(tool_names)
+            tools = tools.filtered(lambda t: t.name in allowed_names)
         openai_tools = []
-        for tool in self.tool_ids:
+        for tool in tools:
             definition = tool._get_tool_definition()
             openai_tools.append(
                 {
@@ -36,6 +40,40 @@ class AiAgent(models.Model):
                 }
             )
         return openai_tools
+
+    def get_decision_tool_candidates(self, include_done: bool = True) -> list[dict]:
+        """Return candidate choices formatted for System 1 Decision Model routing."""
+        self.ensure_one()
+        candidates = [
+            {
+                "value": tool.name,
+                "description": tool.description or tool.name,
+            }
+            for tool in self.tool_ids
+        ]
+        if include_done:
+            candidates.append(
+                {
+                    "value": "done",
+                    "description": (
+                        "Task is complete or can be answered directly "
+                        "without calling another tool."
+                    ),
+                }
+            )
+        return candidates
+
+    def tool_requires_arguments(self, tool_name: str) -> bool:
+        """Return True if the named tool declares input properties or required fields."""
+        self.ensure_one()
+        tool = self.tool_ids.filtered(lambda t: t.name == tool_name)[:1]
+        if not tool:
+            return False
+        definition = tool._get_tool_definition()
+        input_schema = definition.get("inputSchema") or {}
+        return bool(
+            input_schema.get("properties") or input_schema.get("required")
+        )
 
     def execute_tool(self, tool_name, params=None, record=None):
         """Execute named tool under agent's execution_mode security context."""

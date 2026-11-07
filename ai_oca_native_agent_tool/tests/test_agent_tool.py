@@ -59,6 +59,34 @@ class TestAiAgentTool(TransactionCase):
         self.assertIn("get_date", names)
         self.assertIn("post_message", names)
 
+    def test_get_openai_tools_definitions_filtered_by_tool_names(self):
+        definitions = self.agent.get_openai_tools_definitions(
+            tool_names=["post_message"]
+        )
+        self.assertEqual(len(definitions), 1)
+        self.assertEqual(definitions[0]["function"]["name"], "post_message")
+
+    def test_get_decision_tool_candidates_with_and_without_done(self):
+        candidates_with_done = self.agent.get_decision_tool_candidates(
+            include_done=True
+        )
+        values_with_done = [c["value"] for c in candidates_with_done]
+        self.assertIn("get_date", values_with_done)
+        self.assertIn("post_message", values_with_done)
+        self.assertEqual(values_with_done[-1], "done")
+
+        candidates_no_done = self.agent.get_decision_tool_candidates(
+            include_done=False
+        )
+        values_no_done = [c["value"] for c in candidates_no_done]
+        self.assertNotIn("done", values_no_done)
+        self.assertEqual(len(values_no_done), 3)
+
+    def test_tool_requires_arguments_detects_zero_arg_and_parameterized_tools(self):
+        self.assertFalse(self.agent.tool_requires_arguments("get_date"))
+        self.assertTrue(self.agent.tool_requires_arguments("post_message"))
+        self.assertFalse(self.agent.tool_requires_arguments("unknown_tool"))
+
     def test_execute_tool_succeeds_for_allowed_tool(self):
         res = self.agent.execute_tool("get_date")
         self.assertIn("date", res)
