@@ -52,6 +52,13 @@
                         >
                             <field name="ai_llm_fast_model" class="w-100" />
                         </setting>
+                        <setting
+                            id="ai_llm_decision_model_setting"
+                            string="Decision Model (System 1)"
+                            help="Model for fast System 1 tool and agent selection via /v1/decisions (e.g., decision, gpt-6-luna)"
+                        >
+                            <field name="ai_llm_decision_model" class="w-100" />
+                        </setting>
                     </block>
                 </app>
             </xpath>

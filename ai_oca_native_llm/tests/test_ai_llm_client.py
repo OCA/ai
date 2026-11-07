@@ -3,7 +3,10 @@ from unittest.mock import patch
 from odoo.orm.model_classes import add_to_registry
 from odoo.tests.common import TransactionCase
 
-from odoo.addons.ai_oca_native_llm.tests.common import OpenAIMockResponse
+from odoo.addons.ai_oca_native_llm.tests.common import (
+    OpenAIMockDecisionResponse,
+    OpenAIMockResponse,
+)
 
 
 class TestAiLlmClient(TransactionCase):
@@ -250,3 +253,170 @@ class TestAiLlmClient(TransactionCase):
                 ],
             },
         )
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.OpenAI")
+    def test_get_client_uses_model_type_specific_base_url_when_configured(
+        self, mock_client_class
+    ):
+        self.env["ir.config_parameter"].sudo().set_param(
+            "ai_llm.decision_base_url", "http://decision-host:8001/v1"
+        )
+        self.env["fake.model"]._get_client(model_type="decision")
+        mock_client_class.assert_called_once_with(
+            base_url="http://decision-host:8001/v1", api_key="test-key"
+        )
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.OpenAI")
+    def test_decide_serializes_choice_predicate_score_and_refusal_answers(
+        self, mock_client_class
+    ):
+        mock_instance = mock_client_class.return_value
+        choice_ans = type(
+            "MockChoiceAns",
+            (),
+            {
+                "name": "q_choice",
+                "type": "choice",
+                "choice": "get_date",
+                "confidence": 0.95,
+                "probabilities": [
+                    type(
+                        "MockProb",
+                        (),
+                        {"value": "get_date", "probability": 0.95},
+                    )(),
+                    type(
+                        "MockProb",
+                        (),
+                        {"value": "done", "probability": 0.05},
+                    )(),
+                ],
+            },
+        )()
+        predicate_ans = type(
+            "MockPredAns",
+            (),
+            {
+                "name": "q_pred",
+                "type": "predicate",
+                "probability": 0.88,
+            },
+        )()
+        score_ans = type(
+            "MockScoreAns",
+            (),
+            {
+                "name": "q_score",
+                "type": "score",
+                "score": 2.5,
+                "confidence": 0.8,
+                "probabilities": [
+                    type(
+                        "MockScoreProb",
+                        (),
+                        {"label": "high", "value": 3, "probability": 0.5},
+                    )()
+                ],
+            },
+        )()
+        refusal_ans = type(
+            "MockRefusalAns",
+            (),
+            {
+                "name": "q_refusal",
+                "type": "refusal",
+            },
+        )()
+        mock_instance.decisions.create.return_value = OpenAIMockDecisionResponse(
+            answers=[choice_ans, predicate_ans, score_ans, refusal_ans]
+        )
+
+        questions = [{"name": "q_choice", "type": "choice"}]
+        res = self.env["fake.model"].decide(
+            input_data="Test input",
+            questions=questions,
+            options={"safety_identifier": "org-1"},
+        )
+
+        mock_instance.decisions.create.assert_called_once_with(
+            model="decision",
+            input="Test input",
+            questions=questions,
+            safety_identifier="org-1",
+        )
+        self.assertEqual(len(res), 4)
+        self.assertEqual(res[0]["choice"], "get_date")
+        self.assertEqual(res[0]["confidence"], 0.95)
+        self.assertEqual(len(res[0]["probabilities"]), 2)
+        self.assertEqual(res[1], {"name": "q_pred", "type": "predicate", "probability": 0.88})
+        self.assertEqual(res[2]["type"], "score")
+        self.assertEqual(res[2]["score"], 2.5)
+        self.assertEqual(res[2]["probabilities"][0]["label"], "high")
+        self.assertEqual(res[3], {"name": "q_refusal", "type": "refusal"})
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.OpenAI")
+    def test_decide_with_explicit_model_and_error_returns_none(self, mock_client_class):
+        mock_instance = mock_client_class.return_value
+        mock_instance.decisions.create.side_effect = RuntimeError("Decision failure")
+
+        res = self.env["fake.model"].decide(
+            input_data="Test",
+            questions=[{"name": "q1", "type": "predicate", "instructions": "Check"}],
+            model="custom-decision-model",
+        )
+        self.assertIsNone(res)
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.OpenAI")
+    def test_decide_choice_returns_choice_dict_or_none_on_refusal_or_error(
+        self, mock_client_class
+    ):
+        mock_instance = mock_client_class.return_value
+        choice_ans = type(
+            "MockChoiceAns",
+            (),
+            {
+                "name": "next_action",
+                "type": "choice",
+                "choice": "done",
+                "confidence": 0.99,
+                "probabilities": [],
+            },
+        )()
+        refusal_ans = type(
+            "MockRefusalAns",
+            (),
+            {
+                "name": "next_action",
+                "type": "refusal",
+            },
+        )()
+        mock_instance.decisions.create.side_effect = [
+            OpenAIMockDecisionResponse(answers=[choice_ans]),
+            OpenAIMockDecisionResponse(answers=[refusal_ans]),
+            RuntimeError("Network error"),
+        ]
+
+        choices = [
+            {"value": "get_date", "description": "Get date"},
+            {"value": "done", "description": "Finish"},
+        ]
+        ans1 = self.env["fake.model"].decide_choice(
+            input_data="Hi",
+            choices=choices,
+            instructions="Pick next action",
+        )
+        self.assertEqual(ans1["choice"], "done")
+
+        ans2 = self.env["fake.model"].decide_choice(
+            input_data="Hi",
+            choices=choices,
+            instructions="Pick next action",
+        )
+        self.assertIsNone(ans2)
+
+        ans3 = self.env["fake.model"].decide_choice(
+            input_data="Hi",
+            choices=choices,
+            instructions="Pick next action",
+        )
+        self.assertIsNone(ans3)

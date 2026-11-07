@@ -30,3 +30,9 @@ class ResConfigSettings(models.TransientModel):
         default="llama3.2",
         help="The model to use for rapid extractions (e.g., llama3.2, gpt-4o-mini).",
     )
+    ai_llm_decision_model = fields.Char(
+        string="Decision Model (System 1)",
+        config_parameter="ai_llm.decision_model",
+        default="decision",
+        help="The System 1 decision model used for fast tool/agent routing via /v1/decisions (e.g., decision, gpt-6-luna).",
+    )

@@ -19,17 +19,14 @@ class AiLlmClient(models.AbstractModel):
     _description = "AI LLM Client Wrapper"
 
     @api.model
-    def _get_client(self):
-        url = (
-            self.env["ir.config_parameter"]
-            .sudo()
-            .get_param("ai_llm.base_url", "http://localhost:11434/v1")
+    def _get_client(self, model_type: str = "fast"):
+        config_param = self.env["ir.config_parameter"].sudo()
+        url = config_param.get_param(
+            f"ai_llm.{model_type}_base_url"
+        ) or config_param.get_param(
+            "ai_llm.base_url", "http://localhost:11434/v1"
         )
-        api_key = (
-            self.env["ir.config_parameter"]
-            .sudo()
-            .get_param("ai_oca_native_llm.api_key")
-        )
+        api_key = config_param.get_param("ai_oca_native_llm.api_key")
         return OpenAI(base_url=url, api_key=api_key)
 
     @api.model
@@ -37,6 +34,7 @@ class AiLlmClient(models.AbstractModel):
         return {
             "fast": "llama3.2",
             "reasoning": "llama3",
+            "decision": "decision",
         }
 
     @api.model
@@ -73,7 +71,7 @@ class AiLlmClient(models.AbstractModel):
         :param tool_choice: optional tool choice directive (e.g. 'auto', 'none', 'required')
         :return: string response content, or structured dict with 'content' and 'tool_calls' if tools is provided, or None if request fails
         """
-        client = self._get_client()
+        client = self._get_client(model_type=model_type)
         if not model:
             model = self._get_model(model_type)
 
@@ -125,3 +123,125 @@ class AiLlmClient(models.AbstractModel):
         except Exception as err:
             _logger.exception("LLM API completion failed: %s", err)
             return None
+
+    @api.model
+    def _serialize_decision_answer(self, answer) -> dict:
+        answer_type = getattr(answer, "type", None)
+        name = getattr(answer, "name", None)
+        if answer_type == "choice":
+            return {
+                "name": name,
+                "type": "choice",
+                "choice": getattr(answer, "choice", None),
+                "confidence": getattr(answer, "confidence", 0.0),
+                "probabilities": [
+                    {
+                        "value": getattr(prob, "value", None),
+                        "probability": getattr(prob, "probability", 0.0),
+                    }
+                    for prob in (getattr(answer, "probabilities", None) or [])
+                ],
+            }
+        if answer_type == "predicate":
+            return {
+                "name": name,
+                "type": "predicate",
+                "probability": getattr(answer, "probability", 0.0),
+            }
+        if answer_type == "score":
+            return {
+                "name": name,
+                "type": "score",
+                "score": getattr(answer, "score", 0.0),
+                "confidence": getattr(answer, "confidence", 0.0),
+                "probabilities": [
+                    {
+                        "label": getattr(prob, "label", ""),
+                        "value": getattr(prob, "value", 0),
+                        "probability": getattr(prob, "probability", 0.0),
+                    }
+                    for prob in (getattr(answer, "probabilities", None) or [])
+                ],
+            }
+        return {
+            "name": name,
+            "type": "refusal",
+        }
+
+    @api.model
+    def decide(
+        self,
+        input_data,
+        questions: list[dict],
+        model: str | None = None,
+        options: dict | None = None,
+    ) -> list[dict] | None:
+        """Evaluate structured System 1 questions via the OpenAI Decisions API.
+
+        :param input_data: string or list of message/tool items to evaluate
+        :param questions: list of question dicts ('choice', 'predicate', 'score')
+        :param model: optional explicit decision model name
+        :param options: optional extra keyword arguments for client.decisions.create
+        :return: list of serialized answer dicts in question order, or None on error
+        """
+        client = self._get_client(model_type="decision")
+        if not model:
+            model = self._get_model("decision")
+        extra_options = dict(options) if options else {}
+
+        try:
+            _logger.info("Decision input: %s | questions: %s", input_data, questions)
+            response = client.decisions.create(
+                model=model,
+                input=input_data,
+                questions=questions,
+                **extra_options,
+            )
+            answers = [
+                self._serialize_decision_answer(ans)
+                for ans in (getattr(response, "answers", None) or [])
+            ]
+            _logger.info("Decision answers: %s", answers)
+            return answers
+        except Exception as err:
+            _logger.exception("LLM Decisions API call failed: %s", err)
+            return None
+
+    @api.model
+    def decide_choice(
+        self,
+        input_data,
+        choices: list[dict],
+        instructions: str,
+        name: str = "next_action",
+        model: str | None = None,
+        options: dict | None = None,
+    ) -> dict | None:
+        """Evaluate a single categorical choice question with the System 1 Decision Model.
+
+        :param input_data: string or list of conversation items to evaluate
+        :param choices: list of candidate dicts [{'value': '...', 'description': '...'}, ...]
+        :param instructions: instructions guiding the choice selection
+        :param name: question identifier (default 'next_action')
+        :param model: optional explicit decision model name
+        :param options: optional extra keyword arguments for client.decisions.create
+        :return: serialized choice answer dict if a choice was selected, or None on refusal/error
+        """
+        question = {
+            "name": name,
+            "type": "choice",
+            "instructions": instructions,
+            "choices": choices,
+        }
+        answers = self.decide(
+            input_data=input_data,
+            questions=[question],
+            model=model,
+            options=options,
+        )
+        if not answers:
+            return None
+        first_answer = answers[0]
+        if first_answer.get("type") != "choice":
+            return None
+        return first_answer
