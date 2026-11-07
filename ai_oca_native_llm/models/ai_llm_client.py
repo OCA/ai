@@ -58,16 +58,20 @@ class AiLlmClient(models.AbstractModel):
         model: str = None,
         options=None,
         response_model=None,
+        tools=None,
+        tool_choice=None,
     ):
-        """
-        Sends a chat request via OpenAI-compatible endpoint.
+        """Sends a chat request via OpenAI-compatible endpoint.
+
         :param messages: list of dicts [{'role': 'user', 'content': 'hello'}, ...]
         :param model_type: 'reasoning' or 'fast'
         :param model: LLM model to use.
         :param options: dict of optional parameters (e.g. temperature, response_format)
         :param response_model: optional Pydantic Base Model class to parse
                the response into
-        :return: string response content from the LLM, or None if request fails
+        :param tools: optional list of tool definition dicts for OpenAI function calling
+        :param tool_choice: optional tool choice directive (e.g. 'auto', 'none', 'required')
+        :return: string response content, or structured dict with 'content' and 'tool_calls' if tools is provided, or None if request fails
         """
         client = self._get_client()
         if not model:
@@ -75,6 +79,10 @@ class AiLlmClient(models.AbstractModel):
 
         if not options:
             options = {}
+        if tools is not None:
+            options["tools"] = tools
+        if tool_choice is not None:
+            options["tool_choice"] = tool_choice
 
         try:
             _logger.info("LLM context and question: %s", messages)
@@ -89,8 +97,26 @@ class AiLlmClient(models.AbstractModel):
                 response = client.chat.completions.create(
                     model=model, messages=messages, **options
                 )
-            _logger.info("LLM Response: %s", response.choices[0].message.content)
-            return response.choices[0].message.content
+            msg = response.choices[0].message
+            _logger.info("LLM Response: %s", msg.content)
+            if tools is not None:
+                tool_calls_data = []
+                for tc in getattr(msg, "tool_calls", None) or []:
+                    tool_calls_data.append(
+                        {
+                            "id": getattr(tc, "id", None),
+                            "type": getattr(tc, "type", "function"),
+                            "function": {
+                                "name": getattr(tc.function, "name", ""),
+                                "arguments": getattr(tc.function, "arguments", "{}"),
+                            },
+                        }
+                    )
+                return {
+                    "content": msg.content,
+                    "tool_calls": tool_calls_data,
+                }
+            return msg.content
         except LengthFinishReasonError as err:
             _logger.warning(
                 "LLM completion truncated (context length limit reached): %s", err

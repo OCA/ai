@@ -180,3 +180,73 @@ class TestAiLlmClient(TransactionCase):
         messages = [{"role": "user", "content": "Hi"}]
         response = self.env["fake.model"].chat(messages)
         self.assertIsNone(response)
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.OpenAI")
+    def test_chat_with_tools_no_calls(self, mock_client_class):
+        mock_instance = mock_client_class.return_value
+        mock_instance.chat.completions.create.return_value = OpenAIMockResponse(
+            "Hello with tools", tool_calls=[]
+        )
+
+        messages = [{"role": "user", "content": "Hi"}]
+        tools = [{"type": "function", "function": {"name": "test_tool"}}]
+        response = self.env["fake.model"].chat(
+            messages, tools=tools, tool_choice="auto"
+        )
+
+        mock_instance.chat.completions.create.assert_called_once_with(
+            model="other-model",
+            messages=messages,
+            tools=tools,
+            tool_choice="auto",
+        )
+        self.assertEqual(
+            response,
+            {"content": "Hello with tools", "tool_calls": []},
+        )
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.OpenAI")
+    def test_chat_with_tools_and_tool_calls(self, mock_client_class):
+        mock_instance = mock_client_class.return_value
+        fake_tool_call = type(
+            "FakeToolCall",
+            (),
+            {
+                "id": "call_123",
+                "type": "function",
+                "function": type(
+                    "FakeFunction",
+                    (),
+                    {
+                        "name": "agent_list_available_tools",
+                        "arguments": '{"res_model": "sale.order"}',
+                    },
+                )(),
+            },
+        )()
+        mock_instance.chat.completions.create.return_value = OpenAIMockResponse(
+            None, tool_calls=[fake_tool_call]
+        )
+
+        messages = [{"role": "user", "content": "What tools exist?"}]
+        tools = [
+            {"type": "function", "function": {"name": "agent_list_available_tools"}}
+        ]
+        response = self.env["fake.model"].chat(messages, tools=tools)
+
+        self.assertEqual(
+            response,
+            {
+                "content": None,
+                "tool_calls": [
+                    {
+                        "id": "call_123",
+                        "type": "function",
+                        "function": {
+                            "name": "agent_list_available_tools",
+                            "arguments": '{"res_model": "sale.order"}',
+                        },
+                    }
+                ],
+            },
+        )
