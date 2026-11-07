@@ -51,10 +51,11 @@ class TestAiAgentTool(TransactionCase):
             }
         )
 
-    def test_get_tools_definitions_returns_schema_for_assigned_tools(self):
-        definitions = self.agent.get_tools_definitions()
+    def test_get_openai_tools_definitions_returns_function_schemas(self):
+        definitions = self.agent.get_openai_tools_definitions()
         self.assertEqual(len(definitions), 3)
-        names = [d["name"] for d in definitions]
+        self.assertEqual(definitions[0]["type"], "function")
+        names = [d["function"]["name"] for d in definitions]
         self.assertIn("get_date", names)
         self.assertIn("post_message", names)
 

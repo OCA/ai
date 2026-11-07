@@ -18,14 +18,24 @@ class AiAgent(models.Model):
         string="Allowed Tools",
     )
 
-    def get_tools_definitions(self):
-        """Return formatted tool declarations for LLM function calling schema."""
+    def get_openai_tools_definitions(self):
+        """Return formatted tool declarations for OpenAI tool calling schema."""
         self.ensure_one()
-        tools_definitions = []
+        openai_tools = []
         for tool in self.tool_ids:
             definition = tool._get_tool_definition()
-            tools_definitions.append(definition)
-        return tools_definitions
+            openai_tools.append(
+                {
+                    "type": "function",
+                    "function": {
+                        "name": definition["name"],
+                        "description": definition.get("description") or "",
+                        "parameters": definition.get("inputSchema")
+                        or {"type": "object", "properties": {}},
+                    },
+                }
+            )
+        return openai_tools
 
     def execute_tool(self, tool_name, params=None, record=None):
         """Execute named tool under agent's execution_mode security context."""
@@ -46,23 +56,12 @@ class AiAgent(models.Model):
             if self.execution_mode == "user_context"
             else (self.user_id or self.env.user)
         )
-        tool_sudo = tool.sudo()
-        model_name = tool_sudo.model_id.model
-        func_name = tool_sudo.function_name
-        kind = tool_sudo.kind
-
-        target_env = self.env[model_name].with_user(target_user)
-        if kind == "generic":
-            return getattr(target_env, func_name)(**params)
-        if not record:
-            raise ValueError("Record must be provided for non-generic tools")
-        if kind == "generic_model":
-            return getattr(target_env, func_name)(record=record, **params)
-        elif record._name != model_name:
-            raise ValueError(
-                f"Record model {record._name} does not match tool model {model_name}"
-            )
-        return getattr(record.with_user(target_user), func_name)(**params) or {}
+        record = record.with_user(target_user) if record else None
+        return (
+            tool.with_user(target_user)
+            .with_context(active_test=True)
+            ._execute_tool(record=record, **params)
+        )
 
     @aitool(
         input_schema={
