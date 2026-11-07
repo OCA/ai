@@ -61,6 +61,18 @@ class TestAiOrchestrator(TransactionCase):
         self.persona.is_default = True
         self.persona.system_prompt_id = self.system_prompt
         self.persona.user_wrapper_prompt_id = self.user_wrapper
+        decide_patcher = patch(
+            "odoo.addons.ai_oca_native_llm.models.ai_llm_client.AiLlmClient.decide_choice",
+            return_value={
+                "name": "next_action",
+                "type": "choice",
+                "choice": "done",
+                "confidence": 0.99,
+                "probabilities": [],
+            },
+        )
+        self.mock_decide_choice = decide_patcher.start()
+        self.addCleanup(decide_patcher.stop)
 
     def test_prompt_template_qweb_render(self):
         template = self.env["ai.prompt.template"].create(
@@ -530,10 +542,13 @@ class TestAiOrchestrator(TransactionCase):
 
     @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.AiLlmClient.chat")
     def test_orchestrator_fast_path_direct_response(self, mock_chat):
-        mock_chat.return_value = {
-            "content": "Bonjour ! En quoi puis-je vous aider ?",
-            "tool_calls": [],
+        self.mock_decide_choice.return_value = {
+            "name": "next_action",
+            "type": "choice",
+            "choice": "done",
+            "confidence": 0.98,
         }
+        mock_chat.return_value = "Bonjour ! En quoi puis-je vous aider ?"
 
         self.thread._add_message("Bonjour", role="user")
         assistant_msg = self.thread._add_message(
@@ -546,9 +561,44 @@ class TestAiOrchestrator(TransactionCase):
             assistant_msg.content, "Bonjour ! En quoi puis-je vous aider ?"
         )
         self.assertFalse(assistant_msg.payload)
+        self.mock_decide_choice.assert_called_once()
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.AiLlmClient.chat")
+    def test_orchestrator_zero_arg_tool_direct_execution_via_system_one(
+        self, mock_chat
+    ):
+        self.mock_decide_choice.side_effect = [
+            {"name": "next_action", "type": "choice", "choice": "get_date"},
+            {"name": "next_action", "type": "choice", "choice": "done"},
+        ]
+        mock_chat.return_value = "Nous sommes aujourd'hui."
+
+        self.thread._add_message("Quelle est la date ?", role="user")
+        assistant_msg = self.thread._add_message(
+            "", role="assistant", status="processing"
+        )
+        assistant_msg._action_extract_intent()
+
+        self.assertEqual(assistant_msg.status, "done")
+        self.assertEqual(assistant_msg.content, "Nous sommes aujourd'hui.")
+        # System 2 chat() is called only ONCE for the final synthesis (not for get_date!)
+        self.assertEqual(mock_chat.call_count, 1)
+        tool_messages = assistant_msg.task_thread_ids[0].task_message_ids.filtered(
+            lambda m: m.role == "tool"
+        )
+        self.assertTrue(tool_messages)
+        self.assertIn("date", tool_messages[0].payload)
 
     @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.AiLlmClient.chat")
     def test_orchestrator_direct_tool_calling(self, mock_chat):
+        self.mock_decide_choice.side_effect = [
+            {
+                "name": "next_action",
+                "type": "choice",
+                "choice": "agent_list_available_agents",
+            },
+            {"name": "next_action", "type": "choice", "choice": "done"},
+        ]
         mock_chat.side_effect = [
             {
                 "content": None,
@@ -563,10 +613,7 @@ class TestAiOrchestrator(TransactionCase):
                     }
                 ],
             },
-            {
-                "content": "Il y a des agents actifs configurés dans Odoo.",
-                "tool_calls": [],
-            },
+            "Il y a des agents actifs configurés dans Odoo.",
         ]
 
         self.thread._add_message("Quels agents sont disponibles ?", role="user")
@@ -580,6 +627,19 @@ class TestAiOrchestrator(TransactionCase):
             assistant_msg.content, "Il y a des agents actifs configurés dans Odoo."
         )
         self.assertEqual(mock_chat.call_count, 2)
+        first_call_kwargs = mock_chat.call_args_list[0].kwargs
+        self.assertEqual(len(first_call_kwargs["tools"]), 1)
+        self.assertEqual(
+            first_call_kwargs["tools"][0]["function"]["name"],
+            "agent_list_available_agents",
+        )
+        self.assertEqual(
+            first_call_kwargs["tool_choice"],
+            {
+                "type": "function",
+                "function": {"name": "agent_list_available_agents"},
+            },
+        )
 
         task_threads = assistant_msg.task_thread_ids
         self.assertTrue(task_threads)
@@ -590,6 +650,11 @@ class TestAiOrchestrator(TransactionCase):
 
     @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.AiLlmClient.chat")
     def test_orchestrator_action_plan_proposal(self, mock_chat):
+        self.mock_decide_choice.return_value = {
+            "name": "next_action",
+            "type": "choice",
+            "choice": "agent_propose_action_plan",
+        }
         plan_args = {
             "summary": "Plan de requalification CRM",
             "steps": [
@@ -647,6 +712,11 @@ class TestAiOrchestrator(TransactionCase):
     def test_orchestrator_action_plan_proposal_without_content_fallback(
         self, mock_chat
     ):
+        self.mock_decide_choice.return_value = {
+            "name": "next_action",
+            "type": "choice",
+            "choice": "agent_propose_action_plan",
+        }
         plan_args = {
             "summary": "Plan d'archivage",
             "steps": [
@@ -684,6 +754,14 @@ class TestAiOrchestrator(TransactionCase):
 
     @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.AiLlmClient.chat")
     def test_orchestrator_action_plan_proposal_invalid_args_fallback(self, mock_chat):
+        self.mock_decide_choice.side_effect = [
+            {
+                "name": "next_action",
+                "type": "choice",
+                "choice": "agent_propose_action_plan",
+            },
+            {"name": "next_action", "type": "choice", "choice": "done"},
+        ]
         mock_chat.side_effect = [
             {
                 "content": None,
@@ -698,10 +776,7 @@ class TestAiOrchestrator(TransactionCase):
                     }
                 ],
             },
-            {
-                "content": "Impossible de valider le plan proposé.",
-                "tool_calls": [],
-            },
+            "Impossible de valider le plan proposé.",
         ]
 
         self.thread._add_message("Action invalide", role="user")
@@ -717,6 +792,14 @@ class TestAiOrchestrator(TransactionCase):
 
     @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.AiLlmClient.chat")
     def test_orchestrator_tool_execution_error_handling(self, mock_chat):
+        self.mock_decide_choice.side_effect = [
+            {
+                "name": "next_action",
+                "type": "choice",
+                "choice": "agent_list_available_tools",
+            },
+            {"name": "next_action", "type": "choice", "choice": "done"},
+        ]
         mock_chat.side_effect = [
             {
                 "content": None,
@@ -731,10 +814,7 @@ class TestAiOrchestrator(TransactionCase):
                     }
                 ],
             },
-            {
-                "content": "Désolé, cet outil n'est pas disponible.",
-                "tool_calls": [],
-            },
+            "Désolé, cet outil n'est pas disponible.",
         ]
 
         self.thread._add_message("Lance un outil inconnu", role="user")
@@ -750,6 +830,14 @@ class TestAiOrchestrator(TransactionCase):
 
     @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.AiLlmClient.chat")
     def test_orchestrator_tool_execution_with_dict_args(self, mock_chat):
+        self.mock_decide_choice.side_effect = [
+            {
+                "name": "next_action",
+                "type": "choice",
+                "choice": "agent_list_available_tools",
+            },
+            {"name": "next_action", "type": "choice", "choice": "done"},
+        ]
         mock_chat.side_effect = [
             {
                 "content": None,
@@ -764,10 +852,7 @@ class TestAiOrchestrator(TransactionCase):
                     }
                 ],
             },
-            {
-                "content": "Voici les outils pour res.partner.",
-                "tool_calls": [],
-            },
+            "Voici les outils pour res.partner.",
         ]
 
         self.thread._add_message("Liste les outils partner", role="user")
@@ -780,7 +865,40 @@ class TestAiOrchestrator(TransactionCase):
         self.assertEqual(assistant_msg.content, "Voici les outils pour res.partner.")
 
     @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.AiLlmClient.chat")
+    def test_orchestrator_parameterized_tool_chat_fallback_branches(self, mock_chat):
+        self.mock_decide_choice.return_value = {
+            "name": "next_action",
+            "type": "choice",
+            "choice": "agent_list_available_tools",
+        }
+        mock_chat.side_effect = [
+            None,
+            "String fallback response",
+            {"content": "Dict without tool_calls fallback", "tool_calls": []},
+        ]
+
+        assistant_msg = self.thread._add_message(
+            "", role="assistant", status="processing"
+        )
+        task_thread = assistant_msg._create_orchestrator_task_thread()
+
+        self.assertIsNone(assistant_msg._orchestrate_assistant_response(task_thread))
+        self.assertEqual(
+            assistant_msg._orchestrate_assistant_response(task_thread),
+            "String fallback response",
+        )
+        self.assertEqual(
+            assistant_msg._orchestrate_assistant_response(task_thread),
+            "Dict without tool_calls fallback",
+        )
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.AiLlmClient.chat")
     def test_orchestrator_react_loop_max_iterations(self, mock_chat):
+        self.mock_decide_choice.return_value = {
+            "name": "next_action",
+            "type": "choice",
+            "choice": "agent_list_available_agents",
+        }
         mock_chat.return_value = {
             "content": None,
             "tool_calls": [

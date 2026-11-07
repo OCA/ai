@@ -201,22 +201,81 @@ class AiMessage(models.Model):
             "content": json.dumps(tool_result),
         }, None
 
+    def _decide_orchestrator_next_action(
+        self, current_messages, candidates, task_thread
+    ) -> str:
+        self.ensure_one()
+        decision = self.decide_choice(
+            input_data=current_messages,
+            choices=candidates,
+            instructions=(
+                "Select the best tool to advance the user request, "
+                "or select 'done' if no further tool call is needed."
+            ),
+            name="next_action",
+        )
+        selected_action = (
+            decision.get("choice")
+            if isinstance(decision, dict) and decision.get("choice")
+            else "done"
+        )
+        task_thread._add_message(
+            content=f"System 1 Decision: selected '{selected_action}'",
+            role="assistant",
+            payload=decision or {"choice": "done"},
+        )
+        return selected_action
+
     def _orchestrate_assistant_response(self, task_thread, max_iterations=5):
         self.ensure_one()
         agent = self._get_orchestrator_agent()
-        tools = agent.get_openai_tools_definitions() if agent else []
         llm_messages = self._get_orchestrator_llm_messages()
 
-        if not tools:
+        if not agent or not agent.tool_ids:
             return self.chat(llm_messages, model_type="fast")
 
+        candidates = agent.get_decision_tool_candidates(include_done=True)
         current_messages = list(llm_messages)
         content = None
-        for _iteration in range(max_iterations):
+        for iteration in range(max_iterations):
+            selected_action = self._decide_orchestrator_next_action(
+                current_messages, candidates, task_thread
+            )
+            if selected_action == "done":
+                return self.chat(current_messages, model_type="fast")
+
+            if not agent.tool_requires_arguments(selected_action):
+                tool_call = {
+                    "id": f"call_{selected_action}_{iteration}",
+                    "type": "function",
+                    "function": {
+                        "name": selected_action,
+                        "arguments": "{}",
+                    },
+                }
+                current_messages.append(
+                    {
+                        "role": "assistant",
+                        "content": "",
+                        "tool_calls": [tool_call],
+                    }
+                )
+                tool_msg, _early_text = self._process_tool_call(
+                    agent, tool_call, task_thread
+                )
+                current_messages.append(tool_msg)
+                continue
+
+            selected_tools = agent.get_openai_tools_definitions(
+                tool_names=[selected_action]
+            )
             response = self.chat(
                 current_messages,
-                tools=tools,
-                tool_choice="required"
+                tools=selected_tools,
+                tool_choice={
+                    "type": "function",
+                    "function": {"name": selected_action},
+                },
             )
             if not response:
                 return None
