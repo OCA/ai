@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="ai_tool_server_action_wizard_form" model="ir.ui.view">
+        <field name="name">ai.tool.server.action.wizard.form</field>
+        <field name="model">ai.tool.server.action.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Configure AI Tool">
+                <sheet>
+                    <group>
+                        <field name="ai_tool_id" invisible="1" />
+                        <field name="server_action_id" invisible="1" />
+                        <field name="name" />
+                        <field name="description" />
+                    </group>
+                    <group string="Schemas">
+                        <field
+                            name="input_schema_json"
+                            widget="code"
+                            options="{'mode': 'python'}"
+                        />
+                        <field
+                            name="output_schema_json"
+                            widget="code"
+                            options="{'mode': 'python'}"
+                        />
+                    </group>
+                </sheet>
+                <footer>
+                    <button
+                        name="action_apply"
+                        string="Apply"
+                        type="object"
+                        class="btn-primary"
+                    />
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>
