@@ -4,7 +4,7 @@
 import json
 from unittest import mock
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, new_test_user
 
 
 class TestBridge(TransactionCase):
@@ -291,6 +291,29 @@ class TestBridge(TransactionCase):
             message_count + 1,
         )
         self.assertFalse(execution.expiration_date)
+
+    def test_bridge_result_channel_as_bridge_user(self):
+        # The result is processed as the bridge user. An ordinary internal user
+        # cannot read ir.model, and must still find the record.
+        user = new_test_user(
+            self.env, login="bridge_result_user", groups="base.group_user"
+        )
+        self.bridge.write(
+            {"result_type": "message", "result_kind": "async", "user_id": user.id}
+        )
+        execution = (
+            self.env["ai.bridge.execution"]
+            .sudo()
+            .create(
+                {
+                    "ai_bridge_id": self.bridge.id,
+                    "model_id": self.env["ir.model"]._get_id(self.partner._name),
+                    "res_id": self.partner.id,
+                }
+            )
+        )
+        channel = execution.with_user(user)._get_channel()
+        self.assertEqual(channel, self.partner)
 
     def test_bridge_result_action_immediate(self):
         self.bridge.write({"result_type": "action", "result_kind": "immediate"})
