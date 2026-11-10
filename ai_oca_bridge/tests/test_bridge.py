@@ -228,7 +228,9 @@ class TestBridge(TransactionCase):
     def test_view_fields(self):
         view = self.partner.get_view(view_type="form")
         self.assertIn("ai_bridge_info", view["models"][self.partner._name])
-        self.assertIn(b'name="ai_bridge_info"', view["arch"])
+        # The arch stays a string, as core returns it: code that reads it as text keeps working.
+        self.assertIsInstance(view["arch"], str)
+        self.assertIn('name="ai_bridge_info"', view["arch"])
 
     def test_sample(self):
         self.assertTrue(self.bridge.sample_payload)
