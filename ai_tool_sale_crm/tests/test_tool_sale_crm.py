@@ -10,10 +10,19 @@ class TestAiToolSaleCrm(TransactionCase):
         cls.stage = cls.env["crm.stage"].create({"name": "Qualified Stage"})
         cls.lead = cls.env["crm.lead"].create({"name": "Test CRM Lead"})
 
-    def test_ai_update_lead_stage_succeeds(self):
+    def test_ai_update_lead_stage_succeeds_by_stage_id(self):
         res = self.env["crm.lead"]._ai_update_lead_stage(
             lead_id=self.lead.id,
             stage_id=self.stage.id,
+        )
+        self.assertTrue(res["success"])
+        self.assertEqual(res["stage_name"], "Qualified Stage")
+        self.assertEqual(self.lead.stage_id, self.stage)
+
+    def test_ai_update_lead_stage_succeeds_by_stage_name_and_record_fallback(self):
+        res = self.env["crm.lead"]._ai_update_lead_stage(
+            stage_name="qualified stage",
+            record=self.lead,
         )
         self.assertTrue(res["success"])
         self.assertEqual(res["stage_name"], "Qualified Stage")
@@ -31,4 +40,9 @@ class TestAiToolSaleCrm(TransactionCase):
             self.env["crm.lead"]._ai_update_lead_stage(
                 lead_id=self.lead.id,
                 stage_id=999999,
+            )
+        with self.assertRaises(ValueError):
+            self.env["crm.lead"]._ai_update_lead_stage(
+                lead_id=self.lead.id,
+                stage_name="NonExistentStageXYZ",
             )
