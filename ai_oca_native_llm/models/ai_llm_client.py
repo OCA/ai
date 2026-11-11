@@ -23,9 +23,7 @@ class AiLlmClient(models.AbstractModel):
         config_param = self.env["ir.config_parameter"].sudo()
         url = config_param.get_param(
             f"ai_llm.{model_type}_base_url"
-        ) or config_param.get_param(
-            "ai_llm.base_url", "http://localhost:11434/v1"
-        )
+        ) or config_param.get_param("ai_llm.base_url", "http://localhost:11434/v1")
         api_key = config_param.get_param("ai_oca_native_llm.api_key")
         return OpenAI(base_url=url, api_key=api_key)
 
@@ -49,6 +47,44 @@ class AiLlmClient(models.AbstractModel):
         )
 
     @api.model
+    def _prepare_chat_options(
+        self,
+        options: dict | None = None,
+        tools=None,
+        tool_choice=None,
+        **kwargs,
+    ) -> dict:
+        """Hook to prepare options passed to OpenAI chat.completions."""
+        request_options = dict(options) if options else {}
+        if tools is not None:
+            request_options["tools"] = tools
+        if tool_choice is not None:
+            request_options["tool_choice"] = tool_choice
+        return request_options
+
+    @api.model
+    def _extract_chat_result(self, message, tools=None, **kwargs):
+        """Hook to format the response message returned by chat()."""
+        if tools is not None:
+            tool_calls_data = []
+            for tc in getattr(message, "tool_calls", None) or []:
+                tool_calls_data.append(
+                    {
+                        "id": getattr(tc, "id", None),
+                        "type": getattr(tc, "type", "function"),
+                        "function": {
+                            "name": getattr(tc.function, "name", ""),
+                            "arguments": getattr(tc.function, "arguments", "{}"),
+                        },
+                    }
+                )
+            return {
+                "content": message.content,
+                "tool_calls": tool_calls_data,
+            }
+        return message.content
+
+    @api.model
     def chat(
         self,
         messages,
@@ -58,6 +94,7 @@ class AiLlmClient(models.AbstractModel):
         response_model=None,
         tools=None,
         tool_choice=None,
+        **kwargs,
     ):
         """Sends a chat request via OpenAI-compatible endpoint.
 
@@ -67,20 +104,18 @@ class AiLlmClient(models.AbstractModel):
         :param options: dict of optional parameters (e.g. temperature, response_format)
         :param response_model: optional Pydantic Base Model class to parse
                the response into
-        :param tools: optional list of tool definition dicts for OpenAI function calling
-        :param tool_choice: optional tool choice directive (e.g. 'auto', 'none', 'required')
-        :return: string response content, or structured dict with 'content' and 'tool_calls' if tools is provided, or None if request fails
+        :param tools: optional list of OpenAI tool definition dicts
+        :param tool_choice: optional OpenAI tool_choice directive
+        :return: response content (or dict with content/tool_calls when tools
+                 are provided), or None on failure
         """
         client = self._get_client(model_type=model_type)
         if not model:
             model = self._get_model(model_type)
 
-        if not options:
-            options = {}
-        if tools is not None:
-            options["tools"] = tools
-        if tool_choice is not None:
-            options["tool_choice"] = tool_choice
+        request_options = self._prepare_chat_options(
+            options, tools=tools, tool_choice=tool_choice, **kwargs
+        )
 
         try:
             _logger.info("LLM context and question: %s", messages)
@@ -89,32 +124,15 @@ class AiLlmClient(models.AbstractModel):
                     model=model,
                     messages=messages,
                     response_format=response_model,
-                    **options,
+                    **request_options,
                 )
             else:
                 response = client.chat.completions.create(
-                    model=model, messages=messages, **options
+                    model=model, messages=messages, **request_options
                 )
             msg = response.choices[0].message
             _logger.info("LLM Response: %s", msg.content)
-            if tools is not None:
-                tool_calls_data = []
-                for tc in getattr(msg, "tool_calls", None) or []:
-                    tool_calls_data.append(
-                        {
-                            "id": getattr(tc, "id", None),
-                            "type": getattr(tc, "type", "function"),
-                            "function": {
-                                "name": getattr(tc.function, "name", ""),
-                                "arguments": getattr(tc.function, "arguments", "{}"),
-                            },
-                        }
-                    )
-                return {
-                    "content": msg.content,
-                    "tool_calls": tool_calls_data,
-                }
-            return msg.content
+            return self._extract_chat_result(msg, tools=tools, **kwargs)
         except LengthFinishReasonError as err:
             _logger.warning(
                 "LLM completion truncated (context length limit reached): %s", err
@@ -126,6 +144,7 @@ class AiLlmClient(models.AbstractModel):
 
     @api.model
     def _serialize_decision_answer(self, answer) -> dict:
+        """Hook to normalize an OpenAI Decision answer object into a plain dict."""
         answer_type = getattr(answer, "type", None)
         name = getattr(answer, "name", None)
         if answer_type == "choice":
@@ -169,6 +188,36 @@ class AiLlmClient(models.AbstractModel):
         }
 
     @api.model
+    def _format_decision_input_item(self, item) -> list[str]:
+        """Hook to convert a single message item into state lines for Decisions API."""
+        if isinstance(item, str):
+            return [item]
+        role = item.get("role", "user")
+        content = item.get("content") or ""
+        lines = [f"{role.capitalize()}: {content}"] if content else []
+        for tc in item.get("tool_calls") or []:
+            fn = tc.get("function") or {}
+            fn_name = fn.get("name", "")
+            fn_args = fn.get("arguments", "{}")
+            lines.append(f"Assistant Tool Call: {fn_name}({fn_args})")
+        return lines
+
+    @api.model
+    def _normalize_decision_input(self, input_data) -> str:
+        """Convert chat message lists or raw inputs into a Decisions state string."""
+        if isinstance(input_data, str):
+            return input_data
+        lines = []
+        for item in input_data:
+            lines.extend(self._format_decision_input_item(item))
+        return "\n\n".join(lines)
+
+    @api.model
+    def _prepare_decision_choices(self, input_data, choices: list[dict]) -> list[dict]:
+        """Hook to filter or enrich candidate choices before calling Decisions API."""
+        return list(choices)
+
+    @api.model
     def decide(
         self,
         input_data,
@@ -178,7 +227,7 @@ class AiLlmClient(models.AbstractModel):
     ) -> list[dict] | None:
         """Evaluate structured System 1 questions via the OpenAI Decisions API.
 
-        :param input_data: string or list of message/tool items to evaluate
+        :param input_data: string or list of message items to evaluate
         :param questions: list of question dicts ('choice', 'predicate', 'score')
         :param model: optional explicit decision model name
         :param options: optional extra keyword arguments for client.decisions.create
@@ -188,12 +237,15 @@ class AiLlmClient(models.AbstractModel):
         if not model:
             model = self._get_model("decision")
         extra_options = dict(options) if options else {}
+        normalized_input = self._normalize_decision_input(input_data)
 
         try:
-            _logger.info("Decision input: %s | questions: %s", input_data, questions)
+            _logger.info(
+                "Decision input: %s | questions: %s", normalized_input, questions
+            )
             response = client.decisions.create(
                 model=model,
-                input=input_data,
+                input=normalized_input,
                 questions=questions,
                 **extra_options,
             )
@@ -217,21 +269,31 @@ class AiLlmClient(models.AbstractModel):
         model: str | None = None,
         options: dict | None = None,
     ) -> dict | None:
-        """Evaluate a single categorical choice question with the System 1 Decision Model.
+        """Evaluate a categorical choice question with the System 1 Decision Model.
 
         :param input_data: string or list of conversation items to evaluate
-        :param choices: list of candidate dicts [{'value': '...', 'description': '...'}, ...]
+        :param choices: candidate dicts [{'value': '...', 'description': '...'}, ...]
         :param instructions: instructions guiding the choice selection
         :param name: question identifier (default 'next_action')
         :param model: optional explicit decision model name
         :param options: optional extra keyword arguments for client.decisions.create
-        :return: serialized choice answer dict if a choice was selected, or None on refusal/error
+        :return: serialized choice answer dict, or None on refusal/error
         """
+        prepared_choices = self._prepare_decision_choices(input_data, choices)
+        if len(prepared_choices) == 1:
+            single_value = prepared_choices[0].get("value")
+            return {
+                "name": name,
+                "type": "choice",
+                "choice": single_value,
+                "confidence": 1.0,
+                "probabilities": [{"value": single_value, "probability": 1.0}],
+            }
         question = {
             "name": name,
             "type": "choice",
             "instructions": instructions,
-            "choices": choices,
+            "choices": prepared_choices,
         }
         answers = self.decide(
             input_data=input_data,
