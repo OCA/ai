@@ -70,6 +70,16 @@ Output ONLY the title, no quotes or punctuation.</t>]]></field>
         <field name="group_ids" eval="[(6, 0, [ref('base.group_user')])]" />
     </record>
 
+    <record id="ai_tool_agent_delegate_task" model="ai.tool">
+        <field name="name">agent_delegate_task</field>
+        <field
+            name="description"
+        >Delegates a specialized objective to an active sub-agent in an isolated task thread.</field>
+        <field name="model_id" ref="ai_oca_native_agent.model_ai_agent" />
+        <field name="function_name">agent_delegate_task</field>
+        <field name="kind">generic</field>
+    </record>
+
     <record id="default_main_orchestrator_agent" model="ai.agent">
         <field name="name">Main Orchestrator Agent</field>
         <field name="persona_id" ref="persona_default" />
@@ -85,6 +95,7 @@ Output ONLY the title, no quotes or punctuation.</t>]]></field>
                 ref('ai_oca_native_agent_tool.ai_tool_agent_list_available_tools'),
                 ref('ai_oca_native_agent_tool.ai_tool_agent_list_available_agents'),
                 ref('ai_oca_native_agent_tool.ai_tool_agent_propose_action_plan'),
+                ref('ai_oca_native_orchestrator.ai_tool_agent_delegate_task'),
             ])]"
         />
     </record>

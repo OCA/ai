@@ -4,7 +4,10 @@ import json
 from unittest.mock import patch
 
 from odoo import Command
+from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase
+
+from odoo.addons.queue_job.tests.common import trap_jobs
 
 
 class TestAiOrchestrator(TransactionCase):
@@ -581,7 +584,7 @@ class TestAiOrchestrator(TransactionCase):
 
         self.assertEqual(assistant_msg.status, "done")
         self.assertEqual(assistant_msg.content, "Nous sommes aujourd'hui.")
-        # System 2 chat() is called only ONCE for the final synthesis (not for get_date!)
+        # System 2 chat() is called only once for final synthesis (not get_date)
         self.assertEqual(mock_chat.call_count, 1)
         tool_messages = assistant_msg.task_thread_ids[0].task_message_ids.filtered(
             lambda m: m.role == "tool"
@@ -969,3 +972,595 @@ class TestAiOrchestrator(TransactionCase):
             agent,
             self.env.ref("ai_oca_native_orchestrator.default_main_orchestrator_agent"),
         )
+
+    def test_subagent_get_system_prompt_variants(self):
+        user_agent = self.env.ref(
+            "ai_oca_native_orchestrator.user_ai_orchestrator_agent"
+        )
+        msg = self.thread._add_message("Task", role="user")
+        task_thread = msg._create_orchestrator_task_thread()
+
+        agent_with_persona = self.env.ref(
+            "ai_oca_native_orchestrator.default_main_orchestrator_agent"
+        )
+        res_persona = agent_with_persona._get_subagent_system_prompt(
+            task_thread=task_thread
+        )
+        self.assertEqual(res_persona[0]["role"], "system")
+        self.assertIn("autonomous Odoo AI Agent", res_persona[0]["content"])
+
+        empty_prompt = self.env["ai.prompt.template"].create(
+            {
+                "name": "Empty Subagent Prompt",
+                "code": "empty_subagent_prompt",
+                "prompt_type": "system",
+                "template_text": "<t></t>",
+            }
+        )
+        empty_persona = self.env["ai.persona"].create(
+            {
+                "name": "Empty Subagent Persona",
+                "code": "empty_subagent_persona",
+                "system_prompt_id": empty_prompt.id,
+            }
+        )
+        agent_fallback = self.env["ai.agent"].create(
+            {
+                "name": "Fallback Subagent",
+                "persona_id": empty_persona.id,
+                "user_id": user_agent.id,
+                "execution_mode": "user_context",
+            }
+        )
+        res_fallback = agent_fallback._get_subagent_system_prompt(task_thread=None)
+        self.assertEqual(
+            res_fallback,
+            [
+                {
+                    "role": "system",
+                    "content": (
+                        "You are Fallback Subagent, a specialized Odoo AI sub-agent."
+                    ),
+                }
+            ],
+        )
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.AiLlmClient.chat")
+    def test_subagent_execute_task_with_zero_arg_and_parameterized_tools(
+        self, mock_chat
+    ):
+        sub_agent = self.env["ai.agent"].create(
+            {
+                "name": "Audit Sub-Agent",
+                "user_id": self.env.ref(
+                    "ai_oca_native_orchestrator.user_ai_orchestrator_agent"
+                ).id,
+                "execution_mode": "user_context",
+                "description": "Specialized audit sub-agent.",
+                "tool_ids": [
+                    Command.set(
+                        [
+                            self.env.ref("ai_tool.current_date").id,
+                            self.env.ref(
+                                "ai_oca_native_agent_tool.ai_tool_agent_list_available_tools"
+                            ).id,
+                        ]
+                    )
+                ],
+            }
+        )
+        msg = self.thread._add_message("Audit request", role="user")
+        task_thread = self.env["ai.task.thread"].create(
+            {"message_id": msg.id, "name": "Sub-Agent Audit"}
+        )
+
+        self.mock_decide_choice.side_effect = [
+            {"name": "subagent_next_action", "type": "choice", "choice": "get_date"},
+            {
+                "name": "subagent_next_action",
+                "type": "choice",
+                "choice": "agent_list_available_tools",
+            },
+            {"name": "subagent_next_action", "type": "choice", "choice": "done"},
+        ]
+        mock_chat.side_effect = [
+            {
+                "content": "",
+                "tool_calls": [
+                    {
+                        "id": "subcall_tools_1",
+                        "type": "function",
+                        "function": {
+                            "name": "agent_list_available_tools",
+                            "arguments": '{"res_model": "res.partner"}',
+                        },
+                    }
+                ],
+            },
+            "Audit completed with current date and partner tools.",
+        ]
+
+        result = sub_agent.execute_task(
+            task_thread=task_thread,
+            goal="Inspect date and available partner tools",
+            params={"scope": "partner"},
+            record=self.partner,
+        )
+        self.assertEqual(result["status"], "done")
+        self.assertEqual(result["agent"], "Audit Sub-Agent")
+        self.assertEqual(
+            result["result"], "Audit completed with current date and partner tools."
+        )
+        self.assertEqual(len(result["tool_outputs"]), 2)
+        self.assertEqual(result["tool_outputs"][0]["tool"], "get_date")
+        self.assertEqual(
+            result["tool_outputs"][1]["tool"], "agent_list_available_tools"
+        )
+        self.assertEqual(task_thread.payload["status"], "done")
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.AiLlmClient.chat")
+    def test_subagent_execute_task_without_tools_and_fallback_branches(self, mock_chat):
+        user_agent = self.env.ref(
+            "ai_oca_native_orchestrator.user_ai_orchestrator_agent"
+        )
+        agent_no_tools = self.env["ai.agent"].create(
+            {
+                "name": "No Tool Sub-Agent",
+                "user_id": user_agent.id,
+                "execution_mode": "user_context",
+                "tool_ids": [Command.clear()],
+            }
+        )
+        msg = self.thread._add_message("Simple sub-task", role="user")
+        task_thread = self.env["ai.task.thread"].create(
+            {"message_id": msg.id, "name": "No Tool Task"}
+        )
+        mock_chat.return_value = ""
+        res_no_tools = agent_no_tools.execute_task(
+            task_thread=task_thread,
+            goal="Summarize context",
+        )
+        self.assertEqual(res_no_tools["result"], "")
+
+        agent_with_tool = self.env["ai.agent"].create(
+            {
+                "name": "Loop Sub-Agent",
+                "user_id": user_agent.id,
+                "execution_mode": "user_context",
+                "tool_ids": [
+                    Command.set(
+                        [
+                            self.env.ref(
+                                "ai_oca_native_agent_tool.ai_tool_agent_list_available_tools"
+                            ).id
+                        ]
+                    )
+                ],
+            }
+        )
+        self.mock_decide_choice.side_effect = [
+            {
+                "name": "subagent_next_action",
+                "type": "choice",
+                "choice": "agent_list_available_tools",
+            },
+            {
+                "name": "subagent_next_action",
+                "type": "choice",
+                "choice": "agent_list_available_tools",
+            },
+        ]
+        mock_chat.side_effect = [
+            {
+                "content": "",
+                "tool_calls": [
+                    {
+                        "id": "",
+                        "type": "function",
+                        "function": {
+                            "name": "agent_list_available_tools",
+                            "arguments": {"res_model": "res.partner"},
+                        },
+                    }
+                ],
+            },
+            "Non-dict response stopping tool loop",
+            "Final synthesis after loop",
+        ]
+        res_loop = agent_with_tool.execute_task(
+            task_thread=task_thread,
+            goal="Loop test",
+            max_iterations=2,
+        )
+        self.assertEqual(res_loop["result"], "Final synthesis after loop")
+        self.assertEqual(len(res_loop["tool_outputs"]), 1)
+
+        self.mock_decide_choice.side_effect = None
+        self.mock_decide_choice.return_value = {
+            "name": "subagent_next_action",
+            "type": "choice",
+            "choice": "agent_list_available_tools",
+        }
+        mock_chat.side_effect = [
+            {
+                "content": "",
+                "tool_calls": [
+                    {
+                        "id": "call_exhaust",
+                        "type": "function",
+                        "function": {
+                            "name": "agent_list_available_tools",
+                            "arguments": "{}",
+                        },
+                    }
+                ],
+            },
+            "Exhausted max_iterations synthesis",
+        ]
+        res_exhausted = agent_with_tool.execute_task(
+            task_thread=task_thread,
+            goal="Exhaust iterations",
+            max_iterations=1,
+        )
+        self.assertEqual(res_exhausted["result"], "Exhausted max_iterations synthesis")
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.AiLlmClient.chat")
+    def test_agent_delegate_task_success_and_error_cases(self, mock_chat):
+        orchestrator_agent = self.env.ref(
+            "ai_oca_native_orchestrator.default_main_orchestrator_agent"
+        )
+        self.env["ai.agent"].create(
+            {
+                "name": "Delegated Helper Agent",
+                "user_id": self.env.ref(
+                    "ai_oca_native_orchestrator.user_ai_orchestrator_agent"
+                ).id,
+                "execution_mode": "user_context",
+                "tool_ids": [Command.clear()],
+            }
+        )
+        msg = self.thread._add_message("Delegate work", role="user")
+        mock_chat.return_value = "Helper sub-agent finished."
+
+        result = orchestrator_agent.with_context(ai_message_id=msg.id).execute_tool(
+            "agent_delegate_task",
+            params={
+                "agent_name": "Delegated Helper Agent",
+                "objective": "Check partner record",
+                "params": {"key": "val"},
+            },
+            record=self.partner,
+        )
+        self.assertEqual(result["agent"], "Delegated Helper Agent")
+        self.assertEqual(result["result"], "Helper sub-agent finished.")
+        self.assertTrue(
+            msg.task_thread_ids.filtered(
+                lambda t: t.name == "Sub-Agent: Delegated Helper Agent"
+            )
+        )
+
+        with self.assertRaises(UserError):
+            orchestrator_agent.agent_delegate_task(
+                agent_name="Non-Existent Sub-Agent",
+                objective="Fail",
+                message_id=msg.id,
+            )
+
+        with self.assertRaises(ValueError):
+            orchestrator_agent.agent_delegate_task(
+                agent_name="Delegated Helper Agent",
+                objective="Missing message_id context",
+            )
+
+        with self.assertRaises(ValueError):
+            orchestrator_agent.agent_delegate_task(
+                agent_name="",
+                objective="",
+            )
+
+    def test_prepare_tool_definition_enriches_agent_delegate_task_with_subagents(self):
+        orchestrator_agent = self.env.ref(
+            "ai_oca_native_orchestrator.default_main_orchestrator_agent"
+        )
+        sub_with_tools = self.env["ai.agent"].create(
+            {
+                "name": "CRM Specialist Sub-Agent",
+                "description": "Manages CRM leads.",
+                "user_id": self.env.ref(
+                    "ai_oca_native_orchestrator.user_ai_orchestrator_agent"
+                ).id,
+                "execution_mode": "user_context",
+                "tool_ids": [Command.set([self.env.ref("ai_tool.current_date").id])],
+            }
+        )
+        sub_no_tools = self.env["ai.agent"].create(
+            {
+                "name": "No-Tools Sub-Agent",
+                "user_id": self.env.ref(
+                    "ai_oca_native_orchestrator.user_ai_orchestrator_agent"
+                ).id,
+                "execution_mode": "user_context",
+                "tool_ids": [Command.clear()],
+            }
+        )
+        defs = orchestrator_agent.get_openai_tools_definitions(
+            tool_names=["agent_delegate_task"]
+        )
+        self.assertEqual(len(defs), 1)
+        fn_def = defs[0]["function"]
+        self.assertIn("CRM Specialist Sub-Agent", fn_def["description"])
+        self.assertIn("get_date", fn_def["description"])
+        self.assertIn("No-Tools Sub-Agent", fn_def["description"])
+        enum_vals = fn_def["parameters"]["properties"]["agent_name"].get("enum", [])
+        self.assertIn("CRM Specialist Sub-Agent", enum_vals)
+        self.assertIn("No-Tools Sub-Agent", enum_vals)
+
+        # Deactivate all other agents to cover branch when no active sub-agents exist
+        other_agents = (
+            self.env["ai.agent"].sudo().search([("id", "!=", orchestrator_agent.id)])
+        )
+        other_agents.write({"active": False})
+        defs_empty = orchestrator_agent.get_openai_tools_definitions(
+            tool_names=["agent_delegate_task"]
+        )
+        self.assertNotIn(
+            "Available sub-agents:", defs_empty[0]["function"]["description"]
+        )
+        sub_with_tools.active = True
+        sub_no_tools.active = True
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.AiLlmClient.chat")
+    def test_subagent_execute_task_captures_tool_execution_error(self, mock_chat):
+        sub_agent = self.env["ai.agent"].create(
+            {
+                "name": "Error Handling Sub-Agent",
+                "user_id": self.env.ref(
+                    "ai_oca_native_orchestrator.user_ai_orchestrator_agent"
+                ).id,
+                "execution_mode": "user_context",
+                "tool_ids": [Command.set([self.env.ref("ai_tool.post_message").id])],
+            }
+        )
+        msg = self.thread._add_message("Sub-agent error test", role="user")
+        task_thread = self.env["ai.task.thread"].create(
+            {"message_id": msg.id, "name": "Error Task"}
+        )
+        self.mock_decide_choice.side_effect = [
+            {
+                "name": "subagent_next_action",
+                "type": "choice",
+                "choice": "post_message",
+            },
+            {"name": "subagent_next_action", "type": "choice", "choice": "done"},
+        ]
+        mock_chat.side_effect = [
+            {
+                "content": "",
+                "tool_calls": [
+                    {
+                        "id": "call_err_1",
+                        "type": "function",
+                        "function": {
+                            "name": "post_message",
+                            "arguments": '{"message": "hello"}',
+                        },
+                    }
+                ],
+            },
+            "Handled tool failure gracefully.",
+        ]
+        res = sub_agent.execute_task(
+            task_thread=task_thread,
+            goal="Post message without record",
+            record=None,
+        )
+        self.assertEqual(res["result"], "Handled tool failure gracefully.")
+        self.assertIn("error", res["tool_outputs"][0]["result"])
+
+    def test_orchestrator_decision_choices_filters_already_called_tools(self):
+        llm_client = self.env["ai.llm.client"]
+        messages = [
+            "Raw string entry",
+            {"role": "user", "content": "What day is it?"},
+            {
+                "role": "assistant",
+                "content": "",
+                "tool_calls": [
+                    {
+                        "id": "call_1",
+                        "type": "function",
+                        "function": {"name": "get_date", "arguments": "{}"},
+                    },
+                    {"id": "call_empty", "type": "function", "function": {}},
+                ],
+            },
+            {"role": "tool", "content": '{"date": "2026-11-09"}'},
+        ]
+        choices = [
+            {"value": "get_date", "description": "Get date"},
+            {"value": "other_tool", "description": "Other tool"},
+            {"value": "done", "description": "Done"},
+        ]
+        self.assertEqual(llm_client._extract_called_tools("raw string"), set())
+        prepared = llm_client._prepare_decision_choices(messages, choices)
+        self.assertEqual([c["value"] for c in prepared], ["other_tool", "done"])
+
+    def test_thread_queue_job_domain_includes_plan_jobs(self):
+        domain_str = str(self.thread._get_thread_queue_job_domain())
+        self.assertIn("_process_plan_step_job", domain_str)
+        self.assertIn("_action_plan_completed", domain_str)
+
+    def test_action_execute_plan_raises_user_error_when_empty(self):
+        msg = self.thread._add_message(
+            "Empty plan", role="assistant", status="awaiting_approval"
+        )
+        with self.assertRaises(UserError):
+            msg.action_execute_plan(plan_payload={"summary": "Empty", "steps": []})
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.AiLlmClient.chat")
+    def test_action_execute_plan_parallel_and_dependent_dag_execution(self, mock_chat):
+        self.env["ai.agent"].create(
+            {
+                "name": "CRM Synthesis Sub-Agent",
+                "user_id": self.env.ref(
+                    "ai_oca_native_orchestrator.user_ai_orchestrator_agent"
+                ).id,
+                "execution_mode": "user_context",
+                "tool_ids": [Command.clear()],
+            }
+        )
+        plan_payload = {
+            "plan_version": "1.0",
+            "summary": "Parallel Discovery & Synthesis Plan",
+            "steps": [
+                {
+                    "step_id": 1,
+                    "objective": "Get current system date",
+                    "target_type": "tool",
+                    "target_name": "get_date",
+                    "params": {},
+                    "depends_on": [],
+                },
+                {
+                    "step_id": 2,
+                    "objective": "List available tools for res.partner",
+                    "target_type": "tool",
+                    "target_name": "agent_list_available_tools",
+                    "params": {"res_model": "res.partner"},
+                    "depends_on": [],
+                },
+                {
+                    "step_id": 3,
+                    "objective": "Synthesize findings from steps 1 and 2",
+                    "target_type": "agent",
+                    "target_name": "CRM Synthesis Sub-Agent",
+                    "params": {},
+                    "depends_on": [1, 2],
+                },
+            ],
+        }
+        self.thread._add_message("Run full plan", role="user", status="done")
+        assistant_msg = self.thread._add_message(
+            "Plan awaiting approval",
+            role="assistant",
+            status="awaiting_approval",
+        )
+        assistant_msg.payload = plan_payload
+
+        mock_chat.side_effect = [
+            "Sub-agent synthesis of step 1 and step 2",
+            "Final orchestrator summary of all 3 completed plan steps.",
+        ]
+
+        with trap_jobs() as trap:
+            ready_ids = assistant_msg.action_execute_plan()
+            self.assertEqual(ready_ids, [1, 2])
+            self.assertEqual(assistant_msg.status, "processing")
+            trap.assert_jobs_count(2, only=assistant_msg._process_plan_step_job)
+
+            trap.perform_enqueued_jobs()
+            trap.assert_jobs_count(1, only=assistant_msg._process_plan_step_job)
+
+            trap.perform_enqueued_jobs()
+            trap.assert_jobs_count(1, only=assistant_msg._action_plan_completed)
+
+            trap.perform_enqueued_jobs()
+
+        self.assertEqual(assistant_msg.status, "done")
+        self.assertEqual(
+            assistant_msg.content,
+            "Final orchestrator summary of all 3 completed plan steps.",
+        )
+        self.assertEqual(assistant_msg.payload["plan_status"], "completed")
+        steps_by_id = {s["step_id"]: s for s in assistant_msg.payload["steps"]}
+        self.assertEqual(steps_by_id[1]["status"], "done")
+        self.assertIn("date", steps_by_id[1]["result"])
+        self.assertEqual(steps_by_id[2]["status"], "done")
+        self.assertIn("tools", steps_by_id[2]["result"])
+        self.assertEqual(steps_by_id[3]["status"], "done")
+        self.assertEqual(
+            steps_by_id[3]["result"]["result"],
+            "Sub-agent synthesis of step 1 and step 2",
+        )
+        self.assertEqual(len(assistant_msg.task_thread_ids), 4)
+
+    def test_process_plan_step_job_early_returns_and_error_cases(self):
+        plan_payload = {
+            "plan_version": "1.0",
+            "summary": "Edge Cases Plan",
+            "steps": [
+                {
+                    "step_id": 1,
+                    "objective": "Step 1 with missing agent",
+                    "target_type": "agent",
+                    "target_name": "Missing Agent",
+                    "params": {},
+                    "depends_on": [],
+                    "status": "enqueued",
+                },
+                {
+                    "step_id": 2,
+                    "objective": "Step 2 waiting on Step 1",
+                    "target_type": "tool",
+                    "target_name": "get_date",
+                    "params": {},
+                    "depends_on": [1],
+                    "status": "pending",
+                },
+                {
+                    "step_id": 3,
+                    "objective": "Step 3 already done",
+                    "target_type": "tool",
+                    "target_name": "get_date",
+                    "params": {},
+                    "depends_on": [],
+                    "status": "done",
+                    "result": {"date": "2026-11-07"},
+                },
+            ],
+        }
+        msg = self.thread._add_message(
+            "Edge cases", role="assistant", status="processing"
+        )
+        msg.payload = plan_payload
+
+        self.assertIsNone(msg._process_plan_step_job(999))
+        self.assertIsNone(msg._process_plan_step_job(3))
+        self.assertIsNone(msg._process_plan_step_job(2))
+
+        with self.assertRaises(UserError):
+            msg._process_plan_step_job(1)
+
+        msg.status = "cancel"
+        self.assertIsNone(msg._process_plan_step_job(1))
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.AiLlmClient.chat")
+    def test_action_plan_completed_empty_response_and_cancelled_early_return(
+        self, mock_chat
+    ):
+        msg = self.thread._add_message(
+            "Plan synthesis", role="assistant", status="processing"
+        )
+        msg.payload = {
+            "summary": "Synthesis Test",
+            "steps": [
+                {
+                    "step_id": 1,
+                    "objective": "Get date",
+                    "target_type": "tool",
+                    "target_name": "get_date",
+                    "status": "done",
+                    "result": {"date": "2026-11-07"},
+                }
+            ],
+        }
+
+        mock_chat.return_value = ""
+        msg._action_plan_completed()
+        self.assertEqual(msg.status, "cancel")
+        self.assertEqual(
+            msg.content, "Failed to synthesize action plan completion response."
+        )
+
+        msg._action_plan_completed()
+        self.assertEqual(msg.status, "cancel")

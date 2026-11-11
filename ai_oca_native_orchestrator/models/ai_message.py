@@ -1,9 +1,11 @@
 # Copyright 2026 Pierre Verkest
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+import copy
 import json
 import logging
 
 from odoo import fields, models
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -140,7 +142,12 @@ class AiMessage(models.Model):
         self.ensure_one()
         record = self.thread_id.record
         try:
-            return agent.execute_tool(tool_name, params=args, record=record), None
+            return (
+                agent.with_context(ai_message_id=self.id).execute_tool(
+                    tool_name, params=args, record=record
+                ),
+                None,
+            )
         except Exception as err:
             return None, {"error": str(err)}
 
@@ -166,7 +173,10 @@ class AiMessage(models.Model):
         return (
             content
             if content
-            else f"### Action Plan: {args.get('summary', '')}\n\n{steps_summary}\n\n*Awaiting approval to execute.*"
+            else (
+                f"### Action Plan: {args.get('summary', '')}\n\n"
+                f"{steps_summary}\n\n*Awaiting approval to execute.*"
+            )
         )
 
     def _process_tool_call(self, agent, tool_call, task_thread, content=None):
@@ -306,6 +316,214 @@ class AiMessage(models.Model):
                 current_messages.append(tool_msg)
 
         return content or "Maximum reasoning iterations reached."
+
+    def action_execute_plan(self, plan_payload=None):
+        """Initialize and dispatch asynchronous execution of an action plan DAG."""
+        self.ensure_one()
+        raw_payload = copy.deepcopy(plan_payload or self.payload or {})
+        steps = raw_payload.get("steps") or []
+        if not steps:
+            raise UserError(self.env._("No action plan steps found to execute."))
+        for step in steps:
+            step["status"] = "pending"
+            step["result"] = None
+            step["task_thread_id"] = None
+        raw_payload["plan_status"] = "running"
+        self.write({"status": "processing", "payload": raw_payload})
+        self._notify_thread_bus_update(status="processing")
+        return self._dispatch_ready_plan_steps()
+
+    def _dispatch_ready_plan_steps(self):
+        """Enqueue ready pending plan steps, or complete plan when all are done."""
+        self.ensure_one()
+        payload = copy.deepcopy(self.payload or {})
+        steps = payload.get("steps") or []
+        done_step_ids = {s["step_id"] for s in steps if s.get("status") == "done"}
+        ready_step_ids = []
+        for step in steps:
+            if step.get("status") != "pending":
+                continue
+            deps = step.get("depends_on") or []
+            if all(dep_id in done_step_ids for dep_id in deps):
+                step["status"] = "enqueued"
+                ready_step_ids.append(step["step_id"])
+
+        if (
+            len(done_step_ids) == len(steps)
+            and payload.get("plan_status") != "completed"
+        ):
+            payload["plan_status"] = "completed"
+            self.write({"payload": payload})
+            self.with_delay(
+                channel=self.queue_job_channel_name,
+            )._action_plan_completed()
+            return []
+
+        if ready_step_ids:
+            self.write({"payload": payload})
+            for step_id in ready_step_ids:
+                self.with_delay(
+                    channel=self.queue_job_channel_name,
+                )._process_plan_step_job(step_id)
+        return ready_step_ids
+
+    def _process_plan_step_job(self, step_id, plan_id=None):
+        """Execute a single DAG plan step asynchronously inside queue_job."""
+        self.ensure_one()
+        if not self.exists() or self.status == "cancel":
+            return None
+
+        payload = copy.deepcopy(self.payload or {})
+        steps = payload.get("steps") or []
+        step = next((s for s in steps if s.get("step_id") == step_id), None)
+        if not step or step.get("status") == "done":
+            return None
+
+        done_steps = {
+            s["step_id"]: s.get("result") for s in steps if s.get("status") == "done"
+        }
+        deps = step.get("depends_on") or []
+        if any(dep_id not in done_steps for dep_id in deps):
+            return None
+
+        target_type = step.get("target_type")
+        target_name = step.get("target_name")
+        objective = step.get("objective") or f"Step {step_id}"
+        step_params = copy.deepcopy(step.get("params") or {})
+
+        # sudo() is used to create the audit ai.task.thread record for this step.
+        task_thread = (
+            self.env["ai.task.thread"]
+            .sudo()
+            .create(
+                {
+                    "message_id": self.id,
+                    "name": f"Plan Step {step_id}: {target_name}",
+                }
+            )
+        )
+
+        if target_type == "agent":
+            # sudo() is used to lookup the target sub-agent configuration;
+            # execute_task enforces the sub-agent's execution_mode security context.
+            sub_agent = (
+                self.env["ai.agent"]
+                .sudo()
+                .search(
+                    [("name", "=", target_name), ("active", "=", True)],
+                    limit=1,
+                )
+            )
+            if not sub_agent:
+                raise UserError(
+                    self.env._(
+                        "Sub-agent '%(agent_name)s' was not found or is inactive.",
+                        agent_name=target_name,
+                    )
+                )
+            step_params.setdefault(
+                "dependency_results",
+                {str(dep_id): done_steps[dep_id] for dep_id in deps},
+            )
+            step_result = sub_agent.execute_task(
+                task_thread=task_thread,
+                goal=objective,
+                params=step_params,
+                record=self.thread_id.record,
+            )
+        else:
+            agent = self._get_orchestrator_agent()
+            task_thread._add_message(
+                content=(
+                    f"Objective: {objective}\n"
+                    f"Executing tool '{target_name}' with params "
+                    f"{json.dumps(step_params)}"
+                ),
+                role="user",
+                payload=step_params or None,
+            )
+            step_result = agent.with_context(ai_message_id=self.id).execute_tool(
+                target_name,
+                params=step_params,
+                record=self.thread_id.record,
+            )
+            task_thread.payload = step_result
+            task_thread._add_message(
+                content=json.dumps(step_result),
+                role="tool",
+                payload=step_result,
+            )
+
+        updated_payload = copy.deepcopy(self.payload or {})
+        for s in updated_payload.get("steps", []):
+            if s.get("step_id") == step_id:
+                s["status"] = "done"
+                s["result"] = step_result
+                s["task_thread_id"] = task_thread.id
+        self.write({"payload": updated_payload})
+        self._dispatch_ready_plan_steps()
+        return step_result
+
+    def _action_plan_completed(self):
+        """Synthesize final assistant response once all DAG plan steps finish."""
+        self.ensure_one()
+        if not self.exists() or self.status == "cancel":
+            return
+
+        payload = self.payload or {}
+        steps = payload.get("steps") or []
+        summary = payload.get("summary") or "Action Plan"
+        steps_report = [
+            {
+                "step_id": s.get("step_id"),
+                "objective": s.get("objective"),
+                "target_type": s.get("target_type"),
+                "target_name": s.get("target_name"),
+                "result": s.get("result"),
+            }
+            for s in steps
+        ]
+        llm_messages = self._get_orchestrator_llm_messages()
+        llm_messages.append(
+            {
+                "role": "user",
+                "content": (
+                    f"All steps of the action plan '{summary}' have been executed.\n"
+                    f"Execution results:\n{json.dumps(steps_report)}\n"
+                    "Provide a clear, concise final response summarizing the outcome."
+                ),
+            }
+        )
+        ai_content = self.chat(llm_messages, model_type="fast")
+        if not ai_content:
+            self.write(
+                {
+                    "status": "cancel",
+                    "content": "Failed to synthesize action plan completion response.",
+                }
+            )
+            self._notify_thread_bus_update(status="error")
+            return
+
+        self.write({"content": ai_content, "status": "done"})
+        # sudo() is used to create the completion trace in ai.task.thread.
+        synthesis_thread = (
+            self.env["ai.task.thread"]
+            .sudo()
+            .create(
+                {
+                    "message_id": self.id,
+                    "name": "Orchestrator Plan Synthesis",
+                    "payload": {"steps_report": steps_report},
+                }
+            )
+        )
+        synthesis_thread._add_message(
+            content=ai_content,
+            role="assistant",
+            payload={"steps_report": steps_report},
+        )
+        self._notify_thread_bus_update(status="success")
 
     def _notify_thread_bus_update(self, status="success"):
         self.ensure_one()

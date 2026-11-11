@@ -3,6 +3,7 @@
 import logging
 
 from odoo import fields, models
+from odoo.fields import Domain
 
 _logger = logging.getLogger(__name__)
 
@@ -18,6 +19,19 @@ class AiThread(models.Model):
             raise_if_not_found=False,
         ),
     )
+
+    def _get_thread_queue_job_domain(self):
+        return super()._get_thread_queue_job_domain() | Domain(
+            [
+                ("model_name", "=", "ai.message"),
+                (
+                    "method_name",
+                    "in",
+                    ["_process_plan_step_job", "_action_plan_completed"],
+                ),
+                ("channel", "like", f"{self.queue_job_channel_name}%"),
+            ]
+        )
 
     def _action_generate_thread_title(self):
         self.ensure_one()
