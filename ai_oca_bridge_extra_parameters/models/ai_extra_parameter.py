@@ -1,7 +1,7 @@
 import ast
 import re
 
-from odoo import _, api, fields, models
+from odoo import api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.safe_eval import safe_eval
 
@@ -220,13 +220,15 @@ class AIExtraParameter(models.Model):
             else:
                 return str(result)
         else:
-            raise ValidationError(_("Invalid evaluate_type"))
+            raise ValidationError(self.env._("Invalid evaluate_type"))
 
     def _evaluate_expression(self, obj=None):
         expression = self.expression or ""
 
         if expression.count("{") != expression.count("}"):
-            raise ValidationError(_("Unbalanced braces in parameter expression."))
+            raise ValidationError(
+                self.env._("Unbalanced braces in parameter expression.")
+            )
 
         if "{" not in expression or "}" not in expression:
             return expression
@@ -238,7 +240,9 @@ class AIExtraParameter(models.Model):
 
             is_valid, error_msg = self._validate_expression(expr)
             if not is_valid:
-                raise ValidationError(_(f"Expression validation failed: {error_msg}"))
+                raise ValidationError(
+                    self.env._("Expression validation failed: %s", error_msg)
+                )
 
             eval_context = {
                 "object": obj,
@@ -254,11 +258,15 @@ class AIExtraParameter(models.Model):
             }
 
             try:
-                result = safe_eval(expr, eval_context, mode="eval", nocopy=True)
+                result = safe_eval(expr, eval_context, mode="eval")
                 return str(result) if result is not None else ""
             except Exception as e:
                 raise ValidationError(
-                    _(f"Error evaluating expression '{expr}': {str(e)}")
+                    self.env._(
+                        "Error evaluating expression '%(expr)s': %(error)s",
+                        expr=expr,
+                        error=e,
+                    )
                 ) from e
 
         try:
@@ -268,18 +276,20 @@ class AIExtraParameter(models.Model):
             raise
         except Exception as e:
             raise ValidationError(
-                _(f"Error processing parameter expression: {str(e)}")
+                self.env._("Error processing parameter expression: %s", e)
             ) from e
 
     def _evaluate_formula(self, obj=None):
         formula = self.formula or ""
 
         if not formula.strip():
-            raise ValidationError(_("Formula cannot be empty"))
+            raise ValidationError(self.env._("Formula cannot be empty"))
 
         is_valid, error_msg = self._validate_formula(formula)
         if not is_valid:
-            raise ValidationError(_(f"Formula validation failed: {error_msg}"))
+            raise ValidationError(
+                self.env._("Formula validation failed: %s", error_msg)
+            )
 
         eval_context = {
             "object": obj,
@@ -322,17 +332,19 @@ class AIExtraParameter(models.Model):
         }
 
         try:
-            safe_eval(formula, eval_context, mode="exec", nocopy=True)
+            safe_eval(formula, eval_context, mode="exec")
             return eval_context.get("result")
         except Exception as e:
-            raise ValidationError(_(f"Error executing formula: {str(e)}")) from e
+            raise ValidationError(self.env._("Error executing formula: %s", e)) from e
 
     def validate_parameter_expression(self):
         self.ensure_one()
         expression = self.expression or ""
 
         if expression.count("{") != expression.count("}"):
-            raise ValidationError(_("Unbalanced braces in parameter expression."))
+            raise ValidationError(
+                self.env._("Unbalanced braces in parameter expression.")
+            )
 
         expressions = []
         i = 0
@@ -355,7 +367,13 @@ class AIExtraParameter(models.Model):
         for expr in expressions:
             is_valid, error_msg = self._validate_expression(expr.strip())
             if not is_valid:
-                raise ValidationError(_(f"Invalid expression '{expr}': {error_msg}"))
+                raise ValidationError(
+                    self.env._(
+                        "Invalid expression '%(expr)s': %(error)s",
+                        expr=expr,
+                        error=error_msg,
+                    )
+                )
 
         return True
 
@@ -364,11 +382,11 @@ class AIExtraParameter(models.Model):
         formula = self.formula or ""
 
         if not formula.strip():
-            raise ValidationError(_("Formula cannot be empty"))
+            raise ValidationError(self.env._("Formula cannot be empty"))
 
         is_valid, error_msg = self._validate_formula(formula)
         if not is_valid:
-            raise ValidationError(_(f"Invalid formula: {error_msg}"))
+            raise ValidationError(self.env._("Invalid formula: %s", error_msg))
 
         return True
 
@@ -383,7 +401,13 @@ class AIExtraParameter(models.Model):
                     if record.formula:
                         record.validate_parameter_formula()
             except ValidationError as e:
-                raise ValidationError(_(f"Parameter '{record.name}': {e}")) from e
+                raise ValidationError(
+                    self.env._(
+                        "Parameter '%(name)s': %(error)s",
+                        name=record.name,
+                        error=e,
+                    )
+                ) from e
 
 
 class ExpressionVariableExtractor(ast.NodeVisitor):

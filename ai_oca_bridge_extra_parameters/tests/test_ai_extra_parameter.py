@@ -1,5 +1,13 @@
+import ast
+from unittest.mock import patch
+
 from odoo.exceptions import ValidationError
 from odoo.tests import TransactionCase
+
+from odoo.addons.ai_oca_bridge_extra_parameters.models.ai_extra_parameter import (
+    ExpressionVariableExtractor,
+    FormulaVariableExtractor,
+)
 
 
 class TestAIExtraParameter(TransactionCase):
@@ -34,6 +42,7 @@ class TestAIExtraParameter(TransactionCase):
                         0,
                         {
                             "name": "Child Company 1",
+                            "type": "other",
                             "email": "child1@example.com",
                             "phone": "+34 2 111 11 11",
                             "city": "Santa Cruz de Tenerife",
@@ -44,6 +53,7 @@ class TestAIExtraParameter(TransactionCase):
                         0,
                         {
                             "name": "Child Company 2",
+                            "type": "other",
                             "email": "child2@example.com",
                             "phone": "+34 2 222 22 22",
                             "city": "Barcelona",
@@ -394,14 +404,14 @@ class TestAIExtraParameter(TransactionCase):
         bridge_empty_model = self.env["ai.bridge"].create(
             {
                 "name": "Test Bridge Empty Model",
-                "model_id": self.env.ref("base.model_res_partner_title").id,
+                "model_id": self.env.ref("base.model_res_partner_category").id,
                 "url": "https://example.com/api",
                 "auth_type": "none",
                 "usage": "thread",
             }
         )
 
-        self.env["res.partner.title"].search([]).unlink()
+        self.env["res.partner.category"].search([]).unlink()
         bridge_empty_model.extra_parameter_ids = [(6, 0, [self.param_single_expr.id])]
         payload = bridge_empty_model.with_context(
             sample_payload=True
@@ -1103,3 +1113,139 @@ result = {
             result["processed"], ["TEST PARTNER", "test partner", "Test Partner"]
         )
         self.assertEqual(result["combined"], "A-B-C")
+
+    def _new_parameter(self, **values):
+        # A new record skips the constraints, so a value they would refuse
+        # still reaches the evaluation.
+        return self.env["ai.extra.parameter"].new(
+            dict({"name": "unchecked", "parameter_type": "record"}, **values)
+        )
+
+    def test_evaluate_unknown_evaluate_type(self):
+        param = self._new_parameter(evaluate_type="unknown")
+        with self.assertRaises(ValidationError) as cm:
+            param.evaluate_parameter(obj=self.partner)
+        self.assertIn("Invalid evaluate_type", str(cm.exception))
+
+    def test_evaluate_unbalanced_braces(self):
+        param = self._new_parameter(
+            evaluate_type="expression", expression="{object.name"
+        )
+        with self.assertRaises(ValidationError) as cm:
+            param.evaluate_parameter(obj=self.partner)
+        self.assertIn("Unbalanced braces", str(cm.exception))
+
+    def test_evaluate_invalid_expression(self):
+        param = self._new_parameter(
+            evaluate_type="expression", expression="Name: {unknown_var}"
+        )
+        with self.assertRaises(ValidationError) as cm:
+            param.evaluate_parameter(obj=self.partner)
+        self.assertIn("Expression validation failed", str(cm.exception))
+
+    def test_evaluate_expression_unexpected_error(self):
+        param = self._new_parameter(
+            evaluate_type="expression", expression="{object.name}"
+        )
+        with (
+            patch.object(
+                type(param), "_validate_expression", side_effect=RuntimeError("boom")
+            ),
+            self.assertRaises(ValidationError) as cm,
+        ):
+            param.evaluate_parameter(obj=self.partner)
+        self.assertIn("Error processing parameter expression", str(cm.exception))
+
+    def test_evaluate_invalid_formula(self):
+        param = self._new_parameter(evaluate_type="formula", formula="value = 1")
+        with self.assertRaises(ValidationError) as cm:
+            param.evaluate_parameter(obj=self.partner)
+        self.assertIn("Formula validation failed", str(cm.exception))
+
+    def test_parameters_without_expression_or_formula(self):
+        param_expression = self.env["ai.extra.parameter"].create(
+            {
+                "name": "no_expression",
+                "expression": False,
+                "parameter_type": "record",
+                "evaluate_type": "expression",
+            }
+        )
+        self.assertEqual(param_expression.evaluate_parameter(obj=self.partner), "")
+
+        param_formula = self.env["ai.extra.parameter"].create(
+            {
+                "name": "no_formula",
+                "formula": False,
+                "parameter_type": "record",
+                "evaluate_type": "formula",
+            }
+        )
+        with self.assertRaises(ValidationError) as cm:
+            param_formula.evaluate_parameter(obj=self.partner)
+        self.assertIn("Formula cannot be empty", str(cm.exception))
+
+    def test_braces_in_reverse_order(self):
+        param = self.env["ai.extra.parameter"].create(
+            {
+                "name": "reverse_braces",
+                "expression": "}{",
+                "parameter_type": "record",
+                "evaluate_type": "expression",
+            }
+        )
+        self.assertEqual(param.evaluate_parameter(obj=self.partner), "}{")
+
+    def test_extract_variables_invalid_code(self):
+        param_model = self.env["ai.extra.parameter"]
+        self.assertEqual(param_model._extract_variables("object.name +"), set())
+        self.assertEqual(param_model._extract_variables_from_code("result = ("), set())
+
+    def test_validate_code_unknown_parse_mode(self):
+        is_valid, error_msg = self.env["ai.extra.parameter"]._validate_code_base(
+            "1", "unknown"
+        )
+        self.assertFalse(is_valid)
+        self.assertIn("Invalid unknown", error_msg)
+
+    def test_expression_extractor_statements(self):
+        # Expressions are parsed in "eval" mode, which has no def or try, but
+        # the extractor still scopes them when it is given a whole module.
+        extractor = ExpressionVariableExtractor()
+        extractor.visit(
+            ast.parse(
+                "def double(value):\n"
+                "    return value * factor\n"
+                "total = double(2)\n"
+                "try:\n"
+                "    double(3)\n"
+                "except ValueError as error:\n"
+                "    error.args\n"
+                "except Exception:\n"
+                "    pass\n",
+                mode="exec",
+            )
+        )
+        self.assertEqual(extractor.variables, {"factor", "ValueError", "Exception"})
+
+    def test_formula_extractor_targets(self):
+        extractor = FormulaVariableExtractor()
+        extractor.visit(
+            ast.parse(
+                "for (first, (second, third)), item.attr in pairs:\n"
+                "    pass\n"
+                "for item.attr in values:\n"
+                "    pass\n"
+                "evens = {number for number in values if number % 2 == 0}\n"
+                "firsts = [first for (first, (second, third)) in pairs]\n"
+                "ones = [1 for item.attr in values]\n"
+                "try:\n"
+                "    evens.pop()\n"
+                "except KeyError:\n"
+                "    pass\n",
+                mode="exec",
+            )
+        )
+        self.assertEqual(
+            extractor.external_vars, {"item", "pairs", "values", "KeyError"}
+        )
