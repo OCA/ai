@@ -13,7 +13,7 @@ class AIExtraParameter(models.Model):
     name = fields.Char(required=True)
     expression = fields.Char()
     formula = fields.Text(
-        default="if object:\n" "    result = {'result_key': object.property}\n",
+        default="if object:\n    result = {'result_key': object.property}\n",
     )
     parameter_type = fields.Selection(
         [

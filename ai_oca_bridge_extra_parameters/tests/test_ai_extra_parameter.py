@@ -162,7 +162,7 @@ class TestAIExtraParameter(TransactionCase):
             {
                 "name": "type_param",
                 "expression": (
-                    "Int: {int(42.7)} - Bool: {bool(object.name)} - " "Str: {str(123)}"
+                    "Int: {int(42.7)} - Bool: {bool(object.name)} - Str: {str(123)}"
                 ),
                 "parameter_type": "record",
                 "evaluate_type": "expression",
