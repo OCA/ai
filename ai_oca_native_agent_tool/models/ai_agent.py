@@ -1,5 +1,8 @@
 # Copyright 2026 Pierre Verkest
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+import contextlib
+import json
+
 from odoo import fields, models
 from odoo.exceptions import UserError
 
@@ -18,6 +21,11 @@ class AiAgent(models.Model):
         string="Allowed Tools",
     )
 
+    def _prepare_tool_definition(self, tool) -> dict:
+        """Hook to allow subclasses to customize or enrich a tool definition."""
+        self.ensure_one()
+        return tool._prepare_tool_definition()
+
     def get_openai_tools_definitions(self, tool_names=None):
         """Return formatted tool declarations for OpenAI tool calling schema."""
         self.ensure_one()
@@ -25,55 +33,29 @@ class AiAgent(models.Model):
         if tool_names is not None:
             allowed_names = set(tool_names)
             tools = tools.filtered(lambda t: t.name in allowed_names)
-        openai_tools = []
-        for tool in tools:
-            definition = tool._get_tool_definition()
-            openai_tools.append(
-                {
-                    "type": "function",
-                    "function": {
-                        "name": definition["name"],
-                        "description": definition.get("description") or "",
-                        "parameters": definition.get("inputSchema")
-                        or {"type": "object", "properties": {}},
-                    },
-                }
-            )
-        return openai_tools
+        return [
+            tool._to_openai_tool(definition=self._prepare_tool_definition(tool))
+            for tool in tools
+        ]
 
     def get_decision_tool_candidates(self, include_done: bool = True) -> list[dict]:
         """Return candidate choices formatted for System 1 Decision Model routing."""
         self.ensure_one()
         candidates = [
-            {
-                "value": tool.name,
-                "description": tool.description or tool.name,
-            }
+            tool._to_decision_choice(definition=self._prepare_tool_definition(tool))
             for tool in self.tool_ids
         ]
         if include_done:
-            candidates.append(
-                {
-                    "value": "done",
-                    "description": (
-                        "Task is complete or can be answered directly "
-                        "without calling another tool."
-                    ),
-                }
-            )
+            candidates.append(self.env["ai.tool"]._get_done_decision_choice())
         return candidates
 
     def tool_requires_arguments(self, tool_name: str) -> bool:
-        """Return True if the named tool declares input properties or required fields."""
+        """Return True if the named tool declares input arguments."""
         self.ensure_one()
         tool = self.tool_ids.filtered(lambda t: t.name == tool_name)[:1]
         if not tool:
             return False
-        definition = tool._get_tool_definition()
-        input_schema = definition.get("inputSchema") or {}
-        return bool(
-            input_schema.get("properties") or input_schema.get("required")
-        )
+        return tool._requires_arguments(definition=self._prepare_tool_definition(tool))
 
     def execute_tool(self, tool_name, params=None, record=None):
         """Execute named tool under agent's execution_mode security context."""
@@ -204,7 +186,14 @@ class AiAgent(models.Model):
             "payload": {"type": "object"},
         },
     )
-    def agent_propose_action_plan(self, summary, steps, **kwargs):
+    def agent_propose_action_plan(self, summary=None, steps=None, **kwargs):
+        if not summary or steps is None:
+            raise ValueError(
+                "Both 'summary' and 'steps' are required to propose an action plan."
+            )
+        if isinstance(steps, str):
+            with contextlib.suppress(json.JSONDecodeError):
+                steps = json.loads(steps)
         plan_payload = ActionPlanPayload(summary=summary, steps=steps)
         return {
             "status": "awaiting_approval",

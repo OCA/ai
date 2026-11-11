@@ -11,7 +11,7 @@
     "license": "AGPL-3",
     "depends": [
         "ai_oca_native_agent",
-        "ai_tool",
+        "ai_oca_native_llm_tool",
     ],
     "data": [
         "data/ai_tool_agent_discovery.xml",

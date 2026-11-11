@@ -1,5 +1,9 @@
 # Copyright 2026 Pierre Verkest
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+import json
+
+from pydantic import ValidationError
+
 from odoo.exceptions import UserError
 from odoo.tests.common import TransactionCase
 
@@ -75,9 +79,7 @@ class TestAiAgentTool(TransactionCase):
         self.assertIn("post_message", values_with_done)
         self.assertEqual(values_with_done[-1], "done")
 
-        candidates_no_done = self.agent.get_decision_tool_candidates(
-            include_done=False
-        )
+        candidates_no_done = self.agent.get_decision_tool_candidates(include_done=False)
         values_no_done = [c["value"] for c in candidates_no_done]
         self.assertNotIn("done", values_no_done)
         self.assertEqual(len(values_no_done), 3)
@@ -173,3 +175,14 @@ class TestAiAgentTool(TransactionCase):
         self.assertEqual(res["payload"]["summary"], "Test proposal")
         self.assertEqual(len(res["payload"]["steps"]), 1)
         self.assertEqual(res["payload"]["steps"][0]["objective"], "Check inventory")
+
+        res_str = self.agent.agent_propose_action_plan(
+            summary="JSON string steps", steps=json.dumps(steps)
+        )
+        self.assertEqual(res_str["status"], "awaiting_approval")
+        self.assertEqual(len(res_str["payload"]["steps"]), 1)
+
+        with self.assertRaises(ValidationError):
+            self.agent.agent_propose_action_plan(
+                summary="Bad steps", steps="<step>invalid</step>"
+            )
