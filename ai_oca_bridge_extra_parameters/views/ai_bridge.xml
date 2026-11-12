@@ -1,0 +1,12 @@
+<odoo>
+    <record id="ai_bridge_form_view_extra_parameters" model="ir.ui.view">
+        <field name="name">ai.bridge.form.extra.parameters</field>
+        <field name="model">ai.bridge</field>
+        <field name="inherit_id" ref="ai_oca_bridge.ai_bridge_form_view" />
+        <field name="arch" type="xml">
+            <field name="description" position="after">
+                <field name="extra_parameter_ids" widget="many2many_tags" />
+            </field>
+        </field>
+    </record>
+</odoo>
