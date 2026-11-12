@@ -1,0 +1,467 @@
+from unittest.mock import patch
+
+from odoo.orm.model_classes import add_to_registry
+from odoo.tests.common import TransactionCase
+
+from odoo.addons.ai_oca_native_llm.tests.common import (
+    OpenAIMockDecisionResponse,
+    OpenAIMockResponse,
+)
+
+
+class TestAiLlmClient(TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        from .fake_models import FakeModel
+
+        add_to_registry(cls.registry, FakeModel)
+        cls.addClassCleanup(cls.registry.__delitem__, "fake.model")
+        cls.registry._setup_models__(cls.env.cr, ["fake.model"])
+        cls.registry.init_models(cls.env.cr, ["fake.model"], {"models_to_check": True})
+        cls.env["ir.config_parameter"].sudo().set_param(
+            "ai_llm.base_url", "http://test-url:11434/v1"
+        )
+        cls.env["ir.config_parameter"].sudo().set_param(
+            "ai_oca_native_llm.api_key", "test-key"
+        )
+        cls.env["ir.config_parameter"].sudo().set_param(
+            "ai_llm.reasoning_model", "test-model"
+        )
+        cls.env["ir.config_parameter"].sudo().set_param(
+            "ai_llm.fast_model", "other-model"
+        )
+
+    def setUp(self):
+        super().setUp()
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.OpenAI")
+    def test_chat_success(self, mock_client_class):
+        mock_instance = mock_client_class.return_value
+        mock_instance.chat.completions.create.return_value = OpenAIMockResponse(
+            "Hello from mock"
+        )
+
+        messages = [{"role": "user", "content": "Hi"}]
+        response = self.env["fake.model"].chat(messages, options={"temperature": 0.7})
+
+        mock_client_class.assert_called_once_with(
+            base_url="http://test-url:11434/v1", api_key="test-key"
+        )
+        mock_instance.chat.completions.create.assert_called_once_with(
+            model="other-model",
+            messages=messages,
+            temperature=0.7,
+        )
+        self.assertEqual(response, "Hello from mock")
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.OpenAI")
+    def test_chat_success_with_specific_model_type(self, mock_client_class):
+        mock_instance = mock_client_class.return_value
+        mock_instance.chat.completions.create.return_value = OpenAIMockResponse(
+            "Hello from mock"
+        )
+
+        messages = [{"role": "user", "content": "Hi"}]
+        response = self.env["fake.model"].chat(
+            messages, model_type="reasoning", options={"temperature": 0.7}
+        )
+
+        mock_client_class.assert_called_once_with(
+            base_url="http://test-url:11434/v1", api_key="test-key"
+        )
+        mock_instance.chat.completions.create.assert_called_once_with(
+            model="test-model",
+            messages=messages,
+            temperature=0.7,
+        )
+        self.assertEqual(response, "Hello from mock")
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.OpenAI")
+    def test_chat_success_with_explicit_model(self, mock_client_class):
+        mock_instance = mock_client_class.return_value
+        mock_instance.chat.completions.create.return_value = OpenAIMockResponse(
+            "Hello from mock"
+        )
+
+        messages = [{"role": "user", "content": "Hi"}]
+        response = self.env["fake.model"].chat(
+            messages, model="custom-llama", options={"temperature": 0.7}
+        )
+
+        mock_instance.chat.completions.create.assert_called_once_with(
+            model="custom-llama",
+            messages=messages,
+            temperature=0.7,
+        )
+        self.assertEqual(response, "Hello from mock")
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.OpenAI")
+    def test_chat_success_without_options(self, mock_client_class):
+        mock_instance = mock_client_class.return_value
+        mock_instance.chat.completions.create.return_value = OpenAIMockResponse(
+            "Hello from mock without options"
+        )
+
+        messages = [{"role": "user", "content": "Hi"}]
+        response = self.env["fake.model"].chat(messages)
+
+        mock_instance.chat.completions.create.assert_called_once_with(
+            model="other-model",
+            messages=messages,
+        )
+        self.assertEqual(response, "Hello from mock without options")
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.OpenAI")
+    def test_chat_with_response_model(self, mock_client_class):
+        from pydantic import BaseModel
+
+        class MockModel(BaseModel):
+            id: int
+
+        mock_instance = mock_client_class.return_value
+        mock_instance.beta.chat.completions.parse.return_value = OpenAIMockResponse(
+            '{"id": 4}'
+        )
+
+        messages = [{"role": "user", "content": "Hi"}]
+        response = self.env["fake.model"].chat(
+            messages, response_model=MockModel, options={"temperature": 0.7}
+        )
+
+        mock_instance.beta.chat.completions.parse.assert_called_once_with(
+            model="other-model",
+            messages=messages,
+            response_format=MockModel,
+            temperature=0.7,
+        )
+        self.assertEqual(response, '{"id": 4}')
+
+    def test_get_model_fallback(self):
+        self.env["ir.config_parameter"].sudo().search(
+            [("key", "in", ["ai_llm.fast_model", "ai_llm.reasoning_model"])]
+        ).unlink()
+
+        fast_model = self.env["fake.model"]._get_model("fast")
+        self.assertEqual(fast_model, "llama3.2")
+
+        reasoning_model = self.env["fake.model"]._get_model("reasoning")
+        self.assertEqual(reasoning_model, "llama3")
+
+        unknown_model = self.env["fake.model"]._get_model("unknown")
+        self.assertEqual(unknown_model, "llama3.2")
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.OpenAI")
+    def test_chat_length_finish_reason_error(self, mock_client_class):
+        from openai import LengthFinishReasonError
+
+        mock_instance = mock_client_class.return_value
+        mock_completion = OpenAIMockResponse("truncated content")
+        mock_instance.beta.chat.completions.parse.side_effect = LengthFinishReasonError(
+            completion=mock_completion
+        )
+
+        messages = [{"role": "user", "content": "Hi"}]
+        response = self.env["fake.model"].chat(messages, response_model=dict)
+        self.assertIsNone(response)
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.OpenAI")
+    def test_chat_api_error(self, mock_client_class):
+        mock_instance = mock_client_class.return_value
+        mock_instance.chat.completions.create.side_effect = Exception("API error")
+
+        messages = [{"role": "user", "content": "Hi"}]
+        response = self.env["fake.model"].chat(messages)
+        self.assertIsNone(response)
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.OpenAI")
+    def test_get_client_uses_model_type_specific_base_url_when_configured(
+        self, mock_client_class
+    ):
+        self.env["ir.config_parameter"].sudo().set_param(
+            "ai_llm.decision_base_url", "http://decision-host:8001/v1"
+        )
+        self.env["fake.model"]._get_client(model_type="decision")
+        mock_client_class.assert_called_once_with(
+            base_url="http://decision-host:8001/v1", api_key="test-key"
+        )
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.OpenAI")
+    def test_decide_serializes_choice_predicate_score_and_refusal_answers(
+        self, mock_client_class
+    ):
+        mock_instance = mock_client_class.return_value
+        choice_ans = type(
+            "MockChoiceAns",
+            (),
+            {
+                "name": "q_choice",
+                "type": "choice",
+                "choice": "option_a",
+                "confidence": 0.95,
+                "probabilities": [
+                    type(
+                        "MockProb",
+                        (),
+                        {"value": "option_a", "probability": 0.95},
+                    )(),
+                    type(
+                        "MockProb",
+                        (),
+                        {"value": "option_b", "probability": 0.05},
+                    )(),
+                ],
+            },
+        )()
+        predicate_ans = type(
+            "MockPredAns",
+            (),
+            {
+                "name": "q_pred",
+                "type": "predicate",
+                "probability": 0.88,
+            },
+        )()
+        score_ans = type(
+            "MockScoreAns",
+            (),
+            {
+                "name": "q_score",
+                "type": "score",
+                "score": 2.5,
+                "confidence": 0.8,
+                "probabilities": [
+                    type(
+                        "MockScoreProb",
+                        (),
+                        {"label": "high", "value": 3, "probability": 0.5},
+                    )()
+                ],
+            },
+        )()
+        refusal_ans = type(
+            "MockRefusalAns",
+            (),
+            {
+                "name": "q_refusal",
+                "type": "refusal",
+            },
+        )()
+        mock_instance.decisions.create.return_value = OpenAIMockDecisionResponse(
+            answers=[choice_ans, predicate_ans, score_ans, refusal_ans]
+        )
+
+        questions = [{"name": "q_choice", "type": "choice"}]
+        res = self.env["fake.model"].decide(
+            input_data="Test input",
+            questions=questions,
+            options={"safety_identifier": "org-1"},
+        )
+
+        mock_instance.decisions.create.assert_called_once_with(
+            model="decision",
+            input="Test input",
+            questions=questions,
+            safety_identifier="org-1",
+        )
+        self.assertEqual(len(res), 4)
+        self.assertEqual(res[0]["choice"], "option_a")
+        self.assertEqual(res[0]["confidence"], 0.95)
+        self.assertEqual(len(res[0]["probabilities"]), 2)
+        self.assertEqual(
+            res[1], {"name": "q_pred", "type": "predicate", "probability": 0.88}
+        )
+        self.assertEqual(res[2]["type"], "score")
+        self.assertEqual(res[2]["score"], 2.5)
+        self.assertEqual(res[2]["probabilities"][0]["label"], "high")
+        self.assertEqual(res[3], {"name": "q_refusal", "type": "refusal"})
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.OpenAI")
+    def test_decide_with_explicit_model_and_error_returns_none(self, mock_client_class):
+        mock_instance = mock_client_class.return_value
+        mock_instance.decisions.create.side_effect = RuntimeError("Decision failure")
+
+        res = self.env["fake.model"].decide(
+            input_data="Test",
+            questions=[{"name": "q1", "type": "predicate", "instructions": "Check"}],
+            model="custom-decision-model",
+        )
+        self.assertIsNone(res)
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.OpenAI")
+    def test_decide_choice_returns_choice_dict_or_none_on_refusal_or_error(
+        self, mock_client_class
+    ):
+        mock_instance = mock_client_class.return_value
+        choice_ans = type(
+            "MockChoiceAns",
+            (),
+            {
+                "name": "next_action",
+                "type": "choice",
+                "choice": "option_b",
+                "confidence": 0.99,
+                "probabilities": [],
+            },
+        )()
+        refusal_ans = type(
+            "MockRefusalAns",
+            (),
+            {
+                "name": "next_action",
+                "type": "refusal",
+            },
+        )()
+        mock_instance.decisions.create.side_effect = [
+            OpenAIMockDecisionResponse(answers=[choice_ans]),
+            OpenAIMockDecisionResponse(answers=[refusal_ans]),
+            RuntimeError("Network error"),
+        ]
+
+        choices = [
+            {"value": "option_a", "description": "Option A"},
+            {"value": "option_b", "description": "Option B"},
+        ]
+        ans1 = self.env["fake.model"].decide_choice(
+            input_data="Hi",
+            choices=choices,
+            instructions="Pick next action",
+        )
+        self.assertEqual(ans1["choice"], "option_b")
+
+        ans2 = self.env["fake.model"].decide_choice(
+            input_data="Hi",
+            choices=choices,
+            instructions="Pick next action",
+        )
+        self.assertIsNone(ans2)
+
+        ans3 = self.env["fake.model"].decide_choice(
+            input_data="Hi",
+            choices=choices,
+            instructions="Pick next action",
+        )
+        self.assertIsNone(ans3)
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.OpenAI")
+    def test_decide_normalizes_message_list_and_shortcuts_single_choice(
+        self, mock_client_class
+    ):
+        mock_instance = mock_client_class.return_value
+        choice_ans = type(
+            "MockChoiceAns",
+            (),
+            {
+                "name": "next_action",
+                "type": "choice",
+                "choice": "option_b",
+                "confidence": 0.99,
+                "probabilities": [],
+            },
+        )()
+        mock_instance.decisions.create.return_value = OpenAIMockDecisionResponse(
+            answers=[choice_ans]
+        )
+
+        messages = [
+            "Raw string entry",
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": ""},
+            {"role": "user", "content": "Hello there"},
+        ]
+        choices = [
+            {"value": "option_a", "description": "Option A"},
+            {"value": "option_b", "description": "Option B"},
+        ]
+
+        res = self.env["fake.model"].decide_choice(
+            input_data=messages,
+            choices=choices,
+            instructions="Pick option",
+        )
+        self.assertEqual(res["choice"], "option_b")
+        call_kwargs = mock_instance.decisions.create.call_args.kwargs
+        self.assertEqual(
+            call_kwargs["input"],
+            "Raw string entry\n\nSystem: You are a helpful assistant.\n\n"
+            "User: Hello there",
+        )
+
+        single_res = self.env["fake.model"].decide_choice(
+            input_data=messages,
+            choices=[{"value": "only_option", "description": "Only option"}],
+            instructions="Pick option",
+        )
+        self.assertEqual(single_res["choice"], "only_option")
+        self.assertEqual(single_res["confidence"], 1.0)
+        self.assertEqual(mock_instance.decisions.create.call_count, 1)
+
+    @patch("odoo.addons.ai_oca_native_llm.models.ai_llm_client.OpenAI")
+    def test_chat_passes_tools_and_tool_choice_and_extracts_tool_calls(
+        self, mock_client_class
+    ):
+        mock_instance = mock_client_class.return_value
+        fake_tool_call = type(
+            "FakeToolCall",
+            (),
+            {
+                "id": "call_123",
+                "type": "function",
+                "function": type(
+                    "FakeFunction",
+                    (),
+                    {"name": "get_date", "arguments": "{}"},
+                )(),
+            },
+        )()
+        mock_instance.chat.completions.create.return_value = OpenAIMockResponse(
+            None, tool_calls=[fake_tool_call]
+        )
+
+        tools = [{"type": "function", "function": {"name": "get_date"}}]
+        response = self.env["fake.model"].chat(
+            [{"role": "user", "content": "Date?"}],
+            tools=tools,
+            tool_choice="auto",
+        )
+
+        mock_instance.chat.completions.create.assert_called_once_with(
+            model="other-model",
+            messages=[{"role": "user", "content": "Date?"}],
+            tools=tools,
+            tool_choice="auto",
+        )
+        self.assertEqual(
+            response,
+            {
+                "content": None,
+                "tool_calls": [
+                    {
+                        "id": "call_123",
+                        "type": "function",
+                        "function": {"name": "get_date", "arguments": "{}"},
+                    }
+                ],
+            },
+        )
+
+    def test_normalize_decision_input_formats_assistant_tool_calls(self):
+        messages = [
+            {
+                "role": "assistant",
+                "content": "",
+                "tool_calls": [
+                    {
+                        "id": "call_1",
+                        "type": "function",
+                        "function": {"name": "get_date", "arguments": "{}"},
+                    }
+                ],
+            },
+            {"role": "tool", "content": '{"date": "2026-11-10"}'},
+        ]
+        formatted = self.env["fake.model"]._normalize_decision_input(messages)
+        self.assertEqual(
+            formatted,
+            'Assistant Tool Call: get_date({})\n\nTool: {"date": "2026-11-10"}',
+        )

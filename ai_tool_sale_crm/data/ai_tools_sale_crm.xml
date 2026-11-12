@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Pierre Verkest
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).  -->
+<odoo>
+    <record model="ai.tool" id="tool_update_lead_stage">
+        <field name="name">update_lead_stage</field>
+        <field
+            name="description"
+        >Update the CRM stage of an existing lead or opportunity.</field>
+        <field name="model_id" ref="crm.model_crm_lead" />
+        <field name="function_name">_ai_update_lead_stage</field>
+        <field name="kind">generic</field>
+    </record>
+</odoo>
