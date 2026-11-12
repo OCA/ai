@@ -5,6 +5,7 @@ import base64
 import hashlib
 import hmac
 import json
+import secrets
 import time
 from urllib.parse import urlencode, urlsplit
 
@@ -352,6 +353,8 @@ class McpOAuthController(http.Controller):
                 "redirect_uri": params["redirect_uri"],
                 "code_challenge": params["code_challenge"],
                 "exp": int(time.time()) + CODE_LIFETIME,
+                # Two consents in the same second must not give the same code.
+                "nonce": secrets.token_urlsafe(16),
             },
         )
 

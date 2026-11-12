@@ -240,6 +240,9 @@ class TestMcpOAuth(HttpCase):
             response.json()["result"]["tools"][0]["name"],
             self.env.ref("ai_tool.current_date").name,
         )
+        # Two consents in the same second give two codes, not a replay.
+        with freeze_time(fields.Datetime.now()):
+            self.assertNotEqual(self._consent()["code"], self._consent()["code"])
 
     def test_token_errors(self):
         code = self._consent()["code"][0]
