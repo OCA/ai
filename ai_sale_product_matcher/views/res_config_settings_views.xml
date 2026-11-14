@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 VSL
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="res_config_settings_view_form_ai_sale_matcher" model="ir.ui.view">
+        <field name="name">res.config.settings.form.ai.sale.matcher</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//app[@name='sale_management']" position="inside">
+                <block
+                    title="AI Sale Product Matcher"
+                    name="ai_sale_product_matcher_setting_container"
+                >
+                    <setting
+                        id="ai_sale_matcher_connection"
+                        string="AI Connection"
+                        company_dependent="1"
+                        help="Default AI connection used to extract customer product requirements on sales orders."
+                    >
+                        <field name="ai_sale_matcher_connection_id" />
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>
