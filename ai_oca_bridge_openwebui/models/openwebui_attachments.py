@@ -18,19 +18,15 @@ class AiBridgeOpenWebuiAttachments(models.Model):
         """
         attachments = message.attachment_ids.sudo()
         if message.model == "discuss.channel" and message.res_id:
-            previous = (
-                self.env["mail.message"]
-                .sudo()
-                .search(
-                    [
-                        ("model", "=", message.model),
-                        ("res_id", "=", message.res_id),
-                        ("message_type", "=", "comment"),
-                        ("id", "<", message.id),
-                    ],
-                    order="id desc",
-                    limit=1,
-                )
+            previous = self.env["mail.message"].sudo().search(
+                [
+                    ("model", "=", message.model),
+                    ("res_id", "=", message.res_id),
+                    ("message_type", "=", "comment"),
+                    ("id", "<", message.id),
+                ],
+                order="id desc",
+                limit=1,
             )
             domain = [
                 ("res_model", "=", "discuss.channel"),

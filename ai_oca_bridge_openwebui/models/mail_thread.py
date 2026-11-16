@@ -19,13 +19,18 @@ class MailThread(models.AbstractModel):
         if message.message_type != "comment":
             return message
 
+        # A bridge can be used from more than one chatter model. When
+        # ``model_id`` is set, _openwebui_target_matches keeps the optional
+        # restriction. When it is empty, the bridge is intentionally available
+        # for every mail.thread record, including Discuss and project.task.
         partners = message.partner_ids.sudo()
         ai_users = partners.mapped("user_ids").filtered(
-            lambda user: user.ai_bridge_id
-            and user.ai_bridge_id.usage == "chatter"
-            and user.ai_bridge_id.payload_type == "openwebui"
-            and user.ai_bridge_id.model_id
-            and user.ai_bridge_id.model_id.model == self._name
+            lambda user: (
+                user.ai_bridge_id
+                and user.ai_bridge_id.usage == "chatter"
+                and user.ai_bridge_id.payload_type == "openwebui"
+                and user.ai_bridge_id._openwebui_target_matches(message)
+            )
         )
 
         for user in ai_users:

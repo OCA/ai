@@ -32,19 +32,15 @@ class TestOpenWebUIFeatures(common.TransactionCase):
             cls.env, login="openwebui-feature-ai", groups="base.group_user"
         )
         cls.ai_user.write({"ai_bridge_id": cls.bridge.id})
-        cls.chat = (
-            cls.env["discuss.channel"]
-            .with_user(cls.user.id)
-            .create(
-                {
-                    "name": "Feature chat",
-                    "channel_type": "chat",
-                    "channel_member_ids": [
-                        (0, 0, {"partner_id": cls.user.partner_id.id}),
-                        (0, 0, {"partner_id": cls.ai_user.partner_id.id}),
-                    ],
-                }
-            )
+        cls.chat = cls.env["discuss.channel"].with_user(cls.user.id).create(
+            {
+                "name": "Feature chat",
+                "channel_type": "chat",
+                "channel_member_ids": [
+                    (0, 0, {"partner_id": cls.user.partner_id.id}),
+                    (0, 0, {"partner_id": cls.ai_user.partner_id.id}),
+                ],
+            }
         )
 
     def _message(self, body, author=None, attachments=None):
@@ -87,7 +83,9 @@ class TestOpenWebUIFeatures(common.TransactionCase):
         current = self._message("Question actuelle")
         payload = self.bridge._prepare_payload(record=current)
         contents = [
-            item["content"] for item in payload["messages"] if item["role"] != "system"
+            item["content"]
+            for item in payload["messages"]
+            if item["role"] != "system"
         ]
         self.assertEqual(
             contents,
