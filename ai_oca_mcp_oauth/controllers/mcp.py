@@ -25,8 +25,8 @@ class McpController(mcp_controller.McpController):
                 headers=[
                     (
                         "WWW-Authenticate",
-                        'Bearer error="invalid_token", resource_metadata="%s"'
-                        % server._get_oauth_metadata_url(),
+                        'Bearer error="invalid_token", '
+                        f'resource_metadata="{server._get_oauth_metadata_url()}"',
                     )
                 ],
                 status=401,

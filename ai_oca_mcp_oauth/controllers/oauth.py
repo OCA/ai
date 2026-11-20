@@ -9,7 +9,7 @@ import secrets
 import time
 from urllib.parse import urlencode, urlsplit
 
-from odoo import _, http
+from odoo import http
 from odoo.http import request
 from odoo.tools.misc import hmac as odoo_hmac
 
@@ -228,6 +228,8 @@ class McpOAuthController(http.Controller):
         auth="none",
         methods=["POST"],
         csrf=False,
+        # The exchange creates a key: a read-only cursor would only retry.
+        readonly=False,
     )
     def oauth_token(self, key, **kwargs):
         server = self._get_oauth_server_or_404(key)
@@ -300,24 +302,24 @@ class McpOAuthController(http.Controller):
         """Return an error message, or None when the request is valid."""
         redirect_uri = params.get("redirect_uri")
         if not self._is_allowed_redirect_uri(redirect_uri):
-            return _("The application's redirect URI is not allowed.")
+            return request.env._("The application's redirect URI is not allowed.")
         if not client:
-            return _(
+            return request.env._(
                 "The application is not registered with this server. Remove it "
                 "from the AI client and add it again."
             )
         if not any(
             _match_redirect_uri(redirect_uri, uri) for uri in client["redirect_uris"]
         ):
-            return _("The application did not register this redirect URI.")
+            return request.env._("The application did not register this redirect URI.")
         if params.get("response_type") != "code":
-            return _("Unsupported response type.")
+            return request.env._("Unsupported response type.")
         if not params.get("code_challenge") or (
             params.get("code_challenge_method") != "S256"
         ):
-            return _("The application must use PKCE with the S256 method.")
+            return request.env._("The application must use PKCE with the S256 method.")
         if not server._is_oauth_user_allowed(request.env.user):
-            return _(
+            return request.env._(
                 "You are not allowed to connect AI clients. Ask your administrator "
                 "to add you to the group 'Connect AI Clients with OAuth'."
             )

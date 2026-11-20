@@ -29,9 +29,6 @@ class TestMcpOAuth(HttpCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        # Odoo 16 may keep a routing map built by the at_install tests of a
-        # module loaded before this one, without the routes of this module.
-        cls.env["ir.http"]._clear_routing_map()
         cls.server = cls._create_server("Test Server")
         cls.authorize_path = f"/mcp/{cls.server.key}/oauth/authorize"
         cls.group = cls.env.ref(GROUP)
@@ -246,9 +243,9 @@ class TestMcpOAuth(HttpCase):
 
     def test_token_errors(self):
         code = self._consent()["code"][0]
-        self.user.groups_id -= self.group
+        self.user.group_ids -= self.group
         self.assertEqual(self._token(code).json()["error"], "invalid_grant")
-        self.user.groups_id += self.group
+        self.user.group_ids += self.group
         for overrides in (
             {"code_verifier": "wrong-verifier"},
             {"redirect_uri": "http://localhost/callback"},
@@ -296,9 +293,9 @@ class TestMcpOAuth(HttpCase):
         self.user.active = False
         self.assertEqual(self._mcp(token).status_code, 401)
         self.user.active = True
-        self.user.groups_id -= self.group
+        self.user.group_ids -= self.group
         self.assertEqual(self._mcp(token).status_code, 401)
-        self.user.groups_id += self.group
+        self.user.group_ids += self.group
         self.assertEqual(self._mcp(token).status_code, 200)
         with freeze_time(fields.Datetime.now() + timedelta(days=31)):
             self.assertEqual(self._mcp(token).status_code, 401)
@@ -310,6 +307,12 @@ class TestMcpOAuth(HttpCase):
         server_key = self.server.key_ids
         user_data = self.user.with_user(self.user).read(["mcp_oauth_key_ids"])[0]
         self.assertEqual(user_data["mcp_oauth_key_ids"], server_key.ids)
+        # The connected clients are part of the preferences form.
+        form = self.env["res.users"].get_view(
+            view_id=self.env.ref("base.view_users_form_simple_modif").id,
+            view_type="form",
+        )
+        self.assertIn("mcp_oauth_key_ids", form["arch"])
         # Past its expiration date, a key no client has used since is still
         # active, but no longer listed.
         server_key.expiration_date = fields.Datetime.now() - timedelta(days=1)
@@ -328,7 +331,7 @@ class TestMcpOAuth(HttpCase):
         self.assertEqual((self.server.key_ids - manual_key).state, "expired")
         self.server.oauth_enabled = True
         self._get_token()
-        uninstall_hook(self.env.cr, self.registry)
+        uninstall_hook(self.env)
         oauth_keys = self.server.key_ids - manual_key
         self.assertEqual(set(oauth_keys.mapped("state")), {"expired"})
         self.assertEqual(manual_key.state, "active")

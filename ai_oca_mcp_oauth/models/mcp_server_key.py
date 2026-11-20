@@ -19,13 +19,9 @@ class McpServerKey(models.Model):
         help="The key was issued to an AI client through OAuth.",
     )
 
-    _sql_constraints = [
-        (
-            "oauth_code_hash_uniq",
-            "unique(oauth_code_hash)",
-            "An authorization code gives one key only.",
-        ),
-    ]
+    _oauth_code_hash_uniq = models.Constraint(
+        "unique (oauth_code_hash)", "An authorization code gives one key only."
+    )
 
     @api.depends("oauth_code_hash")
     def _compute_is_oauth(self):

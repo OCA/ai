@@ -4,7 +4,7 @@
 {
     "name": "AI OCA MCP OAuth",
     "summary": "Let MCP clients such as Claude get a key by signing in to Odoo",
-    "version": "16.0.1.0.0",
+    "version": "19.0.1.0.0",
     "website": "https://github.com/OCA/ai",
     "license": "AGPL-3",
     "author": "Quartile,Odoo Community Association (OCA)",
