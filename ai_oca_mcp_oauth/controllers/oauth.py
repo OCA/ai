@@ -18,10 +18,12 @@ CODE_SCOPE = "ai_oca_mcp_oauth.code"
 CLIENT_SCOPE = "ai_oca_mcp_oauth.client"
 CODE_LIFETIME = 300  # seconds
 CLIENT_NAME_MAX_LENGTH = 64
-# Claude (web, Desktop, mobile) and Claude Code, always allowed. Claude Code
-# listens on a random port, so the port of a loopback URI is ignored when matching.
+# Claude (web, Desktop, mobile), Claude Code and ChatGPT, always allowed.
+# Claude Code listens on a random port, so the port of a loopback URI is
+# ignored when matching.
 DEFAULT_REDIRECT_URIS = [
     "https://claude.ai/api/mcp/auth_callback",
+    "https://chatgpt.com/connector_platform_oauth_redirect",
     "http://localhost/callback",
     "http://127.0.0.1/callback",
 ]
@@ -34,6 +36,7 @@ AUTHORIZE_PARAMS = (
     "state",
     "code_challenge",
     "code_challenge_method",
+    "resource",
 )
 
 
@@ -235,6 +238,8 @@ class McpOAuthController(http.Controller):
         server = self._get_oauth_server_or_404(key)
         if kwargs.get("grant_type") != "authorization_code":
             return self._oauth_error("unsupported_grant_type")
+        if kwargs.get("resource") and kwargs["resource"] != server.url:
+            return self._oauth_error("invalid_target")
         code = kwargs.get("code")
         data = _unsign(request.env, CODE_SCOPE, code)
         if (
@@ -246,6 +251,8 @@ class McpOAuthController(http.Controller):
             or not _check_pkce(data["code_challenge"], kwargs.get("code_verifier"))
         ):
             return self._oauth_error("invalid_grant")
+        if data.get("resource") and data["resource"] != kwargs.get("resource"):
+            return self._oauth_error("invalid_target")
         user = request.env["res.users"].sudo().browse(data["uid"]).exists()
         if not server._is_oauth_user_allowed(user):
             return self._oauth_error("invalid_grant")
@@ -312,6 +319,10 @@ class McpOAuthController(http.Controller):
             _match_redirect_uri(redirect_uri, uri) for uri in client["redirect_uris"]
         ):
             return request.env._("The application did not register this redirect URI.")
+        if params.get("resource") and params["resource"] != server.url:
+            return request.env._(
+                "The application asked for another resource than this server."
+            )
         if params.get("response_type") != "code":
             return request.env._("Unsupported response type.")
         if not params.get("code_challenge") or (
@@ -353,6 +364,7 @@ class McpOAuthController(http.Controller):
                 "client_id": params["client_id"],
                 "client_name": client["name"],
                 "redirect_uri": params["redirect_uri"],
+                "resource": params.get("resource"),
                 "code_challenge": params["code_challenge"],
                 "exp": int(time.time()) + CODE_LIFETIME,
                 # Two consents in the same second must not give the same code.

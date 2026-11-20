@@ -32,8 +32,9 @@ AI OCA MCP OAuth
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
 
-This module lets MCP clients such as Claude connect to an ``ai_oca_mcp``
-server through an OAuth sign-in, instead of a key entered by hand.
+This module lets MCP clients such as Claude and ChatGPT connect to an
+``ai_oca_mcp`` server through an OAuth sign-in, instead of a key entered
+by hand.
 
 When the user clicks **Connect** (or **Authenticate**) in the client, a
 browser opens on Odoo. The user signs in, reviews the server, its tools
@@ -50,9 +51,10 @@ off on the server or this module is uninstalled.
 
 The module implements the parts of the `MCP authorization
 specification <https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization>`__
-that Claude needs: the authorization code flow with PKCE (S256),
-protected resource and authorization server metadata, and dynamic client
-registration.
+that Claude and ChatGPT need: the authorization code flow with PKCE
+(S256), the resource indicator (RFC 8707), protected resource and
+authorization server metadata, and dynamic client registration. A
+``resource`` parameter, when sent, must be the server's URL.
 
 **Table of contents**
 
@@ -75,9 +77,9 @@ Optional system parameters:
 
 - ``ai_oca_mcp_oauth.redirect_uris``: the redirect URIs of other MCP
   clients to allow, separated by spaces or new lines, for example
-  ``https://chatgpt.com/connector_platform_oauth_redirect`` for ChatGPT.
-  Claude and Claude Code are always allowed. For ``localhost`` and
-  ``127.0.0.1``, any port is accepted, but the path must match.
+  ``https://client.example.com/callback``. Claude, Claude Code and
+  ChatGPT are always allowed. For ``localhost`` and ``127.0.0.1``, any
+  port is accepted, but the path must match.
 - ``ai_oca_mcp_oauth.token_lifetime_days``: how many days an issued key
   is valid (default ``30``). When it expires, the client asks the user
   to connect again.

@@ -20,6 +20,7 @@ from odoo.addons.ai_oca_mcp_oauth.controllers import oauth
 from odoo.addons.ai_oca_mcp_oauth.hooks import uninstall_hook
 
 REDIRECT_URI = "https://claude.ai/api/mcp/auth_callback"
+CHATGPT_REDIRECT_URI = "https://chatgpt.com/connector_platform_oauth_redirect"
 CODE_VERIFIER = "test-code-verifier-0123456789-0123456789-0123456789"
 GROUP = "ai_oca_mcp_oauth.group_mcp_oauth"
 
@@ -63,10 +64,10 @@ class TestMcpOAuth(HttpCase):
             headers["Authorization"] = f"Bearer {token}"
         return self.url_open(path, data=json.dumps(payload), headers=headers)
 
-    def _register(self, redirect_uri=REDIRECT_URI, server=None):
+    def _register(self, redirect_uri=REDIRECT_URI, server=None, client_name="Claude"):
         return self._post_json(
             f"/mcp/{(server or self.server).key}/oauth/register",
-            {"client_name": "Claude", "redirect_uris": [redirect_uri]},
+            {"client_name": client_name, "redirect_uris": [redirect_uri]},
         )
 
     def _mcp(self, token=None, method="initialize", server=None):
@@ -102,17 +103,18 @@ class TestMcpOAuth(HttpCase):
     def _authorize_url(self, **overrides):
         return f"{self.authorize_path}?{urlencode(self._authorize_params(**overrides))}"
 
-    def _consent(self, approve=True):
+    def _consent(self, approve=True, redirect_uri=REDIRECT_URI, **overrides):
         """Allow or deny on the consent page, return the query sent to the client."""
         self.authenticate("mcp_oauth_user", "mcp_oauth_user")
-        page = self.url_open(self._authorize_url())
+        params = self._authorize_params(redirect_uri=redirect_uri, **overrides)
+        page = self.url_open(f"{self.authorize_path}?{urlencode(params)}")
         csrf_token = re.search(r'name="csrf_token" value="([^"]+)"', page.text)
-        data = dict(self._authorize_params(), csrf_token=csrf_token.group(1))
+        data = dict(params, csrf_token=csrf_token.group(1))
         if approve:
             data["approve"] = "1"
         response = self.url_open(self.authorize_path, data=data, allow_redirects=False)
         location = urlsplit(response.headers["Location"])
-        self.assertEqual(location._replace(query="").geturl(), REDIRECT_URI)
+        self.assertEqual(location._replace(query="").geturl(), redirect_uri)
         query = parse_qs(location.query)
         self.assertEqual(query["state"], ["test-state"])
         self.assertEqual(query["iss"], [self.server.url])
@@ -241,6 +243,29 @@ class TestMcpOAuth(HttpCase):
         with freeze_time(fields.Datetime.now()):
             self.assertNotEqual(self._consent()["code"], self._consent()["code"])
 
+    def test_chatgpt_full_flow(self):
+        # ChatGPT registers through DCR with its stable redirect URI, allowed
+        # by default, and sends the resource indicator (RFC 8707).
+        client_id = self._register(CHATGPT_REDIRECT_URI, client_name="ChatGPT").json()[
+            "client_id"
+        ]
+        query = self._consent(
+            redirect_uri=CHATGPT_REDIRECT_URI,
+            client_id=client_id,
+            resource=self.server.url,
+        )
+        self.assertIn("code", query)
+        response = self._token(
+            query["code"][0],
+            redirect_uri=CHATGPT_REDIRECT_URI,
+            client_id=client_id,
+            resource=self.server.url,
+        )
+        self.assertEqual(response.status_code, 200)
+        self.env.invalidate_all()
+        response = self._mcp(response.json()["access_token"])
+        self.assertEqual(response.status_code, 200)
+
     def test_token_errors(self):
         code = self._consent()["code"][0]
         self.user.group_ids -= self.group
@@ -268,6 +293,29 @@ class TestMcpOAuth(HttpCase):
         self.assertEqual(self._token(code).json()["error"], "invalid_grant")
         self.env.invalidate_all()
         self.assertEqual(self.server.key_ids.state, "expired")
+
+    def test_resource_mismatch(self):
+        # A client asking for another resource than this server is refused,
+        # on the consent page and on the token request.
+        other_server = self._create_server("Other Server")
+        self.authenticate("mcp_oauth_user", "mcp_oauth_user")
+        page = self.url_open(
+            self._authorize_url(resource=other_server.url), allow_redirects=False
+        )
+        self.assertEqual(page.status_code, 200)
+        self.assertIn("alert-danger", page.text)
+        self.assertIn("another resource", page.text)
+        self.assertNotIn('name="csrf_token"', page.text)
+        code = self._consent(resource=self.server.url)["code"][0]
+        response = self._token(code, resource=other_server.url)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()["error"], "invalid_target")
+        # The resource given at consent must be sent again at the token request.
+        response = self._token(code)
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()["error"], "invalid_target")
+        response = self._token(code, resource=self.server.url)
+        self.assertEqual(response.status_code, 200)
 
     def test_code_redeemed_concurrently(self):
         # The other request has created its key but not committed it yet, so
