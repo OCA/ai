@@ -34,6 +34,3 @@ eligible chatter records.
 `History Size` applies to every supported chatter model. The bridge also sends
 the current record identity, description when available, creation/modification
 dates, and dated chatter entries with their authors.
-
-OpenWebUI-specific telemetry, cost trackers and custom filters are not part of
-this OCA module. Configure those independently in OpenWebUI if needed.

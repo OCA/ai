@@ -16,5 +16,4 @@ channels, conversations, tasks and notes. It sends a bounded, enriched context
 containing the current record identity and dated chatter history, then posts the
 final assistant answer back to the same Odoo record.
 
-The Odoo module is a transport and context adapter. It does not contain
-OpenWebUI-specific cost tracking, telemetry or custom response filters.
+The Odoo module is a transport and context adapter.
