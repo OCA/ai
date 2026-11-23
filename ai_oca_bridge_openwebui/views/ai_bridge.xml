@@ -17,8 +17,14 @@
                         <field
                             name="openwebui_model_id"
                             options="{'no_create': True}"
+                            help="Optional catalog entry. Use the manual identifier below for a quick setup or demonstration."
                         />
-                        <field name="openwebui_model" invisible="True" />
+                        <field
+                            name="openwebui_model"
+                            string="Model identifier"
+                            help="Exact model ID accepted by OpenWebUI. Synchronization is not required."
+                            placeholder="deepseek-chat"
+                        />
                         <field
                             name="openwebui_tool_record_ids"
                             widget="many2many_tags"

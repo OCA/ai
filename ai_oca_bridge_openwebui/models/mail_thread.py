@@ -10,6 +10,12 @@ class MailThread(models.AbstractModel):
     def message_post(self, **kwargs):
         message = super().message_post(**kwargs)
 
+        # The assistant response is also a normal mail.thread message.  Do
+        # not feed it back into the same bridge (this context is set by the
+        # OpenWebUI execution when it posts the answer).
+        if self.env.context.get("skip_openwebui_bridge"):
+            return message
+
         # ai_oca_bridge_chatter already handles Discuss channels through its
         # mail_channel override. This adapter handles other mail.thread models,
         # such as project.task, without creating duplicate executions there.
@@ -19,13 +25,18 @@ class MailThread(models.AbstractModel):
         if message.message_type != "comment":
             return message
 
+        # A bridge can be used from more than one chatter model. When
+        # ``model_id`` is set, _openwebui_target_matches keeps the optional
+        # restriction. When it is empty, the bridge is intentionally available
+        # for every mail.thread record, including Discuss and project.task.
         partners = message.partner_ids.sudo()
         ai_users = partners.mapped("user_ids").filtered(
-            lambda user: user.ai_bridge_id
-            and user.ai_bridge_id.usage == "chatter"
-            and user.ai_bridge_id.payload_type == "openwebui"
-            and user.ai_bridge_id.model_id
-            and user.ai_bridge_id.model_id.model == self._name
+            lambda user: (
+                user.ai_bridge_id
+                and user.ai_bridge_id.usage == "chatter"
+                and user.ai_bridge_id.payload_type == "openwebui"
+                and user.ai_bridge_id._openwebui_target_matches(message)
+            )
         )
 
         for user in ai_users:

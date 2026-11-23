@@ -241,11 +241,7 @@ class AiBridgeExecution(models.Model):
                 self._openwebui_delete_chat(chat_id)
 
     def _openwebui_must_answer(self, record, payload):
-        if (
-            not record
-            or record._name != "mail.message"
-            or record.message_type != "comment"
-        ):
+        if not record or not self.ai_bridge_id._openwebui_target_matches(record):
             return False
         messages = payload.get("messages") or []
         return bool(messages) and messages[-1].get("role") == "user"

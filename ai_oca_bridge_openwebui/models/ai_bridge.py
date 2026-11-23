@@ -25,8 +25,8 @@ class AiBridge(models.Model):
         string="Keep OpenWebUI Conversation",
         default=True,
         help=(
-            "Keep the OpenWebUI conversation so the user question and "
-            "sources remain visible."
+            "Keep the OpenWebUI conversation so the user question and sources "
+            "remain visible."
         ),
     )
     openwebui_history_limit = fields.Integer(string="History Size", default=5)
@@ -39,6 +39,19 @@ class AiBridge(models.Model):
                 record.usage = "chatter"
                 record.result_kind = "immediate"
                 record.result_type = "message"
+
+    def _get_model_fields(self):
+        """OpenWebUI selects the target from the triggering mail message.
+
+        The base chatter bridge normally requires ``model_id``.  That is
+        correct for a bridge attached to one model, but it prevents the
+        catalog synchronization button from being used before a model is
+        selected.  An empty model means all eligible mail.thread targets.
+        """
+        values = super()._get_model_fields()
+        if self.payload_type == "openwebui":
+            values["model_required"] = False
+        return values
 
     @api.constrains("payload_type", "usage", "result_kind", "result_type")
     def _check_openwebui_configuration(self):
@@ -83,15 +96,31 @@ class AiBridge(models.Model):
         ]
 
     def _openwebui_target_matches(self, message):
+        """Return whether *message* is an eligible invocation for this bridge.
+
+        The bridge is attached to the ``mail.message`` event, not directly to
+        a Discuss channel or an Odoo document.  Keeping this decision in one
+        method makes the same bridge work for Discuss conversations, tasks,
+        notes and any other ``mail.thread`` model, while still allowing an
+        optional model restriction in the bridge configuration.
+        """
         self.ensure_one()
         return bool(
             message
             and message._name == "mail.message"
+            and message.message_type == "comment"
+            and message.model
+            and message.res_id
             and (not self.model_id or self.model_id.model == message.model)
         )
 
     def _prepare_payload_openwebui(self, record=None, **kwargs):
         self.ensure_one()
+        # The base bridge computes ``sample_payload`` while the form is being
+        # created.  At that point no catalog model may have been selected yet;
+        # model validation belongs to a real execution, not to form creation.
+        if not self._openwebui_model_name() and self.env.context.get("sample_payload"):
+            return {"model": "", "messages": [], "stream": False}
         self._openwebui_check_model()
         if not record:
             domain = [("message_type", "=", "comment")]
@@ -102,6 +131,10 @@ class AiBridge(models.Model):
             )
         if record and record._name != "mail.message":
             raise ValueError(_("The record must be a mail.message instance."))
+        if record and not self._openwebui_target_matches(record):
+            raise ValidationError(
+                _("The message is not an eligible target for this OpenWebUI bridge.")
+            )
         messages = []
         system = self._openwebui_system_content(record)
         if system:
@@ -133,24 +166,70 @@ class AiBridge(models.Model):
         )
         parts.append(
             _(
-                "Internal Odoo record references are context only, not "
-                "sources. Never cite references such as "
-                "/odoo/res.partner/<id> as an answer or source. For current "
+                "The current Odoo record context below is authoritative. "
+                "Linked partner/contact references in a mention are not the "
+                "target record; do not follow them instead of the current "
+                "record. Internal Odoo references are context only, not "
+                "sources and must never be cited as an answer. For current "
                 "or recent events, use web search when enabled; otherwise "
                 "state that live web access is unavailable."
             )
         )
         if record and record.model and record.res_id:
-            try:
-                target = self.env[record.model].sudo().browse(record.res_id).exists()
-            except KeyError:
-                target = self.env["mail.thread"].browse()
-            if target:
-                parts.append(
-                    f"Odoo record: {target.display_name} "
-                    f"({record.model}, ID {target.id})"
-                )
+            parts.append(self._openwebui_record_context(record))
         return "\n\n".join(parts)
+
+    def _openwebui_record_context(self, message):
+        """Build explicit, model-independent context for the current chatter.
+
+        The previous implementation only exposed the display name and the
+        free-form message history.  That made dates, authors and fields such
+        as a task description unavailable to the assistant.  Keep this
+        deliberately conservative so the bridge works for every mail.thread
+        model without serialising an entire Odoo record.
+        """
+        self.ensure_one()
+        try:
+            target = self.env[message.model].sudo().browse(message.res_id).exists()
+        except KeyError:
+            target = self.env["mail.thread"].browse()
+        if not target:
+            return _(
+                "Current Odoo record: %(model)s, ID %(res_id)s (record not found)"
+            ) % {
+                "model": message.model,
+                "res_id": message.res_id,
+            }
+        lines = [
+            "CURRENT ODOO RECORD (authoritative target)",
+            f"- Model: {message.model}",
+            f"- ID: {target.id}",
+            f"- Name: {target.display_name}",
+        ]
+        for field_name, label in (("description", "Description"), ("name", "Name")):
+            if field_name not in target._fields or field_name == "name":
+                continue
+            value = target[field_name]
+            if value:
+                text = (
+                    tools.html2plaintext(value).strip()
+                    if isinstance(value, str)
+                    else str(value)
+                )
+                lines.append(f"- {label}: {text}")
+            else:
+                lines.append(f"- {label}: (empty)")
+        for field_name, label in (
+            ("create_date", "Created"),
+            ("write_date", "Last modified"),
+        ):
+            if field_name in target._fields and target[field_name]:
+                lines.append(f"- {label}: {target[field_name]}")
+        lines.append(
+            "- The following chatter history belongs to this record; use "
+            "its dates and authors when answering questions about notes."
+        )
+        return "\n".join(lines)
 
     def _openwebui_history(self, record):
         self.ensure_one()
@@ -173,12 +252,19 @@ class AiBridge(models.Model):
         for message in reversed(history):
             text = tools.html2plaintext(message.body or "").strip()
             if text:
+                author = message.author_id.display_name or _("Unknown author")
+                message_date = message.date or message.create_date or _("unknown date")
+                content = (
+                    f"[Odoo chatter note | id={message.id} | "
+                    f"date={message_date} | author={author}]\n"
+                    f"{text}"
+                )
                 result.append(
                     {
                         "role": "assistant"
                         if message.author_id.user_ids.filtered("ai_bridge_id")
                         else "user",
-                        "content": text,
+                        "content": content,
                     }
                 )
         user_indexes = [
