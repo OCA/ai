@@ -32,28 +32,27 @@ AI OCA Bridge OpenWebUI
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
 
-This module connects Odoo Discuss with
-`OpenWebUI <https://openwebui.com>`__ through its OpenAI-compatible chat
-completions API.
+This module connects an Odoo AI user to OpenWebUI through OpenWebUI's
+server-side chat flow.
 
 It extends the OCA modules ``ai_oca_bridge`` and
 ``ai_oca_bridge_chatter`` with an **OpenWebUI Chat** bridge payload.
 
 The integration deliberately separates responsibilities:
 
-- Odoo remains responsible for users, access rights, Discuss channels,
-  Odoo records and conversation history.
-- OpenWebUI remains responsible for AI orchestration, models, system
-  prompts, knowledge bases, RAG, agents and external tools.
+- Odoo manages users, access rights, Discuss channels, mentions, Odoo
+  records, chatter history and the final answer posted back to the
+  originating record.
+- OpenWebUI manages model execution, prompts, web search, tools,
+  knowledge bases, sources and provider-specific reasoning output.
 
-The module sends the selected Discuss history to OpenWebUI and posts the
-assistant response back as the configured Odoo AI user. The optional
-bridge system prompt adds local Odoo context; it does not replace
-OpenWebUI's own configuration.
+The bridge supports any eligible ``mail.thread`` record, including
+Discuss channels, conversations, tasks and notes. It sends a bounded,
+enriched context containing the current record identity and dated
+chatter history, then posts the final assistant answer back to the same
+Odoo record.
 
-The synchronized models and tools are only a local Odoo catalog used for
-selection. OpenWebUI remains the source of truth for their behavior and
-configuration.
+The Odoo module is a transport and context adapter.
 
 .. IMPORTANT::
    This is an alpha version, the data model and design can change at any time without warning.
@@ -72,36 +71,45 @@ OpenWebUI
 ---------
 
 1. Create an API key in *Settings → Account → API keys*.
-2. Make sure the key can access the models and tools that the bridge
-   should use.
-3. Configure the model, system prompt, knowledge bases and external
-   tools in OpenWebUI. Those remain managed there.
+2. Give the API-key user access to the selected model and any tools
+   required by the bridge.
+3. Configure prompts, knowledge bases, web search and tools in
+   OpenWebUI. OpenWebUI remains the source of truth for those features.
 
 Odoo
 ----
 
-1. Go to *AI Bridge → AI Bridge* and create a bridge.
+1. Go to *AI Bridge → AI Bridge* and create or open a bridge.
 2. Select **OpenWebUI Chat** as the payload type. The module enforces:
 
    - Chatter usage;
    - Immediate result kind;
    - Post a Message result type.
 
-3. Set the OpenWebUI chat completion URL, for example:
+3. Set the OpenWebUI URL, for example:
    ``https://<openwebui>/api/chat/completions``.
-4. Select **Token Authentication** and enter the OpenWebUI API key.
-5. In the **OpenWebUI** tab, set the model identifier, optional bridge
-   system prompt, history size and timeout.
-6. Optionally click **Synchronize models and tools**, then select a
-   model and the tools to expose to the request.
-7. Create an internal Odoo user, for example *Assistant IA*, and assign
-   the bridge to its **AI Bridge** field.
-8. Add this user to a Discuss channel. In a direct chat, the assistant
-   answers every message. In a channel with more than two members,
-   mention the assistant with ``@Assistant IA``.
+4. Select **Token Authentication** and enter the API key.
+5. Synchronize the OpenWebUI catalog if desired, then select a model. A
+   manually entered model identifier is also supported.
+6. Configure the history size, timeout, optional system prompt, web
+   search and tools.
+7. Create or use an internal Odoo AI user and assign the bridge to its
+   **AI Bridge** field.
+8. Add the AI user to a Discuss conversation or channel. For a task,
+   note or another ``mail.thread`` record, mention the AI user in the
+   chatter.
 
-The expected response is an OpenAI-compatible chat completion containing
-``choices[0].message.content``.
+The optional ``Model`` field restricts the bridge to one Odoo model.
+Leave it empty to allow the same bridge to handle Discuss, tasks, notes
+and other eligible chatter records.
+
+Context and history
+-------------------
+
+``History Size`` applies to every supported chatter model. The bridge
+also sends the current record identity, description when available,
+creation/modification dates, and dated chatter entries with their
+authors.
 
 Usage
 =====
@@ -109,50 +117,70 @@ Usage
 Responsibilities
 ----------------
 
-This module is a transport and integration layer. It does not implement
-a knowledge base, RAG engine, agent framework or external-tool runtime
-in Odoo. Those capabilities are configured and executed by OpenWebUI.
+This module connects an Odoo AI user to OpenWebUI through OpenWebUI's
+server-side chat flow.
 
-Odoo provides the conversation context from Discuss. The bridge can add
-an optional local system prompt and the Odoo channel name, then sends
-the recent conversation as ``user`` and ``assistant`` messages.
+Odoo remains responsible for:
 
-Requests use:
+- users and access rights;
+- Discuss channels and mentions;
+- any ``mail.thread`` record, including tasks and notes;
+- local record and chatter context;
+- posting the final assistant answer back to the originating record.
 
-- ``POST /api/chat/completions``;
-- ``stream: false``;
-- the configured model identifier;
-- optional OpenWebUI tool identifiers.
+OpenWebUI remains responsible for:
 
-The current implementation expects a response of the form:
+- model execution and system prompts;
+- web search and agentic tools;
+- knowledge bases and RAG;
+- provider-specific reasoning and sources.
 
-.. code:: json
+Request flow
+------------
 
-   {
-     "choices": [
-       {
-         "message": {
-           "role": "assistant",
-           "content": "Answer"
-         }
-       }
-     ]
-   }
+For each eligible chatter message, Odoo:
 
-A failed request or an empty answer is recorded as an error in the
-bridge execution and is not posted to Discuss.
+1. identifies the originating ``mail.message`` and its target
+   model/record;
+2. builds a bounded history of previous chatter comments;
+3. adds explicit record identity, description, dates, authors and
+   message IDs;
+4. creates an OpenWebUI conversation and submits the server-side chat
+   request;
+5. waits for the final assistant message;
+6. posts the answer back to the originating Discuss channel, task or
+   other supported ``mail.thread`` record.
 
-Catalog synchronization
------------------------
+``History Size`` applies to all supported chatter records, not only
+Discuss. It limits the number of previous user exchanges included in the
+request.
 
-The optional synchronization uses:
+The bridge does not execute OpenWebUI tools in Odoo. OpenWebUI remains
+the runtime for model execution and external tools.
 
-- ``GET /api/models``;
-- ``GET /api/v1/tools/``.
+Context and references
+----------------------
 
-Odoo stores only the identifiers, names and tool descriptions needed for
-configuration. OpenWebUI remains the authoritative system for model
-behavior, knowledge bases and tools.
+The current Odoo record is the authoritative target. A mention such as
+``/odoo/res.partner/<id>`` is only a linked contact reference and must
+not be mistaken for the task or record in which the assistant was
+called.
+
+History entries include their Odoo message ID, date, author and content
+so the assistant can answer questions about the latest note reliably.
+
+Conversation retention
+----------------------
+
+When **Keep OpenWebUI Conversation** is enabled, the OpenWebUI
+conversation is kept for review. When disabled, the temporary
+conversation is deleted after processing when possible.
+
+Errors and timeouts
+-------------------
+
+A failed request, timeout or empty answer is recorded on the bridge
+execution and is not posted as an assistant answer.
 
 Bug Tracker
 ===========
