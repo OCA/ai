@@ -28,9 +28,7 @@ class TestOpenWebUIAgentic(common.TransactionCase):
         )
 
     def _execution(self):
-        return self.env["ai.bridge.execution"].new(
-            {"ai_bridge_id": self.bridge.id}
-        )
+        return self.env["ai.bridge.execution"].new({"ai_bridge_id": self.bridge.id})
 
     def _request_mock(self, calls):
         responses = {
@@ -86,11 +84,12 @@ class TestOpenWebUIAgentic(common.TransactionCase):
     def test_agentic_flow_keeps_question_and_chat(self):
         execution = self._execution()
         calls = []
-        with mock.patch(
-            "requests.request", side_effect=self._request_mock(calls)
-        ), mock.patch(
-            "odoo.addons.ai_oca_bridge_openwebui.models.ai_bridge_execution.uuid.uuid4",
-            side_effect=["assistant-1", "user-1", "session-1"],
+        with (
+            mock.patch("requests.request", side_effect=self._request_mock(calls)),
+            mock.patch(
+                "odoo.addons.ai_oca_bridge_openwebui.models.ai_bridge_execution.uuid.uuid4",
+                side_effect=["assistant-1", "user-1", "session-1"],
+            ),
         ):
             result = execution._openwebui_execute_agentic(
                 {"model": "demo", "messages": [{"role": "user", "content": "Hi"}]}
@@ -127,11 +126,12 @@ class TestOpenWebUIAgentic(common.TransactionCase):
         self.bridge.openwebui_keep_chat = False
         execution = self._execution()
         calls = []
-        with mock.patch(
-            "requests.request", side_effect=self._request_mock(calls)
-        ), mock.patch(
-            "odoo.addons.ai_oca_bridge_openwebui.models.ai_bridge_execution.uuid.uuid4",
-            side_effect=["assistant-1", "user-1", "session-1"],
+        with (
+            mock.patch("requests.request", side_effect=self._request_mock(calls)),
+            mock.patch(
+                "odoo.addons.ai_oca_bridge_openwebui.models.ai_bridge_execution.uuid.uuid4",
+                side_effect=["assistant-1", "user-1", "session-1"],
+            ),
         ):
             execution._openwebui_execute_agentic(
                 {"model": "demo", "messages": [{"role": "user", "content": "Hi"}]}

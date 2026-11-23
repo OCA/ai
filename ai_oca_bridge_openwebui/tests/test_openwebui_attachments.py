@@ -32,27 +32,35 @@ class TestOpenWebuiAttachments(common.TransactionCase):
         cls.user = new_test_user(
             cls.env, login="test-openwebui-attachments-user", groups="base.group_user"
         )
-        cls.chat = cls.env["discuss.channel"].with_user(cls.user.id).create(
-            {
-                "name": "Attachments",
-                "channel_type": "chat",
-                "channel_member_ids": [
-                    (0, 0, {"partner_id": cls.ai_user.partner_id.id}),
-                    (0, 0, {"partner_id": cls.user.partner_id.id}),
-                ],
-            }
+        cls.chat = (
+            cls.env["discuss.channel"]
+            .with_user(cls.user.id)
+            .create(
+                {
+                    "name": "Attachments",
+                    "channel_type": "chat",
+                    "channel_member_ids": [
+                        (0, 0, {"partner_id": cls.ai_user.partner_id.id}),
+                        (0, 0, {"partner_id": cls.user.partner_id.id}),
+                    ],
+                }
+            )
         )
 
     def _message(self, body="Question"):
-        return self.env["mail.message"].sudo().create(
-            {
-                "author_id": self.user.partner_id.id,
-                "body": body,
-                "model": "discuss.channel",
-                "res_id": self.chat.id,
-                "message_type": "comment",
-                "subtype_id": self.env.ref("mail.mt_comment").id,
-            }
+        return (
+            self.env["mail.message"]
+            .sudo()
+            .create(
+                {
+                    "author_id": self.user.partner_id.id,
+                    "body": body,
+                    "model": "discuss.channel",
+                    "res_id": self.chat.id,
+                    "message_type": "comment",
+                    "subtype_id": self.env.ref("mail.mt_comment").id,
+                }
+            )
         )
 
     def _attachment(self, message, name, mimetype, data):

@@ -42,8 +42,14 @@ class TestOpenWebUIWebSearch(common.TransactionCase):
         self.assertIn("res.partner", content)
 
     def test_response_with_text_tool_result_is_supported(self):
-        execution = self.env["ai.bridge.execution"].new({"ai_bridge_id": self.bridge.id})
+        execution = self.env["ai.bridge.execution"].new(
+            {"ai_bridge_id": self.bridge.id}
+        )
         values = execution._openwebui_to_message(
-            {"choices": [{"message": {"content": [{"type": "text", "text": "Answer"}]}}]}
+            {
+                "choices": [
+                    {"message": {"content": [{"type": "text", "text": "Answer"}]}}
+                ]
+            }
         )
         self.assertIn("Answer", values["body"])

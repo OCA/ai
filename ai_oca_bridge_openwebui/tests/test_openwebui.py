@@ -54,15 +54,19 @@ class TestOpenWebUI(common.TransactionCase):
             login="test-openwebui-user",
             groups="base.group_user",
         )
-        cls.chat = cls.env["discuss.channel"].with_user(cls.user.id).create(
-            {
-                "name": "Sales",
-                "channel_type": "chat",
-                "channel_member_ids": [
-                    (0, 0, {"partner_id": cls.ai_user.partner_id.id}),
-                    (0, 0, {"partner_id": cls.user.partner_id.id}),
-                ],
-            }
+        cls.chat = (
+            cls.env["discuss.channel"]
+            .with_user(cls.user.id)
+            .create(
+                {
+                    "name": "Sales",
+                    "channel_type": "chat",
+                    "channel_member_ids": [
+                        (0, 0, {"partner_id": cls.ai_user.partner_id.id}),
+                        (0, 0, {"partner_id": cls.user.partner_id.id}),
+                    ],
+                }
+            )
         )
 
     def _messages(self):
@@ -71,26 +75,34 @@ class TestOpenWebUI(common.TransactionCase):
         )
 
     def _create_message(self, model, res_id, body, message_type="comment"):
-        return self.env["mail.message"].sudo().create(
-            {
-                "author_id": self.user.partner_id.id,
-                "body": body,
-                "model": model,
-                "res_id": res_id,
-                "message_type": message_type,
-                "subtype_id": self.env.ref("mail.mt_comment").id,
-                "partner_ids": [(6, 0, [self.ai_user.partner_id.id])],
-            }
+        return (
+            self.env["mail.message"]
+            .sudo()
+            .create(
+                {
+                    "author_id": self.user.partner_id.id,
+                    "body": body,
+                    "model": model,
+                    "res_id": res_id,
+                    "message_type": message_type,
+                    "subtype_id": self.env.ref("mail.mt_comment").id,
+                    "partner_ids": [(6, 0, [self.ai_user.partner_id.id])],
+                }
+            )
         )
 
     def _execution_for_message(self, message):
-        return self.env["ai.bridge.execution"].sudo().create(
-            {
-                "ai_bridge_id": self.bridge.id,
-                "model_id": self.env.ref("mail.model_mail_message").id,
-                "res_id": message.id,
-                "chatter_user_id": self.ai_user.id,
-            }
+        return (
+            self.env["ai.bridge.execution"]
+            .sudo()
+            .create(
+                {
+                    "ai_bridge_id": self.bridge.id,
+                    "model_id": self.env.ref("mail.model_mail_message").id,
+                    "res_id": message.id,
+                    "chatter_user_id": self.ai_user.id,
+                }
+            )
         )
 
     def _execute_chat_message(self, body):
@@ -139,9 +151,7 @@ class TestOpenWebUI(common.TransactionCase):
         with mock.patch(
             "requests.get",
             side_effect=[
-                _catalog_response(
-                    {"data": [{"id": "model-a", "name": "Model A"}]}
-                ),
+                _catalog_response({"data": [{"id": "model-a", "name": "Model A"}]}),
                 _catalog_response(
                     [
                         {
@@ -179,9 +189,7 @@ class TestOpenWebUI(common.TransactionCase):
             "requests.get",
             side_effect=[
                 _catalog_response({"data": [{"id": "model-a"}]}),
-                _catalog_response(
-                    [{"id": "tool-a", "name": "New", "meta": {}}]
-                ),
+                _catalog_response([{"id": "tool-a", "name": "New", "meta": {}}]),
             ],
         ):
             self.bridge.action_openwebui_sync_catalog()
@@ -220,9 +228,10 @@ class TestOpenWebUI(common.TransactionCase):
 
     def test_agentic_answer_is_posted(self):
         calls = []
-        with mock.patch(
-            "requests.request", side_effect=self._agentic_request(calls)
-        ), self._uuid_patch():
+        with (
+            mock.patch("requests.request", side_effect=self._agentic_request(calls)),
+            self._uuid_patch(),
+        ):
             result = self._execute_chat_message("What is the delivery time?")
         self.assertTrue(result)
         self.assertEqual(
@@ -239,18 +248,20 @@ class TestOpenWebUI(common.TransactionCase):
 
     def test_agentic_history_roles(self):
         calls = []
-        with mock.patch(
-            "requests.request", side_effect=self._agentic_request(calls)
-        ), self._uuid_patch():
+        with (
+            mock.patch("requests.request", side_effect=self._agentic_request(calls)),
+            self._uuid_patch(),
+        ):
             self._execute_chat_message("Question 1")
             self._execute_chat_message("Question 2")
         self.assertEqual(calls[5][2]["json"]["messages"][-1]["role"], "user")
 
     def test_agentic_question_and_channel_title(self):
         calls = []
-        with mock.patch(
-            "requests.request", side_effect=self._agentic_request(calls)
-        ), self._uuid_patch():
+        with (
+            mock.patch("requests.request", side_effect=self._agentic_request(calls)),
+            self._uuid_patch(),
+        ):
             self._execute_chat_message("Question visible in OpenWebUI")
         chat = calls[0][2]["json"]["chat"]
         self.assertEqual(chat["title"], self.chat.display_name)
@@ -264,9 +275,10 @@ class TestOpenWebUI(common.TransactionCase):
     def test_keep_chat_false_deletes_chat(self):
         self.bridge.openwebui_keep_chat = False
         calls = []
-        with mock.patch(
-            "requests.request", side_effect=self._agentic_request(calls)
-        ), self._uuid_patch():
+        with (
+            mock.patch("requests.request", side_effect=self._agentic_request(calls)),
+            self._uuid_patch(),
+        ):
             self._execute_chat_message("Question")
         self.assertEqual(calls[-1][:2], ("DELETE", "/api/v1/chats/chat-1"))
 
@@ -278,9 +290,7 @@ class TestOpenWebUI(common.TransactionCase):
         with self.assertRaises(ValueError):
             self._execution_for_message(message)._get_channel()
 
-    @mute_logger(
-        "odoo.addons.ai_oca_bridge_openwebui.models.ai_bridge_execution"
-    )
+    @mute_logger("odoo.addons.ai_oca_bridge_openwebui.models.ai_bridge_execution")
     def test_execute_handles_http_error(self):
         execution = self._execution_for_message(
             self._create_message("discuss.channel", self.chat.id, "Question")
@@ -311,15 +321,7 @@ class TestOpenWebUI(common.TransactionCase):
             {"ai_bridge_id": self.bridge.id}
         )
         values = execution._openwebui_to_message(
-            {
-                "choices": [
-                    {
-                        "message": {
-                            "content": "- **Module :** `web_gantt`"
-                        }
-                    }
-                ]
-            }
+            {"choices": [{"message": {"content": "- **Module :** `web_gantt`"}}]}
         )
         self.assertIn("<strong>Module :</strong>", values["body"])
 
