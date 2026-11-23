@@ -34,9 +34,7 @@ class TestOpenWebUIMultiContext(common.TransactionCase):
         self.assertTrue(self.bridge._openwebui_target_matches(task_message))
 
     def test_bridge_model_restriction_remains_available(self):
-        model = self.env["ir.model"].search(
-            [("model", "=", "project.task")], limit=1
-        )
+        model = self.env["ir.model"].search([("model", "=", "project.task")], limit=1)
         if not model:
             self.skipTest("project is not installed")
         self.bridge.model_id = model

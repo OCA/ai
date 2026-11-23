@@ -137,7 +137,11 @@ class AiBridgeExecution(models.Model):
         timestamp = int(time.time())
         messages = payload.get("messages") or []
         user_content = next(
-            (message.get("content", "") for message in reversed(messages) if message.get("role") == "user"),
+            (
+                message.get("content", "")
+                for message in reversed(messages)
+                if message.get("role") == "user"
+            ),
             "",
         )
         user_id = str(uuid.uuid4())
@@ -171,7 +175,9 @@ class AiBridgeExecution(models.Model):
                 },
             },
         }
-        response = self._openwebui_request("POST", "/api/v1/chats/new", json={"chat": chat})
+        response = self._openwebui_request(
+            "POST", "/api/v1/chats/new", json={"chat": chat}
+        )
         chat_id = response.json().get("id")
         if not chat_id:
             raise ValueError(_("OpenWebUI did not return a temporary chat ID."))
@@ -181,7 +187,10 @@ class AiBridgeExecution(models.Model):
         self.ensure_one()
         deadline = time.monotonic() + (self.ai_bridge_id.openwebui_timeout or 120)
         while time.monotonic() < deadline:
-            task_data = self._openwebui_request("GET", f"/api/tasks/chat/{chat_id}").json() or {}
+            task_data = (
+                self._openwebui_request("GET", f"/api/tasks/chat/{chat_id}").json()
+                or {}
+            )
             if not task_data.get("task_ids"):
                 return
             self._openwebui_sleep(1)
@@ -204,7 +213,9 @@ class AiBridgeExecution(models.Model):
         try:
             self._openwebui_request("DELETE", f"/api/v1/chats/{chat_id}")
         except Exception:
-            _logger.warning("Unable to delete temporary OpenWebUI chat %s", chat_id, exc_info=True)
+            _logger.warning(
+                "Unable to delete temporary OpenWebUI chat %s", chat_id, exc_info=True
+            )
 
     def _openwebui_execute_agentic(self, payload):
         self.ensure_one()
@@ -212,8 +223,12 @@ class AiBridgeExecution(models.Model):
         chat_id = None
         try:
             chat_id = self._openwebui_create_chat(payload, assistant_id)
-            request_payload = self._openwebui_chat_payload(payload, chat_id, assistant_id)
-            response = self._openwebui_request("POST", "/api/chat/completions", json=request_payload, stream=True)
+            request_payload = self._openwebui_chat_payload(
+                payload, chat_id, assistant_id
+            )
+            response = self._openwebui_request(
+                "POST", "/api/chat/completions", json=request_payload, stream=True
+            )
             try:
                 raw_response = response.text
             finally:
@@ -238,10 +253,17 @@ class AiBridgeExecution(models.Model):
             message = self._openwebui_message_record()
             if not message or message.model != "discuss.channel":
                 return
-            member = self.env["discuss.channel.member"].sudo().search([
-                ("partner_id", "=", self.chatter_user_id.partner_id.id),
-                ("channel_id", "=", message.res_id),
-            ], limit=1)
+            member = (
+                self.env["discuss.channel.member"]
+                .sudo()
+                .search(
+                    [
+                        ("partner_id", "=", self.chatter_user_id.partner_id.id),
+                        ("channel_id", "=", message.res_id),
+                    ],
+                    limit=1,
+                )
+            )
             if member:
                 member._notify_typing(is_typing=False)
         except Exception:
@@ -258,14 +280,27 @@ class AiBridgeExecution(models.Model):
             raise ValueError(_("The OpenWebUI bridge has no author user."))
         values["author_id"] = author.partner_id.id
         if target._name == "discuss.channel":
-            values["partner_ids"] = [partner_id for partner_id in target.channel_member_ids.sudo().partner_id.ids if partner_id != author.partner_id.id]
-        message = target.with_context(skip_openwebui_bridge=True).sudo().message_post(**values)
+            values["partner_ids"] = [
+                partner_id
+                for partner_id in target.channel_member_ids.sudo().partner_id.ids
+                if partner_id != author.partner_id.id
+            ]
+        message = (
+            target.with_context(skip_openwebui_bridge=True)
+            .sudo()
+            .message_post(**values)
+        )
         return {"id": message.id}
 
     def _openwebui_response_content(self, message):
         content = message.get("content")
         if isinstance(content, list):
-            content = "\n".join(item.get("text", "") for item in content if isinstance(item, dict) and item.get("type") in ("text", "output_text"))
+            content = "\n".join(
+                item.get("text", "")
+                for item in content
+                if isinstance(item, dict)
+                and item.get("type") in ("text", "output_text")
+            )
         return content
 
     def _openwebui_to_message(self, response):
@@ -273,12 +308,16 @@ class AiBridgeExecution(models.Model):
             message = response["choices"][0]["message"]
             content = self._openwebui_response_content(message)
         except (KeyError, IndexError, TypeError) as error:
-            raise ValueError(_("Unexpected answer from OpenWebUI: %s", str(response)[:500])) from error
+            raise ValueError(
+                _("Unexpected answer from OpenWebUI: %s", str(response)[:500])
+            ) from error
         content = (content or "").strip()
         if not content:
             raise ValueError(_("OpenWebUI returned an empty answer."))
         if markdown:
-            body = html_sanitize(markdown.markdown(content, extensions=["extra", "nl2br"]))
+            body = html_sanitize(
+                markdown.markdown(content, extensions=["extra", "nl2br"])
+            )
         else:
             body = plaintext2html(content)
         return {"body": body, "message_type": "comment"}

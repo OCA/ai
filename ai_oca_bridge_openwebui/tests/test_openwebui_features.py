@@ -32,15 +32,19 @@ class TestOpenWebUIFeatures(common.TransactionCase):
             cls.env, login="openwebui-feature-ai", groups="base.group_user"
         )
         cls.ai_user.write({"ai_bridge_id": cls.bridge.id})
-        cls.chat = cls.env["discuss.channel"].with_user(cls.user.id).create(
-            {
-                "name": "Feature chat",
-                "channel_type": "chat",
-                "channel_member_ids": [
-                    (0, 0, {"partner_id": cls.user.partner_id.id}),
-                    (0, 0, {"partner_id": cls.ai_user.partner_id.id}),
-                ],
-            }
+        cls.chat = (
+            cls.env["discuss.channel"]
+            .with_user(cls.user.id)
+            .create(
+                {
+                    "name": "Feature chat",
+                    "channel_type": "chat",
+                    "channel_member_ids": [
+                        (0, 0, {"partner_id": cls.user.partner_id.id}),
+                        (0, 0, {"partner_id": cls.ai_user.partner_id.id}),
+                    ],
+                }
+            )
         )
 
     def _message(self, body, author=None, attachments=None):
@@ -83,9 +87,7 @@ class TestOpenWebUIFeatures(common.TransactionCase):
         current = self._message("Question actuelle")
         payload = self.bridge._prepare_payload(record=current)
         contents = [
-            item["content"]
-            for item in payload["messages"]
-            if item["role"] != "system"
+            item["content"] for item in payload["messages"] if item["role"] != "system"
         ]
         self.assertEqual(len(contents), 11)
         for index in range(2, 7):
@@ -102,15 +104,19 @@ class TestOpenWebUIFeatures(common.TransactionCase):
         task = self.env["project.task"].create(
             {"name": "Context task", "description": "<p>Current task description</p>"}
         )
-        message = self.env["mail.message"].sudo().create(
-            {
-                "author_id": self.user.partner_id.id,
-                "body": "Question",
-                "model": "project.task",
-                "res_id": task.id,
-                "message_type": "comment",
-                "subtype_id": self.env.ref("mail.mt_comment").id,
-            }
+        message = (
+            self.env["mail.message"]
+            .sudo()
+            .create(
+                {
+                    "author_id": self.user.partner_id.id,
+                    "body": "Question",
+                    "model": "project.task",
+                    "res_id": task.id,
+                    "message_type": "comment",
+                    "subtype_id": self.env.ref("mail.mt_comment").id,
+                }
+            )
         )
         system = self.bridge._openwebui_system_content(message)
         self.assertIn("Model: project.task", system)
