@@ -10,6 +10,12 @@ class MailThread(models.AbstractModel):
     def message_post(self, **kwargs):
         message = super().message_post(**kwargs)
 
+        # The assistant response is also a normal mail.thread message.  Do
+        # not feed it back into the same bridge (this context is set by the
+        # OpenWebUI execution when it posts the answer).
+        if self.env.context.get("skip_openwebui_bridge"):
+            return message
+
         # ai_oca_bridge_chatter already handles Discuss channels through its
         # mail_channel override. This adapter handles other mail.thread models,
         # such as project.task, without creating duplicate executions there.

@@ -87,19 +87,33 @@ class TestOpenWebUIFeatures(common.TransactionCase):
             for item in payload["messages"]
             if item["role"] != "system"
         ]
-        self.assertEqual(
-            contents,
-            [
-                "Question 2",
-                "Réponse 2",
-                "Question 3",
-                "Réponse 3",
-                "Question 4",
-                "Réponse 4",
-                "Question 5",
-                "Réponse 5",
-                "Question 6",
-                "Réponse 6",
-                "Question actuelle",
-            ],
+        self.assertEqual(len(contents), 11)
+        for index in range(2, 7):
+            self.assertIn(f"Question {index}", contents[(index - 2) * 2])
+            self.assertIn(f"Réponse {index}", contents[(index - 2) * 2 + 1])
+            self.assertIn("Odoo chatter note | id=", contents[(index - 2) * 2])
+            self.assertIn("date=", contents[(index - 2) * 2])
+            self.assertIn("author=", contents[(index - 2) * 2])
+        self.assertEqual(contents[-1], "Question actuelle")
+
+    def test_record_context_contains_task_description_and_identity(self):
+        if "project.task" not in self.env:
+            self.skipTest("project is not installed")
+        task = self.env["project.task"].create(
+            {"name": "Context task", "description": "<p>Current task description</p>"}
         )
+        message = self.env["mail.message"].sudo().create(
+            {
+                "author_id": self.user.partner_id.id,
+                "body": "Question",
+                "model": "project.task",
+                "res_id": task.id,
+                "message_type": "comment",
+                "subtype_id": self.env.ref("mail.mt_comment").id,
+            }
+        )
+        system = self.bridge._openwebui_system_content(message)
+        self.assertIn("Model: project.task", system)
+        self.assertIn(f"ID: {task.id}", system)
+        self.assertIn("Name: Context task", system)
+        self.assertIn("Description: Current task description", system)

@@ -25,10 +25,10 @@ class TestOpenWebUIMultiContext(common.TransactionCase):
     def test_bridge_without_model_is_available_for_multiple_chatter_models(self):
         self.assertFalse(self.bridge.model_id)
         discuss_message = self.env["mail.message"].new(
-            {"model": "discuss.channel", "res_id": 1}
+            {"model": "discuss.channel", "res_id": 1, "message_type": "comment"}
         )
         task_message = self.env["mail.message"].new(
-            {"model": "project.task", "res_id": 1}
+            {"model": "project.task", "res_id": 1, "message_type": "comment"}
         )
         self.assertTrue(self.bridge._openwebui_target_matches(discuss_message))
         self.assertTrue(self.bridge._openwebui_target_matches(task_message))
@@ -41,10 +41,10 @@ class TestOpenWebUIMultiContext(common.TransactionCase):
             self.skipTest("project is not installed")
         self.bridge.model_id = model
         discuss_message = self.env["mail.message"].new(
-            {"model": "discuss.channel", "res_id": 1}
+            {"model": "discuss.channel", "res_id": 1, "message_type": "comment"}
         )
         task_message = self.env["mail.message"].new(
-            {"model": "project.task", "res_id": 1}
+            {"model": "project.task", "res_id": 1, "message_type": "comment"}
         )
         self.assertFalse(self.bridge._openwebui_target_matches(discuss_message))
         self.assertTrue(self.bridge._openwebui_target_matches(task_message))
