@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Nimarosa
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="ai_connection_usage_list_view" model="ir.ui.view">
+        <field name="model">ai.connection.usage</field>
+        <field name="arch" type="xml">
+            <list create="false" edit="false" decoration-danger="state == 'error'">
+                <field name="create_date" string="Date" />
+                <field name="connection_id" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <field name="user_id" widget="many2one_avatar_user" />
+                <field name="purpose" optional="show" />
+                <field name="model_name" optional="hide" />
+                <field name="prompt_tokens" sum="Total" optional="show" />
+                <field name="completion_tokens" sum="Total" optional="show" />
+                <field name="duration" optional="hide" />
+                <field name="cost_company" sum="Total" />
+                <field name="state" optional="show" />
+            </list>
+        </field>
+    </record>
+
+    <record id="ai_connection_usage_form_view" model="ir.ui.view">
+        <field name="model">ai.connection.usage</field>
+        <field name="arch" type="xml">
+            <form create="false" edit="false">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="connection_id" />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                            />
+                            <field name="user_id" />
+                            <field name="create_date" string="Date" />
+                            <field name="purpose" />
+                            <field name="res_model" />
+                            <field name="res_id" />
+                        </group>
+                        <group>
+                            <field name="model_name" />
+                            <field name="state" />
+                            <field name="prompt_tokens" />
+                            <field name="completion_tokens" />
+                            <field name="iterations" />
+                            <field name="duration" />
+                            <field name="currency_id" />
+                            <field name="cost" />
+                            <field name="cost_company" />
+                        </group>
+                    </group>
+                    <group string="Error" invisible="not error">
+                        <field name="error" nolabel="1" colspan="2" />
+                    </group>
+                    <group string="Prompt" groups="base.group_system">
+                        <field name="prompt" nolabel="1" colspan="2" />
+                    </group>
+                    <group string="Answer" groups="base.group_system">
+                        <field name="answer" nolabel="1" colspan="2" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ai_connection_usage_search_view" model="ir.ui.view">
+        <field name="model">ai.connection.usage</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="connection_id" />
+                <field name="user_id" />
+                <field name="purpose" />
+                <field name="company_id" groups="base.group_multi_company" />
+                <filter name="this_month" string="This Month" date="date" />
+                <filter
+                    name="errors"
+                    string="Errors"
+                    domain="[('state', '=', 'error')]"
+                />
+                <group expand="0" string="Group By">
+                    <filter
+                        name="group_connection"
+                        string="Connection"
+                        context="{'group_by': 'connection_id'}"
+                    />
+                    <filter
+                        name="group_company"
+                        string="Company"
+                        context="{'group_by': 'company_id'}"
+                    />
+                    <filter
+                        name="group_user"
+                        string="User"
+                        context="{'group_by': 'user_id'}"
+                    />
+                    <filter
+                        name="group_purpose"
+                        string="Purpose"
+                        context="{'group_by': 'purpose'}"
+                    />
+                    <filter
+                        name="group_month"
+                        string="Month"
+                        context="{'group_by': 'date:month'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="ai_connection_usage_pivot_view" model="ir.ui.view">
+        <field name="model">ai.connection.usage</field>
+        <field name="arch" type="xml">
+            <pivot>
+                <field name="date" interval="month" type="col" />
+                <field name="connection_id" type="row" />
+                <field name="cost_company" type="measure" />
+            </pivot>
+        </field>
+    </record>
+
+    <record id="ai_connection_usage_act_window" model="ir.actions.act_window">
+        <field name="name">AI Usage</field>
+        <field name="res_model">ai.connection.usage</field>
+        <field name="view_mode">list,pivot,form</field>
+        <field name="context">{'search_default_this_month': 1}</field>
+    </record>
+
+    <record id="ai_connection_usage_menu" model="ir.ui.menu">
+        <field name="name">AI Usage</field>
+        <field name="parent_id" ref="ai_tool.ai_menu_root" />
+        <field name="action" ref="ai_connection_usage_act_window" />
+        <field name="sequence" eval="20" />
+    </record>
+</odoo>

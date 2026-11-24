@@ -1,0 +1,373 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ai_connection_usage
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-24 23:58+0000\n"
+"PO-Revision-Date: 2026-11-24 23:58+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#. module: ai_connection_usage
+#: model:ir.model,name:ai_connection_usage.model_ai_connection
+msgid "AI Connection"
+msgstr "Conexión de IA"
+
+#. module: ai_connection_usage
+#: model:ir.model,name:ai_connection_usage.model_ai_connection_usage
+msgid "AI Connection Usage"
+msgstr "Uso de conexión de IA"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection_usage__model_name
+msgid "AI Model"
+msgstr "Modelo de IA"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_res_company__ai_usage_month_cap
+msgid "AI Monthly Spending Cap"
+msgstr "Tope mensual de gasto en IA"
+
+#. module: ai_connection_usage
+#: model:ir.actions.act_window,name:ai_connection_usage.ai_connection_usage_act_window
+#: model:ir.ui.menu,name:ai_connection_usage.ai_connection_usage_menu
+msgid "AI Usage"
+msgstr "Uso de la IA"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection_usage__answer
+#: model_terms:ir.ui.view,arch_db:ai_connection_usage.ai_connection_usage_form_view
+msgid "Answer"
+msgstr "Respuesta"
+
+#. module: ai_connection_usage
+#: model_terms:ir.ui.view,arch_db:ai_connection_usage.ai_connection_form_view
+msgid "Calls"
+msgstr "Llamadas"
+
+#. module: ai_connection_usage
+#: model:ir.model,name:ai_connection_usage.model_res_company
+msgid "Companies"
+msgstr "Compañías"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection__company_id
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection_usage__company_id
+#: model_terms:ir.ui.view,arch_db:ai_connection_usage.ai_connection_usage_search_view
+msgid "Company"
+msgstr "Compañía"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,help:ai_connection_usage.field_ai_connection__company_id
+msgid ""
+"Company whose usage and monthly cap the calls of this connection count "
+"against. Leave it empty to use the current company of the user and share the"
+" connection with every company."
+msgstr ""
+"Compañía a cuyo uso y tope mensual se cargan las llamadas de esta conexión. "
+"Vacía: se usa la compañía actual del usuario y la conexión se comparte con "
+"todas las compañías."
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection_usage__completion_tokens
+msgid "Completion Tokens"
+msgstr "Tokens de respuesta"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection_usage__connection_id
+#: model_terms:ir.ui.view,arch_db:ai_connection_usage.ai_connection_usage_search_view
+msgid "Connection"
+msgstr "Conexión"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection_usage__cost
+msgid "Cost"
+msgstr "Costo"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection_usage__cost_company
+msgid "Cost (Company Currency)"
+msgstr "Costo (moneda de la compañía)"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,help:ai_connection_usage.field_ai_connection_usage__cost_company
+msgid ""
+"Cost of the call in the currency of the company: the amount the monthly cap "
+"of the company counts."
+msgstr ""
+"Costo de la llamada en la moneda de la compañía: el monto que cuenta el tope"
+" mensual de la compañía."
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,help:ai_connection_usage.field_ai_connection_usage__cost
+msgid "Cost of the call, in the currency of the connection."
+msgstr "Costo de la llamada, en la moneda de la conexión."
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection_usage__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection_usage__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection_usage__currency_id
+msgid "Currency"
+msgstr "Moneda"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection_usage__date
+#: model_terms:ir.ui.view,arch_db:ai_connection_usage.ai_connection_usage_form_view
+#: model_terms:ir.ui.view,arch_db:ai_connection_usage.ai_connection_usage_list_view
+msgid "Date"
+msgstr "Fecha"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,help:ai_connection_usage.field_ai_connection_usage__date
+msgid ""
+"Day of the call in the timezone of the system parameter "
+"ai_connection_usage.timezone (UTC by default): the monthly caps count "
+"calendar months of that timezone."
+msgstr ""
+"Día de la llamada en la zona horaria del parámetro del sistema "
+"ai_connection_usage.timezone (UTC por defecto): los topes mensuales cuentan "
+"meses calendario de esa zona."
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection_usage__display_name
+msgid "Display Name"
+msgstr "Nombre mostrado"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields.selection,name:ai_connection_usage.selection__ai_connection_usage__state__done
+msgid "Done"
+msgstr "Hecho"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection_usage__duration
+msgid "Duration"
+msgstr "Duración"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,help:ai_connection_usage.field_ai_connection_usage__duration
+msgid "Duration of the call, in seconds."
+msgstr "Duración de la llamada, en segundos."
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection_usage__error
+#: model:ir.model.fields.selection,name:ai_connection_usage.selection__ai_connection_usage__state__error
+#: model_terms:ir.ui.view,arch_db:ai_connection_usage.ai_connection_usage_form_view
+msgid "Error"
+msgstr "Error"
+
+#. module: ai_connection_usage
+#: model_terms:ir.ui.view,arch_db:ai_connection_usage.ai_connection_usage_search_view
+msgid "Errors"
+msgstr "Errores"
+
+#. module: ai_connection_usage
+#: model_terms:ir.ui.view,arch_db:ai_connection_usage.ai_connection_usage_search_view
+msgid "Group By"
+msgstr "Agrupar por"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection_usage__id
+msgid "ID"
+msgstr "ID"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection__usage_input_price
+msgid "Input Price"
+msgstr "Precio de entrada"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection_usage__iterations
+msgid "Iterations"
+msgstr "Iteraciones"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,help:ai_connection_usage.field_ai_connection__usage_store_content
+msgid ""
+"Keep the prompt and the answer of each call in the usage log. Off by "
+"default: they may contain personal or confidential data."
+msgstr ""
+"Guarda la pregunta y la respuesta de cada llamada en el registro de uso. "
+"Apagado por defecto: pueden tener datos personales o confidenciales."
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection_usage__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection_usage__write_date
+msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: ai_connection_usage
+#: model_terms:ir.ui.view,arch_db:ai_connection_usage.ai_connection_form_view
+msgid "Limits"
+msgstr "Límites"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,help:ai_connection_usage.field_ai_connection__usage_month_cap
+msgid ""
+"Maximum spend of this connection per calendar month, in the price currency. "
+"Calls are refused once it is reached. Zero means no cap."
+msgstr ""
+"Gasto máximo de esta conexión por mes calendario, en la moneda de los "
+"precios. Alcanzado el tope, las llamadas se rechazan. Cero: sin tope."
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,help:ai_connection_usage.field_res_company__ai_usage_month_cap
+msgid ""
+"Maximum spend on AI calls per calendar month for this company, in the "
+"company currency. Calls are refused once it is reached. Leave it at zero for"
+" no cap."
+msgstr ""
+"Gasto máximo en llamadas de IA por mes calendario para esta compañía, en la "
+"moneda de la compañía. Alcanzado el tope, las llamadas se rechazan. Cero: "
+"sin tope."
+
+#. module: ai_connection_usage
+#: model_terms:ir.ui.view,arch_db:ai_connection_usage.ai_connection_usage_search_view
+msgid "Month"
+msgstr "Mes"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection__usage_month_cap
+msgid "Monthly Spending Cap"
+msgstr "Tope mensual de gasto"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection__usage_output_price
+msgid "Output Price"
+msgstr "Precio de salida"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection__usage_currency_id
+msgid "Price Currency"
+msgstr "Moneda de los precios"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,help:ai_connection_usage.field_ai_connection__usage_output_price
+msgid "Price of one million completion tokens."
+msgstr "Precio de un millón de tokens de respuesta."
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,help:ai_connection_usage.field_ai_connection__usage_input_price
+msgid "Price of one million prompt tokens."
+msgstr "Precio de un millón de tokens de entrada."
+
+#. module: ai_connection_usage
+#: model_terms:ir.ui.view,arch_db:ai_connection_usage.ai_connection_form_view
+msgid "Prices"
+msgstr "Precios"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection_usage__prompt
+#: model_terms:ir.ui.view,arch_db:ai_connection_usage.ai_connection_usage_form_view
+msgid "Prompt"
+msgstr "Pregunta"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection_usage__prompt_tokens
+msgid "Prompt Tokens"
+msgstr "Tokens de entrada"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection_usage__purpose
+#: model_terms:ir.ui.view,arch_db:ai_connection_usage.ai_connection_usage_search_view
+msgid "Purpose"
+msgstr "Propósito"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection_usage__res_model
+msgid "Related Model"
+msgstr "Modelo relacionado"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection_usage__res_id
+msgid "Related Record"
+msgstr "Registro relacionado"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection__usage_month_spend
+msgid "Spend This Month"
+msgstr "Gasto de este mes"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection_usage__state
+msgid "State"
+msgstr "Estado"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection__usage_store_content
+msgid "Store Prompts and Answers"
+msgstr "Guardar preguntas y respuestas"
+
+#. module: ai_connection_usage
+#. odoo-python
+#: code:addons/ai_connection_usage/models/ai_connection.py:0
+msgid ""
+"The AI connection %(name)s reached its monthly spending cap (%(spend).2f of "
+"%(cap).2f %(currency)s). Ask an administrator to raise it or wait for next "
+"month."
+msgstr ""
+"La conexión de IA %(name)s llegó a su tope mensual de gasto (%(spend).2f de "
+"%(cap).2f %(currency)s). Pedile a un administrador que lo suba o esperá al "
+"mes que viene."
+
+#. module: ai_connection_usage
+#. odoo-python
+#: code:addons/ai_connection_usage/models/ai_connection.py:0
+msgid ""
+"The company %(company)s reached its monthly AI spending cap (%(spend).2f of "
+"%(cap).2f %(currency)s). Ask an administrator to raise it or wait for next "
+"month."
+msgstr ""
+"La compañía %(company)s llegó a su tope mensual de gasto en IA (%(spend).2f "
+"de %(cap).2f %(currency)s). Pedile a un administrador que lo suba o esperá "
+"al mes que viene."
+
+#. module: ai_connection_usage
+#: model_terms:ir.ui.view,arch_db:ai_connection_usage.ai_connection_usage_search_view
+msgid "This Month"
+msgstr "Este mes"
+
+#. module: ai_connection_usage
+#: model_terms:ir.ui.view,arch_db:ai_connection_usage.ai_connection_usage_list_view
+msgid "Total"
+msgstr "Total"
+
+#. module: ai_connection_usage
+#: model_terms:ir.ui.view,arch_db:ai_connection_usage.ai_connection_form_view
+msgid "Usage"
+msgstr "Uso"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection__usage_count
+msgid "Usage Count"
+msgstr "Cantidad de usos"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,field_description:ai_connection_usage.field_ai_connection_usage__user_id
+#: model_terms:ir.ui.view,arch_db:ai_connection_usage.ai_connection_usage_search_view
+msgid "User"
+msgstr "Usuario"
+
+#. module: ai_connection_usage
+#: model:ir.model.fields,help:ai_connection_usage.field_ai_connection_usage__purpose
+msgid "What the call was made for, set by the caller."
+msgstr "Para qué se hizo la llamada; lo indica quien llama."
