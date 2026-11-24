@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Docutils: https://docutils.sourceforge.io/" />
-<title>README.rst</title>
+<title>AI  Automation Openai</title>
 <style type="text/css">
 
 /*
@@ -382,11 +382,13 @@ only like OpenAI, simplifying the work.</p>
 <div class="contents local topic" id="contents">
 <ul class="simple">
 <li><a class="reference internal" href="#use-cases-context" id="toc-entry-1">Use Cases / Context</a></li>
-<li><a class="reference internal" href="#bug-tracker" id="toc-entry-2">Bug Tracker</a></li>
-<li><a class="reference internal" href="#credits" id="toc-entry-3">Credits</a><ul>
-<li><a class="reference internal" href="#authors" id="toc-entry-4">Authors</a></li>
-<li><a class="reference internal" href="#contributors" id="toc-entry-5">Contributors</a></li>
-<li><a class="reference internal" href="#maintainers" id="toc-entry-6">Maintainers</a></li>
+<li><a class="reference internal" href="#configuration" id="toc-entry-2">Configuration</a></li>
+<li><a class="reference internal" href="#known-issues-roadmap" id="toc-entry-3">Known issues / Roadmap</a></li>
+<li><a class="reference internal" href="#bug-tracker" id="toc-entry-4">Bug Tracker</a></li>
+<li><a class="reference internal" href="#credits" id="toc-entry-5">Credits</a><ul>
+<li><a class="reference internal" href="#authors" id="toc-entry-6">Authors</a></li>
+<li><a class="reference internal" href="#contributors" id="toc-entry-7">Contributors</a></li>
+<li><a class="reference internal" href="#maintainers" id="toc-entry-8">Maintainers</a></li>
 </ul>
 </li>
 </ul>
@@ -396,8 +398,43 @@ only like OpenAI, simplifying the work.</p>
 <p>This module acts as a glue module, however, by using an AI proxy like
 LiteLLM, we can just use this connector for all possible interactions.</p>
 </div>
+<div class="section" id="configuration">
+<h2><a class="toc-backref" href="#toc-entry-2">Configuration</a></h2>
+<p>Create an AI Connection of kind OpenAI and fill the model, the URL of
+the OpenAI-compatible endpoint and the key.</p>
+<p>The key can be stored in the connection (API Key) or kept out of the
+database: fill API Key Environment Variable with the name of an
+environment variable of the Odoo server that holds it. When that name is
+set, the key is read from the environment on every call, the stored key
+is ignored, and a call fails with a clear message if the variable is
+missing.</p>
+<p>Which variables may be used, and where their keys may be sent, is
+decided by the server, not by the database: the Odoo configuration file
+must list them in the <tt class="docutils literal">ai_connection_openai_env_allowlist</tt> option,
+comma separated. Each entry is an exact name or a prefix ending with
+<tt class="docutils literal">*</tt>, optionally pinned to the only host the key may be sent to with
+<tt class="docutils literal">&#64;host</tt>:</p>
+<pre class="code ini literal-block">
+<span class="k">[options]</span><span class="w">
+</span><span class="na">ai_connection_openai_env_allowlist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">OPENAI_API_KEY&#64;api.openai.com,AI_KEY_*&#64;llm.example.com</span>
+</pre>
+<p>With a host, the key is only used when the connection URL is <tt class="docutils literal">https</tt>
+and its host is exactly that one (no user information in the URL).
+Without a host the key may be sent to any <tt class="docutils literal">https</tt> URL, and every call
+logs a warning saying so. A bare <tt class="docutils literal">*</tt> is ignored. Without the option no
+variable is allowed: otherwise an administrator of any database served
+by the instance could read any variable of the server process (database
+password, master password…) by sending it to an URL of their own.</p>
+</div>
+<div class="section" id="known-issues-roadmap">
+<h2><a class="toc-backref" href="#toc-entry-3">Known issues / Roadmap</a></h2>
+<ul class="simple">
+<li>An entry without <tt class="docutils literal">&#64;host</tt> lets an administrator of the database send
+that key to any <tt class="docutils literal">https</tt> URL. Pin every entry to its provider’s host.</li>
+</ul>
+</div>
 <div class="section" id="bug-tracker">
-<h2><a class="toc-backref" href="#toc-entry-2">Bug Tracker</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-4">Bug Tracker</a></h2>
 <p>Bugs are tracked on <a class="reference external" href="https://github.com/OCA/ai/issues">GitHub Issues</a>.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
@@ -405,15 +442,15 @@ If you spotted it first, help us to smash it by providing a detailed and welcome
 <p>Do not contact contributors directly about support or help with technical issues.</p>
 </div>
 <div class="section" id="credits">
-<h2><a class="toc-backref" href="#toc-entry-3">Credits</a></h2>
+<h2><a class="toc-backref" href="#toc-entry-5">Credits</a></h2>
 <div class="section" id="authors">
-<h3><a class="toc-backref" href="#toc-entry-4">Authors</a></h3>
+<h3><a class="toc-backref" href="#toc-entry-6">Authors</a></h3>
 <ul class="simple">
 <li>Dixmit</li>
 </ul>
 </div>
 <div class="section" id="contributors">
-<h3><a class="toc-backref" href="#toc-entry-5">Contributors</a></h3>
+<h3><a class="toc-backref" href="#toc-entry-7">Contributors</a></h3>
 <ul class="simple">
 <li><a class="reference external" href="https://www.dixmit.com">Dixmit</a><ul>
 <li>Enric Tobella</li>
@@ -422,7 +459,7 @@ If you spotted it first, help us to smash it by providing a detailed and welcome
 </ul>
 </div>
 <div class="section" id="maintainers">
-<h3><a class="toc-backref" href="#toc-entry-6">Maintainers</a></h3>
+<h3><a class="toc-backref" href="#toc-entry-8">Maintainers</a></h3>
 <p>This module is maintained by the OCA.</p>
 <a class="reference external image-reference" href="https://odoo-community.org">
 <img alt="Odoo Community Association" src="https://odoo-community.org/logo.png" />
