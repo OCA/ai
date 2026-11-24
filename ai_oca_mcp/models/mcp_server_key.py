@@ -62,9 +62,8 @@ class McpServerKey(models.Model):
                 ("server_id.key", "=", key),
                 ("server_id.active", "=", True),
                 ("hashed_key", "=", self._hash_key(security_key)),
-                "|",
-                ("expiration_date", "=", False),
-                ("expiration_date", ">", fields.Datetime.now()),
+                # expired by date is checked by the caller, which also marks
+                # the key as expired
                 ("state", "=", "active"),
             ],
             limit=1,

@@ -58,7 +58,7 @@ class TestMcp(HttpCase):
                 "Authorization": "Bearer wrong",
             },
         )
-        self.assertEqual(request.status_code, 200)
+        self.assertEqual(request.status_code, 401)
         response = json.loads(request.content.decode("utf-8"))
         self.assertIn("error", response)
 
@@ -337,12 +337,13 @@ class TestMcp(HttpCase):
                     "Authorization": f"Bearer {self.security_key}",
                 },
             )
-        self.assertEqual(request.status_code, 200)
+        self.assertEqual(request.status_code, 401)
         response = json.loads(request.content.decode("utf-8"))
         self.assertNotIn("result", response)
         self.assertIn("error", response)
+        self.assertEqual(self.server.key_ids.state, "expired")
 
-    def _initialize(self, server_key=None, security_key=None):
+    def _initialize(self, server_key=None, security_key=None, status=200):
         request = self.url_open(
             f"/mcp/{server_key or self.server.key}",
             data=json.dumps({"jsonrpc": "2.0", "id": "1", "method": "initialize"}),
@@ -351,27 +352,27 @@ class TestMcp(HttpCase):
                 "Authorization": f"Bearer {security_key or self.security_key}",
             },
         )
-        self.assertEqual(request.status_code, 200, request.content.decode("utf-8"))
+        self.assertEqual(request.status_code, status, request.content.decode("utf-8"))
         return json.loads(request.content.decode("utf-8"))
 
     def test_archived_server_revokes_cached_key(self):
         self.assertIn("result", self._initialize())
         self.server.active = False
-        response = self._initialize()
+        response = self._initialize(status=401)
         self.assertNotIn("result", response)
         self.assertIn("error", response)
 
     def test_deleted_key_revokes_cached_key(self):
         self.assertIn("result", self._initialize())
         self.server.key_ids.unlink()
-        response = self._initialize()
+        response = self._initialize(status=401)
         self.assertNotIn("result", response)
         self.assertIn("error", response)
 
     def test_expired_state_revokes_cached_key(self):
         self.assertIn("result", self._initialize())
         self.server.key_ids.write({"state": "expired"})
-        response = self._initialize()
+        response = self._initialize(status=401)
         self.assertNotIn("result", response)
         self.assertIn("error", response)
 
@@ -379,7 +380,14 @@ class TestMcp(HttpCase):
         old_server_key = self.server.key
         self.assertIn("result", self._initialize())
         self.server.key = "rotated-server-key"
-        response = self._initialize(server_key=old_server_key)
+        response = self._initialize(server_key=old_server_key, status=401)
         self.assertNotIn("result", response)
         self.assertIn("error", response)
         self.assertIn("result", self._initialize())
+
+    def test_expired_key_first_used_after_expiration(self):
+        self.server.key_ids.write({"expiration_date": "2024-01-02 00:00:00"})
+        with freeze_time("2024-01-03"):
+            response = self._initialize(status=401)
+        self.assertIn("error", response)
+        self.assertEqual(self.server.key_ids.state, "expired")

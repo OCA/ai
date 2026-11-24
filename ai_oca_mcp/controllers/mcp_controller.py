@@ -48,7 +48,8 @@ class McpController(http.Controller):
                     "jsonrpc": "2.0",
                     "id": payload.get("id"),
                     "error": {"code": -32000, "message": "Connection failed"},
-                }
+                },
+                status=401,
             )
         server = request.env["mcp.server.key"].sudo().browse(server_id)
         server = server.with_user(server.user_id.id)
