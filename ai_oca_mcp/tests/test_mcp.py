@@ -391,3 +391,18 @@ class TestMcp(HttpCase):
             response = self._initialize(status=401)
         self.assertIn("error", response)
         self.assertEqual(self.server.key_ids.state, "expired")
+
+    @mute_logger("odoo.http")
+    def test_invalid_json(self):
+        for body in ("{not json", "[]", '"text"'):
+            request = self.url_open(
+                f"/mcp/{self.server.key}",
+                data=body,
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": f"Bearer {self.security_key}",
+                },
+            )
+            self.assertEqual(request.status_code, 400, body)
+            response = json.loads(request.content.decode("utf-8"))
+            self.assertEqual(response["error"]["code"], -32700, body)

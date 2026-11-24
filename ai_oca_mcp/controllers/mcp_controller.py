@@ -23,7 +23,19 @@ class McpController(http.Controller):
         match = re.match(
             r"Bearer (.+)", request.httprequest.headers.get("Authorization", "")
         )
-        payload = json.loads(request.httprequest.data.decode("utf-8"))
+        try:
+            payload = json.loads(request.httprequest.data.decode("utf-8"))
+        except ValueError:
+            payload = None
+        if not isinstance(payload, dict):
+            return request.make_json_response(
+                {
+                    "jsonrpc": "2.0",
+                    "id": None,
+                    "error": {"code": -32700, "message": "Parse error"},
+                },
+                status=400,
+            )
         if not match:
             return request.make_json_response(
                 {
