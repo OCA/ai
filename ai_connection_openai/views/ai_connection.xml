@@ -12,6 +12,8 @@
                         <field name="model" />
                         <field name="url" />
                         <field name="temperature" />
+                        <field name="openai_max_completion_tokens" />
+                        <field name="openai_timeout" />
                         <field name="openai_api_key" />
                     </group>
                 </page>
