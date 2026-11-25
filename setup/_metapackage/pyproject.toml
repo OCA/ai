@@ -4,6 +4,7 @@ version = "19.0.20261125.0"
 dependencies = [
     "odoo-addon-ai_connection==19.0.*",
     "odoo-addon-ai_oca_bridge==19.0.*",
+    "odoo-addon-ai_oca_mcp==19.0.*",
     "odoo-addon-ai_tool==19.0.*",
 ]
 classifiers=[
