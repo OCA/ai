@@ -1,0 +1,184 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ai_oca_bridge_extra_parameters
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: 2025-11-12 09:42+0000\n"
+"Last-Translator: mymage <stefano.consolaro@mymage.it>\n"
+"Language-Team: none\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.10.4\n"
+
+#. module: ai_oca_bridge_extra_parameters
+#: model_terms:ir.ui.view,arch_db:ai_oca_bridge_extra_parameters.view_ai_extra_parameter_form
+msgid ""
+"<span class=\"instructions\">\n"
+"                            Use 'object' to access all the line\n"
+"                            Use 'result' to return the result.\n"
+"                        </span>"
+msgstr ""
+"<span class=\"instructions\">\n"
+"                            Usa 'object' per accedere a tutte le righe\n"
+"                            Usa 'result' per restituire il risultato.\n"
+"                        </span>"
+
+#. module: ai_oca_bridge_extra_parameters
+#: model:ir.model,name:ai_oca_bridge_extra_parameters.model_ai_extra_parameter
+msgid "AI Bridge Extra Parameter"
+msgstr "Parametro aggiuntivo collegamento IA"
+
+#. module: ai_oca_bridge_extra_parameters
+#: model:ir.ui.menu,name:ai_oca_bridge_extra_parameters.menu_ai_bridge_extra_parameter
+msgid "AI Bridge Extra Parameters"
+msgstr "Parametri aggiuntivi collegamento IA"
+
+#. module: ai_oca_bridge_extra_parameters
+#: model_terms:ir.ui.view,arch_db:ai_oca_bridge_extra_parameters.view_ai_extra_parameter_form
+msgid "AI Extra Parameter"
+msgstr "Parametro aggiuntivo IA"
+
+#. module: ai_oca_bridge_extra_parameters
+#: model:ir.actions.act_window,name:ai_oca_bridge_extra_parameters.action_ai_extra_parameters
+msgid "AI Extra Parameters"
+msgstr "Parametri aggiuntivi IA"
+
+#. module: ai_oca_bridge_extra_parameters
+#: model:ir.model.fields,help:ai_oca_bridge_extra_parameters.field_ai_bridge__extra_parameter_ids
+msgid ""
+"Additional parameters to be sent to the AI system. These can be used to "
+"customize the AI request using expressions or fixed input."
+msgstr ""
+"Parametri aggiuntivi da inviare al sistema di IA. Questi possono essere "
+"utilizzati per personalizzare la richiesta di IA tramite espressioni o input "
+"fissi."
+
+#. module: ai_oca_bridge_extra_parameters
+#: model:ir.model,name:ai_oca_bridge_extra_parameters.model_ai_bridge
+msgid "Ai Bridge Configuration"
+msgstr "Configurazione collegamento IA"
+
+#. module: ai_oca_bridge_extra_parameters
+#: model:ir.model.fields.selection,name:ai_oca_bridge_extra_parameters.selection__ai_extra_parameter__parameter_type__self
+msgid "Bridge Self"
+msgstr "Auto collegamento"
+
+#. module: ai_oca_bridge_extra_parameters
+#: model:ir.model.fields,field_description:ai_oca_bridge_extra_parameters.field_ai_extra_parameter__create_uid
+msgid "Created by"
+msgstr "Creato da"
+
+#. module: ai_oca_bridge_extra_parameters
+#: model:ir.model.fields,field_description:ai_oca_bridge_extra_parameters.field_ai_extra_parameter__create_date
+msgid "Created on"
+msgstr "Creato il"
+
+#. module: ai_oca_bridge_extra_parameters
+#: model:ir.model.fields,help:ai_oca_bridge_extra_parameters.field_ai_extra_parameter__evaluate_type
+msgid ""
+"Defines how the parameter is evaluated. 'expression' means it will be "
+"evaluated as a Python expression, 'formula' means it will be evaluated as a "
+"formula expression."
+msgstr ""
+"Definisce come viene valutato il parametro. 'expression' significa che verrà "
+"valutato come un'espressione Python, 'formula' significa che verrà valutato "
+"come un'espressione formula."
+
+#. module: ai_oca_bridge_extra_parameters
+#: model:ir.model.fields,help:ai_oca_bridge_extra_parameters.field_ai_extra_parameter__parameter_type
+msgid ""
+"Defines the context in which this parameter is evaluated. 'record' means it "
+"will be evaluated in the context of the record being processed, 'self' means"
+" it will be evaluated in the context of the AI bridge itself."
+msgstr ""
+"Definisce il contesto in cui questo parametro viene valutato. 'record' "
+"significa che verrà valutato nel contesto del record in fase di "
+"elaborazione, 'self' significa che verrà valutato nel contesto del "
+"collegamento IA stesso."
+
+#. module: ai_oca_bridge_extra_parameters
+#: model:ir.model.fields,field_description:ai_oca_bridge_extra_parameters.field_ai_extra_parameter__display_name
+msgid "Display Name"
+msgstr "Nome visualizzato"
+
+#. module: ai_oca_bridge_extra_parameters
+#: model:ir.model.fields,field_description:ai_oca_bridge_extra_parameters.field_ai_extra_parameter__evaluate_type
+msgid "Evaluate Type"
+msgstr "Tipo valutazione"
+
+#. module: ai_oca_bridge_extra_parameters
+#: model:ir.model.fields,field_description:ai_oca_bridge_extra_parameters.field_ai_extra_parameter__expression
+#: model:ir.model.fields.selection,name:ai_oca_bridge_extra_parameters.selection__ai_extra_parameter__evaluate_type__expression
+msgid "Expression"
+msgstr "Espressione"
+
+#. module: ai_oca_bridge_extra_parameters
+#: model:ir.model.fields,field_description:ai_oca_bridge_extra_parameters.field_ai_bridge__extra_parameter_ids
+msgid "Extra Parameters"
+msgstr "Parametri aggiuntivi"
+
+#. module: ai_oca_bridge_extra_parameters
+#: model:ir.model.fields,field_description:ai_oca_bridge_extra_parameters.field_ai_extra_parameter__formula
+#: model:ir.model.fields.selection,name:ai_oca_bridge_extra_parameters.selection__ai_extra_parameter__evaluate_type__formula
+msgid "Formula"
+msgstr "Formula"
+
+#. module: ai_oca_bridge_extra_parameters
+#: model:ir.model.fields,field_description:ai_oca_bridge_extra_parameters.field_ai_extra_parameter__id
+msgid "ID"
+msgstr "ID"
+
+#. module: ai_oca_bridge_extra_parameters
+#: model_terms:ir.ui.view,arch_db:ai_oca_bridge_extra_parameters.view_ai_extra_parameter_form
+msgid "Instructions"
+msgstr "Istruzioni"
+
+#. module: ai_oca_bridge_extra_parameters
+#. odoo-python
+#: code:addons/ai_oca_bridge_extra_parameters/models/ai_extra_parameter.py:0
+#, python-format
+msgid "Invalid evaluate_type"
+msgstr "evaluate_type non valido"
+
+#. module: ai_oca_bridge_extra_parameters
+#: model:ir.model.fields,field_description:ai_oca_bridge_extra_parameters.field_ai_extra_parameter____last_update
+msgid "Last Modified on"
+msgstr "Ultima modifica il"
+
+#. module: ai_oca_bridge_extra_parameters
+#: model:ir.model.fields,field_description:ai_oca_bridge_extra_parameters.field_ai_extra_parameter__write_uid
+msgid "Last Updated by"
+msgstr "Ultimo aggiornamento di"
+
+#. module: ai_oca_bridge_extra_parameters
+#: model:ir.model.fields,field_description:ai_oca_bridge_extra_parameters.field_ai_extra_parameter__write_date
+msgid "Last Updated on"
+msgstr "Ultimo aggiornamento il"
+
+#. module: ai_oca_bridge_extra_parameters
+#: model:ir.model.fields,field_description:ai_oca_bridge_extra_parameters.field_ai_extra_parameter__name
+msgid "Name"
+msgstr "Nome"
+
+#. module: ai_oca_bridge_extra_parameters
+#: model:ir.model.fields,field_description:ai_oca_bridge_extra_parameters.field_ai_extra_parameter__parameter_type
+msgid "Parameter Type"
+msgstr "Tipo parametro"
+
+#. module: ai_oca_bridge_extra_parameters
+#: model:ir.model.fields.selection,name:ai_oca_bridge_extra_parameters.selection__ai_extra_parameter__parameter_type__record
+msgid "Record"
+msgstr "Record"
+
+#. module: ai_oca_bridge_extra_parameters
+#. odoo-python
+#: code:addons/ai_oca_bridge_extra_parameters/models/ai_extra_parameter.py:0
+#, python-format
+msgid "Unbalanced braces in parameter expression."
+msgstr "Parentesi graffe non bilanciate nell'espressione dei parametri."
