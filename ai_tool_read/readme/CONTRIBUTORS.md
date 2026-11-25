@@ -1,0 +1,3 @@
+- [Quartile](https://www.quartile.co):
+  - Toshikimi Shigenobu
+- Daniel Reis <dreis.pt@gmail.com>
