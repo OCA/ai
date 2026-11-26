@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Binhex
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="ai_message_import_order_confirm_view_form" model="ir.ui.view">
+        <field name="name">ai.message.import.order.confirm.form</field>
+        <field name="model">ai.message.import.order.confirm</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="alert alert-warning" role="alert">
+                    The order has
+                    <field name="incident_count" class="oe_inline fw-bold" />
+                    incident(s) of its received documents pending review. Confirm
+                    it only if they are checked.
+                </div>
+                <field name="incident_summary" />
+                <field name="res_model" invisible="1" />
+                <field name="res_id" invisible="1" />
+                <footer>
+                    <button
+                        name="action_confirm"
+                        type="object"
+                        string="Confirm anyway"
+                        class="btn-primary"
+                    />
+                    <button special="cancel" string="Cancel" class="btn-secondary" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

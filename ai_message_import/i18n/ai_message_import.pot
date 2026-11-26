@@ -1,0 +1,3250 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ai_message_import
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0-20261015\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-03 15:56+0000\n"
+"PO-Revision-Date: 2026-11-03 15:56+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/models/mail_message_import_incident.py:0
+msgid ""
+"%(choice)s chosen on the incident, learned for the next documents. Open "
+"incidents solved with it too: %(count)s."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/models/ai_message_import_document.py:0
+msgid "%(conversation)s / manual by %(user)s on %(date)s"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "%(count)s incident(s) pending review."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/models/ai_message_import_document.py:0
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "%(days)s days"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "%(line)s %(discount)s%%"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "%(line)s has no tax pending review (not considered exempt)."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "%(line)s is not in the correction and was kept."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "%(line)s removed: the new document replaces the previous one."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "%(line)s was removed by a person and was not added again."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"%(line)s: product %(product)s chosen by the AI (confidence %(conf).0f%%), "
+"check it before confirming the order. Reason: %(reason)s"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"%(line)s: product %(product)s chosen by the AI in a previous processing, "
+"check it before confirming the order."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"%(line)s: quoted %(qty)s %(uom)s, conversion factor %(factor)s, ordered "
+"%(final_qty)s %(final_uom)s."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"%(line)s: quoted price %(quoted)s, Odoo price (%(origin)s) %(odoo)s; the "
+"Odoo price is applied. Difference %(diff)s per %(uom)s, %(total)s for the "
+"line."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"%(line)s: tax of the document %(quoted)s%%, tax of Odoo %(taxes)s kept."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"%(line)s: the document states no unit, the unit %(uom)s of the order is "
+"assumed."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"%(line)s: the price of Odoo is %(size)s times the quoted one and a box holds"
+" %(size)s units, so the document counts its units: %(qty)s %(uom)s ordered "
+"as %(final_qty)s %(final_uom)s."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"%(line)s: the quoted discount %(quoted)s%% replaces the discount of "
+"%(odoo)s%% of the price list."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"%(line)s: the quoted price is %(size)s times the one of Odoo and a box holds"
+" %(size)s units, so the document counts boxes: %(qty)s %(uom)s ordered as "
+"%(final_qty)s %(final_uom)s."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"%(line)s: unit '%(text)s' taken as %(uom)s, as learned for this sender."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "%(order)s can no longer be modified"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "%(order)s is not in the currency of the company"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "%(product)s: %(qty)s %(uom)s at %(price)s, discount %(discount)s%%"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/models/ai_message_import_document.py:0
+msgid ""
+"%(quote)s already has the order %(order)s: cancel it before changing the "
+"document type."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/models/ai_message_import_document.py:0
+msgid "%(ref)s has no order to correct."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/quote_validator.py:0
+msgid "'%(key)s' must be an object."
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.mail_message_import_config_view_form
+msgid ""
+".\n"
+"                    Without them the conversations cannot be processed."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/pricing.py:0
+msgid ""
+"1 %(code)s = %(rate).6f %(company_currency)s (Odoo rate of %(rate_date)s, "
+"applied on %(date)s)"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.mail_message_import_channel_view_kanban
+msgid "<span>New</span>"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.mail_message_import_channel_view_kanban
+msgid "<span>Unknown senders</span>"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_form
+msgid "<strong>Notes of the AI:</strong>"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/models/ai_message_import_document.py:0
+msgid "A discarded document cannot be applied."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"A document of the same partner, date and total (%(total)s) exists: %(refs)s."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"A person changed '%(field)s' after the last automatic update. The new "
+"document also changes it, so the field was not overwritten: decide which "
+"value is right."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"A person changed the currency of %(order)s to %(currency)s. The module only "
+"writes amounts in %(company_currency)s, so the order was not modified."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"A person removed this line from the order. The document includes it again "
+"but it was not added back: add it by hand if it is needed."
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.mail_message_import_conversation_view_form
+msgid "AI"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model,name:ai_message_import.model_ai_message_import_prompt
+msgid "AI Prompt"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_conversation__ai_response
+msgid "AI answer"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_config__ai_configured
+msgid "AI configured"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_config__ai_connection_id
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_conversation__ai_connection_id
+msgid "AI connection"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__mail_message_import_incident__incident_type__ai_error
+msgid "AI error"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_conversation__ai_model
+msgid "AI model"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.actions.act_window,name:ai_message_import.action_ai_message_import_prompt
+#: model:ir.ui.menu,name:ai_message_import.menu_ai_message_import_prompt
+msgid "AI prompts"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_mail_message_import_config__missing_prompts
+msgid "AI prompts the installed modules need and nobody wrote yet."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_conversation__ai_tokens
+msgid "AI tokens"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_product_mapping__source__user
+msgid "Added by a user"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__sender_address
+msgid "Address"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__mail_message_import_incident__incident_type__update_ambiguous
+msgid "Ambiguous correction"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.mail_message_import_config_view_form
+msgid "An administrator must write them."
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_form
+msgid "Apply again"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.mail_message_import_incident_view_form
+msgid "Apply and learn"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_form
+msgid "Apply as correction"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.mail_message_import_config_view_form
+msgid "Artificial intelligence"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_partner_mapping__partner_text
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_product_mapping__partner_text
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_uom_mapping__uom_text
+msgid "As written"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__barcode
+msgid "Barcode"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_incident__can_fix
+msgid "Can Fix"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_order_confirm_view_form
+msgid "Cancel"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.actions.act_window,name:ai_message_import.action_ai_message_import_change
+#: model:ir.ui.menu,name:ai_message_import.menu_ai_message_import_change
+msgid "Change history"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_form
+msgid "Changes"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_product_mapping__source__ai
+msgid "Choice of the AI, confirmed"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.mail_message_import_incident_view_form
+msgid ""
+"Choose the right product and press\n"
+"                            <strong>Apply and learn</strong>: the document is applied\n"
+"                            again, and the next documents that write it the same way\n"
+"                            will use it on their own."
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.mail_message_import_incident_view_form
+msgid ""
+"Choose the right vendor or customer and press\n"
+"                            <strong>Apply and learn</strong>: the document is applied\n"
+"                            again, and the next documents that write it the same way\n"
+"                            will use it on their own."
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.mail_message_import_incident_view_form
+msgid ""
+"Choose the unit of the quantity and press\n"
+"                            <strong>Apply and learn</strong>: the document is applied\n"
+"                            again, and the next documents that write it the same way\n"
+"                            will use it on their own."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/models/mail_message_import_incident.py:0
+msgid "Choose what to use for the incident %(name)s."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ai.message.import.prompt,name:ai_message_import.prompt_product_choice
+msgid "Choosing the products of the lines"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__clarifications
+msgid "Clarifications"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_prompt__code
+msgid "Code"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_change__company_id
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__company_id
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__company_id
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_partner_mapping__company_id
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_product_mapping__company_id
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_uom_mapping__company_id
+msgid "Company"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_ai_message_import_partner_mapping__company_id
+#: model:ir.model.fields,help:ai_message_import.field_ai_message_import_product_mapping__company_id
+#: model:ir.model.fields,help:ai_message_import.field_ai_message_import_uom_mapping__company_id
+msgid "Company that receives the messages of the sender."
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_form
+msgid "Conditions"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__confidence
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__confidence
+msgid "Confidence"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model,name:ai_message_import.model_ai_message_import_order_confirm
+msgid "Confirm an Order with Open Incidents"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_order_confirm_view_form
+msgid "Confirm anyway"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"Conflict: '%(field)s' of %(where)s was changed by a person and was not "
+"overwritten."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_mail_message_import_config__ai_connection_id
+msgid ""
+"Connection of OCA/ai (provider, model and key) that reads the conversations "
+"of the company and chooses the products."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_mail_message_import_incident__fix_partner_id
+msgid ""
+"Contact of the document. The name it was written with is learned for the "
+"sender."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_incident__fix_partner_id
+msgid "Contact to use"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_prompt__content
+msgid "Content"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model,name:ai_message_import.model_mail_message_import_conversation
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_change__conversation_id
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__conversation_id
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_form
+msgid "Conversation"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_mail_message_import_incident__line_uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.mail_message_import_incident_view_form
+msgid ""
+"Correct the document (button <strong>Document</strong>\n"
+"                            above) or its order. Then press <strong>Retry</strong> to apply the document again, or <strong>Mark as resolved</strong> if you fixed the order by hand.\n"
+"                            If it does not matter, press <strong>Dismiss</strong>."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__target_quote_id
+msgid "Corrected document"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_document__relation__update
+msgid "Correction"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_product_mapping__source__manual
+msgid "Correction of a user"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "Correction without an order to update (%(order)s)"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_form
+msgid "Create or update the order after correcting the document."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_change__create_uid
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__create_uid
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__create_uid
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_order_confirm__create_uid
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_partner_mapping__create_uid
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_product_mapping__create_uid
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_prompt__create_uid
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_uom_mapping__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__create_date
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__create_date
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_order_confirm__create_date
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_partner_mapping__create_date
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_product_mapping__create_date
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_prompt__create_date
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_uom_mapping__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "Creating it is disabled in the settings of AI Message Import."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_change__operation__create
+msgid "Creation"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__currency_code
+#: model:ir.model.fields.selection,name:ai_message_import.selection__mail_message_import_incident__incident_type__currency
+msgid "Currency"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_change__create_date
+msgid "Date"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_config__history_days
+msgid "Days of previous documents"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_ai_message_import_document__document_type
+msgid ""
+"Decided by the AI for each document: it tells the order created from it. "
+"When it is wrong, change it and apply the document again."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__delivery_address
+msgid "Delivery Address"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__delivery_date
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__delivery_date
+msgid "Delivery Date"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__mail_message_import_incident__incident_type__delivery_address
+msgid "Delivery address"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_form
+msgid "Delivery and payment"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__mail_message_import_incident__incident_type__delivery_date
+msgid "Delivery date"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "Delivery date to review"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "Delivery date warning: %(problem)s."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__description
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_product_mapping__key_type__description
+msgid "Description"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_mail_message_import_config__total_tolerance
+msgid "Difference allowed between the totals of a document and of its order."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "Different tax for %(line)s"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_form
+msgid "Discard"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_form
+msgid "Discard this document?"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_document__state__cancelled
+msgid "Discarded"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__mail_message_import_incident__incident_type__discount
+msgid "Discount"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_change__display_name
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__display_name
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__display_name
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_order_confirm__display_name
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_partner_mapping__display_name
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_product_mapping__display_name
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_prompt__display_name
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_uom_mapping__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_change__document_id
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__document_id
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_incident__document_id
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_change_view_search
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_form
+#: model_terms:ir.ui.view,arch_db:ai_message_import.mail_message_import_incident_view_form
+msgid "Document"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/models/mail_message_import_conversation.py:0
+msgid "Document %(document)s could not be applied"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/quote_validator.py:0
+msgid "Document %(index)s has an unknown document type %(type)r."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/quote_validator.py:0
+msgid "Document %(index)s has no list of lines."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/quote_validator.py:0
+msgid "Document %(index)s has too many lines."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/quote_validator.py:0
+msgid "Document %(index)s is not an object."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"Document %(label)s %(quoted)s (%(converted)s), order %(order)s, difference "
+"%(difference)s."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"Document %(quote)s received on %(channel)s (conversation %(conversation)s, "
+"processing %(run)s)"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_channel__document_count
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_conversation__document_count
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_message__document_count
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_sender__document_count
+msgid "Document Count"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__document_type
+msgid "Document Type"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__quote_date
+msgid "Document date"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "Document in %(code)s cannot be converted"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "Document in %(code)s, order in %(currency)s. Exchange rate: %(rate)s."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_incident__document_line_id
+msgid "Document line"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__quote_number
+msgid "Document number"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"Document number %(number)s of %(partner)s already received in %(refs)s."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__quote_number_key
+msgid "Document number key"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_order_mixin__ai_message_import_sender_id
+msgid "Document sender"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_search
+msgid "Document type"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__attachment_ids
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_conversation__document_ids
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_message__document_ids
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_graph
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_pivot
+#: model_terms:ir.ui.view,arch_db:ai_message_import.mail_message_import_channel_view_form
+#: model_terms:ir.ui.view,arch_db:ai_message_import.mail_message_import_channel_view_kanban
+#: model_terms:ir.ui.view,arch_db:ai_message_import.mail_message_import_conversation_view_form
+#: model_terms:ir.ui.view,arch_db:ai_message_import.mail_message_import_conversation_view_list
+#: model_terms:ir.ui.view,arch_db:ai_message_import.mail_message_import_message_view_form
+#: model_terms:ir.ui.view,arch_db:ai_message_import.mail_message_import_sender_view_form
+msgid "Documents"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_mail_message_import_config__history_days
+msgid "Documents of the same sender sent to the AI to recognise corrections."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.actions.act_window,name:ai_message_import.action_ai_message_import_document_review
+#: model:ir.ui.menu,name:ai_message_import.menu_ai_message_import_document_review
+msgid "Documents to review"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_document__relation__duplicate
+msgid "Duplicate"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__duplicate_evidence
+msgid "Duplicate Evidence"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__duplicate_of_id
+msgid "Duplicate of"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.actions.act_window,help:ai_message_import.action_ai_message_import_prompt
+msgid ""
+"Each module creates the prompts it needs, without text: the prompts\n"
+"                in red are still to write. <code>extraction</code> reads the\n"
+"                conversations, <code>product_choice</code> chooses the products of\n"
+"                the lines and <code>document_type.&lt;type&gt;</code> describes each\n"
+"                document type installed (e.g. <code>document_type.purchase</code>)."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/models/mail_message_import_conversation.py:0
+msgid ""
+"Error: %(error)s\n"
+"The other documents of the conversation were processed. Retry once the cause is solved."
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.actions.act_window,help:ai_message_import.action_ai_message_import_change
+msgid "Every value written by the module on an order is recorded here."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__extraction
+msgid "Extraction"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_change__field_label
+msgid "Field"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__mail_message_import_incident__incident_type__unsupported_file
+msgid "File not analysed"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/models/mail_message_import_conversation.py:0
+msgid "File not analysed: %(name)s"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/models/ai_message_import_document.py:0
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_form
+msgid "Files"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__message_follower_ids
+msgid "Followers"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_ai_message_import_document__payment_term_id
+msgid ""
+"Forces the payment terms of the order, instead of searching the quoted ones."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_ai_message_import_document_line__uom_id
+msgid "Forces the unit of the quantity."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "Global discount not applied"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"Global discount of the document: %(percent)s%% / %(amount)s on a base of "
+"%(base)s. Spread proportionally on the net amount of each valid line (same "
+"rate %(rate)s%% on each one, combined with its own discount): %(details)s. "
+"Transport is not discounted."
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_change_view_search
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_search
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_product_mapping_view_search
+msgid "Group By"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__has_message
+msgid "Has Message"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__change_ids
+msgid "History"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.mail_message_import_incident_view_form
+msgid "How to solve it"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_change__id
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__id
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__id
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_order_confirm__id
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_partner_mapping__id
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_product_mapping__id
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_prompt__id
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_uom_mapping__id
+msgid "ID"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__product_match
+msgid "Identified by"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_ai_message_import_document__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_ai_message_import_document__message_has_error
+#: model:ir.model.fields,help:ai_message_import.field_ai_message_import_document__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/quote_validator.py:0
+msgid "Ignored invalid currency %(currency)r."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/quote_validator.py:0
+msgid "Ignored invalid value for %(field)s: %(value)r."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/quote_validator.py:0
+msgid "Ignored unknown previous quotation %(target)s."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/quote_validator.py:0
+msgid "Ignored unknown reference %(ref)s."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_order_confirm__incident_count
+msgid "Incident Count"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_order_confirm__incident_summary
+msgid "Incident Summary"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__incident_ids
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_form
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_list
+msgid "Incidents"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__mail_message_import_incident__incident_type__invalid_line
+msgid "Incomplete line"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "Incomplete line %(line)s"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__ai_warnings
+msgid "Interpretation warnings"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_document__state__draft
+msgid "Interpreted"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model,name:ai_message_import.model_ai_message_import_document
+msgid "Interpreted Document"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model,name:ai_message_import.model_ai_message_import_document_line
+msgid "Interpreted Document Line"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.actions.act_window,name:ai_message_import.action_ai_message_import_document
+#: model:ir.ui.menu,name:ai_message_import.menu_ai_message_import_document
+msgid "Interpreted documents"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_change__reason
+msgid "Interpreted reason"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__extraction_display
+msgid "Interpreted values"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__mail_message_import_incident__incident_type__invalid_ai_response
+msgid "Invalid AI answer"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/quote_validator.py:0
+msgid "Invalid delivery date: %(date)r."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/quote_validator.py:0
+msgid "Invalid quantity: %(qty)r."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__message_is_follower
+msgid "Is Follower"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.mail_message_import_incident_view_form
+msgid ""
+"It is a technical error and the messages are kept. Once\n"
+"                            the cause is corrected (for instance, the AI connection in\n"
+"                            the settings), press <strong>Retry</strong>."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"It is not created because it was read with too little confidence "
+"(%(conf).0f%%, minimum %(min).0f%%)."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"It is not created because the document gives no VAT number, email, phone nor"
+" address of it."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "It is not created because the document gives no name of it."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_partner_mapping__key
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_product_mapping__key
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_uom_mapping__key
+msgid "Key"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_change__write_uid
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__write_uid
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__write_uid
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_order_confirm__write_uid
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_partner_mapping__write_uid
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_product_mapping__write_uid
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_prompt__write_uid
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_uom_mapping__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_change__write_date
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__write_date
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__write_date
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_order_confirm__write_date
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_partner_mapping__write_date
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_product_mapping__write_date
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_prompt__write_date
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_uom_mapping__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_partner_mapping__last_used
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_product_mapping__last_used
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_uom_mapping__last_used
+msgid "Last Used"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model,name:ai_message_import.model_ai_message_import_partner_mapping
+msgid "Learned Partner Equivalence"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model,name:ai_message_import.model_ai_message_import_product_mapping
+msgid "Learned Product Equivalence"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model,name:ai_message_import.model_ai_message_import_uom_mapping
+msgid "Learned Unit Equivalence"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.actions.act_window,name:ai_message_import.action_ai_message_import_partner_mapping
+#: model:ir.ui.menu,name:ai_message_import.menu_ai_message_import_partner_mapping
+msgid "Learned contacts"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.actions.act_window,name:ai_message_import.action_ai_message_import_product_mapping
+msgid "Learned equivalences"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.ui.menu,name:ai_message_import.menu_ai_message_import_product_mapping
+msgid "Learned products"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.actions.act_window,name:ai_message_import.action_ai_message_import_uom_mapping
+#: model:ir.ui.menu,name:ai_message_import.menu_ai_message_import_uom_mapping
+msgid "Learned units"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__line_ids
+msgid "Line"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/quote_validator.py:0
+msgid "Line %(index)s is not an object."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "Line removed by a person: %(line)s"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "Line without tax: %(line)s"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_form
+msgid "Lines"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__mail_message_import_incident__incident_type__human_conflict
+msgid "Manual change conflict"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "Manual change kept: %(field)s of %(where)s"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_list
+msgid "Mark as seen"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_config__max_attachment_size_mb
+msgid "Maximum file size (MB)"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_config__max_batch_size_mb
+msgid "Maximum size per conversation (MB)"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model,name:ai_message_import.model_mail_message_import_incident
+msgid "Message Import Incident"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model,name:ai_message_import.model_mail_message_import_config
+msgid "Message Import Settings"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__message_ids
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_form
+msgid "Messages"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_config__ai_product_min_confidence
+msgid "Minimum confidence of the choice"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_config__missing_prompts
+msgid "Missing Prompts"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__mail_message_import_incident__incident_type__tax_missing
+msgid "Missing tax"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__name
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_prompt__name
+msgid "Name"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_form
+msgid "Name in the document"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__is_new
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_document__relation__new
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_kanban
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_search
+msgid "New"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_channel__new_count
+msgid "New Count"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.actions.act_window,name:ai_message_import.action_ai_message_import_document_new
+#: model:ir.ui.menu,name:ai_message_import.menu_ai_message_import_document_new
+msgid "New documents"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_change__new_value
+msgid "New value"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"No %(order)s was created. When it is not a duplicate, use 'Not a duplicate' "
+"on the document."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"No %(role)s in Odoo matches the one of the document (name: %(name)s, VAT: "
+"%(vat)s)."
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.mail_message_import_config_view_form
+msgid ""
+"No AI connection is set: the conversations cannot be processed.\n"
+"                    Choose one below; an administrator creates them in\n"
+"                    Settings &gt; Technical &gt; AI &gt; AI Connection."
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.actions.act_window,help:ai_message_import.action_ai_message_import_change
+msgid "No change yet"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__mail_message_import_incident__incident_type__no_document
+msgid "No document"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/models/mail_message_import_conversation.py:0
+msgid "No document found in %(conversation)s"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.actions.act_window,help:ai_message_import.action_ai_message_import_document
+msgid "No document interpreted yet"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.actions.act_window,help:ai_message_import.action_ai_message_import_document_review
+msgid "No document to review"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/models/ai_message_import_document.py:0
+msgid ""
+"No installed module processes the documents of type '%(type)s'. Choose "
+"another document type."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "No line of the document can be ordered"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/models/mail_message_import_conversation.py:0
+msgid ""
+"No module of document types is installed: install the purchases or the sales"
+" module of AI Message Import."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "No price was changed and no line was added to match the totals."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"No product of Odoo matches the line and it was not created because "
+"%(reason)s. Choose or create the product on the document line and apply the "
+"document again."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_ai_message_import_partner_mapping__key
+msgid "Normalized name."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_ai_message_import_product_mapping__key
+msgid "Normalized reference or text."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_ai_message_import_uom_mapping__key
+msgid "Normalized unit."
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_form
+msgid "Not a duplicate"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__change_count
+msgid "Number of changes"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__duplicate_count
+msgid "Number of duplicates"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__message_has_error_counter
+msgid "Number of errors"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__attachment_count
+msgid "Number of files"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__message_count
+msgid "Number of messages"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_ai_message_import_document__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_ai_message_import_document__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/pricing.py:0
+msgid "Odoo has no exchange rate for %(code)s."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "Odoo has no such unit nor packaging for the product"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"Odoo has no tax for %(product)s on this %(order)s, so the line has no tax "
+"for now. It is NOT considered exempt: set the right tax before confirming. "
+"Tax of the document: %(quoted)s."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/document_processor.py:0
+msgid ""
+"Old Word documents (.doc) are not supported, a .docx or a PDF is needed."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_document_line__state__applied
+msgid "On the order"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__open_incident_count
+msgid "Open Incident Count"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__open_incident_summary
+msgid "Open Incident Summary"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_order_mixin__ai_message_import_open_incident_count
+msgid "Open document incidents"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_order_mixin__ai_message_import_open_incident_summary
+msgid "Open document incidents summary"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/models/ai_message_import_order_mixin.py:0
+msgid "Open incidents"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_change__operation
+msgid "Operation"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/models/ai_message_import_document.py:0
+msgid "Operation not supported."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model,name:ai_message_import.model_ai_message_import_change
+msgid "Order Change by the AI"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model,name:ai_message_import.model_ai_message_import_order_mixin
+msgid "Order Created from a Received Document"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model,name:ai_message_import.model_ai_message_import_order_line_mixin
+msgid "Order Line Created from a Received Document"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_document__state__done
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_search
+msgid "Order created"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__mail_message_import_incident__incident_type__order_locked
+msgid "Order not modifiable"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/models/ai_message_import_order_mixin.py:0
+msgid ""
+"Orders are never confirmed nor cancelled automatically: a person must do it."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_change__message_ids
+msgid "Origin messages"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_order_mixin__ai_message_import_origin
+msgid "Origin of the document"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_order_line_mixin__ai_message_import_line_kind
+msgid "Origin of the line"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__original_values
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_incident__original_values
+msgid "Original Values"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__own_code
+msgid "Our reference"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"Partner %(partner)s (%(role)s) created from the document (confidence "
+"%(conf).0f%%)."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "Partner %(partner)s (%(role)s) identified by %(method)s."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__partner_confidence
+msgid "Partner Confidence"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__partner_match_method
+msgid "Partner Match Method"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__partner_name
+msgid "Partner Name"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_ai_message_import_document__partner_id
+msgid ""
+"Partner of the order: the vendor of a document, the customer of an order. "
+"Select it when it was not identified."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "Partner to be selected (%(role)s)"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__mail_message_import_incident__incident_type__payment_term
+msgid "Payment terms"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"Payment terms of the document '%(quoted)s' have no equivalent in Odoo: the "
+"default ones are kept."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__payment_term_id
+msgid "Payment terms to apply"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "Payment terms without equivalent in Odoo"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"Payment terms: the document states '%(quoted)s', the %(role)s has "
+"'%(default)s' in Odoo. '%(applied)s' is applied."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_document_line__state__pending
+msgid "Pending"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_document__state__pending
+msgid "Pending review"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_search
+msgid "Phone or email"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_prompt_view_form
+msgid ""
+"Placeholders replaced by the module:\n"
+"                        <code>{types}</code> and <code>{version}</code> in\n"
+"                        <code>extraction</code>, <code>{role}</code> and\n"
+"                        <code>{lang}</code> in <code>product_choice</code>. When a\n"
+"                        module writes the text (as the custom one of Binhex), it\n"
+"                        writes it again when it is updated."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "Possible causes: %(causes)s."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_document__state__duplicate
+#: model:ir.model.fields.selection,name:ai_message_import.selection__mail_message_import_incident__incident_type__duplicate
+msgid "Possible duplicate"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_form
+msgid "Possible duplicate of"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "Possible duplicate of %(ref)s"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_change__old_value
+msgid "Previous value"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__price_known
+msgid "Price quoted"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__prices_include_tax
+msgid "Prices Include Tax"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_change__processing_ref
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__processing_ref
+msgid "Processing"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__processing_notes
+msgid "Processing Notes"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__product_id
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_product_mapping__product_id
+#: model:ir.model.fields.selection,name:ai_message_import.selection__mail_message_import_incident__incident_type__product
+msgid "Product"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_product_mapping__source__created
+msgid "Product created"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "Product not identified for %(line)s"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_ai_message_import_document_line__product_id
+#: model:ir.model.fields,help:ai_message_import.field_mail_message_import_incident__line_product_id
+msgid ""
+"Product of Odoo. Correcting it teaches the module the equivalence for this "
+"sender and partner."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_incident__line_product_id
+msgid "Product of the line"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_mail_message_import_incident__fix_product_id
+msgid ""
+"Product of the line. The equivalence is learned for the sender and the "
+"vendor or customer."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "Product to choose for %(line)s"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_incident__fix_product_id
+msgid "Product to use"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.mail_message_import_config_view_form
+msgid "Products"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_config__ai_product_choice
+msgid "Products chosen by the AI"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_ai_message_import_prompt__code
+msgid ""
+"Prompt the module asks for: 'extraction' (reading the conversations, with "
+"{types} and {version}), 'product_choice' (choosing the products of the "
+"lines, with {role} and {lang}) or 'document_type.<type>' (when a document is"
+" of that type, e.g. document_type.purchase)."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__quantity
+msgid "Quantity"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "Quantity of %(line)s to check"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_form
+msgid "Quoted amounts"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__discount_percent
+msgid "Quoted discount (%)"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__global_discount_doc
+msgid "Quoted global discount"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_order_line_mixin__ai_message_import_document_line_id
+msgid "Quoted line"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__payment_terms_text
+msgid "Quoted payment terms"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__price_unit
+msgid "Quoted price"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_order_line_mixin__ai_message_import_line_kind__product
+#: model:ir.model.fields.selection,name:ai_message_import.selection__purchase_order_line__ai_message_import_line_kind__product
+#: model:ir.model.fields.selection,name:ai_message_import.selection__sale_order_line__ai_message_import_line_kind__product
+msgid "Quoted product"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__subtotal
+msgid "Quoted subtotal"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__tax_percent
+msgid "Quoted tax (%)"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__amount_tax_doc
+msgid "Quoted taxes"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__amount_total_doc
+msgid "Quoted total"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__shipping_amount_doc
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_order_line_mixin__ai_message_import_line_kind__freight
+#: model:ir.model.fields.selection,name:ai_message_import.selection__purchase_order_line__ai_message_import_line_kind__freight
+#: model:ir.model.fields.selection,name:ai_message_import.selection__sale_order_line__ai_message_import_line_kind__freight
+msgid "Quoted transport"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__uom_text
+msgid "Quoted unit"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__amount_untaxed_doc
+msgid "Quoted untaxed"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ai.message.import.prompt,name:ai_message_import.prompt_extraction
+msgid "Reading the conversations"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__relation_reason
+msgid "Reason given"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_list
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_search
+msgid "Received"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model,name:ai_message_import.model_mail_message_import_message
+msgid "Received Message"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_form
+msgid "Received again"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__duplicate_ids
+msgid "Received again in"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__origin_display
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_order_mixin__ai_message_import_channel
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_form
+msgid "Received by"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_order_mixin__ai_message_import_address
+msgid "Received from"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model,name:ai_message_import.model_mail_message_import_channel
+msgid "Receiving Channel"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__channel_id
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_search
+msgid "Receiving channel"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__product_code
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_product_mapping__key_type__code
+msgid "Reference"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_ai_message_import_document_line__own_code
+msgid "Reference of the company stated by the document, if any."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_product_mapping__key_type
+msgid "Reference or description"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__relation
+msgid "Relation"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_change__operation__delete
+msgid "Removal"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__remove_missing_lines
+msgid "Remove Missing Lines"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_document_line__state__removed
+msgid "Removed by a person"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_conversation__ai_request
+msgid "Request sent"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_order_confirm__res_id
+msgid "Res"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_order_confirm__res_model
+msgid "Res Model"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_channel__review_count
+msgid "Review Count"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"Rounding of the discount percentages: %(residual)s compared to an exact "
+"spread (%(expected)s expected, %(applied)s applied)."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_conversation__schema_version
+msgid "Schema Version"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.mail_message_import_incident_view_form
+msgid "Search the product..."
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.mail_message_import_incident_view_form
+msgid "Search the unit..."
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.mail_message_import_incident_view_form
+msgid "Search the vendor or customer..."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__seen_user_ids
+msgid "Seen by"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"Select the partner on the document and apply it again: it is remembered for "
+"the next time. The %(order)s is not created meanwhile."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model,name:ai_message_import.model_mail_message_import_sender
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_change__sender_id
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__sender_id
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__sender_id
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_partner_mapping__sender_id
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_product_mapping__sender_id
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_uom_mapping__sender_id
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_search
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_product_mapping_view_search
+msgid "Sender"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__authorized_address_id
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_search
+msgid "Sent from"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__sequence
+msgid "Sequence"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__is_service
+msgid "Service"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_mail_message_import_config__freight_product_id
+msgid ""
+"Service product used for the transport charges of the documents. Without it,"
+" the charges stay pending review."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "Several partners match the %(role)s of the document: %(names)s."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"Several products match the line: %(names)s. Choose the right one on the "
+"document line; the choice is learned for this sender and %(role)s."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__skip_duplicate_check
+msgid "Skip Duplicate Check"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_form
+msgid ""
+"Solve each one from its form, or correct the document\n"
+"                                below and press <strong>Apply again</strong>."
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_form
+msgid "Solve the incidents"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/models/mail_message_import_incident.py:0
+msgid "Solved with %(choice)s, chosen on the same incident of %(document)s."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_product_mapping__source
+msgid "Source"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__state
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__state
+msgid "State"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_search
+msgid "Status"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/models/ai_message_import_document.py:0
+msgid "Superseded by a new application."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__target_reference
+msgid "Target Reference"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__mail_message_import_incident__incident_type__tax_difference
+msgid "Tax difference"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__tax_known
+msgid "Tax quoted"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.actions.act_window,help:ai_message_import.action_ai_message_import_partner_mapping
+msgid "Teach a contact to the AI"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.actions.act_window,help:ai_message_import.action_ai_message_import_product_mapping
+msgid "Teach a product to the AI"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.actions.act_window,help:ai_message_import.action_ai_message_import_uom_mapping
+msgid "Teach a unit to the AI"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_form
+msgid "Technical"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_change__field_name
+msgid "Technical field"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_ai_message_import_prompt__content
+msgid "Text of the prompt. Until it is written, the module cannot use it."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_mail_message_import_conversation__ai_request
+msgid "Text part of the last request."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"The %(label)s %(order)s is %(state)s. Confirmed or cancelled orders are "
+"never modified automatically: apply the changes of the document by hand if "
+"they are still relevant."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"The %(order)s was not created because no line could be processed safely. "
+"Review the incidents of the lines."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"The %(role)s of the document looks like the sender or one of the companies, "
+"which can never be the %(role)s."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "The AI considers it the same document as %(ref)s: %(reason)s"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"The AI considers the messages a correction of %(ref)s, but no %(order)s can "
+"be associated unequivocally. Nothing was created: check the document and "
+"apply it as a new one if needed."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"The AI could not choose the products of the lines without an exact match "
+"(%(error)s): they stay pending."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/document_processor.py:0
+msgid "The AI does not read this type of file."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/models/mail_message_import_conversation.py:0
+msgid ""
+"The AI found no document of the handled types (%(types)s) in the files of "
+"the conversation. Notes: %(notes)s"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/models/ai_message_import_prompt.py:0
+msgid ""
+"The AI prompt %(code)s is not configured: write it in Configuration > AI "
+"prompts."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/matching.py:0
+msgid "The VAT number %(vat)s was refused by Odoo and was not set."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/quote_validator.py:0
+msgid "The answer has no list of documents."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/quote_validator.py:0
+msgid "The answer has too many documents."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/quote_validator.py:0
+msgid "The answer is not a JSON object."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_ai_message_import_document__origin_display
+msgid "The channel and the phone or email address it came from."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_ai_message_import_order_mixin__ai_message_import_origin
+msgid ""
+"The channel and the phone or email address the documents of the order came "
+"from."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/models/mail_message_import_config.py:0
+msgid "The confidences go from 0 to 1."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"The correction names the %(role)s %(partner)s while %(order)s is for "
+"%(order_partner)s. The order was not modified."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/pricing.py:0
+msgid "The currency %(code)s does not exist in Odoo."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"The document charges %(amount)s for transport (%(description)s) and no line "
+"was added because %(reason)s. Configure a service product for transport in "
+"the settings and add the line; no product was created."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "The document does not state its currency, %(currency)s is assumed."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"The document gives %(qty)s %(uom)s and a box holds %(size)s of them: "
+"%(final_qty)s %(final_uom)s, not a whole number. Check the quantity of the "
+"order line."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/document_processor.py:0
+msgid "The document has no readable text."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/document_processor.py:0
+msgid "The document is too large once uncompressed."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"The document states '%(quoted)s' and no equivalent payment term exists. The "
+"default one of the %(role)s (%(default)s) is kept; no payment term was "
+"created."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"The document states a tax of %(quoted)s%%, Odoo applies %(taxes)s "
+"(%(rate)s%%). The taxes of Odoo are kept."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/models/ai_message_import_document.py:0
+msgid "The document was discarded."
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_form
+msgid ""
+"The document will be applied to its order with the current values. Continue?"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.actions.act_window,help:ai_message_import.action_ai_message_import_document
+msgid ""
+"The documents found by the AI in the conversations of the senders\n"
+"                appear here, with the order created from each one."
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.actions.act_window,help:ai_message_import.action_ai_message_import_document_new
+msgid ""
+"The documents interpreted by the AI that you have not opened yet\n"
+"                appear here, as the unread emails of an inbox."
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.actions.act_window,help:ai_message_import.action_ai_message_import_document_review
+msgid ""
+"The documents with open incidents, pending or possible duplicates\n"
+"                appear here."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/document_processor.py:0
+msgid "The extract-msg library is needed to read Outlook emails (.msg)."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/document_processor.py:0
+msgid "The file exceeds the maximum size of %(size)s MB."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/document_processor.py:0
+msgid "The file is damaged or unreadable."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/document_processor.py:0
+msgid "The file is empty."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/document_processor.py:0
+msgid "The file type is not supported."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/document_processor.py:0
+msgid ""
+"The files of the conversation exceed the size allowed for one analysis."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"The global discount amounts to %(applied)s on the order and %(quoted)s on "
+"the document, because the order uses the prices of Odoo and only the valid "
+"lines."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"The global discount of the document (%(percent)s%%, amount %(amount)s) "
+"cannot be applied safely: %(reason)s."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/models/mail_message_import_incident.py:0
+msgid "The incident %(name)s cannot be retried."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/models/mail_message_import_incident.py:0
+msgid "The incident %(name)s cannot be solved by choosing a record."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/models/mail_message_import_config.py:0
+msgid "The limits must be positive."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/quote_validator.py:0
+msgid "The line has neither description nor reference."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_ai_message_import_document_line__is_service
+msgid ""
+"The line is a service (work, hours, subscription...). A product created from"
+" it is a service."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "The most similar ones: %(names)s."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_ai_message_import_partner_mapping__partner_text
+msgid "The name as the documents write it, e.g. an alias."
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_order_confirm_view_form
+msgid "The order has"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_form
+msgid ""
+"The order is created in draft. Open it with the button above\n"
+"                        to review it and confirm it."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"The order is in %(currency)s with the prices of Odoo; the quoted amounts "
+"cannot be compared nor used."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "The partner differs from %(order)s"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"The quantity %(qty)s %(uom)s cannot be converted: %(reason)s. No unit nor "
+"packaging was created; set the unit on the document line."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "The quantity must be positive."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_ai_message_import_product_mapping__partner_text
+msgid "The reference or the description as the documents write it."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "The same file was already received in %(refs)s."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_ai_message_import_uom_mapping__uom_text
+msgid "The unit as the documents write it, e.g. 'saco' or 'caja de kilo'."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/document_processor.py:0
+msgid "The xlrd library is needed to read .xls files."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.constraint,message:ai_message_import.constraint_ai_message_import_prompt_code_uniq
+msgid "There is already a prompt with this code."
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.mail_message_import_config_view_form
+msgid "These AI prompts are not written yet:"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/document_processor.py:0
+msgid "This audio format is not supported."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.constraint,message:ai_message_import.constraint_ai_message_import_product_mapping_key_uniq
+msgid "This equivalence already exists for the sender and the partner."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.constraint,message:ai_message_import.constraint_ai_message_import_partner_mapping_key_uniq
+msgid "This name is already learned for the sender."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.constraint,message:ai_message_import.constraint_ai_message_import_uom_mapping_key_uniq
+msgid "This unit is already learned for the sender."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_document_line__state__draft
+msgid "To apply"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_search
+#: model_terms:ir.ui.view,arch_db:ai_message_import.mail_message_import_channel_view_kanban
+msgid "To review"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_prompt_view_search
+msgid "To write"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_mail_message_import_conversation__ai_tokens
+msgid "Tokens the AI spent on the conversation."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "Totals differ from the document"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__mail_message_import_incident__incident_type__total_difference
+msgid "Totals difference"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_config__total_tolerance
+msgid "Totals tolerance"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "Transport"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__mail_message_import_incident__incident_type__freight
+msgid "Transport charges"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "Transport charges of %(amount)s pending review."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "Transport charges pending"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"Transport charges: %(amount)s on the line %(product)s, with the taxes of "
+"Odoo."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_config__freight_product_id
+msgid "Transport product"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_incident__incident_type
+msgid "Type"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/quote_validator.py:0
+msgid "Unexpected schema version %(version)r, %(expected)s expected."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "Unit '%(uom)s' of %(line)s"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_incident__line_uom_category_id
+msgid "Unit category of the line"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_uom_mapping__uom_id
+#: model:ir.model.fields.selection,name:ai_message_import.selection__mail_message_import_incident__incident_type__uom
+msgid "Unit of measure"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_mail_message_import_incident__fix_uom_id
+msgid ""
+"Unit of the quantity of the line. The unit as written is learned for the "
+"sender."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__uom_id
+msgid "Unit to apply"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_mail_message_import_incident__fix_uom_id
+msgid "Unit to use"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__mail_message_import_incident__incident_type__pack_size
+msgid "Units per box"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/quote_validator.py:0
+msgid "Unknown relation %(relation)r, handled as new."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_change__operation__update
+msgid "Update"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_change_view_search
+msgid "Updates"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_partner_mapping__usage_count
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_product_mapping__usage_count
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_uom_mapping__usage_count
+msgid "Usage Count"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.mail_message_import_incident_view_form
+msgid ""
+"Use the chosen record, learn it for the next documents and solve with it the"
+" open incidents written the same way."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__partner_vat
+msgid "VAT"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_document__partner_match_method__vat
+msgid "VAT number"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__validation_errors
+msgid "Validation Errors"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.mail_message_import_incident_view_form
+msgid "Values of the document"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_ai_message_import_document__extraction
+msgid "Values of the document as interpreted by the AI and validated."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_mail_message_import_incident__original_values
+msgid "Values of the document or of the file concerned."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_order_line_mixin__ai_message_import_ai_values
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_order_mixin__ai_message_import_ai_values
+msgid "Values set by the module"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__partner_id
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_partner_mapping__partner_id
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_product_mapping__partner_id
+#: model:ir.model.fields.selection,name:ai_message_import.selection__mail_message_import_incident__incident_type__partner
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_form
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_search
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_product_mapping_view_search
+msgid "Vendor / Customer"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/document_processor.py:0
+msgid "Videos are not processed."
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid ""
+"Warning: %(problem)s (%(text)s). The date computed by Odoo is used instead."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document_line__ai_warnings
+msgid "Warnings"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,field_description:ai_message_import.field_ai_message_import_document__website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_ai_message_import_document__website_message_ids
+msgid "Website communication history"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_form
+msgid "What the AI did"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.ui.menu,name:ai_message_import.menu_ai_message_import_learned
+msgid "What the AI learned"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.actions.act_window,help:ai_message_import.action_ai_message_import_product_mapping
+msgid ""
+"When a product of a document is corrected, the equivalence is kept\n"
+"                for the next documents of the same sender and partner. You can also\n"
+"                add one: how the vendor or the customer writes the product (its\n"
+"                reference or its description) and the product of Odoo it is."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_mail_message_import_config__ai_product_choice
+msgid ""
+"When no exact rule identifies the product of a line, the AI chooses it among"
+" the most similar products, the ones the partner takes first. The choice is "
+"noted on the order to be checked, and learned when the order is confirmed."
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.actions.act_window,help:ai_message_import.action_ai_message_import_uom_mapping
+msgid ""
+"When the unit of a line is chosen by hand, the unit it was written\n"
+"                with is kept for the next documents of the sender. You can also add\n"
+"                one: how the documents write it (\"saco\", \"caja de kilo\"...) and its\n"
+"                unit of measure."
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.actions.act_window,help:ai_message_import.action_ai_message_import_partner_mapping
+msgid ""
+"When the vendor or the customer of a document is selected by hand, the\n"
+"                name it was written with is kept for the next documents of the sender.\n"
+"                You can also add one: the name the documents use (an alias, a short\n"
+"                name...) and its contact."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_ai_message_import_product_mapping__key_type
+msgid ""
+"Whether the documents name the product by its reference or by its "
+"description."
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_search
+msgid "With open incidents"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/models/ai_message_import_partner_mapping.py:0
+msgid ""
+"Write the name as the documents write it: %(text)s cannot be recognised."
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.mail_message_import_config_view_form
+msgid "Write the prompts"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.actions.act_window,help:ai_message_import.action_ai_message_import_prompt
+msgid "Write the prompts of the AI"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/models/ai_message_import_product_mapping.py:0
+msgid ""
+"Write the reference or the description as the documents write it: %(text)s "
+"cannot be recognised."
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_prompt_view_form
+msgid "Write the text of the prompt"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/models/ai_message_import_uom_mapping.py:0
+msgid ""
+"Write the unit as the documents write it: %(text)s cannot be recognised."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields,help:ai_message_import.field_ai_message_import_document__is_new
+msgid "You have not opened the document yet."
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.actions.act_window,help:ai_message_import.action_ai_message_import_document_new
+msgid "You have seen every document"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/models/ai_message_import_document.py:0
+msgid "You need the rights to create or update %(orders)s."
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__mail_message_import_incident__incident_type__price_zero
+msgid "Zero price"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_document_line__product_match__barcode
+msgid "barcode"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_document_line__product_match__ai
+msgid "choice of the AI"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_document_line__product_match__created
+msgid "created"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_document__partner_match_method__created
+msgid "creation"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "currency conversion"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/quote_validator.py:0
+msgid "discount"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_product_mapping_view_list
+msgid "e.g. FN-100 or Tornillo M6"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_prompt_view_form
+msgid "e.g. Reading the conversations"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_prompt_view_form
+msgid "e.g. extraction"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_partner_mapping_view_list
+msgid "e.g. fruveicod"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_uom_mapping_view_list
+msgid "e.g. saco"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_document__partner_match_method__email
+msgid "email"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/quote_validator.py:0
+msgid "global discount"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/quote_validator.py:0
+msgid "global discount amount"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_kanban
+msgid "incident(s)"
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_order_confirm_view_form
+msgid ""
+"incident(s) of its received documents pending review. Confirm\n"
+"                    it only if they are checked."
+msgstr ""
+
+#. module: ai_message_import
+#: model_terms:ir.ui.view,arch_db:ai_message_import.ai_message_import_document_view_form
+msgid "incident(s) to solve before confirming the order:"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_document__partner_match_method__ref
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_document_line__product_match__internal_reference
+msgid "internal reference"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "it is an amount and the quoted lines lack prices to spread it"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "it is larger than the quoted amount"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "its percentage and its amount do not match on a base of %(base)s"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_document__partner_match_method__mapping
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_document_line__product_match__mapping
+msgid "learned equivalence"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "lines pending review are not on the order"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_document_line__product_match__manual
+msgid "manual"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_document__partner_match_method__manual
+msgid "manual selection"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_document__partner_match_method__name
+msgid "name"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "no transport product is configured"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_document__partner_match_method__name_part
+msgid "part of the name"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/quote_validator.py:0
+msgid "price"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_document_line__product_match__name
+msgid "product name"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "products are not created for this type of document"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "rounding or data not identified"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "several packagings match it: %(names)s"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/quote_validator.py:0
+msgid "shipping"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/quote_validator.py:0
+msgid "subtotal"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/quote_validator.py:0
+msgid "tax"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "the delivery date is before the date of the document"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "the delivery date is in the past"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "the document gives an ambiguous delivery date"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "the global discount was not applied"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "the prices of Odoo differ from the quoted ones by %(amount)s"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "the taxes differ or are missing"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "the transport charges are pending"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "the unit %(uom)s cannot be converted into %(product_uom)s"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "total"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/quote_validator.py:0
+msgid "totals"
+msgstr ""
+
+#. module: ai_message_import
+#. odoo-python
+#: code:addons/ai_message_import/services/order_builder.py:0
+msgid "untaxed"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_document_line__product_match__supplier_name
+msgid "vendor product name"
+msgstr ""
+
+#. module: ai_message_import
+#: model:ir.model.fields.selection,name:ai_message_import.selection__ai_message_import_document_line__product_match__supplier_code
+msgid "vendor reference"
+msgstr ""

@@ -1,0 +1,335 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ai_message_import_sale
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0-20261015\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-03 15:54+0000\n"
+"PO-Revision-Date: 2026-11-03 15:54+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: ai_message_import_sale
+#. odoo-python
+#: code:addons/ai_message_import_sale/services/sale_order_builder.py:0
+msgid ""
+"%(product)s has no sales price for this customer: the price 0 is kept, check"
+" it before confirming. Quoted price: %(quoted)s."
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model_terms:ir.ui.view,arch_db:ai_message_import_sale.mail_message_import_channel_view_kanban
+msgid "<span>Quotations to confirm</span>"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model_terms:ir.ui.view,arch_db:ai_message_import_sale.view_order_form_inherit_ai_message_import
+msgid ""
+"<strong>\n"
+"                        This quotation comes from a received order and has incidents\n"
+"                        pending review:\n"
+"                    </strong>"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ir.model.fields,field_description:ai_message_import_sale.field_sale_order__ai_message_import_change_ids
+#: model_terms:ir.ui.view,arch_db:ai_message_import_sale.view_order_form_inherit_ai_message_import
+msgid "Changes by the AI"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model_terms:ir.ui.view,arch_db:ai_message_import_sale.view_order_form_inherit_ai_message_import
+msgid "Confirm"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ir.model.fields,field_description:ai_message_import_sale.field_mail_message_import_config__auto_create_customer
+msgid "Create customers"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ir.model.fields,help:ai_message_import_sale.field_mail_message_import_config__auto_create_customer
+msgid ""
+"Create the customer of an order when it does not exist, only with reliable "
+"data: its name and a VAT number, email, phone or address, identified with "
+"enough confidence."
+msgstr ""
+
+#. module: ai_message_import_sale
+#. odoo-python
+#: code:addons/ai_message_import_sale/models/ai_message_import_document.py:0
+msgid "Customer order (sale)"
+msgstr ""
+
+#. module: ai_message_import_sale
+#. odoo-python
+#: code:addons/ai_message_import_sale/services/sale_order_builder.py:0
+msgid "Delivery address '%(address)s' matched to %(partner)s."
+msgstr ""
+
+#. module: ai_message_import_sale
+#. odoo-python
+#: code:addons/ai_message_import_sale/services/sale_order_builder.py:0
+msgid "Delivery address '%(address)s' not found: the usual one is kept."
+msgstr ""
+
+#. module: ai_message_import_sale
+#. odoo-python
+#: code:addons/ai_message_import_sale/services/sale_order_builder.py:0
+msgid "Delivery address not found"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ir.model.fields,field_description:ai_message_import_sale.field_sale_order__ai_message_import_incident_ids
+msgid "Document incidents"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ir.model.fields,field_description:ai_message_import_sale.field_sale_order__ai_message_import_sender_id
+msgid "Document sender"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ai.message.import.prompt,name:ai_message_import_sale.prompt_document_type_sale
+msgid "Document type: customer order (sale)"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model_terms:ir.ui.view,arch_db:ai_message_import_sale.view_order_form_inherit_ai_message_import
+msgid "Incidents"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ir.model,name:ai_message_import_sale.model_ai_message_import_document
+msgid "Interpreted Document"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ir.model,name:ai_message_import_sale.model_ai_message_import_document_line
+msgid "Interpreted Document Line"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ir.model,name:ai_message_import_sale.model_mail_message_import_incident
+msgid "Message Import Incident"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ir.model,name:ai_message_import_sale.model_mail_message_import_config
+msgid "Message Import Settings"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ir.model.fields,field_description:ai_message_import_sale.field_mail_message_import_config__customer_min_confidence
+msgid "Minimum customer confidence"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model_terms:ir.actions.act_window,help:ai_message_import_sale.action_ai_message_sale_order
+msgid "No sales quotation yet"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ir.model.fields,field_description:ai_message_import_sale.field_sale_order__ai_message_import_open_incident_count
+msgid "Open document incidents"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ir.model.fields,field_description:ai_message_import_sale.field_sale_order__ai_message_import_open_incident_summary
+msgid "Open document incidents summary"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ir.model,name:ai_message_import_sale.model_ai_message_import_change
+msgid "Order Change by the AI"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ir.model.fields,field_description:ai_message_import_sale.field_sale_order__ai_message_import_origin
+msgid "Origin of the document"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ir.model.fields,field_description:ai_message_import_sale.field_sale_order_line__ai_message_import_line_kind
+msgid "Origin of the line"
+msgstr ""
+
+#. module: ai_message_import_sale
+#. odoo-python
+#: code:addons/ai_message_import_sale/services/sale_order_builder.py:0
+msgid "Price list in another currency"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ir.model.fields,field_description:ai_message_import_sale.field_sale_order_line__ai_message_import_document_line_id
+msgid "Quoted line"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ir.model.fields,field_description:ai_message_import_sale.field_sale_order__ai_message_import_channel
+msgid "Received by"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model_terms:ir.ui.view,arch_db:ai_message_import_sale.view_order_form_inherit_ai_message_import
+msgid "Received document"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ir.model.fields,field_description:ai_message_import_sale.field_sale_order__ai_message_import_address
+msgid "Received from"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ir.model.fields,field_description:ai_message_import_sale.field_sale_order__ai_message_import_document_ids
+msgid "Received orders"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ir.model,name:ai_message_import_sale.model_mail_message_import_channel
+msgid "Receiving Channel"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ir.model.fields,field_description:ai_message_import_sale.field_mail_message_import_channel__sale_count
+#: model:ir.model.fields,field_description:ai_message_import_sale.field_mail_message_import_sender__sale_count
+msgid "Sale Count"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ir.model.fields,field_description:ai_message_import_sale.field_mail_message_import_channel__sale_to_confirm_count
+msgid "Sale To Confirm Count"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model_terms:ir.ui.view,arch_db:ai_message_import_sale.mail_message_import_sender_view_form
+msgid "Sales"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ir.model,name:ai_message_import_sale.model_sale_order
+msgid "Sales Order"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ir.model,name:ai_message_import_sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ir.model.fields,field_description:ai_message_import_sale.field_ai_message_import_change__sale_line_id
+#: model:ir.model.fields,field_description:ai_message_import_sale.field_ai_message_import_document_line__sale_line_id
+#: model:ir.model.fields,field_description:ai_message_import_sale.field_mail_message_import_incident__sale_line_id
+msgid "Sales order line"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ir.model.fields,field_description:ai_message_import_sale.field_ai_message_import_change__sale_order_id
+#: model:ir.model.fields,field_description:ai_message_import_sale.field_ai_message_import_document__sale_order_id
+#: model:ir.model.fields,field_description:ai_message_import_sale.field_mail_message_import_incident__sale_order_id
+#: model_terms:ir.ui.view,arch_db:ai_message_import_sale.ai_message_import_change_view_search
+#: model_terms:ir.ui.view,arch_db:ai_message_import_sale.mail_message_import_incident_view_form
+msgid "Sales quotation"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ir.actions.act_window,name:ai_message_import_sale.action_ai_message_sale_order
+#: model:ir.ui.menu,name:ai_message_import_sale.menu_ai_message_sale_order
+#: model_terms:ir.ui.view,arch_db:ai_message_import_sale.mail_message_import_channel_view_form
+msgid "Sales quotations"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ir.model.fields,field_description:ai_message_import_sale.field_ai_message_import_document__sale_state
+msgid "Sales status"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model_terms:ir.ui.view,arch_db:ai_message_import_sale.mail_message_import_config_view_form
+msgid "Sales: customers"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ir.model,name:ai_message_import_sale.model_mail_message_import_sender
+msgid "Sender"
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ir.model.fields,help:ai_message_import_sale.field_sale_order__ai_message_import_origin
+msgid ""
+"The channel and the phone or email address the documents of the order came "
+"from."
+msgstr ""
+
+#. module: ai_message_import_sale
+#. odoo-python
+#: code:addons/ai_message_import_sale/models/mail_message_import_config.py:0
+msgid "The confidences go from 0 to 1."
+msgstr ""
+
+#. module: ai_message_import_sale
+#. odoo-python
+#: code:addons/ai_message_import_sale/services/sale_order_builder.py:0
+msgid ""
+"The order asks for a delivery to '%(address)s', which matches %(count)s "
+"addresses of the customer. The usual delivery address of the customer is "
+"kept; no address was created."
+msgstr ""
+
+#. module: ai_message_import_sale
+#. odoo-python
+#: code:addons/ai_message_import_sale/services/sale_order_builder.py:0
+msgid ""
+"The price list of the customer, %(pricelist)s, is in %(currency)s. The "
+"quotation is in %(company_currency)s with the sales prices of the products: "
+"set the price list by hand if it must be used."
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model_terms:ir.actions.act_window,help:ai_message_import_sale.action_ai_message_sale_order
+msgid ""
+"The sales quotations created from the received orders of the customers "
+"appear here."
+msgstr ""
+
+#. module: ai_message_import_sale
+#: model:ir.model.fields,field_description:ai_message_import_sale.field_sale_order__ai_message_import_ai_values
+#: model:ir.model.fields,field_description:ai_message_import_sale.field_sale_order_line__ai_message_import_ai_values
+msgid "Values set by the module"
+msgstr ""
+
+#. module: ai_message_import_sale
+#. odoo-python
+#: code:addons/ai_message_import_sale/services/sale_order_builder.py:0
+msgid "Zero price for %(line)s"
+msgstr ""
+
+#. module: ai_message_import_sale
+#. odoo-python
+#: code:addons/ai_message_import_sale/services/sale_order_builder.py:0
+msgid "customer"
+msgstr ""
+
+#. module: ai_message_import_sale
+#. odoo-python
+#: code:addons/ai_message_import_sale/services/sale_order_builder.py:0
+msgid "price list %(pricelist)s"
+msgstr ""
+
+#. module: ai_message_import_sale
+#. odoo-python
+#: code:addons/ai_message_import_sale/services/sale_order_builder.py:0
+msgid "sales price of the product"
+msgstr ""
+
+#. module: ai_message_import_sale
+#. odoo-python
+#: code:addons/ai_message_import_sale/services/sale_order_builder.py:0
+msgid "sales quotation"
+msgstr ""

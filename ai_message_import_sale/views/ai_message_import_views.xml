@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Binhex
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <!-- Documents -->
+    <record id="ai_message_import_document_view_list" model="ir.ui.view">
+        <field name="name">ai.message.import.document.list.sale</field>
+        <field name="model">ai.message.import.document</field>
+        <field
+            name="inherit_id"
+            ref="ai_message_import.ai_message_import_document_view_list"
+        />
+        <field name="arch" type="xml">
+            <field name="relation" position="after">
+                <field name="sale_order_id" optional="show" />
+            </field>
+        </field>
+    </record>
+
+    <record id="ai_message_import_document_view_form" model="ir.ui.view">
+        <field name="name">ai.message.import.document.form.sale</field>
+        <field name="model">ai.message.import.document</field>
+        <field
+            name="inherit_id"
+            ref="ai_message_import.ai_message_import_document_view_form"
+        />
+        <field name="arch" type="xml">
+            <xpath
+                expr="//div[@name='button_box']/button[@name='action_view_incidents']"
+                position="before"
+            >
+                <button
+                    name="action_view_order"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-usd"
+                    invisible="not sale_order_id"
+                    groups="sales_team.group_sale_salesman"
+                >
+                    <div class="o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="sale_order_id" readonly="1" />
+                        </span>
+                        <span class="o_stat_text">
+                            <field name="sale_state" />
+                        </span>
+                    </div>
+                </button>
+            </xpath>
+            <xpath
+                expr="//field[@name='line_ids']/list/field[@name='product_match']"
+                position="after"
+            >
+                <field name="sale_line_id" optional="hide" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="ai_message_import_document_view_kanban" model="ir.ui.view">
+        <field name="name">ai.message.import.document.kanban.sale</field>
+        <field name="model">ai.message.import.document</field>
+        <field
+            name="inherit_id"
+            ref="ai_message_import.ai_message_import_document_view_kanban"
+        />
+        <field name="arch" type="xml">
+            <div name="references" position="after">
+                <div class="small" t-if="record.sale_order_id.raw_value">
+                    <field name="sale_order_id" class="me-1" />
+                    <field name="sale_state" class="text-muted" />
+                </div>
+            </div>
+        </field>
+    </record>
+
+    <record id="ai_message_import_document_view_search" model="ir.ui.view">
+        <field name="name">ai.message.import.document.search.sale</field>
+        <field name="model">ai.message.import.document</field>
+        <field
+            name="inherit_id"
+            ref="ai_message_import.ai_message_import_document_view_search"
+        />
+        <field name="arch" type="xml">
+            <field name="quote_number" position="after">
+                <field name="sale_order_id" />
+            </field>
+        </field>
+    </record>
+
+    <!-- Senders and receiving channels -->
+    <record id="mail_message_import_sender_view_form" model="ir.ui.view">
+        <field name="name">mail.message.import.sender.form.sale</field>
+        <field name="model">mail.message.import.sender</field>
+        <field
+            name="inherit_id"
+            ref="ai_message_import.mail_message_import_sender_view_form"
+        />
+        <field name="arch" type="xml">
+            <button name="action_view_documents" position="after">
+                <button
+                    name="action_view_sales"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-usd"
+                    groups="sales_team.group_sale_salesman"
+                    invisible="not sale_count"
+                >
+                    <field name="sale_count" widget="statinfo" string="Sales" />
+                </button>
+            </button>
+        </field>
+    </record>
+
+    <record id="mail_message_import_channel_view_form" model="ir.ui.view">
+        <field name="name">mail.message.import.channel.form.sale</field>
+        <field name="model">mail.message.import.channel</field>
+        <field
+            name="inherit_id"
+            ref="ai_message_import.mail_message_import_channel_view_form"
+        />
+        <field name="arch" type="xml">
+            <button name="action_view_documents" position="after">
+                <button
+                    name="action_view_sales"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-usd"
+                    groups="sales_team.group_sale_salesman"
+                    invisible="not sale_count"
+                >
+                    <field
+                        name="sale_count"
+                        widget="statinfo"
+                        string="Sales quotations"
+                    />
+                </button>
+            </button>
+        </field>
+    </record>
+
+    <record id="mail_message_import_channel_view_kanban" model="ir.ui.view">
+        <field name="name">mail.message.import.channel.kanban.sale</field>
+        <field name="model">mail.message.import.channel</field>
+        <field
+            name="inherit_id"
+            ref="ai_message_import.mail_message_import_channel_view_kanban"
+        />
+        <field name="arch" type="xml">
+            <div name="dashboard_links" position="inside">
+                <a
+                    t-if="record.sale_to_confirm_count.raw_value"
+                    class="d-flex justify-content-between"
+                    name="action_view_sales_to_confirm"
+                    type="object"
+                    groups="sales_team.group_sale_salesman"
+                >
+                    <span>Quotations to confirm</span>
+                    <field name="sale_to_confirm_count" />
+                </a>
+            </div>
+        </field>
+    </record>
+
+    <!-- Settings -->
+    <record id="mail_message_import_config_view_form" model="ir.ui.view">
+        <field name="name">mail.message.import.config.form.sale</field>
+        <field name="model">mail.message.import.config</field>
+        <field
+            name="inherit_id"
+            ref="ai_message_import.mail_message_import_config_view_form"
+        />
+        <field name="arch" type="xml">
+            <group name="products" position="before">
+                <group string="Sales: customers" name="sale_customers">
+                    <field name="auto_create_customer" />
+                    <field
+                        name="customer_min_confidence"
+                        invisible="not auto_create_customer"
+                    />
+                </group>
+            </group>
+        </field>
+    </record>
+
+    <!-- Incidents and changes -->
+    <record id="mail_message_import_incident_view_list" model="ir.ui.view">
+        <field name="name">mail.message.import.incident.list.sale</field>
+        <field name="model">mail.message.import.incident</field>
+        <field
+            name="inherit_id"
+            ref="ai_message_import.mail_message_import_incident_view_list"
+        />
+        <field name="arch" type="xml">
+            <field name="document_id" position="after">
+                <field name="sale_order_id" optional="show" />
+            </field>
+        </field>
+    </record>
+
+    <record id="mail_message_import_incident_view_form" model="ir.ui.view">
+        <field name="name">mail.message.import.incident.form.sale</field>
+        <field name="model">mail.message.import.incident</field>
+        <field
+            name="inherit_id"
+            ref="ai_message_import.mail_message_import_incident_view_form"
+        />
+        <field name="arch" type="xml">
+            <button name="action_open_document" position="after">
+                <button
+                    name="action_open_order"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-usd"
+                    string="Sales quotation"
+                    invisible="not sale_order_id"
+                    groups="sales_team.group_sale_salesman"
+                />
+            </button>
+            <field name="document_line_id" position="after">
+                <field name="sale_order_id" invisible="not sale_order_id" />
+                <field name="sale_line_id" invisible="not sale_line_id" />
+            </field>
+        </field>
+    </record>
+
+    <record id="mail_message_import_incident_view_search" model="ir.ui.view">
+        <field name="name">mail.message.import.incident.search.sale</field>
+        <field name="model">mail.message.import.incident</field>
+        <field
+            name="inherit_id"
+            ref="ai_message_import.mail_message_import_incident_view_search"
+        />
+        <field name="arch" type="xml">
+            <field name="document_id" position="after">
+                <field name="sale_order_id" />
+            </field>
+        </field>
+    </record>
+
+    <record id="ai_message_import_change_view_list" model="ir.ui.view">
+        <field name="name">ai.message.import.change.list.sale</field>
+        <field name="model">ai.message.import.change</field>
+        <field
+            name="inherit_id"
+            ref="ai_message_import.ai_message_import_change_view_list"
+        />
+        <field name="arch" type="xml">
+            <field name="create_date" position="after">
+                <field name="sale_order_id" optional="show" />
+            </field>
+        </field>
+    </record>
+
+    <record id="ai_message_import_change_view_search" model="ir.ui.view">
+        <field name="name">ai.message.import.change.search.sale</field>
+        <field name="model">ai.message.import.change</field>
+        <field
+            name="inherit_id"
+            ref="ai_message_import.ai_message_import_change_view_search"
+        />
+        <field name="arch" type="xml">
+            <field name="document_id" position="before">
+                <field name="sale_order_id" />
+            </field>
+            <group name="group_by" position="inside">
+                <filter
+                    name="group_sale_order"
+                    string="Sales quotation"
+                    context="{'group_by': 'sale_order_id'}"
+                />
+            </group>
+        </field>
+    </record>
+
+    <!-- Orders -->
+    <record id="action_ai_message_sale_order" model="ir.actions.act_window">
+        <field name="name">Sales quotations</field>
+        <field name="res_model">sale.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('ai_message_import_sender_id', '!=', False)]</field>
+        <field name="context">{'create': False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">No sales quotation yet</p>
+            <p
+            >The sales quotations created from the received orders of the customers appear here.</p>
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_ai_message_sale_order"
+        name="Sales quotations"
+        parent="mail_message_import.menu_mail_message_import_received"
+        action="action_ai_message_sale_order"
+        groups="sales_team.group_sale_salesman"
+        sequence="25"
+    />
+</odoo>

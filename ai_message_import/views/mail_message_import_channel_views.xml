@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Binhex
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="mail_message_import_channel_view_form" model="ir.ui.view">
+        <field name="name">mail.message.import.channel.form.ai</field>
+        <field name="model">mail.message.import.channel</field>
+        <field
+            name="inherit_id"
+            ref="mail_message_import.mail_message_import_channel_view_form"
+        />
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button
+                    name="action_view_documents"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-file-text-o"
+                >
+                    <field name="document_count" widget="statinfo" string="Documents" />
+                </button>
+            </div>
+        </field>
+    </record>
+
+    <record id="mail_message_import_channel_view_kanban" model="ir.ui.view">
+        <field name="name">mail.message.import.channel.kanban.ai</field>
+        <field name="model">mail.message.import.channel</field>
+        <!-- It replaces the main button of the card. -->
+        <field name="priority">99</field>
+        <field
+            name="inherit_id"
+            ref="mail_message_import.mail_message_import_channel_view_kanban"
+        />
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="inside">
+                <field name="document_count" />
+                <field name="review_count" />
+                <field name="new_count" />
+            </xpath>
+            <xpath
+                expr="//div[@role='menuitem'][a[@name='action_view_conversations']]"
+                position="before"
+            >
+                <div role="menuitem">
+                    <a name="action_view_documents" type="object">Documents</a>
+                </div>
+            </xpath>
+            <xpath
+                expr="//div[@role='menuitem'][a[@name='action_view_incidents']]"
+                position="before"
+            >
+                <div role="menuitem">
+                    <a name="action_view_review" type="object">Documents</a>
+                </div>
+            </xpath>
+            <div name="dashboard_main" position="replace">
+                <div class="col-5" name="dashboard_main">
+                    <button
+                        t-if="record.review_count.raw_value"
+                        class="btn btn-primary"
+                        name="action_view_review"
+                        type="object"
+                    >
+                        <field name="review_count" /> To review
+                    </button>
+                    <button
+                        t-else=""
+                        class="btn btn-secondary"
+                        name="action_view_documents"
+                        type="object"
+                    >
+                        Documents
+                    </button>
+                </div>
+            </div>
+            <xpath expr="//div[@name='dashboard_links']/a[1]" position="before">
+                <a
+                    t-if="record.new_count.raw_value"
+                    class="d-flex justify-content-between"
+                    name="action_view_new"
+                    type="object"
+                >
+                    <span>New</span>
+                    <field name="new_count" />
+                </a>
+                <a
+                    t-if="record.unidentified_count.raw_value"
+                    class="d-flex justify-content-between"
+                    name="action_view_unidentified"
+                    type="object"
+                >
+                    <span>Unknown senders</span>
+                    <field name="unidentified_count" />
+                </a>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Binhex
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="mail_message_import_conversation_view_list" model="ir.ui.view">
+        <field name="name">mail.message.import.conversation.list.ai</field>
+        <field name="model">mail.message.import.conversation</field>
+        <field
+            name="inherit_id"
+            ref="mail_message_import.mail_message_import_conversation_view_list"
+        />
+        <field name="arch" type="xml">
+            <field name="message_count" position="after">
+                <field name="document_count" string="Documents" />
+                <field name="ai_tokens" optional="hide" />
+            </field>
+        </field>
+    </record>
+
+    <record id="mail_message_import_conversation_view_form" model="ir.ui.view">
+        <field name="name">mail.message.import.conversation.form.ai</field>
+        <field name="model">mail.message.import.conversation</field>
+        <field
+            name="inherit_id"
+            ref="mail_message_import.mail_message_import_conversation_view_form"
+        />
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button
+                    name="action_view_documents"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-file-text-o"
+                >
+                    <field name="document_count" widget="statinfo" string="Documents" />
+                </button>
+            </div>
+            <notebook position="inside">
+                <page string="AI" name="ai">
+                    <group>
+                        <group>
+                            <field name="ai_connection_id" />
+                            <field name="ai_model" />
+                        </group>
+                        <group>
+                            <field name="ai_tokens" />
+                            <field name="schema_version" />
+                        </group>
+                    </group>
+                    <label for="ai_request" />
+                    <field name="ai_request" />
+                    <label for="ai_response" />
+                    <field name="ai_response" />
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>

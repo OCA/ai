@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Binhex
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_order_form_inherit_ai_message_import" model="ir.ui.view">
+        <field name="name">sale.order.form.ai.message.import</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <!-- Open incidents: warn before confirming, without blocking it. -->
+            <xpath expr="//button[@id='action_confirm']" position="attributes">
+                <attribute
+                    name="invisible"
+                >state != 'sent' or ai_message_import_open_incident_count</attribute>
+            </xpath>
+            <xpath
+                expr="//button[@name='action_confirm'][not(@id)]"
+                position="attributes"
+            >
+                <attribute
+                    name="invisible"
+                >state != 'draft' or ai_message_import_open_incident_count</attribute>
+            </xpath>
+            <xpath expr="//button[@id='action_confirm']" position="after">
+                <button
+                    name="action_ai_message_confirm"
+                    type="object"
+                    string="Confirm"
+                    class="btn-primary"
+                    invisible="state not in ('draft', 'sent') or not ai_message_import_open_incident_count"
+                />
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="ai_message_import_sender_id" invisible="1" />
+                <field name="ai_message_import_open_incident_count" invisible="1" />
+                <button
+                    name="action_ai_message_view_quotes"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-file-text-o"
+                    invisible="not ai_message_import_sender_id"
+                    groups="mail_message_import.group_mail_message_import_manager"
+                >
+                    <div class="o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="ai_message_import_channel" />
+                        </span>
+                        <span class="o_stat_text">
+                            <field name="ai_message_import_address" />
+                        </span>
+                    </div>
+                </button>
+                <button
+                    name="action_ai_message_view_incidents"
+                    type="object"
+                    class="oe_stat_button"
+                    icon="fa-exclamation-triangle"
+                    invisible="not ai_message_import_open_incident_count"
+                    groups="mail_message_import.group_mail_message_import_manager"
+                >
+                    <field
+                        name="ai_message_import_open_incident_count"
+                        widget="statinfo"
+                        string="Incidents"
+                    />
+                </button>
+            </xpath>
+            <xpath expr="//group[@name='partner_details']" position="inside">
+                <field
+                    name="ai_message_import_origin"
+                    invisible="not ai_message_import_origin"
+                />
+            </xpath>
+            <xpath expr="//div[hasclass('oe_title')]" position="before">
+                <div
+                    class="alert alert-warning"
+                    role="alert"
+                    invisible="not ai_message_import_open_incident_count or state not in ('draft', 'sent')"
+                >
+                    <strong>
+                        This quotation comes from a received order and has incidents
+                        pending review:
+                    </strong>
+                    <field name="ai_message_import_open_incident_summary" />
+                </div>
+            </xpath>
+            <xpath expr="//page[@name='other_information']" position="after">
+                <page
+                    string="Received document"
+                    name="ai_message_import"
+                    invisible="not ai_message_import_sender_id"
+                    groups="mail_message_import.group_mail_message_import_manager"
+                >
+                    <group>
+                        <field name="ai_message_import_origin" />
+                        <field name="ai_message_import_sender_id" />
+                        <field
+                            name="ai_message_import_document_ids"
+                            widget="many2many_tags"
+                        />
+                    </group>
+                    <separator string="Incidents" />
+                    <field name="ai_message_import_incident_ids" readonly="1" />
+                    <separator string="Changes by the AI" />
+                    <field name="ai_message_import_change_ids" readonly="1" />
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

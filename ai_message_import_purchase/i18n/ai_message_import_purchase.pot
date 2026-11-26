@@ -1,0 +1,400 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ai_message_import_purchase
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0-20261015\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-03 15:54+0000\n"
+"PO-Revision-Date: 2026-11-03 15:54+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: ai_message_import_purchase
+#. odoo-python
+#: code:addons/ai_message_import_purchase/services/purchase_order_builder.py:0
+msgid ""
+"%(line)s: no delivery date in the document, Odoo planned it on %(date)s "
+"(%(delay)s days of vendor lead time)."
+msgstr ""
+
+#. module: ai_message_import_purchase
+#. odoo-python
+#: code:addons/ai_message_import_purchase/services/purchase_order_builder.py:0
+msgid ""
+"%(product)s has no vendor price and its cost is zero: the price 0 is kept, "
+"check it before confirming. Quoted price: %(quoted)s."
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model_terms:ir.ui.view,arch_db:ai_message_import_purchase.mail_message_import_channel_view_kanban
+msgid "<span>Purchase orders to confirm</span>"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model_terms:ir.ui.view,arch_db:ai_message_import_purchase.purchase_order_form_inherit_ai_message_import
+msgid ""
+"<strong>\n"
+"                        This order comes from a received document and has incidents\n"
+"                        pending review:\n"
+"                    </strong>"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model.fields,field_description:ai_message_import_purchase.field_purchase_order__ai_message_import_change_ids
+#: model_terms:ir.ui.view,arch_db:ai_message_import_purchase.purchase_order_form_inherit_ai_message_import
+msgid "Changes by the AI"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model_terms:ir.ui.view,arch_db:ai_message_import_purchase.purchase_order_form_inherit_ai_message_import
+msgid "Confirm Order"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model.fields,field_description:ai_message_import_purchase.field_mail_message_import_config__auto_create_product
+msgid "Create products"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model_terms:ir.ui.view,arch_db:ai_message_import_purchase.mail_message_import_config_view_form
+msgid "Create products (purchases)"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model.fields,help:ai_message_import_purchase.field_mail_message_import_config__auto_create_product
+msgid ""
+"Create the products of a vendor quote that do not exist when its data is "
+"complete and reliable."
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model.fields,help:ai_message_import_purchase.field_mail_message_import_config__auto_create_vendor
+msgid ""
+"Create the vendor of a document when it does not exist and it was identified"
+" with enough confidence."
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model.fields,field_description:ai_message_import_purchase.field_mail_message_import_config__auto_create_vendor
+msgid "Create vendors"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#. odoo-python
+#: code:addons/ai_message_import_purchase/services/purchase_order_builder.py:0
+msgid "Delivery address '%(address)s' matched to the warehouse %(warehouse)s."
+msgstr ""
+
+#. module: ai_message_import_purchase
+#. odoo-python
+#: code:addons/ai_message_import_purchase/services/purchase_order_builder.py:0
+msgid ""
+"Delivery address '%(address)s' not found: the usual destination is kept."
+msgstr ""
+
+#. module: ai_message_import_purchase
+#. odoo-python
+#: code:addons/ai_message_import_purchase/services/purchase_order_builder.py:0
+msgid "Delivery address not found"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model.fields,field_description:ai_message_import_purchase.field_purchase_order__ai_message_import_incident_ids
+msgid "Document incidents"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model.fields,field_description:ai_message_import_purchase.field_purchase_order__ai_message_import_sender_id
+msgid "Document sender"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ai.message.import.prompt,name:ai_message_import_purchase.prompt_document_type_purchase
+msgid "Document type: vendor quote (purchase)"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model_terms:ir.ui.view,arch_db:ai_message_import_purchase.purchase_order_form_inherit_ai_message_import
+msgid "Incidents"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model,name:ai_message_import_purchase.model_ai_message_import_document
+msgid "Interpreted Document"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model,name:ai_message_import_purchase.model_ai_message_import_document_line
+msgid "Interpreted Document Line"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model,name:ai_message_import_purchase.model_mail_message_import_incident
+msgid "Message Import Incident"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model,name:ai_message_import_purchase.model_mail_message_import_config
+msgid "Message Import Settings"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model.fields,field_description:ai_message_import_purchase.field_mail_message_import_config__product_min_confidence
+msgid "Minimum product confidence"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model.fields,field_description:ai_message_import_purchase.field_mail_message_import_config__vendor_min_confidence
+msgid "Minimum vendor confidence"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model_terms:ir.actions.act_window,help:ai_message_import_purchase.action_ai_message_purchase_order
+msgid "No purchase order yet"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model.fields,field_description:ai_message_import_purchase.field_purchase_order__ai_message_import_open_incident_count
+msgid "Open document incidents"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model.fields,field_description:ai_message_import_purchase.field_purchase_order__ai_message_import_open_incident_summary
+msgid "Open document incidents summary"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model,name:ai_message_import_purchase.model_ai_message_import_change
+msgid "Order Change by the AI"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model.fields,field_description:ai_message_import_purchase.field_ai_message_import_change__purchase_line_id
+#: model:ir.model.fields,field_description:ai_message_import_purchase.field_ai_message_import_document_line__purchase_line_id
+#: model:ir.model.fields,field_description:ai_message_import_purchase.field_mail_message_import_incident__purchase_line_id
+msgid "Order line"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model.fields,field_description:ai_message_import_purchase.field_purchase_order__ai_message_import_origin
+msgid "Origin of the document"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model.fields,field_description:ai_message_import_purchase.field_purchase_order_line__ai_message_import_line_kind
+msgid "Origin of the line"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#. odoo-python
+#: code:addons/ai_message_import_purchase/services/purchase_order_builder.py:0
+msgid ""
+"Product %(product)s created from the document, with the quoted price "
+"%(price)s as cost."
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model.fields,field_description:ai_message_import_purchase.field_mail_message_import_channel__purchase_count
+#: model:ir.model.fields,field_description:ai_message_import_purchase.field_mail_message_import_sender__purchase_count
+msgid "Purchase Count"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model,name:ai_message_import_purchase.model_purchase_order
+#: model:ir.model.fields,field_description:ai_message_import_purchase.field_ai_message_import_change__purchase_order_id
+#: model:ir.model.fields,field_description:ai_message_import_purchase.field_mail_message_import_incident__purchase_order_id
+msgid "Purchase Order"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model,name:ai_message_import_purchase.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model.fields,field_description:ai_message_import_purchase.field_mail_message_import_channel__purchase_to_confirm_count
+msgid "Purchase To Confirm Count"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model.fields,field_description:ai_message_import_purchase.field_ai_message_import_document__purchase_order_id
+#: model_terms:ir.ui.view,arch_db:ai_message_import_purchase.ai_message_import_change_view_search
+#: model_terms:ir.ui.view,arch_db:ai_message_import_purchase.mail_message_import_incident_view_form
+msgid "Purchase order"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.actions.act_window,name:ai_message_import_purchase.action_ai_message_purchase_order
+#: model:ir.ui.menu,name:ai_message_import_purchase.menu_ai_message_purchase_order
+#: model_terms:ir.ui.view,arch_db:ai_message_import_purchase.mail_message_import_channel_view_form
+msgid "Purchase orders"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model.fields,field_description:ai_message_import_purchase.field_ai_message_import_document__purchase_state
+msgid "Purchase status"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model_terms:ir.ui.view,arch_db:ai_message_import_purchase.mail_message_import_sender_view_form
+msgid "Purchases"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model_terms:ir.ui.view,arch_db:ai_message_import_purchase.mail_message_import_config_view_form
+msgid "Purchases: vendors"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model.fields,field_description:ai_message_import_purchase.field_purchase_order_line__ai_message_import_document_line_id
+msgid "Quoted line"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model.fields,field_description:ai_message_import_purchase.field_purchase_order__ai_message_import_channel
+msgid "Received by"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model_terms:ir.ui.view,arch_db:ai_message_import_purchase.purchase_order_form_inherit_ai_message_import
+msgid "Received document"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model.fields,field_description:ai_message_import_purchase.field_purchase_order__ai_message_import_document_ids
+msgid "Received documents"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model.fields,field_description:ai_message_import_purchase.field_purchase_order__ai_message_import_address
+msgid "Received from"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model,name:ai_message_import_purchase.model_mail_message_import_channel
+msgid "Receiving Channel"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model,name:ai_message_import_purchase.model_mail_message_import_sender
+msgid "Sender"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#. odoo-python
+#: code:addons/ai_message_import_purchase/services/purchase_order_builder.py:0
+msgid ""
+"Service %(product)s created from the document, with the quoted price "
+"%(price)s as cost."
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model.fields,help:ai_message_import_purchase.field_purchase_order__ai_message_import_origin
+msgid ""
+"The channel and the phone or email address the documents of the order came "
+"from."
+msgstr ""
+
+#. module: ai_message_import_purchase
+#. odoo-python
+#: code:addons/ai_message_import_purchase/models/mail_message_import_config.py:0
+msgid "The confidences go from 0 to 1."
+msgstr ""
+
+#. module: ai_message_import_purchase
+#. odoo-python
+#: code:addons/ai_message_import_purchase/services/purchase_order_builder.py:0
+msgid ""
+"The document asks for a delivery to '%(address)s', which matches %(count)s "
+"warehouses of the company. The usual destination of Odoo is kept; no "
+"address, warehouse nor location was created."
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model_terms:ir.actions.act_window,help:ai_message_import_purchase.action_ai_message_purchase_order
+msgid "The purchase orders created from the received documents appear here."
+msgstr ""
+
+#. module: ai_message_import_purchase
+#: model:ir.model.fields,field_description:ai_message_import_purchase.field_purchase_order__ai_message_import_ai_values
+#: model:ir.model.fields,field_description:ai_message_import_purchase.field_purchase_order_line__ai_message_import_ai_values
+msgid "Values set by the module"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#. odoo-python
+#: code:addons/ai_message_import_purchase/models/ai_message_import_document.py:0
+msgid "Vendor quote (purchase)"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#. odoo-python
+#: code:addons/ai_message_import_purchase/services/purchase_order_builder.py:0
+msgid "Zero cost for %(line)s"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#. odoo-python
+#: code:addons/ai_message_import_purchase/services/purchase_order_builder.py:0
+msgid "its price includes taxes at an unknown rate"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#. odoo-python
+#: code:addons/ai_message_import_purchase/services/purchase_order_builder.py:0
+msgid "product cost"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#. odoo-python
+#: code:addons/ai_message_import_purchase/services/purchase_order_builder.py:0
+msgid "purchase order"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#. odoo-python
+#: code:addons/ai_message_import_purchase/services/purchase_order_builder.py:0
+msgid "the automatic creation of products is disabled"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#. odoo-python
+#: code:addons/ai_message_import_purchase/services/purchase_order_builder.py:0
+msgid "the confidence of the line (%(conf).0f%%) is too low"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#. odoo-python
+#: code:addons/ai_message_import_purchase/services/purchase_order_builder.py:0
+msgid "the document gives no price for it"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#. odoo-python
+#: code:addons/ai_message_import_purchase/services/purchase_order_builder.py:0
+msgid "the line has no description"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#. odoo-python
+#: code:addons/ai_message_import_purchase/services/purchase_order_builder.py:0
+msgid "the unit '%(uom)s' does not exist in Odoo"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#. odoo-python
+#: code:addons/ai_message_import_purchase/services/purchase_order_builder.py:0
+msgid "vendor"
+msgstr ""
+
+#. module: ai_message_import_purchase
+#. odoo-python
+#: code:addons/ai_message_import_purchase/services/purchase_order_builder.py:0
+msgid "vendor price list"
+msgstr ""
