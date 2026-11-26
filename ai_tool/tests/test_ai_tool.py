@@ -3,7 +3,7 @@
 
 from freezegun import freeze_time
 
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, new_test_user
 
 
 class TestAiTool(TransactionCase):
@@ -47,3 +47,17 @@ class TestAiTool(TransactionCase):
         tool.kind = "record"
         with self.assertRaises(ValueError):
             tool._execute_tool(message="Hello World", record=self.partner)
+
+    def test_tool_non_admin_user(self):
+        """A plain internal user (no ir.model access) must be able to build a
+        tool definition and execute a generic tool: resolving the tool's model
+        is metadata and must not require Administration/Access Rights."""
+        user = new_test_user(
+            self.env, login="ai_tool_plain_user", groups="base.group_user"
+        )
+        self.assertFalse(user.has_group("base.group_system"))
+        tool = self.env.ref("ai_tool.current_date").with_user(user)
+        definition = tool._get_tool_definition()
+        self.assertEqual(definition["name"], "get_date")
+        result = tool._execute_tool()
+        self.assertIn("date", result)
