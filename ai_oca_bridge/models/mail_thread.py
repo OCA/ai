@@ -52,7 +52,7 @@ class MailThread(models.AbstractModel):
                     else:
                         all_models[model] = res["models"][model]
                 node.addprevious(new_node)
-            res["arch"] = etree.tostring(doc)
+            res["arch"] = etree.tostring(doc, encoding="unicode")
             res["models"] = frozendict(all_models)
         return res
 
