@@ -63,11 +63,9 @@ class HtmlEditorOpenWebUI(HTML_Editor):
             )
         )
         if not bridges:
-            # Do not silently send the editor contents to Odoo IAP when this
-            # integration is installed but not configured.
-            raise UserError(
-                _("Configure one active OpenWebUI bridge with the 'HTML Editor' usage.")
-            )
+            # Keep existing editor providers (including the OCA Ollama addon)
+            # usable until an OpenWebUI editor bridge is explicitly configured.
+            return super().generate_text(prompt, conversation_history)
         if len(bridges) != 1:
             raise UserError(
                 _(

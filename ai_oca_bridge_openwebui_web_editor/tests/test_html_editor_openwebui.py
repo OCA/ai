@@ -9,6 +9,7 @@ from odoo.tests import TransactionCase, tagged
 from odoo.addons.ai_oca_bridge_openwebui_web_editor.controllers.main import (
     HtmlEditorOpenWebUI,
 )
+from odoo.addons.html_editor.controllers.main import HTML_Editor
 
 
 @tagged("post_install", "-at_install")
@@ -59,3 +60,21 @@ class TestHtmlEditorOpenWebUI(TransactionCase):
             payload["messages"][0]["content"], "Keep the original meaning."
         )
         self.assertFalse(payload["stream"])
+
+    def test_no_editor_bridge_preserves_parent_provider(self):
+        self.bridge.active = False
+        request_proxy = SimpleNamespace(env=self.env)
+        with (
+            patch(
+                "odoo.addons.ai_oca_bridge_openwebui_web_editor.controllers.main.request",
+                request_proxy,
+            ),
+            patch.object(
+                HTML_Editor, "generate_text", return_value="parent-provider"
+            ) as parent,
+        ):
+            result = HtmlEditorOpenWebUI.generate_text.__wrapped__(
+                HtmlEditorOpenWebUI(), "Draft text", []
+            )
+        self.assertEqual(result, "parent-provider")
+        parent.assert_called_once_with("Draft text", [])

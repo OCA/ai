@@ -60,10 +60,11 @@ Usage
 
 The addon overrides the existing ``/html_editor/generate_text``
 controller route. It forwards the prompt and conversation history
-server-side to OpenWebUI and returns plain text to Odoo. It fails closed
-when the integration is installed but no editor bridge is configured; it
-does not fall back to Odoo IAP. Only HTML-editor text assistance is
-rerouted.
+server-side to OpenWebUI and returns plain text to Odoo. If no HTML
+Editor bridge is configured, the inherited Odoo or Ollama provider
+handles the request. Once a bridge is configured, OpenWebUI failures are
+reported without falling back to another provider. Only HTML-editor text
+assistance is rerouted.
 
 Bug Tracker
 ===========

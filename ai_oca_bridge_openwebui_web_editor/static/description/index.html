@@ -409,10 +409,11 @@ in frontend assets.</p>
 <h2><a class="toc-backref" href="#toc-entry-2">Usage</a></h2>
 <p>The addon overrides the existing <tt class="docutils literal">/html_editor/generate_text</tt>
 controller route. It forwards the prompt and conversation history
-server-side to OpenWebUI and returns plain text to Odoo. It fails closed
-when the integration is installed but no editor bridge is configured; it
-does not fall back to Odoo IAP. Only HTML-editor text assistance is
-rerouted.</p>
+server-side to OpenWebUI and returns plain text to Odoo. If no HTML
+Editor bridge is configured, the inherited Odoo or Ollama provider
+handles the request. Once a bridge is configured, OpenWebUI failures are
+reported without falling back to another provider. Only HTML-editor text
+assistance is rerouted.</p>
 </div>
 <div class="section" id="bug-tracker">
 <h2><a class="toc-backref" href="#toc-entry-3">Bug Tracker</a></h2>
