@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Nimarosa
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="ai_connection_company_rule" model="ir.rule">
+        <field name="name">AI Connection: multi-company</field>
+        <field name="model_id" ref="ai_connection.model_ai_connection" />
+        <field
+            name="domain_force"
+        >['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="ai_connection_usage_company_rule" model="ir.rule">
+        <field name="name">AI Connection Usage: multi-company</field>
+        <field name="model_id" ref="model_ai_connection_usage" />
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="ai_connection_usage_user_rule" model="ir.rule">
+        <field name="name">AI Connection Usage: own calls</field>
+        <field name="model_id" ref="model_ai_connection_usage" />
+        <field name="domain_force">[('user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_user'))]" />
+    </record>
+
+    <record id="ai_connection_usage_manager_rule" model="ir.rule">
+        <field name="name">AI Connection Usage: all calls</field>
+        <field name="model_id" ref="model_ai_connection_usage" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('base.group_system'))]" />
+    </record>
+</odoo>
