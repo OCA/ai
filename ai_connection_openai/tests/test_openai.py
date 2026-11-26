@@ -109,3 +109,29 @@ class TestOpenai(TransactionCase):
             )
             self.assertEqual(result[0], "The answer is 3.")
             mock_client.assert_called_once()
+
+    def test_temperature_is_sent(self):
+        with patch("openai.OpenAI") as mock_client:
+            create = mock_client.return_value.chat.completions.create
+            create.return_value = ChatCompletion.model_validate(self.result)
+            self.connection._run(prompt="How much is 2+1")
+            self.assertEqual(create.call_args.kwargs["temperature"], 0.7)
+
+    def test_limits_not_sent_when_unset(self):
+        with patch("openai.OpenAI") as mock_client:
+            create = mock_client.return_value.chat.completions.create
+            create.return_value = ChatCompletion.model_validate(self.result)
+            self.connection._run(prompt="How much is 2+1")
+            self.assertNotIn("max_completion_tokens", create.call_args.kwargs)
+            self.assertNotIn("timeout", mock_client.call_args.kwargs)
+
+    def test_limits_sent_when_set(self):
+        self.connection.write(
+            {"openai_max_completion_tokens": 256, "openai_timeout": 30.0}
+        )
+        with patch("openai.OpenAI") as mock_client:
+            create = mock_client.return_value.chat.completions.create
+            create.return_value = ChatCompletion.model_validate(self.result)
+            self.connection._run(prompt="How much is 2+1")
+            self.assertEqual(create.call_args.kwargs["max_completion_tokens"], 256)
+            self.assertEqual(mock_client.call_args.kwargs["timeout"], 30.0)

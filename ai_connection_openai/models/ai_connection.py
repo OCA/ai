@@ -12,15 +12,27 @@ from odoo.addons.ai_connection.client import AiConnectionClient
 
 
 class OpenaiClient(AiConnectionClient):
-    def __init__(self, tools, url, model, api_key, temperature=None):
+    def __init__(
+        self,
+        tools,
+        url,
+        model,
+        api_key,
+        temperature=None,
+        max_completion_tokens=None,
+        timeout=None,
+    ):
         params = {}
         if url:
             params["base_url"] = url
         if api_key:
             params["api_key"] = api_key
+        if timeout:
+            params["timeout"] = timeout
         self._client = openai.OpenAI(**params)
         self.model = model
         self.temperature = temperature
+        self.max_completion_tokens = max_completion_tokens
         self.tool_definition = []
         for tool in tools or []:
             definition = tool._get_tool_definition()
@@ -81,11 +93,15 @@ class OpenaiClient(AiConnectionClient):
         return new_message
 
     def handle_message(self, messages=None, **kwargs):
+        params = {}
+        if self.max_completion_tokens:
+            params["max_completion_tokens"] = self.max_completion_tokens
         response = self._client.chat.completions.create(
             model=self.model,
             messages=self._get_messages(messages),
             tools=self.tool_definition or None,
             temperature=self.temperature,
+            **params,
         )
         response_message = response.choices[0].message
         return {
@@ -112,8 +128,24 @@ class AiConnection(models.Model):
         selection_add=[("openai", "OpenAI")], ondelete={"openai": "cascade"}
     )
     openai_api_key = fields.Char(groups="base.group_system")
+    openai_max_completion_tokens = fields.Integer(
+        string="Max Completion Tokens",
+        help="Upper bound of tokens generated per request, reasoning included. "
+        "Leave empty to use the server default.",
+    )
+    openai_timeout = fields.Float(
+        string="Timeout",
+        help="Timeout of each request, in seconds. "
+        "Leave empty to use the client default.",
+    )
 
     def _get_client_openai(self, tools):
         return OpenaiClient(
-            tools, url=self.url, model=self.model, api_key=self.openai_api_key
+            tools,
+            url=self.url,
+            model=self.model,
+            api_key=self.openai_api_key,
+            temperature=self.temperature,
+            max_completion_tokens=self.openai_max_completion_tokens,
+            timeout=self.openai_timeout,
         )
