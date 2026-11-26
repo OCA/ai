@@ -1,0 +1,1 @@
+Routes Odoo 18 HTML editor AI text generation and translation requests to an OpenWebUI model selected through an OCA AI Bridge, while keeping the standard editor dialog and response contract.

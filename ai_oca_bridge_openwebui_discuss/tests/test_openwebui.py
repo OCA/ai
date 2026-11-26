@@ -143,7 +143,7 @@ class TestOpenWebUI(common.TransactionCase):
 
     def _uuid_patch(self):
         return mock.patch(
-            "odoo.addons.ai_oca_bridge_openwebui.models.ai_bridge_execution.uuid.uuid4",
+            "odoo.addons.ai_oca_bridge_openwebui_discuss.models.ai_bridge_execution.uuid.uuid4",
             side_effect=["assistant-1", "user-1", "session-1"] * 10,
         )
 
@@ -290,13 +290,15 @@ class TestOpenWebUI(common.TransactionCase):
         with self.assertRaises(ValueError):
             self._execution_for_message(message)._get_channel()
 
-    @mute_logger("odoo.addons.ai_oca_bridge_openwebui.models.ai_bridge_execution")
+    @mute_logger(
+        "odoo.addons.ai_oca_bridge_openwebui_discuss.models.ai_bridge_execution"
+    )
     def test_execute_handles_http_error(self):
         execution = self._execution_for_message(
             self._create_message("discuss.channel", self.chat.id, "Question")
         )
         with mock.patch(
-            "odoo.addons.ai_oca_bridge_openwebui.models.ai_bridge_execution.AiBridgeExecution._openwebui_execute_agentic",
+            "odoo.addons.ai_oca_bridge_openwebui_discuss.models.ai_bridge_execution.AiBridgeExecution._openwebui_execute_agentic",
             side_effect=requests.ConnectionError("connection failed"),
         ):
             execution._execute()

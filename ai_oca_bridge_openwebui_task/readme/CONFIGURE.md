@@ -1,0 +1,1 @@
+Install `ai_oca_bridge_openwebui`, `ai_oca_bridge_openwebui_discuss`, and this addon. Create one active bridge with **Usage: Project Task Description**, **Result Kind: Immediate**, **Result Type: No processing**, and a valid OpenWebUI model/token. Restrict its groups/domain as appropriate. The caller must have read access to the task; applying the draft requires write access.

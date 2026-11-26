@@ -87,7 +87,7 @@ class TestOpenWebUIAgentic(common.TransactionCase):
         with (
             mock.patch("requests.request", side_effect=self._request_mock(calls)),
             mock.patch(
-                "odoo.addons.ai_oca_bridge_openwebui.models.ai_bridge_execution.uuid.uuid4",
+                "odoo.addons.ai_oca_bridge_openwebui_discuss.models.ai_bridge_execution.uuid.uuid4",
                 side_effect=["assistant-1", "user-1", "session-1"],
             ),
         ):
@@ -129,7 +129,7 @@ class TestOpenWebUIAgentic(common.TransactionCase):
         with (
             mock.patch("requests.request", side_effect=self._request_mock(calls)),
             mock.patch(
-                "odoo.addons.ai_oca_bridge_openwebui.models.ai_bridge_execution.uuid.uuid4",
+                "odoo.addons.ai_oca_bridge_openwebui_discuss.models.ai_bridge_execution.uuid.uuid4",
                 side_effect=["assistant-1", "user-1", "session-1"],
             ),
         ):

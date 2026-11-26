@@ -1,0 +1,1 @@
+Adds a reviewed OpenWebUI description-drafting action to Odoo project tasks. A proposed description is shown in an editable wizard and only written after the user explicitly applies it.

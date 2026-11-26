@@ -1,0 +1,1 @@
+This addon connects Odoo Discuss and eligible chatter records to OpenWebUI through the OCA AI Bridge. It packages the message hook, bounded history/context, attachment handling, and OpenWebUI agentic execution separately from the shared provider configuration.

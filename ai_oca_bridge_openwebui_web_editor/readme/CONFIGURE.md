@@ -1,0 +1,1 @@
+Install `ai_oca_bridge_openwebui` and this addon. Create exactly one active OpenWebUI bridge with **Usage: HTML Editor**, **Result Kind: Immediate**, **Result Type: No processing**, a model identifier, URL and token. Optional bridge groups restrict access. Do not put the API token in frontend assets.

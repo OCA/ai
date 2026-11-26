@@ -54,11 +54,13 @@ class AiBridge(models.Model):
         "ai.openwebui.model",
         string="OpenWebUI Model",
         ondelete="set null",
+        domain=[("active", "=", True)],
         help="Model selected from the models synchronized from OpenWebUI.",
     )
     openwebui_tool_record_ids = fields.Many2many(
         "ai.openwebui.tool",
         string="OpenWebUI Tools",
+        domain=[("active", "=", True)],
         help="Tools explicitly sent to OpenWebUI for this bridge.",
     )
 
@@ -66,15 +68,31 @@ class AiBridge(models.Model):
         for bridge in self:
             bridge._openwebui_sync_endpoint("/api/models", "models")
             bridge._openwebui_sync_endpoint("/api/v1/tools/", "tools")
+            if not bridge.openwebui_model_id:
+                first_model = self.env["ai.openwebui.model"].search(
+                    [("active", "=", True)], order="id", limit=1
+                )
+                if first_model:
+                    bridge.write(
+                        {
+                            "openwebui_model_id": first_model.id,
+                            "openwebui_model": first_model.external_id,
+                        }
+                    )
         return True
 
     def _openwebui_sync_endpoint(self, path, kind):
         self.ensure_one()
         if not self.url:
             raise UserError(_("Set the OpenWebUI URL before synchronizing."))
-        if not self.auth_token:
-            raise UserError(_("Set the OpenWebUI API token before synchronizing."))
-        base_url = self.url.split("/api/")[0].rstrip("/")
+        if self.auth_type != "token" or not self.auth_token:
+            raise UserError(
+                _(
+                    "Select Token Authentication and set the OpenWebUI API "
+                    "token before synchronizing."
+                )
+            )
+        base_url = self.url.split("/api/", 1)[0].rstrip("/")
         response = requests.get(
             f"{base_url}{path}",
             headers={"Authorization": f"Bearer {self.auth_token}"},

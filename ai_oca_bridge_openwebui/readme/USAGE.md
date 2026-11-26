@@ -1,57 +1,11 @@
 ## Responsibilities
 
-This module connects an Odoo AI user to OpenWebUI through OpenWebUI's
-server-side chat flow.
+Odoo stores bridge configuration, checks the invoking user's permissions, and supplies only the context needed by the selected integration. OpenWebUI handles the configured model, knowledge bases, tools, and provider-specific behavior.
 
-Odoo remains responsible for:
+## Integration behavior
 
-- users and access rights;
-- Discuss channels and mentions;
-- any `mail.thread` record, including tasks and notes;
-- local record and chatter context;
-- posting the final assistant answer back to the originating record.
+- Discuss/chatter requests are handled by `ai_oca_bridge_openwebui_discuss` and posted back as the configured AI user.
+- Project task descriptions are drafted through a review wizard by `ai_oca_bridge_openwebui_task`; the task is not updated until a user applies the draft.
+- HTML editor requests are handled by `ai_oca_bridge_openwebui_web_editor`; it returns the plain-text response expected by Odoo's editor.
 
-OpenWebUI remains responsible for:
-
-- model execution and system prompts;
-- web search and agentic tools;
-- knowledge bases and RAG;
-- provider-specific reasoning and sources.
-
-## Request flow
-
-For each eligible chatter message, Odoo:
-
-1. identifies the originating `mail.message` and its target model/record;
-2. builds a bounded history of previous chatter comments;
-3. adds explicit record identity, description, dates, authors and message IDs;
-4. creates an OpenWebUI conversation and submits the server-side chat request;
-5. waits for the final assistant message;
-6. posts the answer back to the originating Discuss channel, task or other
-   supported `mail.thread` record.
-
-`History Size` applies to all supported chatter records, not only Discuss.
-It limits the number of previous user exchanges included in the request.
-
-The bridge does not execute OpenWebUI tools in Odoo. OpenWebUI remains the
-runtime for model execution and external tools.
-
-## Context and references
-
-The current Odoo record is the authoritative target. A mention such as
-`/odoo/res.partner/<id>` is only a linked contact reference and must not be
-mistaken for the task or record in which the assistant was called.
-
-History entries include their Odoo message ID, date, author and content so the
-assistant can answer questions about the latest note reliably.
-
-## Conversation retention
-
-When **Keep OpenWebUI Conversation** is enabled, the OpenWebUI conversation is
-kept for review. When disabled, the temporary conversation is deleted after
-processing when possible.
-
-## Errors and timeouts
-
-A failed request, timeout or empty answer is recorded on the bridge execution
-and is not posted as an assistant answer.
+Each integration has its own bridge usage and context policy. The OpenWebUI API token is used only by server-side Odoo code and is never sent to the browser.

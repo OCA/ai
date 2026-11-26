@@ -1,19 +1,9 @@
-This module connects an Odoo AI user to OpenWebUI through OpenWebUI's
-server-side chat flow.
+This module provides the shared OpenWebUI provider layer for OCA AI Bridge: server-side credentials, model/tool catalog synchronization, and a reusable non-streaming chat-completion helper.
 
-It extends the OCA modules `ai_oca_bridge` and `ai_oca_bridge_chatter` with an
-**OpenWebUI Chat** bridge payload.
+Use a separate integration addon for each Odoo use case:
 
-The integration deliberately separates responsibilities:
+- `ai_oca_bridge_openwebui_discuss` for Discuss and chatter;
+- `ai_oca_bridge_openwebui_task` for project-task description drafting;
+- `ai_oca_bridge_openwebui_web_editor` for the HTML editor's AI text tools.
 
-- Odoo manages users, access rights, Discuss channels, mentions, Odoo records,
-  chatter history and the final answer posted back to the originating record.
-- OpenWebUI manages model execution, prompts, web search, tools, knowledge
-  bases, sources and provider-specific reasoning output.
-
-The bridge supports any eligible `mail.thread` record, including Discuss
-channels, conversations, tasks and notes. It sends a bounded, enriched context
-containing the current record identity and dated chatter history, then posts the
-final assistant answer back to the same Odoo record.
-
-The Odoo module is a transport and context adapter.
+OpenWebUI remains responsible for model execution and provider-specific behavior. This base addon does not send business records to an LLM by itself.

@@ -3,17 +3,14 @@
 
 {
     "name": "AI OCA Bridge OpenWebUI",
-    "summary": "Use OpenWebUI models and external tools in OCA chatter bridges",
-    "version": "18.0.2.0.0",
+    "summary": "OpenWebUI provider and shared OCA AI Bridge configuration",
+    "version": "18.0.3.0.0",
     "license": "AGPL-3",
     "author": "Sébastien Couratin, Semper Connect, Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/ai",
     "category": "AI",
     "development_status": "Alpha",
-    "depends": [
-        "ai_oca_bridge",
-        "ai_oca_bridge_chatter",
-    ],
+    "depends": ["ai_oca_bridge"],
     "data": [
         "security/ir.model.access.csv",
         "views/ai_bridge.xml",
