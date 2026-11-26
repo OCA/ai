@@ -6,7 +6,7 @@ from unittest import mock
 import requests
 
 from odoo.exceptions import UserError, ValidationError
-from odoo.tests import common
+from odoo.tests import common, mute_logger
 
 
 class TestOpenWebUIClient(common.TransactionCase):
@@ -81,6 +81,7 @@ class TestOpenWebUIClient(common.TransactionCase):
         with self.assertRaisesRegex(UserError, "basic authentication is incomplete"):
             self.bridge._openwebui_request("GET", "/api/models")
 
+    @mute_logger("odoo.addons.ai_oca_bridge_openwebui.models.openwebui_client")
     def test_http_error_is_wrapped_without_leaking_credentials(self):
         with mock.patch(
             "requests.request", side_effect=requests.ConnectionError("private url")
@@ -88,6 +89,7 @@ class TestOpenWebUIClient(common.TransactionCase):
             with self.assertRaisesRegex(UserError, "could not generate a response"):
                 self.bridge._openwebui_chat_completion([])
 
+    @mute_logger("odoo.addons.ai_oca_bridge_openwebui.models.openwebui_client")
     def test_empty_and_malformed_responses_are_reported(self):
         with mock.patch("requests.request", return_value=self._response("  ")):
             with self.assertRaisesRegex(UserError, "empty response"):

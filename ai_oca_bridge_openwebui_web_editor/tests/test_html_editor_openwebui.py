@@ -7,7 +7,7 @@ from unittest.mock import Mock, patch
 import requests
 
 from odoo.exceptions import AccessError, UserError
-from odoo.tests import TransactionCase, new_test_user, tagged
+from odoo.tests import TransactionCase, mute_logger, new_test_user, tagged
 
 from odoo.addons.ai_oca_bridge_openwebui_web_editor.controllers.main import (
     HtmlEditorOpenWebUI,
@@ -37,9 +37,19 @@ class TestHtmlEditorOpenWebUI(TransactionCase):
 
     def _call_route(self, prompt, history, env=None):
         request_proxy = SimpleNamespace(env=env or self.env)
-        with patch(
-            "odoo.addons.ai_oca_bridge_openwebui_web_editor.controllers.main.request",
-            request_proxy,
+        with (
+            patch(
+                "odoo.addons.ai_oca_bridge_openwebui_web_editor.controllers.main.request",
+                request_proxy,
+            ),
+            patch(
+                "odoo.addons.ai_oca_bridge_openwebui_web_editor.controllers.main._",
+                side_effect=lambda source, *args, **kwargs: source,
+            ),
+            patch(
+                "odoo.addons.ai_oca_bridge_openwebui.models.openwebui_client._",
+                side_effect=lambda source, *args, **kwargs: source,
+            ),
         ):
             return HtmlEditorOpenWebUI.generate_text.__wrapped__(
                 HtmlEditorOpenWebUI(), prompt, history
@@ -131,6 +141,7 @@ class TestHtmlEditorOpenWebUI(TransactionCase):
         with self.assertRaisesRegex(UserError, "must not be restricted"):
             self._call_route("Write", [])
 
+    @mute_logger("odoo.addons.ai_oca_bridge_openwebui.models.openwebui_client")
     def test_openwebui_failure_is_not_sent_to_parent_provider(self):
         with patch(
             "requests.request", side_effect=requests.ConnectionError("unavailable")
