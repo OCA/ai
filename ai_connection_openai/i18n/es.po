@@ -1,0 +1,68 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ai_connection_openai
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-24 23:58+0000\n"
+"PO-Revision-Date: 2026-11-24 23:58+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#. module: ai_connection_openai
+#: model:ir.model.fields,field_description:ai_connection_openai.field_ai_connection__openai_api_key_env
+msgid "API Key Environment Variable"
+msgstr "Variable de entorno de la clave"
+
+#. module: ai_connection_openai
+#: model:ir.model.fields,help:ai_connection_openai.field_ai_connection__openai_api_key_env
+msgid ""
+"Name of an environment variable of the Odoo server holding the API key. When"
+" set, the key is read from it on every call and the stored API Key is "
+"ignored, so the key never enters the database. The server configuration must"
+" allow the name (option ai_connection_openai_env_allowlist)."
+msgstr ""
+"Nombre de una variable de entorno del servidor de Odoo que tiene la clave. "
+"Si está cargado, la clave se lee de ahí en cada llamada y se ignora la "
+"clave guardada, así nunca entra a la base de datos. La configuración del "
+"servidor tiene que permitir ese nombre (opción "
+"ai_connection_openai_env_allowlist)."
+
+#. module: ai_connection_openai
+#. odoo-python
+#: code:addons/ai_connection_openai/models/ai_connection.py:0
+msgid ""
+"The API key in %(var)s may only be sent over https to %(hosts)s. The URL of "
+"the AI connection %(name)s is not one of them."
+msgstr ""
+"La clave de %(var)s solo se puede mandar por https a %(hosts)s. La URL de "
+"la conexión de IA %(name)s no es una de ellas."
+
+#. module: ai_connection_openai
+#. odoo-python
+#: code:addons/ai_connection_openai/models/ai_connection.py:0
+msgid ""
+"The environment variable %(var)s is not allowed for AI connections. The "
+"server administrator must add it to the %(option)s option of the Odoo "
+"configuration file."
+msgstr ""
+"La variable de entorno %(var)s no está permitida para las conexiones de IA. "
+"El administrador del servidor tiene que agregarla a la opción %(option)s "
+"del archivo de configuración de Odoo."
+
+#. module: ai_connection_openai
+#. odoo-python
+#: code:addons/ai_connection_openai/models/ai_connection.py:0
+msgid ""
+"The environment variable %(var)s, which holds the API key of the AI "
+"connection %(name)s, is not set on the server."
+msgstr ""
+"La variable de entorno %(var)s, que tiene la clave de la conexión de IA "
+"%(name)s, no está definida en el servidor."
