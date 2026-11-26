@@ -4,7 +4,10 @@
 from types import SimpleNamespace
 from unittest.mock import Mock, patch
 
-from odoo.tests import TransactionCase, tagged
+import requests
+
+from odoo.exceptions import AccessError, UserError
+from odoo.tests import TransactionCase, new_test_user, tagged
 
 from odoo.addons.ai_oca_bridge_openwebui_web_editor.controllers.main import (
     HtmlEditorOpenWebUI,
@@ -32,6 +35,16 @@ class TestHtmlEditorOpenWebUI(TransactionCase):
             }
         )
 
+    def _call_route(self, prompt, history, env=None):
+        request_proxy = SimpleNamespace(env=env or self.env)
+        with patch(
+            "odoo.addons.ai_oca_bridge_openwebui_web_editor.controllers.main.request",
+            request_proxy,
+        ):
+            return HtmlEditorOpenWebUI.generate_text.__wrapped__(
+                HtmlEditorOpenWebUI(), prompt, history
+            )
+
     def test_route_forwards_history_and_returns_plain_text(self):
         response = Mock()
         response.raise_for_status.return_value = None
@@ -46,9 +59,8 @@ class TestHtmlEditorOpenWebUI(TransactionCase):
             ),
             patch("requests.request", return_value=response) as request_mock,
         ):
-            controller = HtmlEditorOpenWebUI()
             result = HtmlEditorOpenWebUI.generate_text.__wrapped__(
-                controller,
+                HtmlEditorOpenWebUI(),
                 "Make it professional",
                 [{"role": "system", "content": "Keep the original meaning."}],
             )
@@ -78,3 +90,50 @@ class TestHtmlEditorOpenWebUI(TransactionCase):
             )
         self.assertEqual(result, "parent-provider")
         parent.assert_called_once_with("Draft text", [])
+
+    def test_invalid_prompt_and_conversation_are_rejected(self):
+        for prompt in ("  ", 3):
+            with self.assertRaises(UserError):
+                self._call_route(prompt, [])
+        for history in (
+            None,
+            [{"role": "tool", "content": "unsupported"}],
+            [{"role": "user", "content": 5}],
+            [{"role": "user", "content": "x"}] * 41,
+            [{"role": "system", "content": "x" * 100_001}],
+        ):
+            with self.assertRaises(UserError):
+                self._call_route("Write", history)
+
+    def test_non_internal_users_cannot_use_editor_generation(self):
+        portal_user = new_test_user(
+            self.env, login="web-editor-portal", groups="base.group_portal"
+        )
+        with self.assertRaises(AccessError):
+            self._call_route("Write", [], env=self.env(user=portal_user))
+
+    def test_ambiguous_group_or_model_configuration_is_rejected(self):
+        second_bridge = self.bridge.copy({"name": "Second HTML Editor bridge"})
+        with self.assertRaisesRegex(UserError, "exactly one active"):
+            self._call_route("Write", [])
+        second_bridge.unlink()
+
+        restricted_group = self.env["res.groups"].create({"name": "HTML AI restricted"})
+        self.bridge.group_ids = [(6, 0, [restricted_group.id])]
+        with self.assertRaises(AccessError):
+            self._call_route("Write", [])
+        self.bridge.group_ids = False
+
+        partner_model = self.env["ir.model"].search(
+            [("model", "=", "res.partner")], limit=1
+        )
+        self.bridge.model_id = partner_model
+        with self.assertRaisesRegex(UserError, "must not be restricted"):
+            self._call_route("Write", [])
+
+    def test_openwebui_failure_is_not_sent_to_parent_provider(self):
+        with patch(
+            "requests.request", side_effect=requests.ConnectionError("unavailable")
+        ):
+            with self.assertRaisesRegex(UserError, "could not generate a response"):
+                self._call_route("Write", [])
