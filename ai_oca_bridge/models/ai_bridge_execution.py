@@ -217,5 +217,6 @@ class AiBridgeExecution(models.Model):
 
     def _get_channel(self):
         if self.model_id and self.res_id:
-            return self.env[self.model_id.model].browse(self.res_id)
+            # The result is processed as the bridge user, who may not read ir.model.
+            return self.env[self.sudo().model_id.model].browse(self.res_id)
         return None
