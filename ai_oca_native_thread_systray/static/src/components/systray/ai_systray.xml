@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2026 Pierre Verkest
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).  -->
+<templates xml:space="preserve">
+    <t t-name="ai_oca_native_thread_systray.AiSystray">
+        <div class="o_ai_systray position-relative d-flex align-items-center me-2">
+            <button
+                class="o_nav_entry dropdown-toggle o-no-caret p-2 border-0 bg-transparent text-reset position-relative"
+                t-on-click="toggleDropdown"
+                title="AI Active Tasks &amp; Conversations"
+                aria-label="AI Conversations"
+                type="button"
+            >
+                <i class="fa fa-brain-ai fa-lg" />
+                <span
+                    t-if="state.totalPending > 0"
+                    class="badge rounded-pill bg-danger position-absolute top-0 start-100 translate-middle"
+                    t-esc="state.totalPending"
+                />
+            </button>
+
+            <div
+                t-if="state.isOpen"
+                class="o_ai_systray_dropdown dropdown-menu show position-absolute end-0 top-100 mt-2 p-0 shadow-lg rounded"
+                style="min-width: 320px; max-width: 400px; z-index: 1050;"
+            >
+                <div
+                    class="d-flex align-items-center justify-content-between px-3 py-2 border-bottom bg-light"
+                >
+                    <span class="fw-bold text-dark d-flex align-items-center">
+                        <i class="fa fa-brain-ai me-1" />
+                        AI Tasks &amp; Threads
+                    </span>
+                    <button
+                        class="btn btn-sm btn-link text-muted p-0"
+                        t-on-click="loadActiveThreads"
+                        title="Refresh"
+                    >
+                        <i class="fa fa-refresh" />
+                    </button>
+                </div>
+
+                <div
+                    class="o_ai_systray_thread_list overflow-auto"
+                    style="max-height: 350px;"
+                >
+                    <t t-if="state.threads.length === 0">
+                        <div class="p-3 text-center text-muted">
+                            No active or recent AI conversations.
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <t t-foreach="state.threads" t-as="thread" t-key="thread.id">
+                            <a
+                                href="#"
+                                class="dropdown-item d-flex flex-column py-2 px-3 border-bottom text-wrap"
+                                t-on-click.prevent="() => this.openThreadRecord(thread)"
+                            >
+                                <div
+                                    class="d-flex align-items-center justify-content-between mb-1"
+                                >
+                                    <span
+                                        class="fw-bold text-truncate"
+                                        style="max-width: 220px;"
+                                        t-esc="thread.record_name"
+                                    />
+                                    <span
+                                        class="badge ms-1"
+                                        t-att-class="{
+                                        'bg-warning text-dark': thread.status === 'processing',
+                                        'bg-success': thread.status === 'done',
+                                        'bg-danger': thread.status === 'cancel' || thread.status === 'error'
+                                    }"
+                                    >
+                                        <i
+                                            t-if="thread.status === 'processing'"
+                                            class="fa fa-spinner fa-spin me-1"
+                                        />
+                                        <i
+                                            t-if="thread.status === 'done'"
+                                            class="fa fa-check me-1"
+                                        />
+                                        <i
+                                            t-if="thread.status === 'cancel' || thread.status === 'error'"
+                                            class="fa fa-exclamation-triangle me-1"
+                                        />
+                                        <t t-esc="thread.status" />
+                                    </span>
+                                </div>
+                                <div
+                                    class="small text-muted text-truncate"
+                                    t-esc="thread.name"
+                                />
+                                <div
+                                    t-if="thread.last_content"
+                                    class="small text-secondary text-truncate mt-1"
+                                    style="max-width: 320px;"
+                                    t-esc="thread.last_content"
+                                />
+                            </a>
+                        </t>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

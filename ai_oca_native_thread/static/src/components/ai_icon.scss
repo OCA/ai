@@ -1,0 +1,32 @@
+/* Copyright 2026 Pierre Verkest
+ * License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).  */
+
+.o_ai_icon,
+.fa.fa-brain-ai,
+i.fa-brain-ai {
+    display: inline-block;
+    width: 1.25em;
+    height: 1.25em;
+    background-color: currentColor;
+    mask: url(/ai_oca_native_thread/static/src/img/ai_brain.svg) no-repeat center /
+        contain;
+    -webkit-mask: url(/ai_oca_native_thread/static/src/img/ai_brain.svg) no-repeat
+        center / contain;
+    vertical-align: middle;
+}
+
+.fa.fa-brain-ai.fa-lg,
+i.fa-brain-ai.fa-lg {
+    width: 1.45em;
+    height: 1.45em;
+}
+
+/* Ensure bright white icon rendering in top main navbar */
+.o_main_navbar,
+.o_navbar {
+    .o_ai_icon,
+    .fa-brain-ai {
+        background-color: #ffffff !important;
+        color: #ffffff !important;
+    }
+}

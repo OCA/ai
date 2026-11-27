@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ai_thread_user,ai.thread.user,model_ai_thread,base.group_user,1,1,1,1
+access_ai_message_user,ai.message.user,model_ai_message,base.group_user,1,1,1,1
+access_ai_task_thread_user,ai.task.thread.user,model_ai_task_thread,base.group_user,1,1,1,1
+access_ai_task_message_user,ai.task.message.user,model_ai_task_message,base.group_user,1,1,1,1

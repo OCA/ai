@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Pierre Verkest
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).  -->
+<odoo>
+    <record id="view_ai_agent_form_inherit_tool" model="ir.ui.view">
+        <field name="name">ai.agent.form.inherit.tool</field>
+        <field name="model">ai.agent</field>
+        <field name="inherit_id" ref="ai_oca_native_agent.view_ai_agent_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <notebook>
+                    <page string="Allowed Tools" name="allowed_tools">
+                        <field name="tool_ids" widget="many2many_tags" />
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Pierre Verkest
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).  -->
+<odoo>
+    <record id="view_ai_prompt_template_form" model="ir.ui.view">
+        <field name="name">ai.prompt.template.form</field>
+        <field name="model">ai.prompt.template</field>
+        <field name="arch" type="xml">
+            <form string="AI Prompt Template">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Prompt Name" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="code" />
+                            <field name="prompt_type" />
+                        </group>
+                        <group>
+                            <field name="active" widget="boolean_toggle" />
+                        </group>
+                    </group>
+                    <group
+                        string="Context Injection Options"
+                        name="context_injection_options"
+                    >
+                        <group>
+                            <field name="include_record_data" widget="boolean_toggle" />
+                            <field
+                                name="include_record_chatter"
+                                widget="boolean_toggle"
+                            />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="QWeb Template Text" name="template_text">
+                            <field
+                                name="template_text"
+                                widget="ace"
+                                options="{'mode': 'xml'}"
+                                placeholder="Enter QWeb template prompt here..."
+                            />
+                        </page>
+                        <page
+                            string="Available Context Variables"
+                            name="help_variables"
+                        >
+                            <div class="alert alert-info" role="alert">
+                                <strong>Available QWeb Evaluation Variables</strong>
+                                <table
+                                    class="table table-sm table-bordered mt-2 bg-white"
+                                >
+                                    <thead>
+                                        <tr>
+                                            <th>Variable</th>
+                                            <th>Description</th>
+                                            <th>Example QWeb Usage</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <code>content</code>
+                                            </td>
+                                            <td
+                                            >User prompt content or message payload passed to the template</td>
+                                            <td>
+                                                <code>&lt;t t-out="content"/&gt;</code>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code>record</code>
+                                            </td>
+                                            <td
+                                            >Active Odoo record (when thread is contextualized on a model)</td>
+                                            <td>
+                                                <code
+                                                >&lt;t t-if="record"&gt;&lt;t t-out="record.display_name"/&gt;&lt;/t&gt;</code>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>res_model</code> / <code
+                                            >res_id</code></td>
+                                            <td
+                                            >Model name and record ID of the active record</td>
+                                            <td>
+                                                <code
+                                                >&lt;t t-out="res_model"/&gt;</code>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <code>record_context</code>
+                                            </td>
+                                            <td
+                                            >JSON serialization of record fields (when Include Record Data is enabled)</td>
+                                            <td>
+                                                <code
+                                                >&lt;t t-if="record_context"&gt;&lt;t t-out="record_context"/&gt;&lt;/t&gt;</code>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>chatter_messages</code> / <code
+                                            >record_chatter</code></td>
+                                            <td
+                                            >Recent chatter history content (when Include Chatter History is enabled)</td>
+                                            <td>
+                                                <code
+                                                >&lt;t t-if="chatter_messages"&gt;&lt;t t-out="chatter_messages"/&gt;&lt;/t&gt;</code>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><code>user</code> / <code
+                                            >company</code> / <code>lang</code></td>
+                                            <td
+                                            >Current user record, current company, and preferred language</td>
+                                            <td>
+                                                <code
+                                                >&lt;t t-out="user.name"/&gt; (&lt;t t-out="lang"/&gt;)</code>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ai_prompt_template_list" model="ir.ui.view">
+        <field name="name">ai.prompt.template.list</field>
+        <field name="model">ai.prompt.template</field>
+        <field name="arch" type="xml">
+            <list string="AI Prompt Templates">
+                <field name="name" />
+                <field name="code" />
+                <field name="prompt_type" />
+                <field name="active" widget="boolean_toggle" />
+            </list>
+        </field>
+    </record>
+
+    <record id="action_ai_prompt_template" model="ir.actions.act_window">
+        <field name="name">AI Prompt Templates</field>
+        <field name="res_model">ai.prompt.template</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem
+        id="menu_ai_prompt_template"
+        name="Prompt Templates"
+        parent="ai_oca_native_base.menu_ai_oca_native_root"
+        action="action_ai_prompt_template"
+        groups="ai_oca_native_base.group_ai_admin"
+        sequence="20"
+    />
+</odoo>

@@ -1,6 +1,8 @@
 # Copyright 2026 Dixmit
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
+from unittest.mock import MagicMock, patch
+
 from freezegun import freeze_time
 
 from odoo.tests.common import TransactionCase
@@ -47,3 +49,11 @@ class TestAiTool(TransactionCase):
         tool.kind = "record"
         with self.assertRaises(ValueError):
             tool._execute_tool(message="Hello World", record=self.partner)
+
+    def test_post_message_tool_with_markdown(self):
+        tool = self.env.ref("ai_tool.post_message")
+        mock_md = MagicMock()
+        mock_md.markdown.return_value = "<p>Hello <strong>World</strong></p>"
+        with patch("odoo.addons.ai_tool.models.ai_tool.markdown", mock_md):
+            res = tool._ai_post_message_parse_body("**Hello World**")
+            self.assertIn("Hello", res)
