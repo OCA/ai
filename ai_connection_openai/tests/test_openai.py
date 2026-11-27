@@ -109,3 +109,9 @@ class TestOpenai(TransactionCase):
             )
             self.assertEqual(result[0], "The answer is 3.")
             mock_client.assert_called_once()
+            create = mock_client.return_value.chat.completions.create
+            content = create.call_args.kwargs["messages"][-1]["content"]
+            self.assertEqual(
+                content[-1]["file"]["file_data"],
+                f"data:application/pdf;base64,{attachment.datas.decode()}",
+            )
