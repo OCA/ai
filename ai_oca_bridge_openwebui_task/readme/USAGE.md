@@ -1,0 +1,1 @@
+The request includes the task title, existing description, project, deadline, assignees and tags. The model is instructed not to invent facts. Its response is converted from plain text to safe HTML and presented for review; it does not overwrite the task automatically.

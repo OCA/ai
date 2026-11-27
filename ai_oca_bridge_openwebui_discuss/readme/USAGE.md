@@ -1,0 +1,1 @@
+Odoo supplies the current chatter message, bounded prior history, selected record context, and eligible attachments. OpenWebUI executes the configured model and tools. The final assistant response is posted to the originating chatter by the configured internal AI user. This addon owns chatter behavior; the base provider addon owns connection/model configuration.

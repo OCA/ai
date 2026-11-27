@@ -1,0 +1,28 @@
+<odoo>
+    <record id="view_openwebui_task_description_wizard_form" model="ir.ui.view">
+        <field name="name">ai.oca.bridge.openwebui.task.description.wizard.form</field>
+        <field name="model">ai.oca.bridge.openwebui.task.description.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Review AI Description">
+                <group>
+                    <field name="task_id" />
+                    <field
+                        name="description"
+                        type="html"
+                        widget="html"
+                        options="{'collaborative': false}"
+                    />
+                </group>
+                <footer>
+                    <button
+                        name="action_apply"
+                        type="object"
+                        string="Apply to Task"
+                        class="btn-primary"
+                    />
+                    <button string="Cancel" special="cancel" class="btn-secondary" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

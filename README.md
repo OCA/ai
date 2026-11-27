@@ -145,6 +145,10 @@ addon | version | maintainers | summary
 [ai_oca_bridge_chatter](ai_oca_bridge_chatter/) | 18.0.2.0.0 |  | Integrate a Bridge with a user that will use it on chatter
 [ai_oca_bridge_document_page](ai_oca_bridge_document_page/) | 18.0.1.0.0 |  | Adds Documents synchronization using AI Bridges
 [ai_oca_bridge_extra_parameters](ai_oca_bridge_extra_parameters/) | 18.0.1.0.1 | <a href='https://github.com/arielbarreiros96'><img src='https://github.com/arielbarreiros96.png' width='32' height='32' style='border-radius:50%;' alt='arielbarreiros96'/></a> | Adds extra parameters to the AI OCA Bridge payload.
+[ai_oca_bridge_openwebui](ai_oca_bridge_openwebui/) | 18.0.3.0.0 |  | OpenWebUI provider and shared OCA AI Bridge configuration
+[ai_oca_bridge_openwebui_discuss](ai_oca_bridge_openwebui_discuss/) | 18.0.1.0.0 |  | Use OpenWebUI as the assistant for Odoo Discuss and chatter
+[ai_oca_bridge_openwebui_task](ai_oca_bridge_openwebui_task/) | 18.0.1.0.0 |  | Draft project task descriptions through OpenWebUI
+[ai_oca_bridge_openwebui_web_editor](ai_oca_bridge_openwebui_web_editor/) | 18.0.1.0.0 |  | Route Odoo HTML editor text assistance to OpenWebUI
 [ai_oca_native_generate_ollama](ai_oca_native_generate_ollama/) | 18.0.1.0.0 |  | This module replaces AI from html_editor to use an Ollama server instead of OpenAI through Odoo IAP.
 [ai_tool](ai_tool/) | 18.0.1.0.1 |  | We want to generate some specific AI Tools that might be used in other places, like MCP or native.
 
