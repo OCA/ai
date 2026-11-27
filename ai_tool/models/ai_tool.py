@@ -34,6 +34,12 @@ class AiTool(models.Model):
         required=True,
         default="record",
     )
+    read_only = fields.Boolean(
+        readonly=True,
+        help="The tool only reads data and has no side effects. "
+        "Exposed as the MCP readOnlyHint annotation. Tools are considered "
+        "to modify data unless they are explicitly flagged.",
+    )
 
     def _get_tool_definition(self):
         # model_id points to ir.model, which non-admin users cannot read.
@@ -45,6 +51,7 @@ class AiTool(models.Model):
             "description": self.description,
             "inputSchema": func._ai_tool["input_schema"],
             "outputSchema": func._ai_tool["output_schema"],
+            "annotations": {"readOnlyHint": self.read_only},
         }
 
     @aitool(

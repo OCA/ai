@@ -17,6 +17,14 @@ class TestAiTool(TransactionCase):
         self.assertEqual(definition["inputSchema"]["type"], "object")
         self.assertEqual(definition["outputSchema"]["type"], "object")
 
+    def test_tool_read_only_annotation(self):
+        """Read-only tools are announced as such (MCP readOnlyHint); any
+        other tool is considered to modify data."""
+        definition = self.env.ref("ai_tool.current_date")._get_tool_definition()
+        self.assertTrue(definition["annotations"]["readOnlyHint"])
+        definition = self.env.ref("ai_tool.post_message")._get_tool_definition()
+        self.assertFalse(definition["annotations"]["readOnlyHint"])
+
     def test_get_date_tool(self):
         with freeze_time("2024-01-01"):
             tool = self.env.ref("ai_tool.current_date")
