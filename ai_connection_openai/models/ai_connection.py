@@ -74,7 +74,8 @@ class OpenaiClient(AiConnectionClient):
                         "type": "file",
                         "file": {
                             "filename": file["name"],
-                            "file_data": file["content"],
+                            "file_data": f"data:{file['mimetype']};base64,"
+                            f"{file['content']}",
                         },
                     }
                 )
