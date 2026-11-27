@@ -5,5 +5,6 @@ from . import test_openwebui
 from . import test_openwebui_agentic
 from . import test_openwebui_attachments
 from . import test_openwebui_features
+from . import test_openwebui_edge_cases
 from . import test_openwebui_multi_context
 from . import test_openwebui_web_search

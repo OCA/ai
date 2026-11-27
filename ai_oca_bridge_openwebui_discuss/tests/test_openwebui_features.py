@@ -2,6 +2,7 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 import base64
+from unittest import mock
 
 from odoo.tests import common, new_test_user
 
@@ -97,6 +98,41 @@ class TestOpenWebUIFeatures(common.TransactionCase):
             self.assertIn("date=", contents[(index - 2) * 2])
             self.assertIn("author=", contents[(index - 2) * 2])
         self.assertEqual(contents[-1], "Question actuelle")
+
+    def test_mail_thread_invokes_bridge_for_non_discuss_records(self):
+        record = self.env["res.partner"].sudo().create({"name": "Chatter record"})
+        execution_path = (
+            "odoo.addons.ai_oca_bridge_openwebui_discuss.models."
+            "ai_bridge_execution.AiBridgeExecution._execute"
+        )
+        with mock.patch(execution_path, return_value={}) as execute:
+            message = record.sudo().message_post(
+                body="Please summarize this partner.",
+                message_type="comment",
+                partner_ids=[self.ai_user.partner_id.id],
+            )
+        self.assertEqual(message.model, "res.partner")
+        self.assertEqual(message.message_type, "comment")
+        self.assertIn(self.ai_user.partner_id, message.partner_ids)
+        self.assertTrue(self.bridge._openwebui_target_matches(message))
+        self.assertTrue(self.bridge._enabled_for(record))
+        self.assertEqual(execute.call_count, 1)
+
+    def test_mail_thread_skips_unaddressed_and_internal_responses(self):
+        record = (
+            self.env["res.partner"].sudo().create({"name": "No assistant recipient"})
+        )
+        execution_path = (
+            "odoo.addons.ai_oca_bridge_openwebui_discuss.models."
+            "ai_bridge_execution.AiBridgeExecution._execute"
+        )
+        with mock.patch(execution_path) as execute:
+            record.sudo().message_post(body="Ordinary note")
+            record.sudo().with_context(skip_openwebui_bridge=True).message_post(
+                body="AI response",
+                partner_ids=[self.ai_user.partner_id.id],
+            )
+        execute.assert_not_called()
 
     def test_record_context_contains_task_description_and_identity(self):
         if "project.task" not in self.env:
