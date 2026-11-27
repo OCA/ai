@@ -1,0 +1,47 @@
+.o-ai_agent-AgentSidebar-avatar {
+    width: 26px;
+    height: 26px;
+}
+
+.o-ai_agent-AgentSidebar-agent {
+    &:hover .o-ai_agent-AgentSidebar-newIcon {
+        opacity: 1;
+    }
+}
+
+.o-ai_agent-DiscussDraftAvatar {
+    width: 30px;
+    height: 30px;
+}
+
+.o-ai_agent-AgentDraft-bigAvatar {
+    width: 64px;
+    height: 64px;
+}
+
+.o-ai_agent-AgentDraft-input {
+    resize: none;
+}
+
+.o-ai_agent-AgentSystrayMenu-dropdown {
+    min-width: 280px;
+    max-width: 340px;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.o-ai_agent-AgentSystrayMenu-icon {
+    vertical-align: middle;
+}
+
+// Progress notes of the agent still in progress: "Thinking...", "⏳ ..."
+.o_ai_agent_pending {
+    font-style: italic;
+    animation: o-ai_agent-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes o-ai_agent-pulse {
+    50% {
+        opacity: 0.4;
+    }
+}

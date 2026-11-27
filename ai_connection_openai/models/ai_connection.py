@@ -88,8 +88,12 @@ class OpenaiClient(AiConnectionClient):
             temperature=self.temperature,
         )
         response_message = response.choices[0].message
+        # OpenAI-compatible servers such as llama.cpp or vLLM return the
+        # reasoning of thinking models as an extra field of the message.
+        reasoning = getattr(response_message, "reasoning_content", None)
         return {
             "message": response_message.model_dump(),
+            "reasoning": reasoning if isinstance(reasoning, str) else None,
             "tool_calls": [
                 {
                     "name": tool_call.function.name,
@@ -115,5 +119,9 @@ class AiConnection(models.Model):
 
     def _get_client_openai(self, tools):
         return OpenaiClient(
-            tools, url=self.url, model=self.model, api_key=self.openai_api_key
+            tools,
+            url=self.url,
+            model=self.model,
+            api_key=self.openai_api_key,
+            temperature=self.temperature,
         )

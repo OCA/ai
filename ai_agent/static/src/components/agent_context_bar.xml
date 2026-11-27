@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="ai_agent.AgentContextBar">
+        <div
+            class="o-ai_agent-AgentContextBar d-flex align-items-center gap-1 px-3 py-1 small border-bottom border-secondary bg-100 text-truncate"
+            t-att-title="details"
+        >
+            <i
+                t-att-class="props.resId ? 'fa fa-file-text-o' : 'fa fa-list-ul'"
+                class="text-muted"
+            />
+            <span class="text-muted">Related to:</span>
+            <a
+                href="#"
+                class="text-truncate fw-bold flex-shrink-0"
+                t-on-click.prevent="open"
+                t-esc="label"
+            />
+            <span
+                t-if="!props.resId and viewTypeLabel"
+                class="text-muted flex-shrink-0"
+            >· <t t-esc="viewTypeLabel" /></span>
+            <span t-if="details" class="text-muted text-truncate">· <t
+                t-esc="details"
+            /></span>
+        </div>
+    </t>
+</templates>

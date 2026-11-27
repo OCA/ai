@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 SDi - Ángel Moya <amoya@sdi.es>
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record model="ir.actions.act_window" id="ai_agent_act_window">
+        <field name="name">AI Agents</field>
+        <field name="res_model">ai.agent</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record model="ir.ui.menu" id="ai_agent_menu">
+        <field name="name">AI Agents</field>
+        <field name="parent_id" ref="ai_tool.ai_menu_root" />
+        <field name="action" ref="ai_agent_act_window" />
+        <field name="sequence" eval="20" />
+    </record>
+
+    <record model="ir.actions.act_window" id="ai_agent_session_act_window">
+        <field name="name">AI Agent Sessions</field>
+        <field name="res_model">ai.agent.session</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record model="ir.ui.menu" id="ai_agent_session_menu">
+        <field name="name">AI Agent Sessions</field>
+        <field name="parent_id" ref="ai_tool.ai_menu_root" />
+        <field name="action" ref="ai_agent_session_act_window" />
+        <field name="sequence" eval="21" />
+    </record>
+</odoo>

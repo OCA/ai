@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="ai_agent.AgentHistoryDialog">
+        <Dialog
+            title="props.agent.name"
+            size="'md'"
+            footer="false"
+            contentClass="'o-ai_agent-AgentHistoryDialog'"
+        >
+            <input
+                class="form-control o-ai_agent-AgentHistoryDialog-search mb-3"
+                type="search"
+                placeholder="Search conversations…"
+                t-model="state.term"
+                t-on-input="onInput"
+                autofocus="autofocus"
+            />
+            <div class="list-group">
+                <button
+                    t-foreach="state.sessions"
+                    t-as="session"
+                    t-key="session.id"
+                    class="o-ai_agent-AgentHistoryDialog-session list-group-item list-group-item-action d-flex align-items-center gap-2"
+                    t-on-click="() => this.open(session)"
+                >
+                    <i
+                        t-att-class="session.res_model ? 'fa fa-file-text-o' : 'fa fa-comments-o'"
+                        class="text-muted"
+                    />
+                    <div class="d-flex flex-column flex-grow-1 text-truncate">
+                        <span class="text-truncate fw-bold" t-esc="session.name" />
+                        <span
+                            t-if="session.res_name"
+                            class="small text-muted text-truncate"
+                            t-esc="session.res_name"
+                        />
+                    </div>
+                    <span
+                        class="small text-muted text-nowrap"
+                        t-esc="formatDate(session.last_activity)"
+                    />
+                </button>
+            </div>
+            <div
+                t-if="!state.loading and !state.sessions.length"
+                class="text-muted text-center py-3"
+            >No conversations found.</div>
+            <div class="d-flex justify-content-center mt-2">
+                <button
+                    t-if="state.sessions.length lt state.count"
+                    class="btn btn-link o-ai_agent-AgentHistoryDialog-loadMore"
+                    t-att-disabled="state.loading"
+                    t-on-click="() => this.search({ append: true })"
+                >Load more</button>
+                <i
+                    t-if="state.loading"
+                    class="fa fa-circle-o-notch fa-spin text-muted"
+                />
+            </div>
+        </Dialog>
+    </t>
+</templates>

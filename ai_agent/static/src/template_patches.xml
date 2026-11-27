@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Discuss" t-inherit-mode="extension">
+        <xpath
+            expr="//div[hasclass('o-mail-Discuss-header')]/t[@t-if='thread']"
+            position="after"
+        >
+            <t t-elif="aiAgentDraft">
+                <img
+                    t-if="aiAgentDraftAgent"
+                    class="o-ai_agent-DiscussDraftAvatar rounded o_object_fit_cover align-self-center my-2 me-2"
+                    t-att-src="'/web/image/res.partner/' + aiAgentDraftAgent.partner_id + '/avatar_128'"
+                    alt="Agent"
+                />
+                <div
+                    class="d-flex flex-grow-1 align-self-center align-items-center h-100 py-2"
+                >
+                    <span
+                        class="fw-bolder text-dark fs-4 ms-1"
+                        t-esc="aiAgentDraftAgent?.name"
+                    />
+                    <span class="text-muted ms-2">New conversation</span>
+                </div>
+            </t>
+        </xpath>
+        <xpath
+            expr="//div[hasclass('o-mail-Discuss-threadAvatar')]"
+            position="attributes"
+        >
+            <attribute
+                name="t-if"
+            >['channel', 'group', 'chat', 'ai_agent'].includes(thread.channel_type)</attribute>
+        </xpath>
+        <xpath
+            expr="//div[hasclass('o-mail-Discuss-threadAvatar')]/FileUploader"
+            position="attributes"
+        >
+            <attribute
+                name="t-if"
+            >!thread.parent_channel_id and thread.is_editable and !['chat', 'ai_agent'].includes(thread.channel_type)</attribute>
+        </xpath>
+        <xpath
+            expr="//div[hasclass('o-mail-Discuss-threadContainer')]/t[@name='thread']"
+            position="before"
+        >
+            <AgentContextBar
+                t-if="thread.channel_type === 'ai_agent' and thread.ai_res_model"
+                resModel="thread.ai_res_model"
+                resId="thread.ai_res_id"
+                resName="thread.ai_res_display_name"
+                viewContext="thread.ai_context"
+            />
+        </xpath>
+        <xpath expr="//t[@name='core-content']/t[@t-if='thread']" position="after">
+            <t t-elif="aiAgentDraft">
+                <AgentDraft
+                    draft="aiAgentDraft"
+                    t-key="aiAgentDraft.agentId + '_' + (aiAgentDraft.resId or 0)"
+                />
+            </t>
+        </xpath>
+    </t>
+
+    <t t-inherit="mail.ChatWindow" t-inherit-mode="extension">
+        <xpath expr="//Thread[@isInChatWindow='true']" position="before">
+            <AgentContextBar
+                t-if="thread.channel_type === 'ai_agent' and thread.ai_res_model"
+                resModel="thread.ai_res_model"
+                resId="thread.ai_res_id"
+                resName="thread.ai_res_display_name"
+                viewContext="thread.ai_context"
+            />
+        </xpath>
+        <xpath expr="//ChannelSelector/.." position="attributes">
+            <attribute name="t-if">!thread and !props.chatWindow.aiDraft</attribute>
+        </xpath>
+        <xpath expr="//ChannelSelector/.." position="after">
+            <AgentDraft
+                t-if="!thread and props.chatWindow.aiDraft"
+                draft="props.chatWindow.aiDraft"
+                chatWindow="props.chatWindow"
+                t-key="props.chatWindow.aiDraft.agentId + '_' + (props.chatWindow.aiDraft.resId or 0)"
+            />
+        </xpath>
+    </t>
+
+    <t t-inherit="mail.DiscussSidebarCategories.category" t-inherit-mode="extension">
+        <xpath expr="//DiscussSidebarCategory" position="after">
+            <AgentSidebar t-if="category.id === aiAgentsCategoryId and category.open" />
+        </xpath>
+    </t>
+
+</templates>
