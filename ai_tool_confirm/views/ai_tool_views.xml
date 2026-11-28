@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Coopdevs
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="ai_tool_form_view" model="ir.ui.view">
+        <field name="model">ai.tool</field>
+        <field name="inherit_id" ref="ai_tool.ai_tool_form_view" />
+        <field name="arch" type="xml">
+            <field name="read_only" position="after">
+                <field name="confirmation" />
+            </field>
+        </field>
+    </record>
+
+    <record id="ai_tool_list_view" model="ir.ui.view">
+        <field name="model">ai.tool</field>
+        <field name="inherit_id" ref="ai_tool.ai_tool_list_view" />
+        <field name="arch" type="xml">
+            <field name="read_only" position="after">
+                <field name="confirmation" />
+            </field>
+        </field>
+    </record>
+</odoo>

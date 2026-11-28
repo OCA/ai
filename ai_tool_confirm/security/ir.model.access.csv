@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ai_tool_request_user,access_ai_tool_request_user,model_ai_tool_request,base.group_user,1,0,0,0
+access_ai_tool_request_system,access_ai_tool_request_system,model_ai_tool_request,base.group_system,1,0,0,0
+access_ai_tool_system,access_ai_tool_system,ai_tool.model_ai_tool,base.group_system,1,1,0,0
+access_ai_tool_request_record_user,access_ai_tool_request_record_user,model_ai_tool_request_record,base.group_user,1,0,0,0
