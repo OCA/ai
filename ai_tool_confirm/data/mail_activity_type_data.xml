@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Coopdevs
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo noupdate="1">
+    <record id="mail_activity_type_ai_tool_confirm" model="mail.activity.type">
+        <field name="name">Confirm AI Action</field>
+        <field name="icon">fa-check-square-o</field>
+        <field name="res_model">ai.tool.request</field>
+        <field name="delay_count">0</field>
+    </record>
+</odoo>

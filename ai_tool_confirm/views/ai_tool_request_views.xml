@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Coopdevs
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="ai_tool_request_view_form" model="ir.ui.view">
+        <field name="model">ai.tool.request</field>
+        <field name="arch" type="xml">
+            <form create="false" edit="false">
+                <header>
+                    <field name="can_answer" invisible="1" />
+                    <button
+                        name="action_approve"
+                        type="object"
+                        string="Approve"
+                        class="btn-primary"
+                        invisible="not can_answer"
+                        confirm="The AI action will be executed with your access rights. Continue?"
+                    />
+                    <button
+                        name="action_reject"
+                        type="object"
+                        string="Reject"
+                        invisible="not can_answer"
+                    />
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="pending,done"
+                    />
+                </header>
+                <sheet>
+                    <div
+                        class="alert alert-warning"
+                        role="alert"
+                        invisible="not can_answer"
+                    >
+                        An AI asked for this action and wrote its arguments.
+                        If you approve it, it will be executed with
+                        <strong>your</strong> access rights. Check it first.
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="tool_name" />
+                            <field name="tool_description" />
+                            <field name="record_ref" />
+                            <field name="origin" />
+                        </group>
+                        <group>
+                            <field name="requester_id" />
+                            <field name="approver_id" />
+                            <field name="create_date" string="Requested on" />
+                            <field name="expiration_date" />
+                            <field name="answer_date" />
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Arguments" name="arguments">
+                            <group>
+                                <field
+                                    name="call_description"
+                                    string="What it will do"
+                                    invisible="not call_description"
+                                />
+                                <field name="arguments_display" />
+                                <field name="arguments" string="Arguments (as sent)" />
+                            </group>
+                        </page>
+                        <page string="Result" name="result" invisible="state != 'done'">
+                            <field name="result" />
+                        </page>
+                        <page
+                            string="Affected Records"
+                            name="affected_records"
+                            invisible="not record_ids"
+                        >
+                            <field name="record_ids">
+                                <list>
+                                    <field name="operation" />
+                                    <field name="record_ref" />
+                                    <field name="res_model" optional="hide" />
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Error" name="error" invisible="state != 'error'">
+                            <field name="error" />
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter />
+            </form>
+        </field>
+    </record>
+
+    <record id="ai_tool_request_view_list" model="ir.ui.view">
+        <field name="model">ai.tool.request</field>
+        <field name="arch" type="xml">
+            <list create="false">
+                <field name="create_date" string="Requested on" />
+                <field name="name" />
+                <field name="tool_name" optional="hide" />
+                <field name="requester_id" widget="many2one_avatar_user" />
+                <field name="approver_id" widget="many2one_avatar_user" />
+                <field name="expiration_date" optional="show" />
+                <field
+                    name="state"
+                    widget="badge"
+                    decoration-info="state == 'pending'"
+                    decoration-success="state == 'done'"
+                    decoration-danger="state == 'error'"
+                    decoration-muted="state in ('rejected', 'expired')"
+                />
+            </list>
+        </field>
+    </record>
+
+    <record id="ai_tool_request_view_search" model="ir.ui.view">
+        <field name="model">ai.tool.request</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" />
+                <field name="tool_id" />
+                <field name="requester_id" />
+                <field name="approver_id" />
+                <filter
+                    name="to_confirm"
+                    string="To Confirm by Me"
+                    domain="[('approver_id', '=', uid), ('state', '=', 'pending')]"
+                />
+                <filter
+                    name="pending"
+                    string="Pending"
+                    domain="[('state', '=', 'pending')]"
+                />
+                <separator />
+                <filter
+                    name="group_state"
+                    string="Status"
+                    context="{'group_by': 'state'}"
+                />
+                <filter
+                    name="group_tool"
+                    string="Tool"
+                    context="{'group_by': 'tool_id'}"
+                />
+            </search>
+        </field>
+    </record>
+
+    <record id="ai_tool_request_action" model="ir.actions.act_window">
+        <field name="name">AI Tool Requests</field>
+        <field name="res_model">ai.tool.request</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_to_confirm': 1}</field>
+    </record>
+
+    <record id="ai_tool_request_menu" model="ir.ui.menu">
+        <field name="name">AI Tool Requests</field>
+        <field name="parent_id" ref="ai_tool.ai_menu_root" />
+        <field name="action" ref="ai_tool_request_action" />
+        <field name="sequence" eval="17" />
+    </record>
+</odoo>

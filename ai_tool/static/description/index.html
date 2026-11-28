@@ -444,6 +444,12 @@ used to define integrations with automation. This argument is required
 in <tt class="docutils literal">generic_model</tt> and <tt class="docutils literal">record</tt> tools.</p>
 <p>On <tt class="docutils literal">generic_model</tt>s we are expecting this value because we want to
 do a specific action with the model.</p>
+<p>If the tool only reads data and has no side effects, flag it with
+<tt class="docutils literal">&lt;field <span class="pre">name=&quot;read_only&quot;</span> <span class="pre">eval=&quot;True&quot;</span> /&gt;</tt>. It is exposed in the tool
+definition as the MCP <tt class="docutils literal">readOnlyHint</tt> annotation, so clients (and
+modules that ask for human confirmation) can tell it apart from tools
+that modify data. Tools are considered to modify data unless they are
+flagged.</p>
 </div>
 <div class="section" id="bug-tracker">
 <h2><a class="toc-backref" href="#toc-entry-2">Bug Tracker</a></h2>

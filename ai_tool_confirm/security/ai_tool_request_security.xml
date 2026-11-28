@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Coopdevs
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="ai_tool_request_rule_user" model="ir.rule">
+        <field name="name">AI tool requests: requester and approver</field>
+        <field name="model_id" ref="model_ai_tool_request" />
+        <field name="groups" eval="[(4, ref('base.group_user'))]" />
+        <field
+            name="domain_force"
+        >['|', ('requester_id', '=', user.id), ('approver_id', '=', user.id)]</field>
+    </record>
+
+    <record id="ai_tool_request_rule_system" model="ir.rule">
+        <field name="name">AI tool requests: all for administrators</field>
+        <field name="model_id" ref="model_ai_tool_request" />
+        <field name="groups" eval="[(4, ref('base.group_system'))]" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
+    <record id="ai_tool_request_record_rule_user" model="ir.rule">
+        <field name="name">AI tool request records: requester and approver</field>
+        <field name="model_id" ref="model_ai_tool_request_record" />
+        <field name="groups" eval="[(4, ref('base.group_user'))]" />
+        <field
+            name="domain_force"
+        >['|', ('request_id.requester_id', '=', user.id), ('request_id.approver_id', '=', user.id)]</field>
+    </record>
+
+    <record id="ai_tool_request_record_rule_system" model="ir.rule">
+        <field name="name">AI tool request records: all for administrators</field>
+        <field name="model_id" ref="model_ai_tool_request_record" />
+        <field name="groups" eval="[(4, ref('base.group_system'))]" />
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+</odoo>

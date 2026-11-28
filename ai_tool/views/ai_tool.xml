@@ -12,6 +12,7 @@
                         <field name="name" />
                         <field name="description" />
                         <field name="kind" />
+                        <field name="read_only" />
                     </group>
                 </sheet>
             </form>
@@ -32,6 +33,7 @@
         <field name="arch" type="xml">
             <list>
                 <field name="name" />
+                <field name="read_only" />
             </list>
         </field>
     </record>

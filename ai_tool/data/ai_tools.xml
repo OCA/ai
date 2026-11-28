@@ -8,6 +8,7 @@
         <field name="model_id" ref="model_ai_tool" />
         <field name="function_name">_ai_get_date</field>
         <field name="kind">generic</field>
+        <field name="read_only" eval="True" />
     </record>
 
     <record model="ai.tool" id="post_message">

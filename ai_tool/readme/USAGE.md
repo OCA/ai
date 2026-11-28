@@ -50,3 +50,9 @@ This argument is protected and is used to define integrations with automation.
 This argument is required in `generic_model` and `record` tools.
 
 On `generic_model`s we are expecting this value because we want to do a specific action with the model.
+
+If the tool only reads data and has no side effects, flag it with
+`<field name="read_only" eval="True" />`. It is exposed in the tool definition as
+the MCP `readOnlyHint` annotation, so clients (and modules that ask for human
+confirmation) can tell it apart from tools that modify data. Tools are
+considered to modify data unless they are flagged.
